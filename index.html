@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Quantum Reactors Idle — MVP</title>
-  <meta name="theme-color" content="#0ff" />
+  <title>Symulator Kariery Korposzczura</title>
+  <meta name="theme-color" content="#1976d2" />
   <link rel="icon" href="favicon.svg" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header id="topbar">
-    <div class="brand">Quantum Reactors Idle</div>
+    <div class="brand">Symulator Kariery Korposzczura</div>
     <div class="stats">
-      <span id="energy">E: 0</span>
-      <span id="eps">E/s: 0</span>
-      <span id="mult">M: 1.00</span>
+      <span id="energy">Korpogrosze: 0</span>
+      <span id="eps">Korpogrosze/s: 0</span>
+      <span id="mult">Soft Skills: 1.00</span>
     </div>
     <button id="collapseTopbar" title="Zwiń">▲</button>
   </header>
 
   <main id="app">
     <nav class="tabs">
-      <button class="tab active" data-tab="reactors">Reaktory</button>
-      <button class="tab" data-tab="prestige">Prestige</button>
+      <button class="tab active" data-tab="reactors">Kariera</button>
+      <button class="tab" data-tab="prestige">Zmiana firmy</button>
       <button class="tab" data-tab="settings">Ustawienia</button>
     </nav>
 
@@ -32,29 +32,29 @@
 
     <section id="prestige" class="tabview">
       <div class="panel">
-        <h2>Prestige</h2>
-        <p>Aktualne Kwanty [Q]: <b id="qTotal">0</b></p>
-        <p>Jeśli zrobisz Prestige teraz, zyskasz: <b id="qGain">0</b> Q</p>
-        <button id="doPrestige" class="cta">Wykonaj Prestige</button>
+        <h2>Zmiana firmy</h2>
+        <p>Soft Skills: <b id="qTotal">0</b></p>
+        <p>Jeśli rzucisz korpo teraz (prestige), zyskasz: <b id="qGain">0</b> soft skills</p>
+        <button id="doPrestige" class="cta">Zmień firmę (Resety kariery)</button>
 
-        <h3>Upgrade'y Q</h3>
+        <h3>Benefity/Boosty za soft skills</h3>
         <div class="q-upgrades">
           <div class="q-upgrade">
-            <div class="q-title">Boost podstawowy</div>
-            <div class="q-desc">+10% do base_gain za 1 Q</div>
-            <button data-upg="base" class="q-buy">Kup (1 Q)</button>
+            <div class="q-title">Networking</div>
+            <div class="q-desc">+10% do wszystkich przychodów z każdej pozycji za 1 soft skill</div>
+            <button data-upg="base" class="q-buy">Kup (1 soft skill)</button>
             <div class="q-level">Poziom: <span data-upg-lvl="base">0</span></div>
           </div>
           <div class="q-upgrade">
-            <div class="q-title">Boost prędkości</div>
-            <div class="q-desc">+6% do prędkości wszystkich reaktorów za 1 Q</div>
-            <button data-upg="speed" class="q-buy">Kup (1 Q)</button>
+            <div class="q-title">Mocniejsza kawa</div>
+            <div class="q-desc">+6% do efektywności pracy (v) na każdym stanowisku za 1 soft skill</div>
+            <button data-upg="speed" class="q-buy">Kup (1 soft skill)</button>
             <div class="q-level">Poziom: <span data-upg-lvl="speed">0</span></div>
           </div>
           <div class="q-upgrade">
-            <div class="q-title">Boost mnożnika</div>
-            <div class="q-desc">+2% do gain_i wszystkich reaktorów za 1 Q</div>
-            <button data-upg="mult" class="q-buy">Kup (1 Q)</button>
+            <div class="q-title">Umiejętność ściemniania</div>
+            <div class="q-desc">+2% do zysku przy awansach za 1 soft skill</div>
+            <button data-upg="mult" class="q-buy">Kup (1 soft skill)</button>
             <div class="q-level">Poziom: <span data-upg-lvl="mult">0</span></div>
           </div>
         </div>
@@ -92,24 +92,21 @@
       <div class="telemetry-content">
         <div class="telemetry-section">
           <h4>Live</h4>
-          <div class="kv">E/s (live): <span id="t_eps_live">0</span></div>
-          <div class="kv">E/s (30s avg): <span id="t_eps_avg">0</span></div>
-          <div class="kv">M (Π m_i): <span id="t_M">1.00</span></div>
+          <div class="kv">Korpogrosze/s (live): <span id="t_eps_live">0</span></div>
+          <div class="kv">Korpogrosze/s (30s avg): <span id="t_eps_avg">0</span></div>
+          <div class="kv">Soft Skills (Π m_i): <span id="t_M">1.00</span></div>
           <div class="kv">FPS: <span id="t_fps">0</span></div>
-          <div class="kv">Czas do 1. Prestige: <span id="t_t1p">—</span></div>
-          <div class="kv">Czas od ostatniego Prestige: <span id="t_tlp">—</span></div>
+          <div class="kv">Czas do 1. zmiany firmy: <span id="t_t1p">—</span></div>
+          <div class="kv">Czas od ostatniej zmiany: <span id="t_tlp">—</span></div>
         </div>
-
         <div class="telemetry-section">
-          <h4>Zakupy (ostatnie 50)</h4>
+          <h4>Akcje (ostatnie 50)</h4>
           <pre id="t_actions" class="mono"></pre>
         </div>
-
         <div class="telemetry-section">
           <h4>Rozkład wydatków</h4>
           <pre id="t_spend" class="mono"></pre>
         </div>
-
         <div class="telemetry-section">
           <h4>Snapshots m_i / v_i (5 ostatnich)</h4>
           <pre id="t_snapshots" class="mono"></pre>
