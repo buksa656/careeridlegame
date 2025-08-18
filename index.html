@@ -1,123 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Symulator Kariery Korposzczura</title>
-  <meta name="theme-color" content="#1976d2" />
-  <link rel="icon" href="favicon.svg" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8">
+  <title>KorpoSim Idle</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header id="topbar">
-    <div class="brand">Symulator Kariery Korposzczura</div>
-    <div class="stats">
-      <span id="energy">Korpogrosze: 0</span>
-      <span id="eps">Korpogrosze/s: 0</span>
-      <span id="mult">Soft Skills: 1.00</span>
-    </div>
-    <button id="collapseTopbar" title="Zwiń">▲</button>
-  </header>
-
-  <main id="app">
-    <nav class="tabs">
-      <button class="tab active" data-tab="reactors">Kariera</button>
-      <button class="tab" data-tab="prestige">Zmiana firmy</button>
-      <button class="tab" data-tab="settings">Ustawienia</button>
-    </nav>
-
-<section id="reactors" class="tabview active">
-  <div id="careerList" class="career-list"></div>
-  <div id="softStats" style="font-size:1.15em;color:#1976d2;margin:16px 0 0 0;"></div>
-</section>
-
-    <section id="prestige" class="tabview">
-      <div class="panel">
-        <h2>Zmiana firmy</h2>
-        <p>Soft Skills: <b id="qTotal">0</b></p>
-        <p>Jeśli rzucisz korpo teraz, zyskasz: <b id="qGain">0</b> soft skills</p>
-        <button id="doPrestige" class="cta">Zmień firmę (Resety kariery)</button>
-
-        <h3>Benefity/Boosty za soft skills</h3>
-        <div class="q-upgrades">
-          <div class="q-upgrade">
-            <div class="q-title">Networking</div>
-            <div class="q-desc">+10% do wszystkich przychodów z każdej pozycji za 1 soft skill</div>
-            <button data-upg="base" class="q-buy">Kup (1 soft skill)</button>
-            <div class="q-level">Poziom: <span data-upg-lvl="base">0</span></div>
-          </div>
-          <div class="q-upgrade">
-            <div class="q-title">Mocniejsza kawa</div>
-            <div class="q-desc">+6% do efektywności pracy (wydajności) za 1 soft skill</div>
-            <button data-upg="speed" class="q-buy">Kup (1 soft skill)</button>
-            <div class="q-level">Poziom: <span data-upg-lvl="speed">0</span></div>
-          </div>
-          <div class="q-upgrade">
-            <div class="q-title">Umiejętność ściemniania</div>
-            <div class="q-desc">+2% do zysku przy awansach za 1 soft skill</div>
-            <button data-upg="mult" class="q-buy">Kup (1 soft skill)</button>
-            <div class="q-level">Poziom: <span data-upg-lvl="mult">0</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="settings" class="tabview">
-      <div class="panel">
-        <h2>Ustawienia</h2>
-        <label class="row">
-          <input type="checkbox" id="toggleTelemetry" />
-          Pokaż telemetrię (Dev Overlay)
-        </label>
-        <label class="row">
-          <input type="checkbox" id="saveTelemetry" />
-          Zapisuj telemetrię w save (dla debug)
-        </label>
-        <div class="row">
-          <button id="exportTelemetry">Eksport telemetrii (JSON)</button>
-          <button id="clearTelemetry">Wyczyść telemetrię</button>
-        </div>
-        <div class="row">
-          <button id="clearSave" class="danger">Wyczyść zapis gry</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="telemetryOverlay" class="hidden">
-    <div class="telemetry-panel">
-      <div class="telemetry-header">
-        <h3>Telemetria (Live)</h3>
-        <button id="closeTelemetry">×</button>
-      </div>
-      <div class="telemetry-content">
-        <div class="telemetry-section">
-          <h4>Live</h4>
-          <div class="kv">Korpogrosze/s (live): <span id="t_eps_live">0</span></div>
-          <div class="kv">Korpogrosze/s (30s avg): <span id="t_eps_avg">0</span></div>
-          <div class="kv">Soft Skills (Π m_i): <span id="t_M">1.00</span></div>
-          <div class="kv">FPS: <span id="t_fps">0</span></div>
-          <div class="kv">Czas do 1. zmiany firmy: <span id="t_t1p">—</span></div>
-          <div class="kv">Czas od ostatniej zmiany: <span id="t_tlp">—</span></div>
-        </div>
-        <div class="telemetry-section">
-          <h4>Akcje (ostatnie 50)</h4>
-          <pre id="t_actions" class="mono"></pre>
-        </div>
-        <div class="telemetry-section">
-          <h4>Rozkład wydatków</h4>
-          <pre id="t_spend" class="mono"></pre>
-        </div>
-        <div class="telemetry-section">
-          <h4>Snapshots m_i / v_i (5 ostatnich)</h4>
-          <pre id="t_snapshots" class="mono"></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="js/telemetry.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/main.js"></script>
+<header id="topbar">
+  <div class="brand">KorpoSim</div>
+  <nav>
+    <button class="tab-btn" data-panel="kariera">Kariera</button>
+    <button class="tab-btn" data-panel="firma">Zmiana firmy</button>
+    <button class="tab-btn" data-panel="ustawienia">Ustawienia</button>
+  </nav>
+</header>
+<main id="app">
+  <section id="panel-kariera" class="panel"></section>
+  <section id="panel-firma" class="panel" style="display:none;">
+    <div id="prestige-box"></div>
+  </section>
+  <section id="panel-ustawienia" class="panel" style="display:none;">
+    <button id="reset-btn">Zresetuj postęp</button>
+  </section>
+</main>
+<script src="ui.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
