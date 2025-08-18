@@ -96,3 +96,13 @@ main#app { padding: 32px 6vw; max-width: 920px; margin: 0 auto; }
   .kafelek { flex-direction: column; gap: 10px; }
   .kafelek-akcje { margin-left:0; flex-direction: row; gap: 14px; }
 }
+.kafelek.locked {
+  opacity: 0.48;
+  filter: grayscale(0.7);
+  pointer-events: none;
+}
+.kafelek-akcje button:disabled {
+  background: #eaeaea !important;
+  color: #b0b3bb !important;
+  cursor: not-allowed;
+}
