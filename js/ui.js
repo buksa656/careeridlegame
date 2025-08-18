@@ -3,7 +3,7 @@
 
   const el = (q) => document.querySelector(q);
 
-  function fmt(n) { return Math.round(n); }
+  function fmt(n) { return (Math.round(n * 100) / 100).toLocaleString("pl"); }
 
   function makeTaskTile(task, idx, canUnlock, onClickTask, onUpgradeTask) {
     const wrap = document.createElement('div');
@@ -16,8 +16,13 @@
       <div class="kafelek-progbar">
         <div class="kafelek-progbar-inner" style="width:${Math.min(100, (task.points / (task.unlockCost || 1)) * 100)}%"></div>
       </div>
-      <div class="kafelek-row">Poziom: <b>${task.lvl}</b> &nbsp; Punkty: <b>${fmt(task.points)}</b></div>
-      <div class="kafelek-row">Zysk na klik: ${fmt(task.baseGain * Math.pow(task.gainGrowth, task.lvl))}</div>
+      <div class="kafelek-row">
+        Poziom: <b>${task.lvl}</b> &nbsp; Punkty: <b>${fmt(task.points)}</b>
+      </div>
+      <div class="kafelek-row">
+        Idle: <b>${fmt(task.idleRate || task.baseIdle || 0)}</b> PKT/s
+        ${task.clickGain ? ` &bull; Pracuj: <b>${fmt(task.clickGain)}</b> PKT/klik` : ""}
+      </div>
     `;
 
     const actions = document.createElement('div');
@@ -28,7 +33,7 @@
     } else {
       actions.innerHTML = `
         <button data-click="${idx}">Pracuj</button>
-        <button data-upg="${idx}">Ulepsz (${fmt(10 * Math.pow(2.1, task.lvl))} PKT)</button>`;
+        <button data-upg="${idx}">Ulepsz (+0.5 PKT/s) (${fmt(10 * Math.pow(2.1, task.lvl))} PKT)</button>`;
     }
 
     wrap.appendChild(info);
@@ -47,25 +52,15 @@
         if (t.matches('button[data-upg]')) cfg.onUpgradeTask(Number(t.dataset.upg));
         if (t.matches('button[data-unlock]')) {
           const idx = Number(t.dataset.unlock);
-          // Unlock: pobierz taski, odblokuj jeśli poprzedni ma wystarczająco punktów
-          const event = new CustomEvent('unlock-task', { detail: { idx }});
-          el('#careerList').dispatchEvent(event);
-        }
-        if (t.matches('#prestigeBtn')) cfg.onPrestige();
-        if (t.matches('#clearSave')) cfg.onClearSave();
-      });
-
-      // Unlock handler
-      el('#careerList').addEventListener('unlock-task', e => {
-        const idx = e.detail.idx;
-        if (idx > 0) {
           const tasks = cfg.getTasks ? cfg.getTasks() : [];
-          if (tasks[idx - 1].points >= tasks[idx].unlockCost) {
+          if (idx > 0 && tasks[idx - 1].points >= tasks[idx].unlockCost) {
             tasks[idx].unlocked = true;
             tasks[idx - 1].points -= tasks[idx].unlockCost;
             QRI_UI.updateTasks(tasks, cfg.currentPosition || "", QRI_UI._prestigeReady(tasks));
           }
         }
+        if (t.matches('#prestigeBtn')) cfg.onPrestige();
+        if (t.matches('#clearSave')) cfg.onClearSave();
       });
     },
     updateTasks(tasks, position, prestigeReady) {
@@ -75,7 +70,7 @@
           makeTaskTile(task, i, i === 0 || tasks[i - 1].points >= (task.unlockCost || 0), cfg.onClickTask, cfg.onUpgradeTask).outerHTML
         ).join("")}
         ${prestigeReady ? `<button id="prestigeBtn" style="display:block;margin:28px auto 8px auto;padding:10px 38px;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;font-size:1.1em;">Awansuj na wyższy szczebel</button>` : ""}
-        <button id="clearSave" style="margin:24px 0 0 0;float:right;background:#eee;border:none;padding:8px 15px;border-radius:6px;color:#c22;">Wyczyść zapis</button>
+        <button id="clearSave" style="margin:22px 0 0 0;float:right;background:#eee;border:none;padding:8px 15px;border-radius:6px;color:#c22;">Wyczyść zapis</button>
       `;
     },
     _prestigeReady(tasks) {
