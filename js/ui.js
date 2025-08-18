@@ -88,13 +88,15 @@
 
       // Kariera (stanowiska)
       const list = el('#careerList');
-      list.innerHTML = '';
-      cfg.reactors.forEach((_, i) => list.appendChild(makeCareerTile(i)));
-      list.addEventListener('click', (e) => {
-        const t = e.target;
-        if (t.matches('button[data-buy]')) cfg.onBuy(Number(t.dataset.buy));
-        if (t.matches('button[data-asc]')) cfg.onAscend(Number(t.dataset.asc));
-      });
+      if(list) {
+        list.innerHTML = '';
+        cfg.reactors.forEach((_, i) => list.appendChild(makeCareerTile(i)));
+        list.addEventListener('click', (e) => {
+          const t = e.target;
+          if (t.matches('button[data-buy]')) cfg.onBuy(Number(t.dataset.buy));
+          if (t.matches('button[data-asc]')) cfg.onAscend(Number(t.dataset.asc));
+        });
+      }
 
       // Prestige i upgrades jak poprzednio
       el('#doPrestige').addEventListener('click', cfg.onDoPrestige);
