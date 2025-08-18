@@ -35,6 +35,7 @@
     document.getElementById("panel-firma").style.display = "none";
     document.getElementById("panel-ustawienia").style.display = "none";
     document.getElementById("panel-achievementy").style.display = "none";
+    document.getElementById("panel-automaty").style.display = "none";
   }
 
   function taskTile(task, idx, totalPoints) {
@@ -61,7 +62,7 @@
       </div>`;
   }
 
-  function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements = []) {
+  function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements = [], automaty = []) {
     // Pasek na górę
     e("#top-total-points").textContent = fmt(totalPoints);
     e("#top-soft-skills").textContent = fmt(softSkills);
@@ -77,6 +78,9 @@
     `;
 
     renderAchievements(achievements);
+
+    // Automaty panel
+    renderAutomaty(automaty, tasks);
 
     e("#panel-firma").innerHTML = `
       <h2>Rzuć robotę (PRESTIGE)</h2>
@@ -95,10 +99,10 @@
     const ACHIEVEMENTS = [
       { emoji:'☕', name: "Caffeinated Intern", desc: "Zrób 150 kliknięć w 'Robienie kawy Szefowi'" },
       { emoji: '💾', name: "Master Copypasta", desc: "Zgarnij 2 000 biuro-punktów ogółem" },
-      { emoji: '💸', name: "Sknerus korporacji", desc: "Wydaj >10 000 punktów na ulepszenia" },
-      { emoji: '🧠', name: "Szef od HR", desc: "Zdobądź 2 Soft Skills przez Prestige" },
-      { emoji: '🔥', name: "Burnout Hero", desc: "Rzuć robotę co najmniej 3 razy!" },
-      { emoji: '👑', name: "Król Open Space", desc: "Odblokuj ostatni poziom kariery" }
+      { emoji: '☕', name: "Ekspresowy korposzczur", desc: "700 pkt. kawy – nagroda: Ekspres do Kawy" },
+      { emoji: '📊', name: "Excelowa magia", desc: "2000 pkt. do Excela – nagroda: ExcelBot" },
+      { emoji: '🤖', name: "Meeting Terminator", desc: "3000 pkt. na Zebraniu – nagroda: Notatnik AI" },
+      { emoji: '🧠', name: "Szef od HR", desc: "Zdobądź 2 Soft Skills" }
     ];
     e("#panel-achievementy").innerHTML = `
       <h2>Osiągnięcia</h2>
@@ -112,6 +116,22 @@
           </div>
         </div>`
       ).join('')}
+      </div>
+    `;
+  }
+
+  function renderAutomaty(automaty, tasks) {
+    e("#panel-automaty").innerHTML = `
+      <h2>Automaty – odblokuj przez wyzwania!</h2>
+      <div class="auto-tabs">
+      ${automaty.map(auto => `
+        <div class="auto-box${auto.unlocked ? ' active' : ''}">
+          <div class="auto-header">${auto.emoji} <b>${auto.name}</b></div>
+          <div>${auto.desc}</div>
+          <div style="font-size:0.96em;color:#9a9;">Obsługiwany task: <b>${tasks[auto.taskIdx] ? tasks[auto.taskIdx].name : ""}</b></div>
+          <span style="color:#999">${auto.unlocked ? "Aktywny!" : "Zablokowany"}</span>
+        </div>
+      `).join('')}
       </div>
     `;
   }
@@ -139,6 +159,30 @@
     if (rbtn) rbtn.onclick = () => eventHandlers.onClearSave();
   }
 
+  // -------- MODAL REWARDY -----------
+  function showRewardModal(emoji, name, desc, rewardDesc, onCollect) {
+    const modal = e("#reward-modal");
+    modal.innerHTML = `
+      <div class="emoji">${emoji}</div>
+      <div style="font-size:1.12em"><b>${name}</b></div>
+      <div style="margin:10px 0 11px 0">${desc}</div>
+      <div style="padding:10px 0 10px 0;color:#246">${rewardDesc}</div>
+      <button id="collect-reward-btn">Odbierz nagrodę!</button>
+    `;
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+    e("#collect-reward-btn").onclick = () => {
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+      if (onCollect) onCollect();
+    };
+  }
+  function hideRewardModal() {
+    const modal = e("#reward-modal");
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
   window.IdleUI = {
     init(opts) {
       eventHandlers = opts;
@@ -146,6 +190,8 @@
     },
     renderAll,
     renderProgress,
-    renderUpgradeAffordances
+    renderUpgradeAffordances,
+    showRewardModal,
+    hideRewardModal
   };
 })();
