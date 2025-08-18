@@ -234,6 +234,13 @@
   }
   // --- INICJALIZACJA ---
   const ui=window.IdleUI;
+  
+  function clearSave() {
+  timers.forEach(clearInterval);
+  clearAutomaty && clearAutomaty();
+  localStorage.removeItem("korposzczur_save");
+  location.reload();
+}
   function init() {
     loadGame();
     timers=Array(tasks.length).fill(null);
