@@ -8,13 +8,14 @@
   function makeTaskTile(task, idx, canUnlock, onClickTask, onUpgradeTask) {
     const wrap = document.createElement('div');
     wrap.className = 'kafelek' + (task.unlocked ? '' : ' locked');
+    const prog = Math.max(0, Math.min(1, task.progress || 0));
 
     const info = document.createElement('div');
     info.className = 'kafelek-info';
     info.innerHTML = `
       <div class="title">${task.name}</div>
       <div class="kafelek-progbar">
-        <div class="kafelek-progbar-inner" style="width:${Math.min(100, (task.points / (task.unlockCost || 1)) * 100)}%"></div>
+        <div class="kafelek-progbar-inner" style="width:${Math.floor(prog * 100)}%"></div>
       </div>
       <div class="kafelek-row">
         Poziom: <b>${task.lvl}</b> &nbsp; Punkty: <b>${fmt(task.points)}</b>
