@@ -5,22 +5,21 @@
     {
       name: "Stażysta",
       tasks: [
-        { name: "Kopiowanie dokumentów", unlockCost: 0, unlocked: true, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.15 },
-        { name: "Parzenie kawy", unlockCost: 50, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.18 },
-        { name: "Skanowanie faktur", unlockCost: 120, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.22 },
-        { name: "Przygotowanie prezentacji", unlockCost: 270, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.25 },
-        { name: "Zamknięcie refaktury", unlockCost: 500, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.28 },
+        { name: "Kopiowanie dokumentów", unlockCost: 0, unlocked: true, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.15, progress: 0, lastTick: Date.now() },
+        { name: "Parzenie kawy", unlockCost: 50, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.18, progress: 0, lastTick: Date.now() },
+        { name: "Skanowanie faktur", unlockCost: 120, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.22, progress: 0, lastTick: Date.now() },
+        { name: "Przygotowanie prezentacji", unlockCost: 270, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.25, progress: 0, lastTick: Date.now() },
+        { name: "Zamknięcie refaktury", unlockCost: 500, unlocked: false, lvl: 0, points: 0, numClicks: 0, clickGain: 1, idleRate: 0, started: false, baseIdle: 0, gainGrowth: 1.28, progress: 0, lastTick: Date.now() },
       ]
     },
-    // Dodaj szczeble analogicznie...
+    // Możesz dodać kolejne szczeble...
   ];
 
   let careerLevel = 0;
   let currentTasks = JSON.parse(JSON.stringify(CAREER_TRACKS[careerLevel].tasks));
   let softSkills = 0;
-  let idleTimers = [];
 
-  // --- SOFTCAP na bonus idle za klik ---
+  // --- SOFTCAP idle/sec za klik ---
   function clickToIdleBonus(numClicks) {
     if (numClicks <= 30) return 0.1;
     else if (numClicks <= 60) return 0.05;
@@ -32,14 +31,14 @@
   const ui = window.QRI_UI;
 
   function saveGame() {
-    localStorage.setItem("korpo_sim_v3", JSON.stringify({
+    localStorage.setItem("korpo_sim_v4", JSON.stringify({
       careerLevel,
       currentTasks,
       softSkills
     }));
   }
   function loadGame() {
-    const raw = localStorage.getItem("korpo_sim_v3");
+    const raw = localStorage.getItem("korpo_sim_v4");
     if (!raw) return;
     try {
       const s = JSON.parse(raw);
@@ -48,46 +47,28 @@
       if (typeof s.softSkills === "number") softSkills = s.softSkills;
     } catch (e) {}
   }
-  function clearSave() { localStorage.removeItem("korpo_sim_v3"); location.reload(); }
+  function clearSave() { localStorage.removeItem("korpo_sim_v4"); location.reload(); }
 
-  // --- Idle pętla per task ---
-  function startIdle(task, idx) {
-    if (idleTimers[idx]) return;
-    task.started = true;
-    idleTimers[idx] = setInterval(() => {
-      task.points += task.idleRate;
-      // Auto-odblokowanie kolejnych tasków
-      if (
-        idx + 1 < currentTasks.length &&
-        !currentTasks[idx + 1].unlocked &&
-        task.points >= currentTasks[idx + 1].unlockCost
-      ) {
-        currentTasks[idx + 1].unlocked = true;
-      }
-      saveGame();
-      ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
-    }, 1000);
-  }
-
-  // === Główna ekonomia — klik: boostuje idle, daje PKT
+  // --- Klik: dopełnienie paska, boost idleRate ---
   function clickTask(idx) {
     const task = currentTasks[idx];
     if (!task.unlocked) return;
 
-    // Klik boostuje tymczasowo (PKT) + trwale (idleRate)
+    // Ulga/efekt kliknięcia
     task.points += task.clickGain;
     task.numClicks = (task.numClicks || 0) + 1;
-
-    // Softcap — klik klik klik!
-    task.idleRate = (task.idleRate || task.baseIdle || 0) + clickToIdleBonus(task.numClicks);
-
     if (!task.started) {
-      task.baseIdle = 0.2; // idle/sec inicjalne (możesz zmienić)
-      task.idleRate = task.baseIdle + clickToIdleBonus(task.numClicks); // dodaj początkowe
-      startIdle(task, idx);
+      task.baseIdle = 0.2;
+      task.idleRate = task.baseIdle + clickToIdleBonus(task.numClicks);
+      task.started = true;
+      task.lastTick = Date.now();
+    } else {
+      task.idleRate = (task.baseIdle || 0) + clickToIdleBonus(task.numClicks) + (task.lvl * 0.5);
     }
+    // Efekt: paski idle idą, klik dopełnia bar!
+    task.progress = 1;
 
-    // Odblokuj kolejny task jeśli warunek spełniony
+    // Auto-odblokowanie
     if (
       idx + 1 < currentTasks.length &&
       !currentTasks[idx + 1].unlocked &&
@@ -106,8 +87,8 @@
     if (task.points >= upgCost) {
       task.points -= upgCost;
       task.lvl += 1;
-      task.idleRate += 0.5; // upgrade podbija idle/sec o 0.5
-      task.clickGain += 0.5; // i klik zyskuje trochę wartości
+      task.idleRate = (task.baseIdle || 0) + clickToIdleBonus(task.numClicks) + (task.lvl * 0.5);
+      task.clickGain += 0.5;
     }
     saveGame();
     ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
@@ -118,16 +99,43 @@
   }
   function prestige() {
     if (!prestigeReady()) return;
-    // Zatrzymaj stare intervale
-    idleTimers.forEach(x => clearInterval(x));
-    idleTimers = [];
-    // Awans — przestaw się na kolejny szczebel!
     softSkills += 1;
     careerLevel = Math.min(careerLevel + 1, CAREER_TRACKS.length - 1);
     currentTasks = JSON.parse(JSON.stringify(CAREER_TRACKS[careerLevel].tasks));
     saveGame();
     ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
     ui.updateSoftSkills(softSkills, careerLevel + 1, CAREER_TRACKS.length);
+  }
+
+  // --- Globalny cykliczny idle loop ---
+  function idleLoop() {
+    const now = Date.now();
+    currentTasks.forEach((task, idx) => {
+      if(task.unlocked && (task.idleRate || 0) > 0) {
+        if (!task.lastTick) task.lastTick = now;
+        const dt = (now - task.lastTick) / 1000;
+        task.lastTick = now;
+        const cycleTime = 1 / (task.idleRate || 1e-9);
+        task.progress = (task.progress || 0) + dt / cycleTime;
+        while(task.progress >= 1) {
+          task.points += 1;
+          task.progress -= 1;
+          // Auto-odblokowanie
+          if (
+            idx + 1 < currentTasks.length &&
+            !currentTasks[idx + 1].unlocked &&
+            task.points >= currentTasks[idx + 1].unlockCost
+          ) {
+            currentTasks[idx + 1].unlocked = true;
+          }
+        }
+      } else {
+        task.progress = 0;
+        task.lastTick = now;
+      }
+    });
+    ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
+    requestAnimationFrame(idleLoop);
   }
 
   // === INIT ===
@@ -138,12 +146,13 @@
       onUpgradeTask: upgradeTask,
       onPrestige: prestige,
       onClearSave: clearSave,
-      getTasks: () => currentTasks,  // nowy getter dodałem dla poprawności unlock
+      getTasks: () => currentTasks,
       currentPosition: CAREER_TRACKS[careerLevel].name
     });
     ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
     ui.updateSoftSkills(softSkills, careerLevel + 1, CAREER_TRACKS.length);
     setInterval(saveGame, 10_000);
+    idleLoop();
   }
   window.addEventListener('load', init);
 })();
