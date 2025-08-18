@@ -11,7 +11,8 @@
       points: 0,
       cycleTime: 1600,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 0
     },
     {
       name: "Ctrl+C, Ctrl+V - Copypasta ofisowa",
@@ -19,11 +20,11 @@
       level: 0,
       baseGain: 9,
       gainGrowth: 1.13,
-      unlockCost: 33,
       points: 0,
       cycleTime: 2500,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 48 // progresywny, patrz niżej
     },
     {
       name: "Odpisanie na maila z RE: FW: FW:  ",
@@ -31,11 +32,11 @@
       level: 0,
       baseGain: 20,
       gainGrowth: 1.17,
-      unlockCost: 170,
       points: 0,
       cycleTime: 4000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 180
     },
     {
       name: "Wklejka do Excela (magia tabel)",
@@ -43,11 +44,11 @@
       level: 0,
       baseGain: 44,
       gainGrowth: 1.156,
-      unlockCost: 540,
       points: 0,
       cycleTime: 5700,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 570
     },
     {
       name: "Prezentacja – z google slides pod stołem",
@@ -55,11 +56,11 @@
       level: 0,
       baseGain: 113,
       gainGrowth: 1.13,
-      unlockCost: 2100,
       points: 0,
       cycleTime: 8000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 1450
     },
     {
       name: "Zebranie – symulacja słuchania",
@@ -67,11 +68,11 @@
       level: 0,
       baseGain: 330,
       gainGrowth: 1.09,
-      unlockCost: 4800,
       points: 0,
       cycleTime: 12000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 3550
     },
     {
       name: "Standup 'co zrobisz dziś?'",
@@ -79,11 +80,11 @@
       level: 0,
       baseGain: 600,
       gainGrowth: 1.12,
-      unlockCost: 13100,
       points: 0,
       cycleTime: 17000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 8600
     },
     {
       name: "Delegowanie spraw lemingowi",
@@ -91,11 +92,11 @@
       level: 0,
       baseGain: 1600,
       gainGrowth: 1.15,
-      unlockCost: 29000,
       points: 0,
       cycleTime: 23000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 22000
     },
     {
       name: "Lunch break: 7/8 dnia 🥪",
@@ -103,11 +104,11 @@
       level: 0,
       baseGain: 3600,
       gainGrowth: 1.17,
-      unlockCost: 100000,
       points: 0,
       cycleTime: 31000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 64000
     },
     {
       name: "Król Open Space – 'Co tu się dzieje?!'",
@@ -115,19 +116,51 @@
       level: 0,
       baseGain: 9000,
       gainGrowth: 1.19,
-      unlockCost: 790000,
       points: 0,
       cycleTime: 47000,
       progress: 0,
-      active: false
+      active: false,
+      unlockCost: 230000
+    }
+  ];
+
+  // ----------- ACHIEVEMENTS SYSTEM -----------
+  const ACHIEVEMENTS = [
+    { 
+      emoji:'☕', name: "Caffeinated Intern", desc: "Zrób 150 kliknięć w 'Robienie kawy Szefowi'", 
+      check: data => data.tasks[0].points >= 150,
+    },
+    {
+      emoji: '💾', name: "Master Copypasta", desc: "Zgarnij 2 000 biuro-punktów ogółem",
+      check: data => data.totalPoints >= 2000,
+    },
+    {
+      emoji: '💸', name: "Sknerus korporacji", desc: "Wydaj >10 000 punktów na ulepszenia",
+      check: data => data.stats.spentOnUpgrades >= 10000,
+    },
+    {
+      emoji: '🧠', name: "Szef od HR", desc: "Zdobądź co najmniej 2 soft skills przez rzucenie roboty",
+      check: data => data.softSkills >= 2,
+    },
+    {
+      emoji: '🔥', name: "Burnout Hero", desc: "Rzuć robotę co najmniej 3 razy (Burnout)",
+      check: data => data.burnout >= 3,
+    },
+    {
+      emoji: '👑', name: "Król Open Space", desc: "Odblokuj ostatni poziom kariery",
+      check: data => data.tasks[9] && data.tasks.unlocked,
     }
   ];
 
   let tasks = [];
   let totalPoints = 0;
   let softSkills = 0;
-  let burnout = 0; // mini-system: liczba prestige
+  let burnout = 0;
   let timers = [];
+  let achievements = [];
+  let stats = {
+    spentOnUpgrades: 0
+  };
 
   // ----------- ZAPIS/ODCZYT -----------
   function saveGame() {
@@ -135,7 +168,9 @@
       tasks,
       totalPoints,
       softSkills,
-      burnout
+      burnout,
+      achievements,
+      stats
     }));
   }
 
@@ -148,9 +183,13 @@
         if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
         if (typeof s.softSkills === "number") softSkills = s.softSkills;
         if (typeof s.burnout === "number") burnout = s.burnout;
+        if (Array.isArray(s.achievements)) achievements = s.achievements;
+        if (typeof s.stats === "object") stats = s.stats;
       } catch (e) {}
     } else {
       tasks = JSON.parse(JSON.stringify(TASKS));
+      achievements = [];
+      stats = { spentOnUpgrades: 0 };
     }
   }
 
@@ -160,17 +199,17 @@
     location.reload();
   }
 
-  // ----------- START IDLE TASKA -----------
+  // ----------- IDLE TASK -----------
   function startIdle(idx) {
-    if (tasks[idx].active) return; // już działa
+    if (tasks[idx].active) return;
     tasks[idx].active = true;
     tasks[idx].progress = 0;
     let prev = Date.now();
 
     timers[idx] = setInterval(() => {
       const task = tasks[idx];
-      // Szybkość cyklu zależy od poziomu i softSkills
-      const lvlCycle = task.cycleTime * Math.pow(0.91, task.level) * Math.pow(0.90, softSkills);
+      // Szybkość cyklu zależy od levela i softskills
+      const lvlCycle = task.cycleTime * Math.pow(0.89, task.level) * Math.pow(0.90, softSkills);
       const now = Date.now();
       task.progress += (now - prev) / lvlCycle;
       prev = now;
@@ -180,45 +219,52 @@
         const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
         task.points += gain;
         totalPoints += gain;
-        // Odblokuj nowy task jeśli warunek spełniony
-        if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
-          tasks[idx + 1].unlocked = true;
-        }
+        tryUnlockTask(idx + 1); // unlock kolejny, jeśli warunek spełniony
+        checkAchievements();
         saveGame();
-        ui.renderAll(tasks, totalPoints, softSkills, burnout);
+        ui.renderAll(tasks, totalPoints, softSkills, burnout, achievements);
       }
       ui.renderProgress(idx, task.progress);
-    }, 1000 / 30); // ~30fps
+    }, 1000 / 30);
   }
 
-  // ----------- CLICK = natychmiastowe punkty i idle start -----------
+  function tryUnlockTask(idx) {
+    if (
+      idx < tasks.length &&
+      !tasks[idx].unlocked &&
+      totalPoints >= tasks[idx].unlockCost
+    ) {
+      tasks[idx].unlocked = true;
+    }
+  }
+
   function clickTask(idx) {
     const task = tasks[idx];
-    // Klik natychmiastowy
     if (task.unlocked) {
       const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
       task.points += gain;
       totalPoints += gain;
-      // Odblokuj nowy task, jeśli warunek spełniony
-      if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
-        tasks[idx + 1].unlocked = true;
-      }
+      tryUnlockTask(idx + 1); // unlock nowego, jeśli warunek spełniony
+      checkAchievements();
       saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      ui.renderAll(tasks, totalPoints, softSkills, burnout, achievements);
     }
-    // Idle startuje tylko raz na taska
     if (!task.active) startIdle(idx);
   }
 
-  // ----------- ULEPSZENIA -----------
+  // ----------- ULEPSZENIA (z centralnych punktów!) -----------
   function upgradeTask(idx) {
     const task = tasks[idx];
-    const cost = 10 * Math.pow(2, task.level);
-    if (task.points >= cost) {
-      task.points -= cost;
+    const cost = Math.floor(20 * Math.pow(2.25, task.level));
+    // koszt idzie z totalPoints (zgromadzone, globalne)
+    if (totalPoints >= cost) {
       task.level += 1;
+      totalPoints -= cost;
+      stats.spentOnUpgrades = (stats.spentOnUpgrades || 0) + cost;
+      checkAchievements();
       saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      ui.renderAll(tasks, totalPoints, softSkills, burnout, achievements);
+      ui.renderUpgradeAffordances(tasks, totalPoints);
     }
   }
 
@@ -230,8 +276,24 @@
     burnout += 1;
     totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
+    checkAchievements();
     saveGame();
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    ui.renderAll(tasks, totalPoints, softSkills, burnout, achievements);
+  }
+
+  // ----------- ACHIEVEMENTY -----------
+  function checkAchievements() {
+    let unlocked = achievements ? achievements.slice() : [];
+    let data = { tasks, totalPoints, softSkills, burnout, stats };
+    ACHIEVEMENTS.forEach((ach, idx) => {
+      if (!unlocked.includes(idx) && ach.check(data)) {
+        unlocked.push(idx);
+        setTimeout(() => alert(
+          `Osiągnięcie odblokowane!\n\n${ach.emoji} ${ach.name}\n${ach.desc}`), 100
+        );
+      }
+    });
+    achievements = unlocked;
   }
 
   // ----------- INICJALIZACJA -----------
@@ -246,7 +308,9 @@
       onPrestige: prestige,
       onClearSave: clearSave
     });
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    checkAchievements();
+    ui.renderAll(tasks, totalPoints, softSkills, burnout, achievements);
+    ui.renderUpgradeAffordances(tasks, totalPoints);
   }
 
   window.addEventListener("load", init);
