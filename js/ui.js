@@ -53,10 +53,9 @@
         <button id="clearSave" style="margin:22px 0 0 0;float:right;background:#eee;border:none;padding:8px 15px;border-radius:6px;color:#c22;">Wyczyść zapis</button>
       `;
 
-      // Nasłuchiwanie klików dla KAŻDEJ kafelki!
+      // Obsługa KAŻDEGO kliknięcia po renderze!
       Array.from(wrap.querySelectorAll('.kafelek')).forEach(div => {
         const idx = Number(div.dataset.taskIdx);
-        // UNLOCK
         const unlockBtn = div.querySelector('.unlock-btn');
         if (unlockBtn) {
           unlockBtn.onclick = () => {
@@ -67,10 +66,8 @@
             }
           };
         }
-        // PRACUJ
         const pracujBtn = div.querySelector('.pracuj-btn');
         if (pracujBtn) pracujBtn.onclick = () => cfg.onClickTask(idx);
-        // UPGRADE
         const upgBtn = div.querySelector('.upg-btn');
         if (upgBtn) upgBtn.onclick = () => cfg.onUpgradeTask(idx);
       });
