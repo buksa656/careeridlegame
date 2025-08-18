@@ -12,13 +12,16 @@
 
   function taskTile(task, idx) {
     return `
-      <div class="kafelek${task.unlocked ? '' : ' locked'}">
+      <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}">
         <div class="kafelek-info">
           <b>${task.name}</b><br>
           Zarobek: <b>${fmt(task.baseGain * Math.pow(task.gainGrowth, task.level))}</b><br>
-          Level: ${task.level}<br>
+          Poziom: ${task.level}<br>
           Punkty: <b>${fmt(task.points)}</b><br>
           ${!task.unlocked && task.unlockCost ? `Odblokuj za <b>${fmt(task.unlockCost)}</b>` : ''}
+          <div class="kafelek-progbar">
+            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
+          </div>
         </div>
         <div class="kafelek-akcje">
           <button ${!task.unlocked ? "disabled" : ""} data-do="click" data-idx="${idx}">Wykonaj</button>
@@ -45,6 +48,11 @@
     addEvents(tasks.length);
   }
 
+  function renderProgress(idx, progress) {
+    const bar = document.querySelector(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
+    if (bar) bar.style.width = Math.round(progress * 100) + "%";
+  }
+
   function addEvents(tasksLen) {
     [...document.querySelectorAll("[data-do='click']")].forEach(btn =>
       btn.onclick = () => eventHandlers.onClickTask(Number(btn.dataset.idx)));
@@ -58,6 +66,7 @@
 
   window.IdleUI = {
     init(opts) { eventHandlers = opts; },
-    renderAll
+    renderAll,
+    renderProgress
   };
 })();
