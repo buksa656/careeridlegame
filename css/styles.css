@@ -138,3 +138,39 @@ main#app { padding: 32px 6vw; max-width: 900px; margin: 0 auto; }
   color: #999; font-size: .82em;
   position: absolute; bottom: 8px; right: 18px;
 }
+#reward-modal {
+  position: fixed;
+  left: 50%; top: 30%;
+  transform: translate(-50%, 0);
+  z-index: 30;
+  background: #ffd;
+  border: 2px solid #f6a629;
+  border-radius: 18px;
+  padding: 34px 38px;
+  box-shadow: 0 8px 42px #dab25155;
+  text-align: center;
+  font-size: 1.16em;
+  max-width: 380px;
+}
+#reward-modal .emoji { font-size: 2.1em; }
+#reward-modal button {
+  margin-top: 16px;
+  font-size: 1em;
+  background: #f8d326;
+  color: #222;
+  padding: 7px 22px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 9px #ffe18833;
+  cursor: pointer;
+  font-weight: 700;
+}
+.auto-tabs {
+  display:flex; gap:22px; flex-wrap:wrap; margin-top:17px;
+}
+.auto-box {
+  background:#fafbe8;border:1px solid #caca7c;border-radius:8px;padding:14px 24px;
+  min-width:220px;box-shadow:0 2px 8px #ddeda311; margin-bottom:10px;
+}
+.auto-box.active{border-color:#6bc24a; background:#f2ffe3;}
+.auto-header {font-weight:700; font-size:1.11em;margin-bottom:6px;}
