@@ -1,134 +1,120 @@
 (() => {
   'use strict';
 
-  // === Opis progresu kariery (każdy szczebel/poziom to nowy PRESTIGE) ===
-  const CAREER_TRACKS = [
+  // ----------- KONFIGURACJA GRY -----------
+  const TASKS = [
     {
-      name: "Stażysta",
-      tasks: [
-        { name: "Kopiowanie dokumentów", unlockCost: 0, unlocked: true, lvl: 0, points: 0, baseGain: 1, gainGrowth: 1.15 },
-        { name: "Parzenie kawy", unlockCost: 50, unlocked: false, lvl: 0, points: 0, baseGain: 2, gainGrowth: 1.18 },
-        { name: "Skanowanie faktur", unlockCost: 120, unlocked: false, lvl: 0, points: 0, baseGain: 4, gainGrowth: 1.22 },
-        { name: "Przygotowanie prezentacji", unlockCost: 270, unlocked: false, lvl: 0, points: 0, baseGain: 9, gainGrowth: 1.25 },
-        { name: "Zamknięcie refaktury", unlockCost: 500, unlocked: false, lvl: 0, points: 0, baseGain: 18, gainGrowth: 1.28 }
-      ]
+      name: "Kliknięcie myszą",
+      unlocked: true,
+      level: 0,
+      baseGain: 1,
+      gainGrowth: 1.12,
+      points: 0
     },
     {
-      name: "Młodszy Specjalista",
-      tasks: [
-        { name: "Wysyłanie maili", unlockCost: 0, unlocked: true, lvl: 0, points: 0, baseGain: 2, gainGrowth: 1.14 },
-        { name: "Zamykanie ticketów", unlockCost: 74, unlocked: false, lvl: 0, points: 0, baseGain: 4, gainGrowth: 1.18 },
-        { name: "Wypełnianie raportów", unlockCost: 190, unlocked: false, lvl: 0, points: 0, baseGain: 8, gainGrowth: 1.22 },
-        { name: "Wrzuta na Teamsa", unlockCost: 410, unlocked: false, lvl: 0, points: 0, baseGain: 17, gainGrowth: 1.28 },
-        { name: "Obsługa klienta", unlockCost: 690, unlocked: false, lvl: 0, points: 0, baseGain: 30, gainGrowth: 1.32 }
-      ]
+      name: "Wstawienie Excela",
+      unlocked: false,
+      level: 0,
+      baseGain: 10,
+      gainGrowth: 1.14,
+      unlockCost: 100,
+      points: 0
+    },
+    {
+      name: "Zrobienie prezentacji",
+      unlocked: false,
+      level: 0,
+      baseGain: 50,
+      gainGrowth: 1.17,
+      unlockCost: 500,
+      points: 0
     }
-    // Dodaj kolejne szczeble podobnie
+    // Dodaj kolejne taski analogicznie!
   ];
 
-  let careerLevel = 0; // numer szczebla kariery
-  let currentTasks = JSON.parse(JSON.stringify(CAREER_TRACKS[careerLevel].tasks)); // Głęboka kopia!
+  let tasks = [];
+  let totalPoints = 0;
   let softSkills = 0;
 
-  // === UI ===
-  const ui = window.QRI_UI;
-
+  // ----------- ZAPIS/ODCZYT -----------
   function saveGame() {
-    localStorage.setItem("korpo_sim_v2", JSON.stringify({
-      careerLevel,
-      currentTasks,
+    localStorage.setItem("idle_game", JSON.stringify({
+      tasks,
+      totalPoints,
       softSkills
     }));
   }
 
   function loadGame() {
-    const raw = localStorage.getItem("korpo_sim_v2");
-    if (!raw) return;
-    try {
-      const s = JSON.parse(raw);
-      if (typeof s.careerLevel === "number") careerLevel = s.careerLevel;
-      if (Array.isArray(s.currentTasks)) currentTasks = s.currentTasks;
-      if (typeof s.softSkills === "number") softSkills = s.softSkills;
-    } catch (e) {}
+    const save = localStorage.getItem("idle_game");
+    if (save) {
+      try {
+        const s = JSON.parse(save);
+        if (Array.isArray(s.tasks)) tasks = s.tasks;
+        if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
+        if (typeof s.softSkills === "number") softSkills = s.softSkills;
+      } catch (e) {}
+    } else {
+      tasks = JSON.parse(JSON.stringify(TASKS));
+    }
   }
 
   function clearSave() {
-    localStorage.removeItem("korpo_sim_v2");
+    localStorage.removeItem("idle_game");
     location.reload();
   }
 
-  // === Panel prestige (Zmiana firmy) ===
-  function updatePrestigeBox() {
-    ui.updatePrestigeBox(softSkills, prestigeReady(), prestige);
-  }
-
-  // === Główna ekonomia — klikanie jobów ===
+  // ----------- GŁÓWNA EKONOMIA CLICK -----------
   function clickTask(idx) {
-    const task = currentTasks[idx];
+    const task = tasks[idx];
     if (!task.unlocked) return;
-    // Bonusy z softskills
-    let prestigeBoost = 1 + softSkills * 0.10; // networking
-    let coffeeBoost = 1 + softSkills * 0.06;
-    const earned = task.baseGain * Math.pow(task.gainGrowth, task.lvl) * prestigeBoost * coffeeBoost || 1;
-    task.points += earned;
-    // Odblokuj kolejny jeśli warunek spełniony:
-    if (idx + 1 < currentTasks.length && !currentTasks[idx + 1].unlocked) {
-      if (task.points >= currentTasks[idx + 1].unlockCost) {
-        currentTasks[idx + 1].unlocked = true;
-      }
+    const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
+    task.points += gain;
+    totalPoints += gain;
+    // Odblokuj kolejny task jeśli masz wymagane punkty
+    if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
+      tasks[idx + 1].unlocked = true;
     }
     saveGame();
-    ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
-    ui.updateSoftSkills(softSkills, careerLevel + 1, CAREER_TRACKS.length);
-    updatePrestigeBox();
+    ui.renderAll(tasks, totalPoints, softSkills);
   }
 
-  // Ulepszanie taska (przyrost KP na klik)
+  // ----------- ULEPSZENIA -----------
   function upgradeTask(idx) {
-    const task = currentTasks[idx];
-    // Ulepszenia tanieją delikatnie przy soft skills?
-    let upgCost = 10 * Math.pow(2.1, task.lvl) * (1 - softSkills * 0.01); // Każdy soft skill -1% kosztu
-    upgCost = Math.max(upgCost, 5);
-    if (task.points >= upgCost) {
-      task.points -= upgCost;
-      task.lvl += 1;
+    const task = tasks[idx];
+    const cost = 10 * Math.pow(2, task.level);
+    if (task.points >= cost) {
+      task.points -= cost;
+      task.level += 1;
       saveGame();
-      ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
-      ui.updateSoftSkills(softSkills, careerLevel + 1, CAREER_TRACKS.length);
-      updatePrestigeBox();
+      ui.renderAll(tasks, totalPoints, softSkills);
     }
   }
 
-  function prestigeReady() {
-    // Czy wszystkie zadania unlocked?
-    return currentTasks.every(t => t.unlocked);
-  }
-
+  // ----------- UMIEJĘTNOŚĆ PRESTIGE (opcjonalnie) -----------
   function prestige() {
-    if (!prestigeReady()) return;
+    if (totalPoints < 1000) return; // Przykładowy warunek
     softSkills += 1;
-    careerLevel = Math.min(careerLevel + 1, CAREER_TRACKS.length - 1);
-    currentTasks = JSON.parse(JSON.stringify(CAREER_TRACKS[careerLevel].tasks));
+    totalPoints = 0;
+    tasks = JSON.parse(JSON.stringify(TASKS));
     saveGame();
-    ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
-    ui.updateSoftSkills(softSkills, careerLevel + 1, CAREER_TRACKS.length);
-    updatePrestigeBox();
+    ui.renderAll(tasks, totalPoints, softSkills);
   }
 
-  // === INIT ===
+  // ----------- INICJALIZACJA -----------
+  const ui = window.IdleUI;
+
   function init() {
     loadGame();
-    ui.mount({
+    ui.init({
       onClickTask: clickTask,
       onUpgradeTask: upgradeTask,
       onPrestige: prestige,
       onClearSave: clearSave
     });
-    ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
-    ui.updateSoftSkills(softSkills, careerLevel + 1, CAREER_TRACKS.length);
-    updatePrestigeBox();
-    setInterval(saveGame, 9000);
+    ui.renderAll(tasks, totalPoints, softSkills);
+    setInterval(saveGame, 10000);
   }
 
-  window.addEventListener('load', init);
+  window.addEventListener("load", init);
 })();
