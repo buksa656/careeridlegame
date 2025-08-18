@@ -93,3 +93,48 @@ main#app { padding: 32px 6vw; max-width: 900px; margin: 0 auto; }
   .kafelek-akcje { margin-left:0; flex-direction: row; gap: 14px; }
   .brand { font-size: 1.05em;}
 }
+#scorebar {
+  padding: 13px 25px 10px 25px;
+  background: #fff9e4;
+  color: #46412c;
+  font-size: 1.18em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: sticky; top: 0; z-index: 4;
+  border-bottom: 2px solid #f4eac4;
+}
+.ach-list {
+  display: flex; flex-direction: column; gap: 14px; margin-top: 18px; max-width: 600px;
+}
+.ach-item {
+  background: #fffef7;
+  border: 1.5px solid #dac793;
+  border-radius: 9px;
+  padding: 13px 18px;
+  line-height: 1.65;
+  font-size: 1.03em;
+  box-shadow: 0 1px 3px #dcc77a12;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  position: relative;
+}
+.ach-item.completed {
+  background: #f7ffe0;
+  border-color: #b5e07f;
+  color: #526952;
+}
+.ach-item .emoji {
+  font-size: 1.62em;
+  margin-right: 7px;
+}
+.ach-item .ach-name {
+  font-weight: 700; color: #735b0a;
+}
+.ach-item .ach-desc {
+  font-size: .92em; color: #7e876a;
+}
+.ach-item .ach-date {
+  color: #999; font-size: .82em;
+  position: absolute; bottom: 8px; right: 18px;
+}
