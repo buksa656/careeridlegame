@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const el = (q) => document.querySelector(q);
+  let storedOpts = {}; // <- Zmienna na przekazane funkcje/option
 
   function fmt(n) { return Math.round(n); }
 
@@ -36,6 +37,7 @@
 
   window.QRI_UI = {
     mount: function (opts) {
+      storedOpts = opts; // <<<< zapisz referencje funkcji!
       // Obsługa zakładek
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", e => {
@@ -51,7 +53,7 @@
       document.getElementById("panel-firma").style.display = "none";
       document.getElementById("panel-ustawienia").style.display = "none";
       // Reset
-      document.getElementById("reset-btn").onclick = opts.onClearSave;
+      document.getElementById("reset-btn").onclick = storedOpts.onClearSave;
     },
     updateTasks: function(tasks, careerName, canPrestige) {
       const panel = el("#panel-kariera");
@@ -59,7 +61,8 @@
       const list = document.createElement("div");
       list.className = "career-list";
       tasks.forEach((task, idx) => {
-        list.appendChild(makeTaskTile(task, idx, canPrestige, opts.onClickTask, opts.onUpgradeTask));
+        // Używaj storedOpts zamiast opts!
+        list.appendChild(makeTaskTile(task, idx, canPrestige, storedOpts.onClickTask, storedOpts.onUpgradeTask));
       });
       panel.appendChild(list);
     },
