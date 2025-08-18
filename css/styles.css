@@ -174,3 +174,39 @@ main#app { padding: 32px 6vw; max-width: 900px; margin: 0 auto; }
 }
 .auto-box.active{border-color:#6bc24a; background:#f2ffe3;}
 .auto-header {font-weight:700; font-size:1.11em;margin-bottom:6px;}
+
+#scorebar {
+  padding: 13px 25px 10px 25px;
+  background: #fff9e4;
+  color: #46412c;
+  font-size: 1.18em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: sticky; top: 0; z-index: 4;
+  border-bottom: 2px solid #f4eac4;
+}
+.night #scorebar { background: #1c1c17; color: #dadac5; border-bottom: 2px solid #333; }
+.night { background:#161617 !important; color:#d0d1d2!important;}
+.night .panel { background: #232327 !important; color: #d0d1d2!important;}
+.night #topbar, .night .brand, .night nav { background: #232327 !important; color: #f0f0d0!important;}
+.night .kafelek { background: #242430 !important; color: #cec !important; box-shadow: 0 0 14px #2351a111;}
+.night .softskill-info, .night .ach-item, .night .auto-box, .night #reward-modal, .night .career-list {
+  background: #181820 !important; color: #d4e4f5 !important; border-color:#222 !important;
+}
+.leaderboard {
+  max-width: 410px; margin:auto; border-radius: 8px; margin-top: 18px; border:1.5px solid #bbd2e9; background:#f9fafd;
+  box-shadow:0 2px 6px #84aed322;
+}
+.leaderboard th, .leaderboard td { text-align:left; padding:4px 12px; }
+.leaderboard th { color:#3a597c; font-size:1.03em;}
+#panel-statystyki svg { width: 98%; max-width:500px; display:block; margin:auto;}
+.night .leaderboard { background: #282833; border-color: #111; }
+.nick-wrap {margin-bottom:12px;}
+#nick-input { font-size:1.08em; padding:3px 8px;}
+#random-event {
+  position:fixed; z-index:50; left:50%;top:28%; transform:translate(-50%,0); min-width:300px;
+  background:#fffae8; border:2px solid #f4a523; border-radius:13px; box-shadow:0 8px 42px #dab25155;
+  padding:18px 22px;font-size:1.17em;text-align:center;
+}
+.night #random-event { background: #36361a; color: #ff8; border:2px solid #bba52e; }
+
