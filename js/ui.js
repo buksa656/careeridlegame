@@ -1,9 +1,18 @@
 (() => {
   'use strict';
 
-  // Umożliwia przekazanie tablicy nazw i opisów przez mount
   let KARIERY = [];
   let OPISEY = [];
+
+  // Proste SVG z literką – flat design
+  function svgAvatar(letter, color="#1976d2", bg="#e3eaf3") {
+    return `
+      <svg width="48" height="48" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="22" fill="${bg}" stroke="${color}" stroke-width="2"/>
+        <text x="50%" y="54%" text-anchor="middle" fill="${color}" font-size="22" font-family="Segoe UI,Arial,sans-serif" dy=".3em" font-weight="bold">${letter}</text>
+      </svg>
+    `;
+  }
 
   const fmt = (n) => {
     if (!isFinite(n)) return '∞';
@@ -21,42 +30,39 @@
     saveTelemetry: false
   };
 
-  function makePosition(i) {
+  function makeCareerTile(i) {
     const wrap = document.createElement('div');
-    wrap.className = 'reactor';
+    wrap.className = 'kafelek';
+    // SVG z literą stanowiska
+    const firstLetter = (KARIERY[i]?.[0] || "?").toUpperCase();
 
-    const ring = document.createElement('div');
-    ring.className = 'ring';
-    ring.innerHTML = `
-      <svg width="96" height="96">
-        <circle cx="48" cy="48" r="42" stroke="#10202a" stroke-width="8" fill="none" />
-        <circle data-ring="${i}" cx="48" cy="48" r="42" stroke="var(--accent)" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264"/>
-      </svg>
-      <div class="label"><div>${KARIERY[i]}</div><div><span data-rpm="${i}">0</span> zadań/min</div></div>
-    `;
+    const ikona = document.createElement('span');
+    ikona.className = 'kafelek-ikona';
+    ikona.innerHTML = svgAvatar(firstLetter);
+
     const info = document.createElement('div');
-    info.className = 'info';
+    info.className = 'kafelek-info';
     info.innerHTML = `
       <div class="title">${KARIERY[i]}</div>
       <div class="korpo-desc">${OPISEY[i]}</div>
-      <div class="row">
-        <span>Motywacja: <b data-m="${i}">1.00</b></span>
-        <span>Gain: <b data-gain="${i}">0</b></span>
-        <span>Wydajność: <b data-v="${i}">1.00</b></span>
+      <div class="kafelek-progbar"><div class="kafelek-progbar-inner" data-prog="${i}" style="width: 0%"></div></div>
+      <div class="kafelek-row">
+        Poziom: <b data-level="${i}">0</b>
+        &nbsp;&ndash;&nbsp; Motywacja: <b data-m="${i}">1.00</b>
+        &nbsp;&ndash;&nbsp; Wydajność: <b data-v="${i}">1.00</b>
       </div>
-      <div class="row">
-        <span>Koszt szkoły/awansu: <b data-cost="${i}">0</b></span>
-        <span>Poziom: <b data-level="${i}">0</b></span>
+      <div class="kafelek-row">
+        Koszt szkolenia: <b data-cost="${i}">0</b> &bull; Zysk awansu: <b data-gain="${i}">0.0</b>
       </div>
     `;
     const actions = document.createElement('div');
-    actions.className = 'actions';
+    actions.className = 'kafelek-akcje';
     actions.innerHTML = `
-      <button data-buy="${i}">Weź udział w szkoleniu</button>
-      <button data-asc="${i}">Awansuj wyżej</button>
+      <button data-buy="${i}">Szkolenie</button>
+      <button data-asc="${i}">Awans</button>
     `;
 
-    wrap.appendChild(ring);
+    wrap.appendChild(ikona);
     wrap.appendChild(info);
     wrap.appendChild(actions);
     return wrap;
@@ -64,7 +70,6 @@
 
   const QRI_UI = {
     mount(cfg) {
-      // Przypisz tablice nazw i opisów przekazane z main.js
       KARIERY = cfg.KARIERY || [];
       OPISEY = cfg.OPISEY || [];
       this.cfg = cfg;
@@ -82,16 +87,16 @@
       el('#collapseTopbar').addEventListener('click', this.toggleTopbar);
 
       // Kariera (stanowiska)
-      const list = el('#reactorList');
+      const list = el('#careerList');
       list.innerHTML = '';
-      cfg.reactors.forEach((_, i) => list.appendChild(makePosition(i)));
+      cfg.reactors.forEach((_, i) => list.appendChild(makeCareerTile(i)));
       list.addEventListener('click', (e) => {
         const t = e.target;
         if (t.matches('button[data-buy]')) cfg.onBuy(Number(t.dataset.buy));
         if (t.matches('button[data-asc]')) cfg.onAscend(Number(t.dataset.asc));
       });
 
-      // Prestige
+      // Prestige i upgrades jak poprzednio
       el('#doPrestige').addEventListener('click', cfg.onDoPrestige);
       elAll('.q-buy').forEach(b => {
         b.addEventListener('click', () => cfg.onBuyQ(b.dataset.upg));
@@ -126,21 +131,23 @@
 
     updateReactors(stanowiska) {
       stanowiska.forEach((r, i) => {
-        const dash = 264;
-        const off = dash * (1 - Math.max(0, Math.min(1, r.progress)));
-        const c = document.querySelector(`circle[data-ring="${i}"]`);
-        if (c) c.setAttribute('stroke-dashoffset', String(off));
-        const rpm = (r.v / r.T) * 60;
-        const rpmEl = document.querySelector(`[data-rpm="${i}"]`);
-        if (rpmEl) rpmEl.textContent = (rpm).toFixed(2);
+        // Progress bar
+        const percent = Math.max(0, Math.min(1, r.progress)) * 100;
+        const progEl = document.querySelector(`.kafelek-progbar-inner[data-prog="${i}"]`);
+        if (progEl) progEl.style.width = `${percent}%`;
+
         const mEl = document.querySelector(`[data-m="${i}"]`);
         if (mEl) mEl.textContent = r.m.toFixed(3);
+
         const vEl = document.querySelector(`[data-v="${i}"]`);
         if (vEl) vEl.textContent = r.v.toFixed(2);
+
         const gEl = document.querySelector(`[data-gain="${i}"]`);
         if (gEl) gEl.textContent = r.gain.toFixed(3);
+
         const lvlEl = document.querySelector(`[data-level="${i}"]`);
         if (lvlEl) lvlEl.textContent = String(r.level);
+
         const cost = r.costBase * Math.pow(r.growth, r.level);
         const costEl = document.querySelector(`[data-cost="${i}"]`);
         if (costEl) costEl.textContent = fmt(cost);
@@ -155,12 +162,8 @@
       el('[data-upg-lvl="mult"]').textContent = String(qUpg.mult);
     },
 
-    flashBuy(i) {
-      // Animacja lub podświetlenie - do wprowadzenia!
-    },
-    flashAscend(i) {
-      // Animacja – tu można mrugnąć gratulacjami!
-    },
+    flashBuy(i) {},
+    flashAscend(i) {},
 
     exportTelemetry(data) {
       const txt = JSON.stringify(data, null, 2);
@@ -175,9 +178,7 @@
       });
     },
 
-    refreshTelemetry(data) {
-      // Natychmiastowy rerender overlayu (opcjonalnie)
-    },
+    refreshTelemetry(data) {},
 
     toggleTopbar() {
       const bar = document.getElementById('topbar');
