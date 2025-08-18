@@ -10,8 +10,8 @@
       gainGrowth: 1.12,
       points: 0,
       auto: true,
-      cycleTime: 2000, // 2 sekundy cyklu
-      progress: 0,     // 0..1 do animacji
+      cycleTime: 2000, // ms, czas pełnego cyklu progresu
+      progress: 0,
       active: false
     },
     {
@@ -85,9 +85,8 @@
 
     timers[idx] = setInterval(() => {
       const task = tasks[idx];
-      const lvlCycle = task.cycleTime * Math.pow(0.93, task.level); // 7% szybciej na lvl
-      
-      // Aktualizuj progres paska
+      // Szybkość cyklu zależy od poziomu
+      const lvlCycle = task.cycleTime * Math.pow(0.93, task.level); // 7% szybciej per lvl
       const now = Date.now();
       task.progress += (now - prev) / lvlCycle;
       prev = now;
@@ -97,7 +96,7 @@
         const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
         task.points += gain;
         totalPoints += gain;
-        // auto-unlock nowego taska, jeśli możliwe
+        // Odblokuj nowy task jeśli potrzeba
         if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
           tasks[idx + 1].unlocked = true;
         }
@@ -105,12 +104,26 @@
         ui.renderAll(tasks, totalPoints, softSkills);
       }
       ui.renderProgress(idx, task.progress);
-    }, 1000/30); // ~30 fps na pasek
+    }, 1000 / 30); // ~30fps na pasek
   }
 
-  // ----------- GŁÓWNA EKONOMIA CLICK -----------
+  // ----------- CLICK = natychmiastowy zysk i idle-start -----------
   function clickTask(idx) {
-    startIdle(idx); // pierwszy klik uruchamia tryb idle
+    const task = tasks[idx];
+    // Natychmiastowy klik
+    if (task.unlocked) {
+      const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
+      task.points += gain;
+      totalPoints += gain;
+      // Odblokuj nowy task, jeśli warunek spełniony
+      if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
+        tasks[idx + 1].unlocked = true;
+      }
+      saveGame();
+      ui.renderAll(tasks, totalPoints, softSkills);
+    }
+    // Idle startuje tylko raz na taska (potem trwa cały czas)
+    if (!task.active) startIdle(idx);
   }
 
   // ----------- ULEPSZENIA -----------
