@@ -50,36 +50,50 @@
   function clearSave() { localStorage.removeItem("korpo_sim_v4"); location.reload(); }
 
   // --- Klik: dopełnienie paska, boost idleRate ---
-  function clickTask(idx) {
-    const task = currentTasks[idx];
-    if (!task.unlocked) return;
+function clickTask(idx) {
+  const task = currentTasks[idx];
+  if (!task.unlocked) return;
 
-    // Ulga/efekt kliknięcia
-    task.points += task.clickGain;
-    task.numClicks = (task.numClicks || 0) + 1;
-    if (!task.started) {
-      task.baseIdle = 0.2;
-      task.idleRate = task.baseIdle + clickToIdleBonus(task.numClicks);
-      task.started = true;
-      task.lastTick = Date.now();
-    } else {
-      task.idleRate = (task.baseIdle || 0) + clickToIdleBonus(task.numClicks) + (task.lvl * 0.5);
-    }
-    // Efekt: paski idle idą, klik dopełnia bar!
+  // SAFETY: popraw domyślne wartości:
+  if (task.baseIdle == null) task.baseIdle = 0.2;
+  if (task.progress == null) task.progress = 0;
+  if (task.lastTick == null) task.lastTick = Date.now();
+  if (task.clickGain == null) task.clickGain = 1;
+  if (task.numClicks == null) task.numClicks = 0;
+  if (task.lvl == null) task.lvl = 0;
+
+  // Klik dodaje PKT
+  task.points += task.clickGain;
+
+  // Klik nalicza...
+  task.numClicks += 1;
+
+  // Uruchom idle po raz pierwszy (jeżeli nie chodzi):
+  if (!task.started) {
+    task.started = true;
+    task.baseIdle = 0.2;
+    task.idleRate = task.baseIdle + clickToIdleBonus(task.numClicks) + (task.lvl * 0.5);
+    task.progress = 1; // dopełnij bar
+    task.lastTick = Date.now();
+  } else {
+    task.idleRate = (task.baseIdle || 0) + clickToIdleBonus(task.numClicks) + (task.lvl * 0.5);
     task.progress = 1;
-
-    // Auto-odblokowanie
-    if (
-      idx + 1 < currentTasks.length &&
-      !currentTasks[idx + 1].unlocked &&
-      task.points >= currentTasks[idx + 1].unlockCost
-    ) {
-      currentTasks[idx + 1].unlocked = true;
-    }
-
-    saveGame();
-    ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
+    task.lastTick = Date.now();
   }
+
+  // Odblokuj kolejny task jeśli warunek spełniony
+  if (
+    idx + 1 < currentTasks.length &&
+    !currentTasks[idx + 1].unlocked &&
+    task.points >= currentTasks[idx + 1].unlockCost
+  ) {
+    currentTasks[idx + 1].unlocked = true;
+  }
+
+  saveGame();
+  ui.updateTasks(currentTasks, CAREER_TRACKS[careerLevel].name, prestigeReady());
+}
+
 
   function upgradeTask(idx) {
     const task = currentTasks[idx];
