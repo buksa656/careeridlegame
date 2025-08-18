@@ -80,3 +80,23 @@ main#app { padding: 32px 6vw; max-width: 900px; margin: 0 auto; }
   color: #b0b3bb !important;
   cursor: not-allowed;
 }
+nav {
+  display: flex;
+  gap: 8px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1em;
+  font-weight: 600;
+  padding: 3px 12px;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: background 0.1s, color 0.1s;
+}
+.tab-btn.active, .tab-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.panel { display: block; }
