@@ -1,6 +1,5 @@
 (() => {
   'use strict';
-
   // ----------- KONFIGURACJA GRY -----------
   const TASKS = [
     {
@@ -10,7 +9,10 @@
       baseGain: 1,
       gainGrowth: 1.12,
       points: 0,
-      auto: false // Nie generuje automatycznie
+      auto: true,
+      cycleTime: 2000, // 2 sekundy cyklu
+      progress: 0,     // 0..1 do animacji
+      active: false
     },
     {
       name: "Wstawienie Excela",
@@ -20,7 +22,10 @@
       gainGrowth: 1.14,
       unlockCost: 100,
       points: 0,
-      auto: true  // To już generuje automatycznie
+      auto: true,
+      cycleTime: 4000,
+      progress: 0,
+      active: false
     },
     {
       name: "Zrobienie prezentacji",
@@ -30,13 +35,17 @@
       gainGrowth: 1.17,
       unlockCost: 500,
       points: 0,
-      auto: true
+      auto: true,
+      cycleTime: 6000,
+      progress: 0,
+      active: false
     }
   ];
 
   let tasks = [];
   let totalPoints = 0;
   let softSkills = 0;
+  let timers = [];
 
   // ----------- ZAPIS/ODCZYT -----------
   function saveGame() {
@@ -62,22 +71,46 @@
   }
 
   function clearSave() {
+    timers.forEach(t => clearInterval(t));
     localStorage.removeItem("idle_game");
     location.reload();
   }
 
+  // ----------- START IDLE TASKA -----------
+  function startIdle(idx) {
+    if (tasks[idx].active) return; // już działa
+    tasks[idx].active = true;
+    tasks[idx].progress = 0;
+    let prev = Date.now();
+
+    timers[idx] = setInterval(() => {
+      const task = tasks[idx];
+      const lvlCycle = task.cycleTime * Math.pow(0.93, task.level); // 7% szybciej na lvl
+      
+      // Aktualizuj progres paska
+      const now = Date.now();
+      task.progress += (now - prev) / lvlCycle;
+      prev = now;
+
+      if (task.progress >= 1) {
+        task.progress = 0;
+        const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
+        task.points += gain;
+        totalPoints += gain;
+        // auto-unlock nowego taska, jeśli możliwe
+        if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
+          tasks[idx + 1].unlocked = true;
+        }
+        saveGame();
+        ui.renderAll(tasks, totalPoints, softSkills);
+      }
+      ui.renderProgress(idx, task.progress);
+    }, 1000/30); // ~30 fps na pasek
+  }
+
   // ----------- GŁÓWNA EKONOMIA CLICK -----------
   function clickTask(idx) {
-    const task = tasks[idx];
-    if (!task.unlocked) return;
-    const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
-    task.points += gain;
-    totalPoints += gain;
-    if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
-      tasks[idx + 1].unlocked = true;
-    }
-    saveGame();
-    ui.renderAll(tasks, totalPoints, softSkills);
+    startIdle(idx); // pierwszy klik uruchamia tryb idle
   }
 
   // ----------- ULEPSZENIA -----------
@@ -92,25 +125,9 @@
     }
   }
 
-  // ----------- AUTOMATYCZNY DOCHÓD -----------
-  function autoIncome() {
-    let tickGain = 0;
-    tasks.forEach(task => {
-      if (task.auto && task.unlocked && task.level > 0) {
-        const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
-        task.points += gain;
-        tickGain += gain;
-      }
-    });
-    totalPoints += tickGain;
-    if (tickGain > 0) {
-      saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills);
-    }
-  }
-
-  // ----------- UMIEJĘTNOŚĆ PRESTIGE -----------
+  // ----------- PRESTIGE -----------
   function prestige() {
+    timers.forEach(t => clearInterval(t));
     if (totalPoints < 1000) return;
     softSkills += 1;
     totalPoints = 0;
@@ -124,6 +141,7 @@
 
   function init() {
     loadGame();
+    timers = Array(tasks.length).fill(null);
     ui.init({
       onClickTask: clickTask,
       onUpgradeTask: upgradeTask,
@@ -131,8 +149,6 @@
       onClearSave: clearSave
     });
     ui.renderAll(tasks, totalPoints, softSkills);
-    setInterval(saveGame, 10000);
-    setInterval(autoIncome, 1000);    // Dodane automatyczne zarabianie co sekundę
   }
 
   window.addEventListener("load", init);
