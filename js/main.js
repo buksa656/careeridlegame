@@ -9,7 +9,8 @@
       level: 0,
       baseGain: 1,
       gainGrowth: 1.12,
-      points: 0
+      points: 0,
+      auto: false // Nie generuje automatycznie
     },
     {
       name: "Wstawienie Excela",
@@ -18,7 +19,8 @@
       baseGain: 10,
       gainGrowth: 1.14,
       unlockCost: 100,
-      points: 0
+      points: 0,
+      auto: true  // To już generuje automatycznie
     },
     {
       name: "Zrobienie prezentacji",
@@ -27,9 +29,9 @@
       baseGain: 50,
       gainGrowth: 1.17,
       unlockCost: 500,
-      points: 0
+      points: 0,
+      auto: true
     }
-    // Dodaj kolejne taski analogicznie!
   ];
 
   let tasks = [];
@@ -71,7 +73,6 @@
     const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
     task.points += gain;
     totalPoints += gain;
-    // Odblokuj kolejny task jeśli masz wymagane punkty
     if (idx + 1 < tasks.length && !tasks[idx + 1].unlocked && task.points >= tasks[idx + 1].unlockCost) {
       tasks[idx + 1].unlocked = true;
     }
@@ -91,9 +92,26 @@
     }
   }
 
-  // ----------- UMIEJĘTNOŚĆ PRESTIGE (opcjonalnie) -----------
+  // ----------- AUTOMATYCZNY DOCHÓD -----------
+  function autoIncome() {
+    let tickGain = 0;
+    tasks.forEach(task => {
+      if (task.auto && task.unlocked && task.level > 0) {
+        const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
+        task.points += gain;
+        tickGain += gain;
+      }
+    });
+    totalPoints += tickGain;
+    if (tickGain > 0) {
+      saveGame();
+      ui.renderAll(tasks, totalPoints, softSkills);
+    }
+  }
+
+  // ----------- UMIEJĘTNOŚĆ PRESTIGE -----------
   function prestige() {
-    if (totalPoints < 1000) return; // Przykładowy warunek
+    if (totalPoints < 1000) return;
     softSkills += 1;
     totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
@@ -114,6 +132,7 @@
     });
     ui.renderAll(tasks, totalPoints, softSkills);
     setInterval(saveGame, 10000);
+    setInterval(autoIncome, 1000);    // Dodane automatyczne zarabianie co sekundę
   }
 
   window.addEventListener("load", init);
