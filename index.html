@@ -6,16 +6,22 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<div id="scorebar">
+  🏢 Biuro-punkty: <b id="top-total-points"></b>
+  &nbsp;| 🧠 Soft Skills: <b id="top-soft-skills"></b>
+</div>
 <header id="topbar">
   <div class="brand">KorpoSzczur 🐀</div>
   <nav>
     <button class="tab-btn" data-panel="kariera">Kariera</button>
+    <button class="tab-btn" data-panel="achievementy">Osiągnięcia</button>
     <button class="tab-btn" data-panel="firma">Rzuć robotę</button>
     <button class="tab-btn" data-panel="ustawienia">Ustawienia</button>
   </nav>
 </header>
 <main id="app">
   <section id="panel-kariera" class="panel"></section>
+  <section id="panel-achievementy" class="panel" style="display:none;"></section>
   <section id="panel-firma" class="panel" style="display:none;"></section>
   <section id="panel-ustawienia" class="panel" style="display:none;"></section>
 </main>
