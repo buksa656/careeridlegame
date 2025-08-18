@@ -38,7 +38,7 @@
   const QRI_UI = {
     mount(config) {
       cfg = config;
-      this.updateTasks([], '', false); // pusty init na etapie startu
+      this.updateTasks([], '', false);
     },
     updateTasks(tasks, position, prestigeReady) {
       const wrap = el('#careerList');
@@ -53,7 +53,7 @@
         <button id="clearSave" style="margin:22px 0 0 0;float:right;background:#eee;border:none;padding:8px 15px;border-radius:6px;color:#c22;">Wyczyść zapis</button>
       `;
 
-      // Podpinanie eventów PO wyrenderowaniu HTML!
+      // Nasłuchiwanie klików dla KAŻDEJ kafelki!
       Array.from(wrap.querySelectorAll('.kafelek')).forEach(div => {
         const idx = Number(div.dataset.taskIdx);
         // UNLOCK
