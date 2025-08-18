@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const el = (q) => document.querySelector(q);
-  let storedOpts = {}; // <- Zmienna na przekazane funkcje/option
+  let storedOpts = {};
 
   function fmt(n) { return Math.round(n); }
 
@@ -61,7 +61,6 @@
       const list = document.createElement("div");
       list.className = "career-list";
       tasks.forEach((task, idx) => {
-        // Używaj storedOpts zamiast opts!
         list.appendChild(makeTaskTile(task, idx, canPrestige, storedOpts.onClickTask, storedOpts.onUpgradeTask));
       });
       panel.appendChild(list);
