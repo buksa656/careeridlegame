@@ -206,7 +206,7 @@ function upgradeTask(idx) {
     "Od tego jest PowerPoint!",
     "Tak było na daily, nie pamiętasz?",
     "Możesz to wrzucić na SLACKA?",
-    "Deadline wczoraj, prezentacja dziś,
+    "Deadline wczoraj, prezentacja dziś",
     "Daj mi 5 minut na prodzie",
     "Robimy szybki brainstorming",
     "Wyślij mi briefa na maila"
