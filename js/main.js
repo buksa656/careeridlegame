@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // Bazowe wartoÅ›ci za klik
+  // Bazowe wartości za klik
   const BASE_CLICKS = [1, 2, 4, 7, 11, 16, 23, 33, 46, 64, 88, 121, 166, 227, 311, 426];
 const TASKS = [
     { name: "Robienie kawy Szefowi", unlocked: true,  level: 0, baseClick: BASE_CLICKS[0],  baseIdle: 0.02, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 0 },
@@ -12,13 +12,13 @@ const TASKS = [
     { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
     { name: "Fake brainstorming", unlocked: false,   level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
     { name: "Przeklejka z Google Docs", unlocked: false,  level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
-    { name: "Zebranie (udawaj, Å¼e sÅ‚uchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
-    { name: "Standup 'co zrobisz dziÅ›?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
+    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
+    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
     { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
-    { name: "Lunch break ðŸ¥ª", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
-    { name: "WysyÅ‚anie GIF-Ã³w", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
+    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
+    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
     { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
-    { name: "KrÃ³l Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
+    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
   ];
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
   let pointsHistory = []; // do wykresu
@@ -157,7 +157,7 @@ function upgradeTask(idx) {
   function renderMultipliersBar() {
     const bar = document.getElementById('multipliersBar');
     bar.innerHTML =
-      'Akt. mnoÅ¼nik idle: ' +
+      'Akt. mnożnik idle: ' +
       tasks
         .map(t =>
           t.unlocked
@@ -197,19 +197,19 @@ function upgradeTask(idx) {
     setTimeout(() => c.remove(), 1200);
   }
   const OFFICE_QUOTES = [
-    "â€žCzy byÅ‚ tu kiedyÅ› onboarding?â€",
-    "â€žOd tego jest PowerPoint!â€",
-    "â€žTak byÅ‚o na daily, nie pamiÄ™tasz?â€",
-    "â€žMoÅ¼esz to wrzuciÄ‡ na SLACKA?â€",
-    "â€žDeadline wczoraj, prezentacja dziÅ›â€",
-    "â€žDaj mi 5 minut na prodzieâ€",
-    "â€žRobimy szybki brainstormingâ€¦â€",
-    "â€žWyÅ›lij mi briefa na mailaâ€"
+    "Czy był tu kiedyś onboarding?",
+    "Od tego jest PowerPoint!",
+    "Tak było na daily, nie pamiętasz?",
+    "Możesz to wrzucić na SLACKA?",
+    "Deadline wczoraj, prezentacja dziś,
+    "Daj mi 5 minut na prodzie",
+    "Robimy szybki brainstorming",
+    "Wyślij mi briefa na maila"
   ];
   function randomQuote() {
     const el = document.getElementById('quote');
     let idx = Math.floor(Math.random() * OFFICE_QUOTES.length);
-    el.innerHTML = "ðŸ’¬ <span>" + OFFICE_QUOTES[idx] + "</span>";
+    el.innerHTML = "<span>" + OFFICE_QUOTES[idx] + "</span>";
     el.classList.remove("quote-anim");
     void el.offsetWidth;
     el.classList.add("quote-anim");
