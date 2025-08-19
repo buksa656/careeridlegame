@@ -210,3 +210,72 @@ main#app {
   font-family: 'Inter', Arial, sans-serif;
 }
 .multipliers-bar strong { font-variant-numeric: tabular-nums; font-size:1.06em;}
+.fraction {
+  color: #b2b8c1;
+  font-weight: 400;
+  font-size: 0.90em;
+  letter-spacing: 0;
+}
+.clicked-anim { animation: kaf-shake .23s linear; }
+@keyframes kaf-shake {
+  10% { transform: scale(1.05) rotate(-3deg);}
+  50% { transform: scale(1) rotate(3deg);}
+  90% { transform: scale(1.04) rotate(-1deg);}
+}
+.floating-score {
+  position: absolute;
+  left: 37%;
+  font-size: 1.08em;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 11;
+  opacity: 1;
+  transition: all 0.5s cubic-bezier(.4,1.2,.3,1.01);
+  filter: drop-shadow(0 0 2px #fff);
+}
+.points-flash {
+  background: #ffedaf;
+  border-radius: 7px;
+  transition: background 0.2s;
+}
+.confetti {
+  position: fixed;
+  left: 48vw; top: -36px; z-index:99;
+  font-size:2.7em;
+  pointer-events:none; transition: top 1.1s cubic-bezier(.09,.65,.87,.87), opacity .6s;
+}
+.tip-box {
+  position: fixed;
+  background: #fffbe2;
+  color: #8a781b;
+  border: 1.4px solid #ded6b0;
+  padding: 6px 15px;
+  font-size: 0.97em;
+  border-radius: 10px;
+  box-shadow: 0 2px 7px #dbc34a11;
+  pointer-events: none;
+  z-index: 45;
+}
+.lvled { box-shadow: 0 0 8px #e5cd71,0 2px 9px #9efaef33!important; border-color: #f5d70c!important;}
+/* cytat */
+.quote {
+  color:#746bda; background: #faf8fd; font-size: 1.1em;
+  letter-spacing:.8px; text-align:center; margin:0 0 5px 0; padding:8px 5vw 9px 7vw;
+  min-height:30px; border-bottom:1px solid #e8e0fa;
+  transition: background .25s;
+}
+.quote-anim { animation: quote-blink 1.3s; }
+@keyframes quote-blink { 0%{background:#faf8fd} 25%{background:#f3f0ff} 100%{background:#faf8fd} }
+.unlock-progress {
+  margin:9px 0 0 0; background:#fafdff; border-radius:9px; overflow:hidden; font-size:.99em;
+  border:1.3px solid #deebfd; position:relative;
+}
+.unlock-progress-bar {
+  height:13px; background: #7dbbcf;
+  border-radius: 9px 0 0 9px;
+  transition: width .4s cubic-bezier(.25,.9,.77,.91);
+  min-width:2%;
+  max-width:100%;
+}
+.topk-table { margin-top:12px; font-size:.97em;}
+.topk-table td { padding: 2px 10px 2px 0;}
