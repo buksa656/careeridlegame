@@ -279,3 +279,21 @@ main#app {
 }
 .topk-table { margin-top:12px; font-size:.97em;}
 .topk-table td { padding: 2px 10px 2px 0;}
+#reward-modal {
+  position: fixed; left: 50%; top: 30%;
+  transform: translate(-50%, 0);
+  z-index: 30; background: #ffd; border: 2px solid #f6a629;
+  border-radius: 18px; padding: 34px 38px; box-shadow: 0 8px 42px #dab25155;
+  text-align: center; font-size: 1.16em; max-width: 380px;
+}
+#reward-modal .emoji { font-size: 2.2em; }
+#reward-modal button { margin-top: 16px; font-size: 1em; background: #f8d326; color: #222; padding: 7px 22px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+/* Achievements Tab */
+.ach-list { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; max-width: 600px; }
+.ach-item { background: #fffef7; border: 1.5px solid #dac793; border-radius: 9px; padding: 13px 18px; line-height: 1.65; font-size: 1.03em; box-shadow: 0 1px 3px #dcc77a12; display: flex; align-items: flex-start; gap: 13px; position: relative; }
+.ach-item.completed { background: #f7ffe0; border-color: #b5e07f; color: #526952; }
+.ach-item .emoji { font-size: 1.62em; margin-right: 7px; }
+.ach-item .ach-name { font-weight: 700; color: #735b0a; }
+.ach-item .ach-desc { font-size: .92em; color: #7e876a; }
+.ach-item .ach-date { color: #999; font-size: .82em; position: absolute; bottom: 8px; right: 18px; }
+.rew-modal .reward { color: #1976d2; margin-top: 8px; font-weight: bold; }
