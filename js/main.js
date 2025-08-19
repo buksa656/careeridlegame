@@ -1,17 +1,16 @@
 (() => {
   'use strict';
-  // ---------- KONFIG ----------
   const TASKS = [
-    { name: "Robienie kawy Szefowi", unlocked: true, level: 0, baseGain: 1, gainGrowth: 1.14, cycleTime: 1600, progress: 0, active: false, unlockCost: 0 },
-    { name: "Ctrl+C, Ctrl+V", unlocked: false, level: 0, baseGain: 9, gainGrowth: 1.13, cycleTime: 2500, progress: 0, active: false, unlockCost: 48 },
-    { name: "Odpisanie na maila z RE: FW:", unlocked: false, level: 0, baseGain: 20, gainGrowth: 1.17, cycleTime: 4000, progress: 0, active: false, unlockCost: 180 },
-    { name: "Wklejka do Excela", unlocked: false, level: 0, baseGain: 44, gainGrowth: 1.156, cycleTime: 5700, progress: 0, active: false, unlockCost: 570 },
-    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseGain: 113, gainGrowth: 1.13, cycleTime: 8000, progress: 0, active: false, unlockCost: 1450 },
-    { name: "Zebranie – udawanie słuchania", unlocked: false, level: 0, baseGain: 330, gainGrowth: 1.09, cycleTime: 12000, progress: 0, active: false, unlockCost: 3550 },
-    { name: "Standup: co zrobisz dziś?", unlocked: false, level: 0, baseGain: 600, gainGrowth: 1.12, cycleTime: 17000, progress: 0, active: false, unlockCost: 8600 },
-    { name: "Delegowanie spraw lemingowi", unlocked: false, level: 0, baseGain: 1600, gainGrowth: 1.15, cycleTime: 23000, progress: 0, active: false, unlockCost: 22000 },
-    { name: "Lunch break 🥪", unlocked: false, level: 0, baseGain: 3600, gainGrowth: 1.17, cycleTime: 31000, progress: 0, active: false, unlockCost: 64000 },
-    { name: "Król Open Space", unlocked: false, level: 0, baseGain: 9000, gainGrowth: 1.19, cycleTime: 47000, progress: 0, active: false, unlockCost: 230000 }
+    { name: "Robienie kawy Szefowi", unlocked: true, level: 0, baseGain: 1, baseIdle: 0.02, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 0 },
+    { name: "Ctrl+C, Ctrl+V",        unlocked: false, level: 0, baseGain: 1, baseIdle: 0.04, cycleTime: 2500, multiplier: 1, progress: 0, active: false, unlockCost: 48 },
+    { name: "Odpisanie na maila",    unlocked: false, level: 0, baseGain: 1, baseIdle: 0.09, cycleTime: 4000, multiplier: 1, progress: 0, active: false, unlockCost: 180 },
+    { name: "Wklejka do Excela",     unlocked: false, level: 0, baseGain: 1, baseIdle: 0.18, cycleTime: 5700, multiplier: 1, progress: 0, active: false, unlockCost: 570 },
+    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseGain: 1, baseIdle: 0.28, cycleTime: 8000, multiplier: 1, progress: 0, active: false, unlockCost: 1450 },
+    { name: "Zebranie – słuchanie",  unlocked: false, level: 0, baseGain: 1, baseIdle: 0.38, cycleTime: 12000, multiplier: 1, progress: 0, active: false, unlockCost: 3550 },
+    { name: "Standup",               unlocked: false, level: 0, baseGain: 1, baseIdle: 0.67, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 8600 },
+    { name: "Delegowanie lemingowi", unlocked: false, level: 0, baseGain: 1, baseIdle: 1.12, cycleTime: 23000, multiplier: 1, progress: 0, active: false, unlockCost: 22000 },
+    { name: "Lunch break 🥪",        unlocked: false, level: 0, baseGain: 1, baseIdle: 1.8, cycleTime: 31000, multiplier: 1, progress: 0, active: false, unlockCost: 64000 },
+    { name: "Król Open Space",       unlocked: false, level: 0, baseGain: 1, baseIdle: 3.1, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 }
   ];
 
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
@@ -44,6 +43,13 @@
     if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost)
       tasks[idx].unlocked = true;
   }
+  // Prędkość bary na poziom z soft-capem powyżej 15 poziomu
+  function getBarCycleMs(task) {
+    const speedGrowth = 0.94;
+    const lvl = Math.min(task.level, 15);
+    const softcap = task.level > 15 ? Math.pow(0.98, task.level - 15) : 1;
+    return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap;
+  }
   function startIdle(idx) {
     if (tasks[idx].active) return;
     tasks[idx].active = true;
@@ -51,29 +57,33 @@
     let prev = Date.now();
     timers[idx] = setInterval(() => {
       const task = tasks[idx];
-      const lvlCycle = task.cycleTime * Math.pow(0.89, task.level) * Math.pow(0.90, softSkills);
+      const barMs = getBarCycleMs(task);
       const now = Date.now();
-      task.progress += (now - prev) / lvlCycle;
+      task.progress += (now - prev) / barMs;
       prev = now;
       if (task.progress >= 1) {
         task.progress = 0;
-        const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
-        totalPoints += gain;
+        // idle tylko: baseIdle * multiplier
+        const idlePts = task.baseIdle * task.multiplier;
+        totalPoints += idlePts;
+        task.multiplier += 0.001;
         tryUnlockTask(idx + 1);
         saveGame();
         ui.renderAll(tasks, totalPoints, softSkills, burnout);
+        ui.renderProgress(idx, task.progress, task.multiplier);
+        renderMultipliersBar();
       }
-      ui.renderProgress(idx, task.progress);
+      ui.renderProgress(idx, task.progress, task.multiplier);
     }, 1000 / 30);
   }
   function clickTask(idx) {
     const task = tasks[idx];
     if (task.unlocked) {
-      const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
-      totalPoints += gain;
+      totalPoints += 1;
       tryUnlockTask(idx + 1);
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      renderMultipliersBar();
     }
     if (!task.active) startIdle(idx);
   }
@@ -86,6 +96,7 @@
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
       ui.renderUpgradeAffordances(tasks, totalPoints);
+      renderMultipliersBar();
     }
   }
   function prestige() {
@@ -98,7 +109,19 @@
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
+    renderMultipliersBar();
   }
+
+  // Mnożniki pod Biuro-punktami:
+  function renderMultipliersBar() {
+    const bar = document.getElementById('multipliersBar');
+    bar.innerHTML = 'Akt. mnożnik idle: ' + tasks.map((t,i) =>
+      t.unlocked
+        ? `<strong>${t.name}</strong>: x${t.multiplier.toFixed(3)}`
+        : `<span style="color:#bbb">${t.name}: x1.000</span>`
+    ).join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
+  }
+
   const ui = window.IdleUI;
   function init() {
     loadGame();
@@ -111,6 +134,7 @@
     });
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
+    renderMultipliersBar();
   }
   window.addEventListener("load", init);
 })();
