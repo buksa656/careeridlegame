@@ -20,18 +20,15 @@
     const barMs = getBarCycleMs(task);
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number'?task.multiplier:1).toFixed(3);
-    // Tooltip = podpowiedź do zadania (tip)
     const tip = task.tip ? ` data-tooltip="${task.tip}"` : "";
-    // Kolorowanie kafla zależnie od poziomu
     const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
-
     return `
       <div class="kafelek${locked ? ' locked' : ''} ${task.level>=10&&!locked?"lvled":""}" data-taskidx="${idx}" tabindex="0" ${tip} ${style}>
         <div class="kafelek-info">
           <div class="title">${task.name}</div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
           <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
-          <div class="kafelek-row">Za klik: <b>1</b></div>
+          <div class="kafelek-row">Za klik: <b>${task.baseClick||1}</b></div>
           <div class="kafelek-progbar">
             <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
           </div>
@@ -58,7 +55,6 @@
     document.getElementById("panel-ustawienia").style.display = "none";
   }
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
-    // unlocked + jeden lock
     let maxUnlockedIdx = -1;
     for(let i=0; i<tasks.length; ++i) if(tasks[i].unlocked) maxUnlockedIdx = i;
     let visibleTasks = [];
@@ -66,7 +62,7 @@
       if(tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
       else if(i === maxUnlockedIdx+1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
     }
-    // liczenie i styl szary "grosze"
+    // Biuro-punkty — szare "grosze"
     let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
     let [intPart, fracPart] = totalPointsStr.split(',');
     e("#top-total-points").innerHTML =
@@ -83,7 +79,6 @@
       <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
       <div id="grid-progress"></div>
     `;
-    // Pasek postępu do kolejnej pracy
     const next = tasks[maxUnlockedIdx+1];
     if(next && next.unlockCost) {
       const prog = Math.min(Number(totalPoints)/Number(next.unlockCost), 1);
@@ -96,7 +91,6 @@
     enableTooltips();
     updateTopClicks();
   }
-  // MultipliersBar – tylko unlocked!
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
     bar.innerHTML =
@@ -120,7 +114,6 @@
       btn.disabled = (!tasks[idx].unlocked || totalPoints < upgCost);
     });
   }
-  // Tooltipy: pokazywanie na hover
   function enableTooltips() {
     document.querySelectorAll('.kafelek[data-tooltip]').forEach(el => {
       el.onmouseenter = function() {
@@ -140,9 +133,7 @@
       }
     });
   }
-  // Statystyka — wyświetlanie w panelu (na przykładzie, żeby spełnić pkt 6)
   function updateTopClicks() {
-    // main.js podaje topClicks jako global
     if (window.topClicks && window.TASKS) {
       let rows = window.topClicks.map((c, i) =>
         c > 0 ? `<tr><td>${window.TASKS[i].name}</td><td>${c}</td></tr>` : ''
