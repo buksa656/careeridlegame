@@ -90,7 +90,7 @@ const TASKS = [
         task.progress = 0;
         const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
         totalPoints += idlePts;
-        task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + 0.001;
+        task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + 0.01;
         tryUnlockTask(idx + 1);
         saveGame();
         ui.renderAll(tasks, totalPoints, softSkills, burnout);
