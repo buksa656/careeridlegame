@@ -36,29 +36,34 @@
     });
   }
 
-  function taskTile(task, idx, totalPoints) {
-    const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
-    const canUpgrade = totalPoints >= upgCost;
-    const gainClick = Math.round(task.baseGain * Math.pow(task.gainGrowth, task.level));
-    const gainIdle = gainClick; // tu możesz dodać oddzielne bonusy dla idle wg logiki main.js
+function taskTile(task, idx, totalPoints) {
+  // Ile daje kliknięcie (uwzględnij soft skills itd. w razie potrzeby)
+  const gainClick = Math.round(task.baseGain * Math.pow(task.gainGrowth, task.level));
+  // Ile daje automatycznie przez idle (za pełny cykl)
+  const gainIdle = gainClick;
+  // Ile daje na sekundę?
+  const perSec = ((gainIdle * 1000) / task.cycleTime).toFixed(2);
 
-    return `
-      <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
-        <div class="kafelek-info">
-          <div class="title">${task.name}</div>
-          <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-          <div class="kafelek-row">Punkty pracy: <b>${fmt(task.points)}</b></div>
-          <div class="kafelek-row">Za klik: <b>${gainClick}</b></div>
-          <div class="kafelek-row">Za pasek idle: <b>${gainIdle}</b></div>
-          <div class="kafelek-progbar">
-            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
-          </div>
+  const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
+  const canUpgrade = totalPoints >= upgCost;
+
+  return `
+    <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
+      <div class="kafelek-info">
+        <div class="title">${task.name}</div>
+        <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
+        <div class="kafelek-row">Za klik: <b>${gainClick}</b></div>
+        <div class="kafelek-row"><b>${perSec}</b> pkt/s (idle)</div>
+        <div class="kafelek-progbar">
+          <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
         </div>
-        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
-          Ulepsz<br>(${fmt(upgCost)})
-        </button>
-      </div>`;
-  }
+      </div>
+      <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
+        Ulepsz<br>(${fmt(upgCost)})
+      </button>
+    </div>`;
+}
+
 
   function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements = [], automaty = []) {
     e("#panel-kariera").innerHTML = `
