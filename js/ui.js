@@ -30,42 +30,37 @@
     });
     document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
     document.getElementById("panel-kariera").style.display = "";
-    ["firma", "ustawienia", "achievementy", "automaty"].forEach(id => {
-      let el = document.getElementById("panel-" + id.replace("panel-", ""));
-      if (el) el.style.display = "none";
-    });
+    document.getElementById("panel-firma").style.display = "none";
+    document.getElementById("panel-ustawienia").style.display = "none";
   }
 
-function taskTile(task, idx, totalPoints) {
-  // Ile daje kliknięcie (uwzględnij soft skills itd. w razie potrzeby)
-  const gainClick = Math.round(task.baseGain * Math.pow(task.gainGrowth, task.level));
-  // Ile daje automatycznie przez idle (za pełny cykl)
-  const gainIdle = gainClick;
-  // Ile daje na sekundę?
-  const perSec = ((gainIdle * 1000) / task.cycleTime).toFixed(2);
+  function taskTile(task, idx, totalPoints) {
+    const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
+    const canUpgrade = totalPoints >= upgCost;
+    const gainClick = Math.round(task.baseGain * Math.pow(task.gainGrowth, task.level));
+    const gainIdle = gainClick;
+    const perSec = ((gainIdle * 1000) / task.cycleTime).toFixed(2);
 
-  const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
-  const canUpgrade = totalPoints >= upgCost;
-
-  return `
-    <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
-      <div class="kafelek-info">
-        <div class="title">${task.name}</div>
-        <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-        <div class="kafelek-row">Za klik: <b>${gainClick}</b></div>
-        <div class="kafelek-row"><b>${perSec}</b> pkt/s (idle)</div>
-        <div class="kafelek-progbar">
-          <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
+    return `
+      <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
+        <div class="kafelek-info">
+          <div class="title">${task.name}</div>
+          <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
+          <div class="kafelek-row">Za klik: <b>${gainClick}</b></div>
+          <div class="kafelek-row">${perSec} pkt/s (idle)</div>
+          <div class="kafelek-progbar">
+            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
+          </div>
         </div>
-      </div>
-      <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
-        Ulepsz<br>(${fmt(upgCost)})
-      </button>
-    </div>`;
-}
+        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
+          Ulepsz<br>(${fmt(upgCost)})
+        </button>
+      </div>`;
+  }
 
-
-  function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements = [], automaty = []) {
+  function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
+    e("#top-total-points").textContent = fmt(totalPoints);
+    e("#top-soft-skills").textContent = fmt(softSkills);
     e("#panel-kariera").innerHTML = `
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${tasks.map((task, idx) => taskTile(task, idx, totalPoints)).join('')}</div>
@@ -84,22 +79,20 @@ function taskTile(task, idx, totalPoints) {
   }
 
   function renderUpgradeAffordances(tasks, totalPoints) {
-    document.querySelectorAll('.kafelek-akcje [data-do="upg"], .kafelek-ulepsz-btn').forEach((btn, idx) => {
+    document.querySelectorAll('.kafelek-ulepsz-btn').forEach((btn, idx) => {
       const upgCost = Math.floor(20 * Math.pow(2.25, tasks[idx].level));
       btn.disabled = (!tasks[idx].unlocked || totalPoints < upgCost);
     });
   }
 
   function addEvents(tasksLen) {
-    // KAFEL – klik = zarabiaj punkty
     document.querySelectorAll(".kafelek").forEach((el) => {
       el.onclick = (e) => {
-        if (e.target.classList.contains("kafelek-ulepsz-btn")) return; // Jeśli klik na "Ulepsz", nie bij punktu podwójnie
+        if (e.target.classList.contains("kafelek-ulepsz-btn")) return;
         if (el.classList.contains("locked")) return;
         const idx = Number(el.dataset.taskidx);
         eventHandlers.onClickTask(idx);
       };
-      // Enter/Space na kafelku też klik
       el.onkeydown = (e) => {
         if ((e.key === "Enter" || e.key === " ") && !el.classList.contains("locked")) {
           e.preventDefault();
@@ -107,14 +100,12 @@ function taskTile(task, idx, totalPoints) {
         }
       }
     });
-    // ulepszanie ("Ulepsz" = +lvl)
     document.querySelectorAll('[data-do="upg"]').forEach(btn =>
       btn.onclick = (e) => {
         e.stopPropagation();
         eventHandlers.onUpgradeTask(Number(btn.dataset.idx));
       }
     );
-    // pozostałe: prestige, reset, automaty – jak wcześniej
     const pbtn = document.getElementById("prestige-btn");
     if (pbtn) pbtn.onclick = () => eventHandlers.onPrestige();
     const rbtn = document.getElementById("reset-btn");
@@ -129,6 +120,5 @@ function taskTile(task, idx, totalPoints) {
     renderAll,
     renderProgress,
     renderUpgradeAffordances
-    // ...reszta metod wrzucaj modułowo (statystyki, automaty, achievementy itd.)
   };
 })();
