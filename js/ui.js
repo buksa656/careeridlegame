@@ -14,7 +14,9 @@
   }
   const colorByLevel = lvl => lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
   function taskTile(task, idx, totalPoints, locked=false) {
-    const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
+    const upgCost = typeof task.getUpgradeCost === "function"
+    ? task.getUpgradeCost()
+    : Math.floor(20 * Math.pow(2.25, task.level));
     const canUpgrade = totalPoints >= upgCost;
     const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
     const barMs = getBarCycleMs(task);
