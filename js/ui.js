@@ -43,20 +43,28 @@
   function panelNav() {
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", e => {
-        document.querySelectorAll(".panel").forEach(panel => panel.style.display = "none");
+        document.querySelectorAll(".panel").forEach(panel => {
+          if (panel) panel.style.display = "none";
+        });
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
         const target = btn.dataset.panel;
         btn.classList.add("active");
-        document.getElementById("panel-" + target).style.display = "";
+        const panelToShow = document.getElementById("panel-" + target);
+        if (panelToShow) panelToShow.style.display = "";
       });
     });
-    document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
-    document.getElementById("panel-kariera").style.display = "";
-    document.getElementById("panel-achievementy").style.display = "none";
-    document.getElementById("panel-prestige").style.display = "none";
-    document.getElementById("panel-ustawienia").style.display = "none";
+    const karieraBtn = document.querySelector('.tab-btn[data-panel="kariera"]');
+    if (karieraBtn) karieraBtn.classList.add("active");
+    const pKariera = document.getElementById("panel-kariera");
+    if (pKariera) pKariera.style.display = "";
+    const pAch = document.getElementById("panel-achievementy");
+    if (pAch) pAch.style.display = "none";
+    const prest = document.getElementById("panel-prestige");
+    if (prest) prest.style.display = "none";
+    const ustawienia = document.getElementById("panel-ustawienia");
+    if (ustawienia) ustawienia.style.display = "none";
   }
-function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[], prestigeCount=0) {
+  function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[], prestigeCount=0) {
     let maxUnlockedIdx = -1;
     for(let i=0; i<tasks.length; ++i) if(tasks[i].unlocked) maxUnlockedIdx = i;
     let visibleTasks = [];
@@ -64,19 +72,22 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
       if(tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
       else if(i === maxUnlockedIdx+1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
     }
-    // Biuro-punkty — szare "grosze"
     let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
     let [intPart, fracPart] = totalPointsStr.split(',');
-    e("#top-total-points").innerHTML = `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
-    e("#top-soft-skills").textContent = fmt(softSkills);
+    const elemPoints = e("#top-total-points");
+    if (elemPoints) elemPoints.innerHTML = `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
+    const elemSoft = e("#top-soft-skills");
+    if (elemSoft) elemSoft.textContent = fmt(softSkills);
     renderMultipliersBar(tasks);
-    e("#career-progress").textContent = prestigeCount;
-    e("#panel-kariera").innerHTML = `
+    const elemProg = e("#career-progress");
+    if (elemProg) elemProg.textContent = prestigeCount;
+    const elemKariera = e("#panel-kariera");
+    if (elemKariera) elemKariera.innerHTML = `
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${visibleTasks.join('')}</div>
       <div class="softskill-info">
         <span>🧠 Soft Skills: <b>${softSkills}</b></span>
-        ${burnout ? ` | 😵‍💫 Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
+        ${burnout ? `&#32;| 😵‍💫 Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
       </div>
       <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
       <div id="grid-progress"></div>
@@ -84,7 +95,8 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
     const next = tasks[maxUnlockedIdx+1];
     if(next && next.unlockCost) {
       const prog = Math.min(Number(totalPoints)/Number(next.unlockCost), 1);
-      e("#grid-progress").innerHTML = `<div class="unlock-progress">
+      const gridProgress = e("#grid-progress");
+      if (gridProgress) gridProgress.innerHTML = `<div class="unlock-progress">
         <div class="unlock-progress-bar" style="width:${(prog*100).toFixed(1)}%"></div>
         <span>${Math.min((prog*100),100).toFixed(0)}% do odblokowania nowej pracy</span>
       </div>`;
@@ -94,6 +106,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
   }
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
+    if (!bar) return;
     bar.innerHTML =
       'Akt. mnożnik idle: ' +
       tasks
@@ -107,6 +120,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
   }
   function showRewardModal(a,idx) {
     const modal = document.getElementById('reward-modal');
+    if (!modal) return;
     modal.innerHTML = `
       <div class="modal-header">${a.emoji} <b>${a.name}</b></div>
       <div class="modal-desc">${a.desc}</div>
@@ -126,6 +140,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
   }
   function renderAchievementyPanel(achievements) {
     const panel = e('#panel-achievementy');
+    if (!panel) return;
     panel.innerHTML = `<h2>Osiągnięcia</h2>` +
       ACHIEVEMENTS.map((a, idx) => `
         <div class="ach-item${achievements.includes(idx) ? ' completed' : ''}">
@@ -139,7 +154,9 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
       `).join('');
   }
   function renderPrestigePanel(pc,ss) {
-    e("#panel-prestige").innerHTML = `
+    const panelPres = e("#panel-prestige");
+    if (!panelPres) return;
+    panelPres.innerHTML = `
       <h2>Nowy etap kariery</h2>
       <b>Dotychczasowe przebranżowienia:</b> ${pc}<br>
       <b>Twoje soft skills:</b> ${ss}<br>
@@ -149,7 +166,8 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[],
       Zaawansowani Korposzczury mogą zdobyć <b>specjalne osiągnięcia!</b>
       </div>
     `;
-    document.getElementById("prestige-btn-2").onclick = () => eventHandlers.onPrestige();
+    const btn = document.getElementById("prestige-btn-2");
+    if (btn) btn.onclick = () => eventHandlers.onPrestige();
   }
   function renderProgress(idx, progress) {
     const bar = document.querySelector(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
