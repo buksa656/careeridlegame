@@ -74,8 +74,8 @@
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${visibleTasks.join('')}</div>
       <div class="softskill-info">
-        <span>ðŸ§  Soft Skills: <b>${softSkills}</b></span>
-        ${burnout ? ` | ðŸ˜µâ€ðŸ’« Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
+        <span>Soft Skills: <b>${softSkills}</b></span>
+        ${burnout ? ` |  Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
       </div>
       <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
       <div id="grid-progress"></div>
