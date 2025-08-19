@@ -5,18 +5,35 @@
   function fmt(n) {
     return typeof n === "number" && n >= 1000 ? n.toLocaleString("pl") : Math.round(n);
   }
-  const JOKES = [
-    "Sztuka kopiowania – podstawa sukcesu 🖨️",
-    "Kawa nie robi się sama... ale spróbuj!",
-    "Excelem cie nie posadzą, ale odkliknieć musisz",
-    "Czy ten raport jest w ogóle potrzebny?",
-    "Restart kompa zawsze działa – polecane!",
-    "Klient czeka... na odpowiedź bota.",
-    "Ogarnianie Teamów – skill XXI w.",
-    "Awans przez przypadek 😅",
-    "Automat wygrał z tobą – czas na urlop?",
-    "Nigdy nie podpisuj się imieniem, podpisz się Zespołem!"
-  ];
+  function getBarCycleMs(task) {
+    const speedGrowth = 0.94;
+    const lvl = Math.min(task.level, 15);
+    const softcap = task.level > 15 ? Math.pow(0.98, task.level - 15) : 1;
+    return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap;
+  }
+  function taskTile(task, idx, totalPoints) {
+    const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
+    const canUpgrade = totalPoints >= upgCost;
+    const gainIdle = task.baseIdle * task.multiplier;
+    const barMs = getBarCycleMs(task);
+    const perSec = (gainIdle * 1000 / barMs).toFixed(3);
+
+    return `
+      <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
+        <div class="kafelek-info">
+          <div class="title">${task.name}</div>
+          <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
+          <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${task.multiplier.toFixed(3)})</span></div>
+          <div class="kafelek-row">Za klik: <b>1</b></div>
+          <div class="kafelek-progbar">
+            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
+          </div>
+        </div>
+        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
+          Ulepsz<br>(${fmt(upgCost)})
+        </button>
+      </div>`;
+  }
 
   function panelNav() {
     document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -34,33 +51,10 @@
     document.getElementById("panel-ustawienia").style.display = "none";
   }
 
-  function taskTile(task, idx, totalPoints) {
-    const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
-    const canUpgrade = totalPoints >= upgCost;
-    const gainClick = Math.round(task.baseGain * Math.pow(task.gainGrowth, task.level));
-    const gainIdle = gainClick;
-    const perSec = ((gainIdle * 1000) / task.cycleTime).toFixed(2);
-
-    return `
-      <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
-        <div class="kafelek-info">
-          <div class="title">${task.name}</div>
-          <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-          <div class="kafelek-row">Za klik: <b>${gainClick}</b></div>
-          <div class="kafelek-row">${perSec} pkt/s (idle)</div>
-          <div class="kafelek-progbar">
-            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
-          </div>
-        </div>
-        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
-          Ulepsz<br>(${fmt(upgCost)})
-        </button>
-      </div>`;
-  }
-
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     e("#top-total-points").textContent = fmt(totalPoints);
     e("#top-soft-skills").textContent = fmt(softSkills);
+    // multipliersBar obsługiwany przez main.js!
     e("#panel-kariera").innerHTML = `
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${tasks.map((task, idx) => taskTile(task, idx, totalPoints)).join('')}</div>
@@ -68,7 +62,7 @@
         <span>🧠 Soft Skills: <b>${softSkills}</b></span>
         ${burnout ? ` | 😵‍💫 Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
       </div>
-      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na KAFELKI żeby pracować! Użyj przycisku Ulepsz aby rozwinąć zadanie.</div>
+      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
     `;
     addEvents(tasks.length);
   }
