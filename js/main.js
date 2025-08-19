@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 
-// Bazowe wartości za klik
+// Bazowe wartości za klik:
 const BASE_CLICKS = [1, 2, 4, 7, 11, 16, 23, 33, 46, 64, 88, 121, 166, 227, 311, 426];
 
 const TASKS = [
@@ -10,31 +10,34 @@ const TASKS = [
 { name: "Przerzucanie maili do folderu", unlocked: false, level: 0, baseClick: BASE_CLICKS[2], baseIdle: 0.06, cycleTime: 2600, multiplier: 1, progress: 0, active: false, unlockCost: 120 },
 { name: "Small talk w kuchni", unlocked: false, level: 0, baseClick: BASE_CLICKS[3], baseIdle: 0.09, cycleTime: 2700, multiplier: 1, progress: 0, active: false, unlockCost: 260 },
 { name: "Zlecenie ticketu w JIRZE", unlocked: false, level: 0, baseClick: BASE_CLICKS[4], baseIdle: 0.13, cycleTime: 3150, multiplier: 1, progress: 0, active: false, unlockCost: 850 },
-{ name: "Wklejka do Excela", unlocked: false, level: 0, baseClick: BASE_CLICKS[5], baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
-{ name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS[6], baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
-{ name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS[7], baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
-{ name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS[8], baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
-{ name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS[9], baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
-{ name: "Standup 'co zrobisz dziś?'", unlocked: false, level: 0, baseClick: BASE_CLICKS[10], baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
-{ name: "Delegowanie lemingowi", unlocked: false, level: 0, baseClick: BASE_CLICKS[11], baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
-{ name: "Lunch break 🥪", unlocked: false, level: 0, baseClick: BASE_CLICKS[12], baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
-{ name: "Wysyłanie GIF-ów", unlocked: false, level: 0, baseClick: BASE_CLICKS[13], baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
-{ name: "Przeklikanie LinkedIna", unlocked: false, level: 0, baseClick: BASE_CLICKS[14], baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
-{ name: "Król Open Space", unlocked: false, level: 0, baseClick: BASE_CLICKS[15], baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
+{ name: "Wklejka do Excela", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
+{ name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
+{ name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
+{ name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
+{ name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
+{ name: "Standup 'co zrobisz dziś?'", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
+{ name: "Delegowanie lemingowi", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
+{ name: "Lunch break 🥪", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
+{ name: "Wysyłanie GIF-ów", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
+{ name: "Przeklikanie LinkedIna", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
+{ name: "Król Open Space", unlocked: false, level: 0, baseClick: BASE_CLICKS, baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
 ];
 
 // ACHIEVEMENTS
 const ACHIEVEMENTS = [
   { id: 1, name: "Pierwszy dzień w korpo", desc: "Zdobądź 10 punktów.", emoji: "🎉", condition: () => totalPoints >= 10, reward: () => { tasks[0].multiplier += 0.1; } },
   { id: 2, name: "Automatyzator", desc: "Odblokuj automatyzację pierwszego zadania.", emoji: "🤖", condition: () => tasks[1] && tasks[1].unlocked, reward: () => { totalPoints += 50; } },
-  { id: 3, name: "Awansik", desc: "Pierwszy awans (ulepsz 1. pracę).", emoji: "⬆️", condition: () => tasks[0].level >= 1, reward: () => { tasks.multiplier += 0.25; } },
+  { id: 3, name: "Awansik", desc: "Pierwszy awans (ulepsz 1. pracę).", emoji: "⬆️", condition: () => tasks.level >= 1, reward: () => { tasks.multiplier += 0.25; } },
   { id: 5, name: "Pracoholik", desc: "Zdobądź 10000 punktów!", emoji: "😵‍💫", condition: () => totalPoints >= 10000, reward: () => { burnout += 1; } }
-  // Dodaj śmiało kolejne!
 ];
 let unlockedAchievements = [];
 
-// Save/load/burnout/prestige
-let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
+// Stan gry
+let tasks = [],
+    totalPoints = 0,
+    softSkills = 0,
+    burnout = 0,
+    timers = [];
 let pointsHistory = [];
 let topClicks = Array(TASKS.length).fill(0);
 
@@ -60,17 +63,17 @@ function loadGame() {
         if (typeof t.baseClick !== 'number') t.baseClick = BASE_CLICKS[i];
       });
     } catch (e) {
-      tasks = JSON.parse(JSON.stringify(TASKS));
-      unlockedAchievements = [];
-      pointsHistory = [];
-      topClicks = Array(TASKS.length).fill(0);
+      resetState();
     }
   } else {
-    tasks = JSON.parse(JSON.stringify(TASKS));
-    unlockedAchievements = [];
-    pointsHistory = [];
-    topClicks = Array(TASKS.length).fill(0);
+    resetState();
   }
+}
+function resetState() {
+  tasks = JSON.parse(JSON.stringify(TASKS));
+  unlockedAchievements = [];
+  pointsHistory = [];
+  topClicks = Array(TASKS.length).fill(0);
 }
 
 function clearSave() {
@@ -126,7 +129,6 @@ function clickTask(idx) {
     totalPoints += task.baseClick || 1;
     topClicks[idx] += 1;
     tryUnlockTask(idx + 1);
-
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     renderMultipliersBar();
@@ -141,19 +143,14 @@ function clickTask(idx) {
 function upgradeTask(idx) {
   const task = tasks[idx];
   let cost = Math.floor(20 * Math.pow(2.25, task.level));
-  // Ulepszanie przez kolejny mnożnik:
   if (idx > 0 && tasks[idx].multiplier > 1) {
-    // Zmniejsz koszt ulepszenia poprzedniej pracy i zwiększ mnożnik
-    // const prevUpgrade = Math.floor(tasks[idx-1].level + 1);
     tasks[idx-1].upgradeDiscount = (tasks[idx].multiplier || 1);
     tasks[idx-1].multiplier *= tasks[idx].multiplier;
   }
   const effectiveCost = cost - (task.upgradeDiscount || 0);
-
   if (totalPoints >= effectiveCost) {
     task.level += 1;
     totalPoints -= effectiveCost;
-    // Zerujemy zniżkę po upgrade żeby nie nawarstwiała się:
     task.upgradeDiscount = 0;
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
@@ -192,6 +189,7 @@ function checkAchievements() {
 
 function renderMultipliersBar() {
   const bar = document.getElementById('multipliersBar');
+  if (!bar) return;
   bar.innerHTML =
     'Akt. mnożnik idle: ' +
     tasks
@@ -223,8 +221,10 @@ function floatingScore(points, idx, color) {
 
 function flashPoints() {
   const score = document.getElementById('top-total-points');
-  score.classList.add("points-flash");
-  setTimeout(() => score.classList.remove("points-flash"), 400);
+  if (score) {
+    score.classList.add("points-flash");
+    setTimeout(() => score.classList.remove("points-flash"), 400);
+  }
 }
 
 function confetti() {
@@ -244,6 +244,7 @@ function showAchievementModal(ach) {
   <div class="reward">Nagroda przyznana!</div>`);
 }
 
+// Cytaty biurowe
 const OFFICE_QUOTES = [
   "„Czy był tu kiedyś onboarding?”",
   "„Od tego jest PowerPoint!”",
@@ -257,8 +258,9 @@ const OFFICE_QUOTES = [
 
 function randomQuote() {
   const el = document.getElementById('quote');
+  if (!el) return;
   let idx = Math.floor(Math.random() * OFFICE_QUOTES.length);
-  el.innerHTML = "💬 " + OFFICE_QUOTES[idx] + "";
+  el.innerHTML = "💬 " + OFFICE_QUOTES[idx];
   el.classList.remove("quote-anim");
   void el.offsetWidth;
   el.classList.add("quote-anim");
@@ -293,7 +295,7 @@ function topClickersTable() {
   return `<table class="topk-table"><tr><th>Praca</th><th>Klików</th></tr>${rows}</table>`;
 }
 
-// Eksportowanie globalne
+// Eksport globalny
 window.korposzczur = {
   tasks, totalPoints, softSkills, burnout, pointsHistory, topClicks,
   saveGame, loadGame, clearSave, clickTask, upgradeTask, startIdle, prestige,
