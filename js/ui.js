@@ -14,16 +14,17 @@
   function taskTile(task, idx, totalPoints) {
     const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
     const canUpgrade = totalPoints >= upgCost;
-    const gainIdle = task.baseIdle * task.multiplier;
+    const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
     const barMs = getBarCycleMs(task);
-    const perSec = (gainIdle * 1000 / barMs).toFixed(3);
+    const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
+    const multiplierLabel = (typeof task.multiplier === 'number'?task.multiplier:1).toFixed(3);
 
     return `
       <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
         <div class="kafelek-info">
           <div class="title">${task.name}</div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-          <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${task.multiplier.toFixed(3)})</span></div>
+          <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
           <div class="kafelek-row">Za klik: <b>1</b></div>
           <div class="kafelek-progbar">
             <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
@@ -54,7 +55,6 @@
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     e("#top-total-points").textContent = fmt(totalPoints);
     e("#top-soft-skills").textContent = fmt(softSkills);
-    // multipliersBar obsługiwany przez main.js!
     e("#panel-kariera").innerHTML = `
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${tasks.map((task, idx) => taskTile(task, idx, totalPoints)).join('')}</div>
