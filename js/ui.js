@@ -87,7 +87,6 @@ function renderAchievementsTab() {
 }
 
 // ------ Obsługa zakładek ------
-
 function openPanel(panel) {
   document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
   const active = document.getElementById('panel-' + panel);
