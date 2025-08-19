@@ -14,7 +14,9 @@
   }
   const colorByLevel = lvl => lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
   function taskTile(task, idx, totalPoints, locked=false) {
-    const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
+    let baseCost = Math.floor(20 * Math.pow(2.25, task.level));
+    let discount = task.upgradeDiscount || 1;
+    let upgCost = Math.floor(baseCost / discount);
     const canUpgrade = totalPoints >= upgCost;
     const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
     const barMs = getBarCycleMs(task);
@@ -28,10 +30,10 @@
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
           <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
           <div class="kafelek-row">Za klik: <b>${task.baseClick||1}</b></div>
-          <div class="kafelek-progbar">
-            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
-          </div>
-          ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b> biuro-pkt</div>` : ''}
+          <div class="kafelek-progbar"><div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div></div>
+          ${(locked && typeof task.unlockCost === 'number')
+              ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b> biuro-pkt</div>` : ''}
+          ${!locked && discount>1 ? `<div class="kafelek-row" style="color:#185;">🔥 Koszt ulepszenia obniżony: x${discount.toFixed(2)}<br>Idle szybciej rośnie!</div>` : ''}
         </div>
         <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${locked || !canUpgrade ? "disabled" : ""}>
           Ulepsz<br>(${fmt(upgCost)})
@@ -50,10 +52,11 @@
     });
     document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
     document.getElementById("panel-kariera").style.display = "";
-    document.getElementById("panel-firma").style.display = "none";
+    document.getElementById("panel-achievementy").style.display = "none";
+    document.getElementById("panel-prestige").style.display = "none";
     document.getElementById("panel-ustawienia").style.display = "none";
   }
-  function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
+function renderAll(tasks, totalPoints, softSkills, burnout = 0, achievements=[], prestigeCount=0) {
     let maxUnlockedIdx = -1;
     for(let i=0; i<tasks.length; ++i) if(tasks[i].unlocked) maxUnlockedIdx = i;
     let visibleTasks = [];
@@ -64,10 +67,10 @@
     // Biuro-punkty — szare "grosze"
     let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
     let [intPart, fracPart] = totalPointsStr.split(',');
-    e("#top-total-points").innerHTML =
-      `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
+    e("#top-total-points").innerHTML = `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
     e("#top-soft-skills").textContent = fmt(softSkills);
     renderMultipliersBar(tasks);
+    e("#career-progress").textContent = prestigeCount;
     e("#panel-kariera").innerHTML = `
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${visibleTasks.join('')}</div>
@@ -101,6 +104,52 @@
         )
         .filter(Boolean)
         .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
+  }
+  function showRewardModal(a,idx) {
+    const modal = document.getElementById('reward-modal');
+    modal.innerHTML = `
+      <div class="modal-header">${a.emoji} <b>${a.name}</b></div>
+      <div class="modal-desc">${a.desc}</div>
+      <div class="modal-reward">Nagroda: ${formatReward(a.reward)}</div>
+      <button onclick="document.getElementById('reward-modal').style.display='none'">Zamknij</button>
+    `;
+    modal.style.display='';
+    modal.style.zIndex = 99;
+    setTimeout(()=>modal.style.display='', 80);
+  }
+  function formatReward(rw) {
+    if(!rw) return "—";
+    if(rw.type==="points") return `+${rw.value} biuro-pkt`;
+    if(rw.type==="multiplier") return `+${(rw.value*100-100).toFixed(1)}% do idle`;
+    if(rw.type==="badge") return `Odznaka: ${rw.value}`;
+    return "?";
+  }
+  function renderAchievementyPanel(achievements) {
+    const panel = e('#panel-achievementy');
+    panel.innerHTML = `<h2>Osiągnięcia</h2>` +
+      ACHIEVEMENTS.map((a, idx) => `
+        <div class="ach-item${achievements.includes(idx) ? ' completed' : ''}">
+          <span class="emoji">${a.emoji}</span>
+          <div>
+            <div class="ach-name">${a.name}</div>
+            <div class="ach-desc">${a.desc}</div>
+            ${achievements.includes(idx) ? `<div class="ach-date">Odebrane!</div>` : ``}
+          </div>
+        </div>
+      `).join('');
+  }
+  function renderPrestigePanel(pc,ss) {
+    e("#panel-prestige").innerHTML = `
+      <h2>Nowy etap kariery</h2>
+      <b>Dotychczasowe przebranżowienia:</b> ${pc}<br>
+      <b>Twoje soft skills:</b> ${ss}<br>
+      <button id="prestige-btn-2">Rozpocznij od nowa!</button>
+      <div class="prestige-info">
+      Każdy nowy etap życia zawodowego daje dodatkowy Soft Skill 🌟!<br>
+      Zaawansowani Korposzczury mogą zdobyć <b>specjalne osiągnięcia!</b>
+      </div>
+    `;
+    document.getElementById("prestige-btn-2").onclick = () => eventHandlers.onPrestige();
   }
   function renderProgress(idx, progress) {
     const bar = document.querySelector(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
