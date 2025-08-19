@@ -61,7 +61,7 @@
       if(tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
       else if(i === maxUnlockedIdx+1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
     }
-    // Biuro-punkty — szare "grosze"
+    // Biuro-punkty â€” szare "grosze"
     let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
     let [intPart, fracPart] = totalPointsStr.split(',');
     e("#top-total-points").innerHTML =
@@ -72,10 +72,10 @@
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${visibleTasks.join('')}</div>
       <div class="softskill-info">
-        <span>🧠 Soft Skills: <b>${softSkills}</b></span>
-        ${burnout ? ` | 😵‍💫 Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
+        <span>ðŸ§  Soft Skills: <b>${softSkills}</b></span>
+        ${burnout ? ` | ðŸ˜µâ€ðŸ’« Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
       </div>
-      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
+      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki Å¼eby pracowaÄ‡! Pasek idle siÄ™ wyÅ›wietla, a mnoÅ¼niki znajdziesz pod Biuro-punktami.</div>
       <div id="grid-progress"></div>
     `;
     const next = tasks[maxUnlockedIdx+1];
@@ -92,7 +92,7 @@
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
     bar.innerHTML =
-      'Akt. mnożnik idle: ' +
+      'Akt. mnoÅ¼nik idle: ' +
       tasks
         .map(t =>
           t.unlocked
