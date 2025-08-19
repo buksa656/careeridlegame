@@ -111,18 +111,36 @@ const TASKS = [
     }
     if (!task.active) startIdle(idx);
   }
-  function upgradeTask(idx) {
+function upgradeTask(idx) {
     const task = tasks[idx];
     const cost = Math.floor(20 * Math.pow(2.25, task.level));
     if (totalPoints >= cost) {
-      task.level += 1;
-      totalPoints -= cost;
-      saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
-      ui.renderUpgradeAffordances(tasks, totalPoints);
-      renderMultipliersBar();
+        task.level += 1;
+        totalPoints -= cost;
+
+        // 1. Jeśli istnieje poprzednie zadanie, zmniejsz koszt jego ulepszenia o mnożnik z obecnego taska
+        if (idx > 0) {
+            const prevTask = tasks[idx - 1];
+            // Odjęcie mnożnika od kosztu ulepszenia poprzedniego zadania (nie mniej niż 1)
+            prevTask.upgradeDiscount = (prevTask.upgradeDiscount || 0) + (typeof task.multiplier === "number" ? task.multiplier : 1);
+
+            // Przelicz koszt ulepszenia, uwzględniając discount
+            prevTask.getUpgradeCost = function() {
+                const baseCost = Math.floor(20 * Math.pow(2.25, this.level));
+                const discount = this.upgradeDiscount || 0;
+                return Math.max(1, Math.floor(baseCost - discount));
+            };
+
+            // 2. Mnożenie mnożnika poprzedniej pracy przez obecny mnożnik
+            prevTask.multiplier = (typeof prevTask.multiplier === "number" ? prevTask.multiplier : 1) * (typeof task.multiplier === "number" ? task.multiplier : 1);
+        }
+
+        saveGame();
+        ui.renderAll(tasks, totalPoints, softSkills, burnout);
+        ui.renderUpgradeAffordances(tasks, totalPoints);
+        renderMultipliersBar();
     }
-  }
+}
   function prestige() {
     timers.forEach(t => clearInterval(t));
     if (totalPoints < 10000) return;
