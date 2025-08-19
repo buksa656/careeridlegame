@@ -1,6 +1,5 @@
 (() => {
 'use strict';
-
 // Pomocnicze funkcje
 function e(q) { return document.querySelector(q); }
 function fmt(n) {
@@ -13,7 +12,6 @@ function getBarCycleMs(task) {
   return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap;
 }
 const colorByLevel = lvl => lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
-
 // Kafelek zadania
 function taskTile(task, idx, totalPoints, locked = false) {
   const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
@@ -34,7 +32,6 @@ function taskTile(task, idx, totalPoints, locked = false) {
     <button class="kafelek-ulepsz-btn" data-upgrade="${idx}" ${totalPoints < upgCost ? 'disabled' : ''}>Ulepsz (${fmt(upgCost)})</button>
   </div>`;
 }
-
 // Renderowanie panelu kariery
 function renderAll(tasks, totalPoints, softSkills, burnout) {
   const list = e('#panel-kariera .career-list');
@@ -45,13 +42,11 @@ function renderAll(tasks, totalPoints, softSkills, burnout) {
   if (e('#soft-skills')) e('#soft-skills').innerText = softSkills;
   if (e('#burnout')) e('#burnout').innerText = burnout;
 }
-
 // Pasek progresu kafelka
 function renderProgress(idx, progress, multiplier) {
   const bars = document.querySelectorAll('.kafelek-progbar-inner');
   if (bars[idx]) bars[idx].style.width = `${progress * 100}%`;
 }
-
 // Aktywacja/dezaktywacja przycisków ulepszania
 function renderUpgradeAffordances(tasks, totalPoints) {
   const btns = document.querySelectorAll('.kafelek-ulepsz-btn');
@@ -60,7 +55,6 @@ function renderUpgradeAffordances(tasks, totalPoints) {
     btn.disabled = totalPoints < cost;
   });
 }
-
 // MODAL reward/achievement
 function showModal(html) {
   let modal = document.createElement('div');
@@ -68,7 +62,6 @@ function showModal(html) {
   modal.innerHTML = html + `<br><button onclick="this.parentNode.remove()">OK</button>`;
   document.body.appendChild(modal);
 }
-
 // Achievementy — generowanie tablicy
 function renderAchievementsTab() {
   const achList = document.querySelector('#panel-achievementy .ach-list');
@@ -85,7 +78,6 @@ function renderAchievementsTab() {
     ).join('');
   }
 }
-
 // ------ Obsługa zakładek ------
 function openPanel(panel) {
   document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
@@ -96,16 +88,17 @@ function openPanel(panel) {
   );
   // Dodatkowe renderowanie dla achievementów
   if (panel === 'achievementy') renderAchievementsTab();
+  // Dla kariery – zawsze renderAll!
+  if (panel === 'kariera' && window.korposzczur && window.korposzczur.tasks)
+    renderAll(window.korposzczur.tasks, window.korposzczur.totalPoints, window.korposzczur.softSkills, window.korposzczur.burnout);
 }
 window.openPanel = openPanel;
-
 // Obsługa kliknięć w zakładki nawigacji
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('tab-btn')) {
     openPanel(e.target.dataset.panel);
   }
 });
-
 // ------ Inicjalizacja gry po załadowaniu strony ------
 document.addEventListener("DOMContentLoaded", function() {
   // startowa zakładka
@@ -119,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
   );
   if(window.korposzczur && window.korposzczur.renderMultipliersBar) window.korposzczur.renderMultipliersBar();
 });
-
 // Eksport funkcji do globalnego obiektu ui
 window.ui = {
   renderAll,
