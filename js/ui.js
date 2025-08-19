@@ -77,7 +77,7 @@
         <span>ðŸ§  Soft Skills: <b>${softSkills}</b></span>
         ${burnout ? ` | ðŸ˜µâ€ðŸ’« Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
       </div>
-      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki Å¼eby pracowaÄ‡! Pasek idle siÄ™ wyÅ›wietla, a mnoÅ¼niki znajdziesz pod Biuro-punktami.</div>
+      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
       <div id="grid-progress"></div>
     `;
     const next = tasks[maxUnlockedIdx+1];
@@ -94,7 +94,7 @@
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
     bar.innerHTML =
-      'Akt. mnoÅ¼nik idle: ' +
+      'Akt. mnożnik idle: ' +
       tasks
         .map(t =>
           t.unlocked
