@@ -54,6 +54,11 @@ const TASKS = [
       pointsHistory = [];
       topClicks = Array(TASKS.length).fill(0);
     }
+    tasks.forEach((t, i) => {
+    if (t.unlocked && !t.active) {
+        startIdle(i);
+    }
+});
   }
   function clearSave() {
     timers.forEach(t => clearInterval(t));
