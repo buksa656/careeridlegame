@@ -20,10 +20,9 @@
     const barMs = getBarCycleMs(task);
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number'?task.multiplier:1).toFixed(3);
-    const tip = task.tip ? ` data-tooltip="${task.tip}"` : "";
     const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
     return `
-      <div class="kafelek${locked ? ' locked' : ''} ${task.level>=10&&!locked?"lvled":""}" data-taskidx="${idx}" tabindex="0" ${tip} ${style}>
+      <div class="kafelek${locked ? ' locked' : ''} ${task.level>=10&&!locked?"lvled":""}" data-taskidx="${idx}" tabindex="0" ${style}>
         <div class="kafelek-info">
           <div class="title">${task.name}</div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
@@ -88,7 +87,6 @@
       </div>`;
     }
     addEvents(tasks.length);
-    enableTooltips();
     updateTopClicks();
   }
   function renderMultipliersBar(tasks) {
@@ -112,25 +110,6 @@
     document.querySelectorAll('.kafelek-ulepsz-btn').forEach((btn, idx) => {
       const upgCost = Math.floor(20 * Math.pow(2.25, tasks[idx].level));
       btn.disabled = (!tasks[idx].unlocked || totalPoints < upgCost);
-    });
-  }
-  function enableTooltips() {
-    document.querySelectorAll('.kafelek[data-tooltip]').forEach(el => {
-      el.onmouseenter = function() {
-        let tip = el.getAttribute('data-tooltip');
-        if(!tip) return;
-        let ttip = document.createElement("div");
-        ttip.className = "tip-box";
-        ttip.textContent = tip;
-        document.body.appendChild(ttip);
-        const rect = el.getBoundingClientRect();
-        ttip.style.left = (rect.left + (rect.width/2) - 55)+'px';
-        ttip.style.top = (rect.top - 32)+'px';
-        el._tip = ttip;
-      };
-      el.onmouseleave = function() {
-        if(el._tip) { el._tip.remove(); el._tip = null; }
-      }
     });
   }
   function updateTopClicks() {
