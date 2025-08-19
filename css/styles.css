@@ -18,7 +18,7 @@ html, body {
   font-size: 17px;
 }
 
-/* --- SCOREBAR & NAGŁÓWEK --- */
+/* --- SCOREBAR & NAGĹĂ“WEK --- */
 #scorebar {
   padding: 13px 25px 10px 25px;
   background: #fff9e4;
@@ -142,14 +142,14 @@ main#app {
   cursor: not-allowed;
 }
 
-/* --- RESPONSYWNOŚĆ KAFELKÓW --- */
+/* --- RESPONSYWNOĹšÄ† KAFELKĂ“W --- */
 @media (max-width: 800px) {
   main#app { padding: 12px 2vw;}
   .kafelek { flex-direction: column; gap: 10px; }
   .brand { font-size: 1.05em;}
 }
 
-/* --- ACHIEVEMENTY, REWARDY, AUTOMATY itd (PRZYSZŁOŚĆ) --- */
+/* --- ACHIEVEMENTY, REWARDY, AUTOMATY itd (PRZYSZĹOĹšÄ†) --- */
 .ach-list {
   display: flex; flex-direction: column; gap: 14px; margin-top: 18px; max-width: 600px;
 }
