@@ -40,7 +40,15 @@ let tasks = [],
     timers = [];
 let pointsHistory = [];
 let topClicks = Array(TASKS.length).fill(0);
+let unlockedAchievements = [];
 
+// po powyższym:
+if (!localStorage.getItem("korposzczur_save")) {
+  tasks = JSON.parse(JSON.stringify(TASKS));
+  pointsHistory = [];
+  topClicks = Array(TASKS.length).fill(0);
+  unlockedAchievements = [];
+}
 function saveGame() {
   localStorage.setItem("korposzczur_save", JSON.stringify({tasks, totalPoints, softSkills, burnout, pointsHistory, topClicks, unlockedAchievements}));
 }
@@ -50,7 +58,8 @@ function loadGame() {
   if (save) {
     try {
       const s = JSON.parse(save);
-      if (Array.isArray(s.tasks)) tasks = s.tasks;
+      if (Array.isArray(s.tasks) && s.tasks.length === TASKS.length) tasks = s.tasks;
+      else tasks = JSON.parse(JSON.stringify(TASKS));
       if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
       if (typeof s.softSkills === "number") softSkills = s.softSkills;
       if (typeof s.burnout === "number") burnout = s.burnout;
