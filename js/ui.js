@@ -10,7 +10,7 @@
     const speedGrowth = 0.94;
     const lvl = Math.min(task.level, 15);
     const softcap = task.level > 15 ? Math.pow(0.98, task.level - 15) : 1;
-    return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap;
+    return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap / (typeof task.multiplier === 'number' ? task.multiplier : 1);
   }
   const colorByLevel = lvl => lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
   function taskTile(task, idx, totalPoints, locked=false) {
