@@ -3,7 +3,8 @@
   let eventHandlers = {};
   function e(q) { return document.querySelector(q); }
   function fmt(n) {
-    return typeof n === "number" && n >= 1000 ? n.toLocaleString("pl") : Math.round(n);
+    return typeof n === "number" && n >= 1000
+      ? n.toLocaleString("pl") : Math.round(n);
   }
   function getBarCycleMs(task) {
     const speedGrowth = 0.94;
@@ -11,6 +12,7 @@
     const softcap = task.level > 15 ? Math.pow(0.98, task.level - 15) : 1;
     return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap;
   }
+  const colorByLevel = lvl => lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
   function taskTile(task, idx, totalPoints, locked=false) {
     const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
     const canUpgrade = totalPoints >= upgCost;
@@ -18,10 +20,13 @@
     const barMs = getBarCycleMs(task);
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number'?task.multiplier:1).toFixed(3);
+    // Tooltip = podpowiedź do zadania (tip)
+    const tip = task.tip ? ` data-tooltip="${task.tip}"` : "";
+    // Kolorowanie kafla zależnie od poziomu
+    const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
 
-    // Jeśli jest to JEDYNY widoczny zablokowany kafelek – pokazujemy unlock cost, reszta kafelków nie pokazuje się wcale
     return `
-      <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
+      <div class="kafelek${locked ? ' locked' : ''} ${task.level>=10&&!locked?"lvled":""}" data-taskidx="${idx}" tabindex="0" ${tip} ${style}>
         <div class="kafelek-info">
           <div class="title">${task.name}</div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
@@ -37,7 +42,6 @@
         </button>
       </div>`;
   }
-
   function panelNav() {
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", e => {
@@ -53,24 +57,22 @@
     document.getElementById("panel-firma").style.display = "none";
     document.getElementById("panel-ustawienia").style.display = "none";
   }
-
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
-    // tylko odblokowane + jeden kolejny
+    // unlocked + jeden lock
     let maxUnlockedIdx = -1;
-    for(let i=0; i<tasks.length; ++i) {
-      if(tasks[i].unlocked) maxUnlockedIdx = i;
-    }
-    // odblokowane + pierwszy zablokowany (jeśli istnieje)
+    for(let i=0; i<tasks.length; ++i) if(tasks[i].unlocked) maxUnlockedIdx = i;
     let visibleTasks = [];
     for(let i=0; i<tasks.length; ++i) {
       if(tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
       else if(i === maxUnlockedIdx+1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
     }
-    e("#top-total-points").textContent = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+    // liczenie i styl szary "grosze"
+    let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+    let [intPart, fracPart] = totalPointsStr.split(',');
+    e("#top-total-points").innerHTML =
+      `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
     e("#top-soft-skills").textContent = fmt(softSkills);
-
-    renderMultipliersBar(tasks); // nowy sposób!
-
+    renderMultipliersBar(tasks);
     e("#panel-kariera").innerHTML = `
       <h2>Twoja kariera w korpo</h2>
       <div class="career-list">${visibleTasks.join('')}</div>
@@ -79,14 +81,26 @@
         ${burnout ? ` | 😵‍💫 Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
       </div>
       <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
+      <div id="grid-progress"></div>
     `;
+    // Pasek postępu do kolejnej pracy
+    const next = tasks[maxUnlockedIdx+1];
+    if(next && next.unlockCost) {
+      const prog = Math.min(Number(totalPoints)/Number(next.unlockCost), 1);
+      e("#grid-progress").innerHTML = `<div class="unlock-progress">
+        <div class="unlock-progress-bar" style="width:${(prog*100).toFixed(1)}%"></div>
+        <span>${Math.min((prog*100),100).toFixed(0)}% do odblokowania nowej pracy</span>
+      </div>`;
+    }
     addEvents(tasks.length);
+    enableTooltips();
+    updateTopClicks();
   }
-
-  // MultipliersBar: wyświetl tylko odblokowane mnożniki
+  // MultipliersBar – tylko unlocked!
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
-    bar.innerHTML = 'Akt. mnożnik idle: ' +
+    bar.innerHTML =
+      'Akt. mnożnik idle: ' +
       tasks
         .map(t =>
           t.unlocked
@@ -96,19 +110,51 @@
         .filter(Boolean)
         .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
   }
-
   function renderProgress(idx, progress) {
     const bar = document.querySelector(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
     if (bar) bar.style.width = Math.round(progress * 100) + "%";
   }
-
   function renderUpgradeAffordances(tasks, totalPoints) {
     document.querySelectorAll('.kafelek-ulepsz-btn').forEach((btn, idx) => {
       const upgCost = Math.floor(20 * Math.pow(2.25, tasks[idx].level));
       btn.disabled = (!tasks[idx].unlocked || totalPoints < upgCost);
     });
   }
-
+  // Tooltipy: pokazywanie na hover
+  function enableTooltips() {
+    document.querySelectorAll('.kafelek[data-tooltip]').forEach(el => {
+      el.onmouseenter = function() {
+        let tip = el.getAttribute('data-tooltip');
+        if(!tip) return;
+        let ttip = document.createElement("div");
+        ttip.className = "tip-box";
+        ttip.textContent = tip;
+        document.body.appendChild(ttip);
+        const rect = el.getBoundingClientRect();
+        ttip.style.left = (rect.left + (rect.width/2) - 55)+'px';
+        ttip.style.top = (rect.top - 32)+'px';
+        el._tip = ttip;
+      };
+      el.onmouseleave = function() {
+        if(el._tip) { el._tip.remove(); el._tip = null; }
+      }
+    });
+  }
+  // Statystyka — wyświetlanie w panelu (na przykładzie, żeby spełnić pkt 6)
+  function updateTopClicks() {
+    // main.js podaje topClicks jako global
+    if (window.topClicks && window.TASKS) {
+      let rows = window.topClicks.map((c, i) =>
+        c > 0 ? `<tr><td>${window.TASKS[i].name}</td><td>${c}</td></tr>` : ''
+      ).filter(Boolean).join('');
+      let panel = document.getElementById("panel-kariera");
+      if(rows && panel) {
+        let html = `<div class="topk-table" style="margin-top:9px;"><b>Twoje top klikane zadania:</b>
+        <table>${rows}</table></div>`;
+        if(!document.querySelector(".topk-table")) panel.insertAdjacentHTML('beforeend', html);
+      }
+    }
+  }
   function addEvents(tasksLen) {
     document.querySelectorAll(".kafelek").forEach((el) => {
       el.onclick = (e) => {
@@ -135,7 +181,6 @@
     const rbtn = document.getElementById("reset-btn");
     if (rbtn) rbtn.onclick = () => eventHandlers.onClearSave();
   }
-
   window.IdleUI = {
     init(opts) {
       eventHandlers = opts;
