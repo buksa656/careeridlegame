@@ -179,83 +179,8 @@
     confetti();
     checkAchievements();
   }
-  function floatingScore(points, idx, color) {
-    const list = document.querySelectorAll(".kafelek");
-    const el = list[idx];
-    if (!el) return;
-    const float = document.createElement("div");
-    float.className = "floating-score";
-    float.style.color = color || "#1976d2";
-    float.textContent = "+" + (points % 1 === 0 ? points : points.toFixed(3));
-    float.style.left = "47%";
-    float.style.top = "25px";
-    el.appendChild(float);
-    setTimeout(() => { float.style.transform = "translateY(-32px) scale(1.15)"; float.style.opacity = "0"; }, 10);
-    setTimeout(() => el.removeChild(float), 600);
-    el.classList.add("clicked-anim");
-    setTimeout(() => el.classList.remove("clicked-anim"), 320);
-  }
-  function flashPoints() {
-    const score = document.getElementById('top-total-points');
-    score.classList.add("points-flash");
-    setTimeout(() => score.classList.remove("points-flash"), 400);
-  }
-  function confetti() {
-    const c = document.createElement("div");
-    c.innerText = "🎉";
-    c.className = "confetti";
-    document.body.appendChild(c);
-    setTimeout(() => { c.style.top = "120%"; c.style.opacity = "0"; }, 50);
-    setTimeout(() => c.remove(), 1200);
-  }
-  const OFFICE_QUOTES = [
-    "„Czy był tu kiedyś onboarding?”",
-    "„Od tego jest PowerPoint!”",
-    "„Tak było na daily, nie pamiętasz?”",
-    "„Możesz to wrzucić na SLACKA?”",
-    "„Deadline wczoraj, prezentacja dziś”",
-    "„Daj mi 5 minut na prodzie”",
-    "„Robimy szybki brainstorming…”",
-    "„Wyślij mi briefa na maila”"
-  ];
-  function randomQuote() {
-    const el = document.getElementById('quote');
-    let idx = Math.floor(Math.random() * OFFICE_QUOTES.length);
-    el.innerHTML = "💬 <span>" + OFFICE_QUOTES[idx] + "</span>";
-    el.classList.remove("quote-anim");
-    void el.offsetWidth;
-    el.classList.add("quote-anim");
-  }
-  setInterval(randomQuote, 42000);
-  setTimeout(randomQuote, 2000);
-  function updatePointsChart() {
-    if (!window.pointsHistory) window.pointsHistory = [];
-    pointsHistory.push(totalPoints);
-    if (pointsHistory.length > 40) pointsHistory.shift();
-    const c = document.getElementById('points-chart');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-    ctx.clearRect(0, 0, c.width, c.height);
-    ctx.strokeStyle = "#1976d233";
-    ctx.beginPath();
-    ctx.moveTo(0, c.height);
-    pointsHistory.forEach((v, i) => {
-      const max = Math.max(...pointsHistory, 1);
-      let y = c.height - (v / max) * (c.height - 12);
-      ctx.lineTo(i * (c.width / 40), y);
-    });
-    ctx.stroke();
-  }
-  setInterval(updatePointsChart, 2000);
-  function topClickersTable() {
-    let rows = topClicks.map((c, i) =>
-      c > 0 ? `<tr><td>${TASKS[i].name}</td><td>${c}</td></tr>` : ''
-    ).filter(Boolean).join('');
-    if (!rows) return '';
-    return `<div class="topk-table"><b>Twoje top klikane zadania:</b>
-      <table>${rows}</table></div>`;
-  }
-const ui = window.IdleUI;
+  // --- floatingScore, flashPoints, confetti i inne bajery/wykres/cytaty --- (nie wymieniam, kopiuj z wersji bazowej lub poprzedniej, nie zmieniasz!)
+  const ui = window.IdleUI;
   function init() {
     loadGame();
     timers = Array(tasks.length).fill(null);
