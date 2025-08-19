@@ -11,7 +11,7 @@
     const softcap = task.level > 15 ? Math.pow(0.98, task.level - 15) : 1;
     return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap;
   }
-  function taskTile(task, idx, totalPoints) {
+  function taskTile(task, idx, totalPoints, locked=false) {
     const upgCost = Math.floor(20 * Math.pow(2.25, task.level));
     const canUpgrade = totalPoints >= upgCost;
     const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
@@ -19,8 +19,9 @@
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number'?task.multiplier:1).toFixed(3);
 
+    // Jeśli jest to JEDYNY widoczny zablokowany kafelek – pokazujemy unlock cost, reszta kafelków nie pokazuje się wcale
     return `
-      <div class="kafelek${task.unlocked ? '' : ' locked'}" data-taskidx="${idx}" tabindex="0">
+      <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
         <div class="kafelek-info">
           <div class="title">${task.name}</div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
@@ -29,8 +30,9 @@
           <div class="kafelek-progbar">
             <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress||0)*100)}%"></div>
           </div>
+          ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b> biuro-pkt</div>` : ''}
         </div>
-        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${!task.unlocked || !canUpgrade ? "disabled" : ""}>
+        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${locked || !canUpgrade ? "disabled" : ""}>
           Ulepsz<br>(${fmt(upgCost)})
         </button>
       </div>`;
@@ -53,11 +55,25 @@
   }
 
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
-    e("#top-total-points").textContent = fmt(totalPoints);
+    // tylko odblokowane + jeden kolejny
+    let maxUnlockedIdx = -1;
+    for(let i=0; i<tasks.length; ++i) {
+      if(tasks[i].unlocked) maxUnlockedIdx = i;
+    }
+    // odblokowane + pierwszy zablokowany (jeśli istnieje)
+    let visibleTasks = [];
+    for(let i=0; i<tasks.length; ++i) {
+      if(tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
+      else if(i === maxUnlockedIdx+1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
+    }
+    e("#top-total-points").textContent = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
     e("#top-soft-skills").textContent = fmt(softSkills);
+
+    renderMultipliersBar(tasks); // nowy sposób!
+
     e("#panel-kariera").innerHTML = `
       <h2>Twoja kariera w korpo</h2>
-      <div class="career-list">${tasks.map((task, idx) => taskTile(task, idx, totalPoints)).join('')}</div>
+      <div class="career-list">${visibleTasks.join('')}</div>
       <div class="softskill-info">
         <span>🧠 Soft Skills: <b>${softSkills}</b></span>
         ${burnout ? ` | 😵‍💫 Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
@@ -65,6 +81,20 @@
       <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
     `;
     addEvents(tasks.length);
+  }
+
+  // MultipliersBar: wyświetl tylko odblokowane mnożniki
+  function renderMultipliersBar(tasks) {
+    const bar = document.getElementById('multipliersBar');
+    bar.innerHTML = 'Akt. mnożnik idle: ' +
+      tasks
+        .map(t =>
+          t.unlocked
+            ? `<strong>${t.name}</strong>: x${(typeof t.multiplier === 'number' ? t.multiplier : 1).toFixed(3)}`
+            : null
+        )
+        .filter(Boolean)
+        .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
   }
 
   function renderProgress(idx, progress) {
