@@ -29,7 +29,14 @@
         if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
         if (typeof s.softSkills === "number") softSkills = s.softSkills;
         if (typeof s.burnout === "number") burnout = s.burnout;
-      } catch (e) {}
+        // MIGRACJA SAFE - DOPEŁNIENIE POL TASKÓW
+        tasks.forEach((t,i)=>{
+          if(typeof t.multiplier !== 'number') t.multiplier = 1;
+          if(typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
+        });
+      } catch (e) {
+        tasks = JSON.parse(JSON.stringify(TASKS));
+      }
     } else {
       tasks = JSON.parse(JSON.stringify(TASKS));
     }
@@ -43,7 +50,6 @@
     if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost)
       tasks[idx].unlocked = true;
   }
-  // Prędkość bary na poziom z soft-capem powyżej 15 poziomu
   function getBarCycleMs(task) {
     const speedGrowth = 0.94;
     const lvl = Math.min(task.level, 15);
@@ -63,10 +69,9 @@
       prev = now;
       if (task.progress >= 1) {
         task.progress = 0;
-        // idle tylko: baseIdle * multiplier
-        const idlePts = task.baseIdle * task.multiplier;
+        const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
         totalPoints += idlePts;
-        task.multiplier += 0.001;
+        task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + 0.001;
         tryUnlockTask(idx + 1);
         saveGame();
         ui.renderAll(tasks, totalPoints, softSkills, burnout);
@@ -111,17 +116,14 @@
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
   }
-
-  // Mnożniki pod Biuro-punktami:
   function renderMultipliersBar() {
     const bar = document.getElementById('multipliersBar');
     bar.innerHTML = 'Akt. mnożnik idle: ' + tasks.map((t,i) =>
       t.unlocked
-        ? `<strong>${t.name}</strong>: x${t.multiplier.toFixed(3)}`
+        ? `<strong>${t.name}</strong>: x${(typeof t.multiplier === 'number'?t.multiplier:1).toFixed(3)}`
         : `<span style="color:#bbb">${t.name}: x1.000</span>`
     ).join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
   }
-
   const ui = window.IdleUI;
   function init() {
     loadGame();
