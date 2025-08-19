@@ -10,7 +10,6 @@
       level: 0,
       baseGain: 1,
       gainGrowth: 1.14,
-      points: 0,
       cycleTime: 1600,
       progress: 0,
       active: false,
@@ -23,7 +22,6 @@
       level: 0,
       baseGain: 9,
       gainGrowth: 1.13,
-      points: 0,
       cycleTime: 2500,
       progress: 0,
       active: false,
@@ -36,7 +34,6 @@
       level: 0,
       baseGain: 20,
       gainGrowth: 1.17,
-      points: 0,
       cycleTime: 4000,
       progress: 0,
       active: false,
@@ -49,7 +46,6 @@
       level: 0,
       baseGain: 44,
       gainGrowth: 1.156,
-      points: 0,
       cycleTime: 5700,
       progress: 0,
       active: false,
@@ -62,7 +58,6 @@
       level: 0,
       baseGain: 113,
       gainGrowth: 1.13,
-      points: 0,
       cycleTime: 8000,
       progress: 0,
       active: false,
@@ -75,7 +70,6 @@
       level: 0,
       baseGain: 330,
       gainGrowth: 1.09,
-      points: 0,
       cycleTime: 12000,
       progress: 0,
       active: false,
@@ -220,7 +214,6 @@
       if (task.progress >= 1) {
         task.progress = 0;
         const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
-        task.points += gain;
         totalPoints += gain;
         tryUnlockTask(idx + 1);
         checkAchievements();
@@ -243,7 +236,6 @@
     const task = tasks[idx];
     if (task.unlocked) {
       const gain = task.baseGain * Math.pow(task.gainGrowth, task.level);
-      task.points += gain;
       totalPoints += gain;
       tryUnlockTask(idx + 1);
       checkAchievements();
