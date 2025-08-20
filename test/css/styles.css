@@ -279,3 +279,35 @@ main#app {
 }
 .topk-table { margin-top:12px; font-size:.97em;}
 .topk-table td { padding: 2px 10px 2px 0;}
+#achievement-toast {
+  background: #fffef7;
+  border: 2px solid #dda43a;
+  color: #573703;
+  box-shadow: 0 8px 38px #dac79355, 0 1px 9px #cf800a18;
+  border-radius: 13px;
+  padding: 22px 36px 18px 32px;
+  font-size: 1.18em;
+  font-family: inherit;
+  min-width: 240px;
+  max-width: 360px;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(-42px) scale(0.97);
+  transition: opacity .3s cubic-bezier(.4,1.2,.3,1.01), transform .33s cubic-bezier(.1,.9,.3,1.01);
+}
+#achievement-toast.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+#achievement-toast .emoji {
+  font-size: 2.2em;
+  margin-right: 6px;
+}
+#achievement-toast .desc {
+  color: #7d6d36;
+  font-size: 0.95em;
+  margin-top: 3px;
+}
