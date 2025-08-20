@@ -57,7 +57,7 @@
         document.getElementById("panel-" + target).style.display = "";
         // --- POPRAWKA: renderuj osiągnięcia gdy wejdziemy na panel zakładki
         if (target === "osiagniecia" && window.ACHIEVEMENTS) {
-          renderAchievements(window.ACHIEVEMENTS);
+          IdleUI.renderAchievements(window.ACHIEVEMENTS);
         }
       });
     });
