@@ -47,26 +47,22 @@
       </div>`;
   }
 
-  function panelNav() {
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", e => {
-        // Ukryj wszystkie panele
-        document.querySelectorAll(".panel").forEach(panel => panel.style.display = "none");
-        // Usuń aktywne klasy
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        const target = btn.dataset.panel;
-        btn.classList.add("active");
-        const panel = document.getElementById("panel-" + target);
-        if(panel) panel.style.display = "";
-        
-        // Osiągnięcia – odśwież
-        if (target === "osiagniecia" && window.ACHIEVEMENTS) {
-          IdleUI.renderAchievements(window.ACHIEVEMENTS);
-        }
-        // NOWOŚĆ: Zakładka Biurko – renderuj sklep
-        if (target === "biurko" && typeof window.renderDeskTab === "function") {
-          window.renderDeskTab();
-        }
+function panelNav() {
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      document.querySelectorAll(".panel").forEach(panel => panel.style.display = "none");
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      const target = btn.dataset.panel;
+      btn.classList.add("active");
+      document.getElementById("panel-" + target).style.display = "";
+      // RENDERUJ ODPOWIEDNI PANEL:
+      if (target === "kariera" && typeof ui.renderAll === "function") {
+        ui.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+      } else if (target === "osiagniecia" && typeof ui.renderAchievements === "function") {
+        ui.renderAchievements(window.ACHIEVEMENTS);
+      } else if (target === "biurko" && typeof window.renderDeskSVG === "function") {
+        window.renderDeskSVG();
+      }
       });
     });
     // Ustaw domyślną aktywną (Kariera)
