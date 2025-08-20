@@ -358,3 +358,11 @@ main#app {
 .desk-mod .emoji { font-size:2em; margin-right:7px;}
 .desk-mod button {margin-left:auto; font-size:0.97em;}
 .desk-desc { color:#888; font-size:0.98em; margin:2px 0 8px 0; }
+#desk-svg-wrapper { position:relative; }
+#desk-tooltip {
+  transition: opacity .16s, transform .16s;
+  pointer-events:none;
+}
+.desk-hotspot-hover circle { fill: #ffe887; opacity:0.32 }
+.desk-hotspot-locked circle { fill: #ccc; opacity:0.15 }
+.desk-hotspot-bought circle { fill: #aeeeab; opacity:0.19 }
