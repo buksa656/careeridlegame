@@ -186,6 +186,7 @@ const DESK_MODS = [
         topClicks = Array(TASKS.length).fill(0);
         ACHIEVEMENTS.forEach(a => a.unlocked = false);
         deskModsOwned = [];
+        applyDeskModsEffects();
       }
     } else {
       tasks = JSON.parse(JSON.stringify(TASKS));
@@ -288,6 +289,7 @@ function getBarCycleMs(task) {
     burnout += 1;
     totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
+    applyDeskModsEffects();
     checkAchievements();
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
@@ -329,7 +331,20 @@ const gameState = {
   burnoutReduction: 0,
   idleMultiplierGrow: 0.01 // domyślnie jak w bazowej mechanice
 };
-
+function applyDeskModsEffects() {
+  gameState.softcapShift = 0;
+  gameState.burnoutReduction = 0;
+  gameState.idleMultiplierGrow = 0.01;
+  tasks.forEach((t, i) => {
+    t.cycleTime = TASKS[i].cycleTime; // przywraca domyślną wartość
+    t.multiplier = TASKS[i].multiplier; // przywraca domyślny mnożnik
+  });
+  deskModsOwned.forEach(idx => {
+    if (typeof DESK_MODS[idx].effect === "function") {
+      DESK_MODS[idx].effect(gameState);
+    }
+  });
+}
 function buyDeskMod(idx) {
   if (!deskModsOwned.includes(idx) && softSkills >= DESK_MODS[idx].cost) {
     deskModsOwned.push(idx);
