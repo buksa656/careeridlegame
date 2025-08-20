@@ -56,10 +56,10 @@ function panelNav() {
       btn.classList.add("active");
       document.getElementById("panel-" + target).style.display = "";
       // RENDERUJ ODPOWIEDNI PANEL:
-      if (target === "kariera" && typeof ui.renderAll === "function") {
-        ui.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-      } else if (target === "osiagniecia" && typeof ui.renderAchievements === "function") {
-        ui.renderAchievements(window.ACHIEVEMENTS);
+      if (target === "kariera" && window.tasks && typeof renderAll === "function") {
+        renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+      } else if (target === "osiagniecia" && window.ACHIEVEMENTS && typeof renderAchievements === "function") {
+        renderAchievements(window.ACHIEVEMENTS);
       } else if (target === "biurko" && typeof window.renderDeskSVG === "function") {
         window.renderDeskSVG();
       }
@@ -230,15 +230,16 @@ function showAchievement(a) {
 }
 
   // --- eksport API ---
-  window.IdleUI = {
-    init: function (opts) {
-      eventHandlers = opts;
-      panelNav();
-    },
-    renderAll,
-    renderProgress,
-    renderUpgradeAffordances,
-    renderAchievements,
-    showAchievement
-  };
+window.IdleUI = {
+  init: function (opts) {
+    eventHandlers = opts;
+    // NIE wywołuj panelNav od razu!
+  },
+  panelNav,          // <-- Eksportuj funkcję panelNav jako funkcję!
+  renderAll,
+  renderProgress,
+  renderUpgradeAffordances,
+  renderAchievements,
+  showAchievement
+};
 })();
