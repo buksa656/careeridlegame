@@ -55,23 +55,25 @@ function panelNav() {
       const target = btn.dataset.panel;
       btn.classList.add("active");
       document.getElementById("panel-" + target).style.display = "";
-      // RENDERUJ ODPOWIEDNI PANEL:
-      if (target === "kariera" && window.tasks && typeof renderAll === "function") {
+
+      // Tu uruchamiaj odpowiedni renderer:
+      if (target === "kariera" && window.tasks) {
         renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-      } else if (target === "osiagniecia" && window.ACHIEVEMENTS && typeof renderAchievements === "function") {
+      } else if (target === "osiagniecia" && window.ACHIEVEMENTS) {
         renderAchievements(window.ACHIEVEMENTS);
       } else if (target === "biurko" && typeof window.renderDeskSVG === "function") {
         window.renderDeskSVG();
       }
-      });
     });
-    // Ustaw domyślną aktywną (Kariera)
-    document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
-    document.getElementById("panel-kariera").style.display = "";
-    document.querySelectorAll(".panel").forEach(panel => {
-      if(panel.id !== "panel-kariera") panel.style.display = "none";
-    });
-  }
+  });
+
+  // Ustaw domyślny panel i aktywny button:
+  document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
+  document.getElementById("panel-kariera").style.display = "";
+  document.querySelectorAll(".panel").forEach(panel => {
+    if (panel.id !== "panel-kariera") panel.style.display = "none";
+  });
+}
 
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     let maxUnlockedIdx = -1;
@@ -229,13 +231,13 @@ function showAchievement(a) {
   }, 3200);
 }
 
-  // --- eksport API ---
+// --- eksport API ---
 window.IdleUI = {
   init: function (opts) {
     eventHandlers = opts;
-    // NIE wywołuj panelNav od razu!
+    // NIE wywołuj panelNav tu! Wywołasz po inicjalizacji w main.js
   },
-  panelNav,          // <-- Eksportuj funkcję panelNav jako funkcję!
+  panelNav,
   renderAll,
   renderProgress,
   renderUpgradeAffordances,
