@@ -316,14 +316,11 @@
     "Robimy szybki brainstorming",
     "Wyślij mi briefa na maila"
   ];
-  function randomQuote() {
-    const el = document.getElementById('quote');
-    let idx = Math.floor(Math.random() * OFFICE_QUOTES.length);
-    el.innerHTML = "<span>" + OFFICE_QUOTES[idx] + "</span>";
-    el.classList.remove("quote-anim");
-    void el.offsetWidth;
-    el.classList.add("quote-anim");
-  }
+function randomQuote() {
+  const el = document.getElementById('quote');
+  let idx = Math.floor(Math.random() * OFFICE_QUOTES.length);
+  el.innerHTML = `<span>💬 ${OFFICE_QUOTES[idx]}</span>`;
+}
   setInterval(randomQuote, 42000);
   setTimeout(randomQuote, 2000);
   function updatePointsChart() {
