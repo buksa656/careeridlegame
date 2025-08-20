@@ -500,7 +500,8 @@ function setMarqueeQuote(idx = null) {
     return `<div class="topk-table"><b>Twoje top klikane zadania:</b>
       <table>${rows}</table></div>`;
   }
-  const ui = window.IdleUI;
+const ui = window.IdleUI; // lub używaj window.IdleUI bezpośrednio
+
 function init() {
   loadGame();
   timers = Array(tasks.length).fill(null);
@@ -517,11 +518,9 @@ function init() {
   updatePointsChart();
   ui.renderAchievements(window.ACHIEVEMENTS);
   setMarqueeQuote();
-
-  // TUTAJ: odpal panelNav z ui.js, nie swój własny handler!
-  IdleUI.panelNav(); // aktywuje obsługę zakładek przez prawidłowy system
+  // KLUCZOWE!
+  window.IdleUI.panelNav();
 }
-
 window.addEventListener("load", init);
 
 // ------ Przełączanie zakładek menu
