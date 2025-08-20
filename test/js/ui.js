@@ -50,24 +50,31 @@
   function panelNav() {
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", e => {
+        // Ukryj wszystkie panele
         document.querySelectorAll(".panel").forEach(panel => panel.style.display = "none");
+        // Usuń aktywne klasy
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
         const target = btn.dataset.panel;
         btn.classList.add("active");
-        document.getElementById("panel-" + target).style.display = "";
-        // --- POPRAWKA: renderuj osiągnięcia gdy wejdziemy na panel zakładki
+        const panel = document.getElementById("panel-" + target);
+        if(panel) panel.style.display = "";
+        
+        // Osiągnięcia – odśwież
         if (target === "osiagniecia" && window.ACHIEVEMENTS) {
           IdleUI.renderAchievements(window.ACHIEVEMENTS);
         }
+        // NOWOŚĆ: Zakładka Biurko – renderuj sklep
+        if (target === "biurko" && typeof window.renderDeskTab === "function") {
+          window.renderDeskTab();
+        }
       });
     });
-    // Ustaw panel startowy (Kariera)
+    // Ustaw domyślną aktywną (Kariera)
     document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
     document.getElementById("panel-kariera").style.display = "";
-    document.getElementById("panel-firma").style.display = "none";
-    document.getElementById("panel-ustawienia").style.display = "none";
-    const panelAch = document.getElementById("panel-osiagniecia");
-    if (panelAch) panelAch.style.display = "none";
+    document.querySelectorAll(".panel").forEach(panel => {
+      if(panel.id !== "panel-kariera") panel.style.display = "none";
+    });
   }
 
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
@@ -104,7 +111,6 @@
     }
     addEvents(tasks.length);
     updateTopClicks();
-    // Osiągnięcia renderowane będą tylko, gdy panel jest aktywny
   }
 
   function renderMultipliersBar(tasks) {
