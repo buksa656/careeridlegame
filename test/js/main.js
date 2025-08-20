@@ -20,6 +20,89 @@ const TASKS = [
     { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
     { name: "KrÃ³l Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
   ];
+  // --- NOWE: Achievementy ---
+const ACHIEVEMENTS = [
+  {
+    id: 'first-click',
+    name: "Pierwszy Klik",
+    desc: "Wykonaj pierwszy klik",
+    unlocked: false,
+    reward: { taskIdx: 0, multiplierInc: 0.05 }
+  },
+  {
+    id: 'mail-master',
+    name: "Mailowy Mistrz",
+    desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
+    unlocked: false,
+    reward: { taskIdx: 2, multiplierInc: 0.10 },
+    condition: () => topClicks[2] >= 100
+  },
+  {
+    id: 'coffee-baron',
+    name: "Baron Kawowy",
+    desc: "Uzyskaj 1000 punktów z pracy „Robienie kawy Szefowi”",
+    unlocked: false,
+    reward: { taskIdx: 0, multiplierInc: 0.10 },
+    condition: () => tasks.level * BASE_CLICKS >= 1000
+  },
+  {
+    id: 'idle-starter',
+    name: "Pierwsze Idle",
+    desc: "Uzyskaj punkty przez pracę z idle",
+    unlocked: false,
+    reward: { taskIdx: 1, multiplierInc: 0.05 },
+    condition: () => tasks.some(t => t.active && t.multiplier > 1)
+  },
+  {
+    id: 'level-up-5',
+    name: "Poziom 5",
+    desc: "Podnieś dowolne zadanie do poziomu 5",
+    unlocked: false,
+    reward: { taskIdx: null, multiplierInc: 0.05 }, // globalny modyfikator
+    condition: () => tasks.some(t => t.level >= 5)
+  },
+  {
+    id: 'daily-speaker',
+    name: "Mówca na daily",
+    desc: "Kliknij 50 razy w „Standup 'co zrobisz dziś?'”",
+    unlocked: false,
+    reward: { taskIdx: 10, multiplierInc: 0.12 },
+    condition: () => topClicks[10] >= 50
+  },
+  {
+    id: 'delegator',
+    name: "Mistrz Delegowania",
+    desc: "Odblokuj zadanie „Delegowanie lemingowi”",
+    unlocked: false,
+    reward: { taskIdx: 11, multiplierInc: 0.15 },
+    condition: () => tasks.unlocked
+  },
+  {
+    id: 'giphy-enthusiast',
+    name: "GIFoholik",
+    desc: "Kliknij 25 razy w „Wysyłanie GIF-ów”",
+    unlocked: false,
+    reward: { taskIdx: 13, multiplierInc: 0.08 },
+    condition: () => topClicks >= 25
+  },
+  {
+    id: 'linkedin-pro',
+    name: "LinkedIn Pro",
+    desc: "Uzyskaj 500 punktów z „Przeklikanie LinkedIna”",
+    unlocked: false,
+    reward: { taskIdx: 14, multiplierInc: 0.10 },
+    condition: () => tasks.level * BASE_CLICKS >= 500
+  },
+  {
+    id: 'burnout-survivor',
+    name: "Survivor",
+    desc: "Prestige (zdobądź dodatkową umiejętność miękką)",
+    unlocked: false,
+    reward: { taskIdx: null, multiplierInc: 0.10 },
+    condition: () => softSkills >= 1
+  }
+];
+
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
   let pointsHistory = []; // do wykresu
   let topClicks = Array(TASKS.length).fill(0);
