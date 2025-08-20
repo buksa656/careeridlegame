@@ -376,21 +376,15 @@ function init() {
     onPrestige: prestige,
     onClearSave: clearSave
   });
-  // inne rzeczy ustawiane przy starcie gry...
+  tasks.forEach((task, idx) => { if (task.unlocked) startIdle(idx); });
   ui.renderAll(tasks, totalPoints, softSkills, burnout);
   ui.renderUpgradeAffordances(tasks, totalPoints);
   renderMultipliersBar();
   updatePointsChart();
-  ui.renderAchievements(window.ACHIEVEMENTS); // <- po starcie
+  ui.renderAchievements(window.ACHIEVEMENTS);
   setMarqueeQuote();
 }
-    // START IDLE od razu dla odblokowanych!
-    tasks.forEach((task, idx) => { if(task.unlocked) startIdle(idx); });
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
-    ui.renderUpgradeAffordances(tasks, totalPoints);
-    renderMultipliersBar();
-    updatePointsChart();
-    ui.renderAchievements(window.ACHIEVEMENTS); // <- po starcie
-  }
-  window.addEventListener("load", init);
+
+window.addEventListener("load", init);
+
 })();
