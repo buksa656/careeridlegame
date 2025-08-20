@@ -17,7 +17,7 @@
   <nav>
     <button class="tab-btn" data-panel="kariera">Kariera</button>
     <button class="tab-btn" data-panel="osiagniecia">Osiągnięcia</button>
-    <button class="tab-btn" data-panel="firma">Rzuć robotę</button>
+    <button class="tab-btn" id="deskTabBtn">🖥️ Biurko</button>
     <button class="tab-btn" data-panel="ustawienia">Ustawienia</button>
   </nav>
 </header>
@@ -29,8 +29,23 @@
   <section id="panel-firma" class="panel" style="display:none;"></section>
   <section id="panel-ustawienia" class="panel" style="display:none;"></section>
 </main>
+<main id="deskTab" style="display:none;">
+  <h2>Twoje Biurko</h2>
+  <div id="deskModsList"></div>
+</main>
 <script src="js/ui.js"></script>
 <script src="js/main.js"></script>
 <div id="achievement-toast" style="display:none;position:fixed;top:24px;right:24px;z-index:99;"></div>
+<div id="softskill-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="emoji">🎉</span>
+    <h2>Gratulacje!</h2>
+    <p>
+      Zdobywasz pierwszy <b>Soft Skill</b>! Otworzyłeś nową zakładkę <b>Biurko</b>.<br>
+      Upiększaj swoje stanowisko kolejnymi modyfikacjami za zgromadzone soft skille.
+    </p>
+    <button onclick="closeModal('softskill-modal')">OK</button>
+  </div>
+</div>
 </body>
 </html>
