@@ -25,56 +25,104 @@
   // --- MODYFIKACJE BIURKA --- //
 const DESK_MODS = [
   {
-    name: "Niebieski kwiatek",
-    cost: 1,
-    emoji: "🌼",
-    desc: "Dodaje pozytywną aurę – o 5% większy mnożnik idle.",
-    effect: (state) => {
-      // Bonus: +5% do wszystkich mnożników zadań
-      state.tasks.forEach(t => t.multiplier *= 1.05);
-    }
+    id: "cup", name: "Kubek", emoji: "☕",
+    desc: "Twój ulubiony kubek! Burnout -10%.", cost: 1,
+    svg: `<ellipse cx="70" cy="175" rx="9" ry="11" fill="#fff"/>
+          <rect x="67" y="172" width="6" height="11" rx="2.2" fill="#c8a869" />
+          <ellipse cx="70" cy="180" rx="8" ry="4" fill="#faa" opacity="0.25"/>`
   },
   {
-    name: "Lampka RGB",
-    cost: 2,
-    emoji: "💡",
-    desc: "Barwy RGB pobudzają kreatywność! Softcap poziomu tasków przesunięty o +3.",
-    effect: (state) => {
-      // Bonus: przesuwa softcap z 15 na 18 przy liczeniu getBarCycleMs
-      state.softcapShift = 3;
-    }
+    id: "flower", name: "Kwiatuszek", emoji: "🌼",
+    desc: "Zwiększa wszystkie mnożniki idle o 5%.", cost: 2,
+    svg: `<circle cx="320" cy="157" r="10" fill="#aef4e9"/>
+         <circle cx="320" cy="157" r="6" fill="#fff"/>
+         <circle cx="320" cy="157" r="2.9" fill="#ffe45e"/>
+         <ellipse cx="320" cy="150" rx="2" ry="5" fill="#fff"/>
+         <ellipse cx="326" cy="157" rx="5" ry="2" fill="#fff"/>
+         <ellipse cx="320" cy="164" rx="2" ry="5" fill="#fff"/>
+         <ellipse cx="314" cy="157" rx="5" ry="2" fill="#fff"/>
+    `
   },
   {
-    name: "Monitor ultrapanoramiczny",
-    cost: 3,
-    emoji: "🖥️",
-    desc: "Więcej miejsca na taski – idle szybciej o 10%!",
-    effect: (state) => {
-      // Wszystkie cycleTime skracają się o 10%
-      state.tasks.forEach(t => t.cycleTime *= 0.90);
-    }
+    id: "lamp", name: "Lampka RGB", emoji: "💡",
+    desc: "Softcap poziomu tasków przesunięty o +3.", cost: 3,
+    svg: `<ellipse cx="205" cy="112" rx="10" ry="6" fill="#eaf"/> 
+          <rect x="199" y="113" width="12" height="21" rx="4" fill="#bbb"/>
+          <ellipse cx="205" cy="137" rx="6" ry="2" fill="#eaeaea"/>`
   },
   {
-    name: "Kaktus i kubek",
-    cost: 5,
-    emoji: "🌵☕",
-    desc: "Każda kawa to mniej stresu. Burnout wolniej o 10%.",
-    effect: (state) => {
-      state.burnoutReduction = 0.10; // Można obsłużyć obniżanie burnoutu w mechanice
-    }
+    id: "monitor", name: "Monitor", emoji: "🖥️",
+    desc: "Wszystkie taski idle szybciej o 10%.", cost: 4,
+    svg: `<rect x="248" y="122" width="24" height="14" rx="2" fill="#333"/>
+          <rect x="252" y="126" width="16" height="7" rx="1.5" fill="#0cc" opacity="0.63"/>`
   },
   {
-    name: "Trzymacz Lama",
-    cost: 8,
-    emoji: "🦙",
-    desc: "Bardziej relaksująca praca – idle mnożniki zamiast +0.01 rosną +0.013.",
-    effect: (state) => {
-      state.idleMultiplierGrow = 0.013;
-    }
+    id: "lama", name: "Lama", emoji: "🦙",
+    desc: "Idle mnożniki rosną szybciej (+30%).", cost: 5,
+    svg: `<ellipse cx="115" cy="194" rx="8" ry="5" fill="#fff9f6"/>
+          <ellipse cx="115" cy="189" rx="3" ry="4" fill="#fff"/>
+          <rect x="112" y="188" width="6" height="8" rx="2.5" fill="#f7dcc3"/>`
   }
 ];
-  let deskModsOwned = [];
+  const hotspotMap = {
+  "hotspot-cup": 0,
+  "hotspot-flower": 1,
+  "hotspot-lamp": 2,
+  "hotspot-monitor": 3,
+  "hotspot-lama": 4
+  };
+let deskModsOwned = [];
+function renderDeskSVG() {
+  for (const id in hotspotMap) {
+    let idx = hotspotMap[id];
+    const group = document.getElementById(id);
+    group.classList.remove("desk-hotspot-hover", "desk-hotspot-bought", "desk-hotspot-locked");
+    group.querySelector("g").innerHTML = "";
 
+    group.onmouseenter = (ev) => { showDeskTooltip(idx, group); group.classList.add("desk-hotspot-hover"); }
+    group.onmouseleave = (ev) => { hideDeskTooltip(); group.classList.remove("desk-hotspot-hover"); }
+    group.onclick = () => {
+      if (!deskModsOwned.includes(idx)) {
+        if (softSkills >= DESK_MODS[idx].cost) {
+          deskModsOwned.push(idx);
+          softSkills -= DESK_MODS[idx].cost;
+          if (typeof DESK_MODS[idx].effect === "function") DESK_MODS[idx].effect(gameState);
+          applyDeskModsEffects();
+          saveGame();
+          ui.renderAll(tasks, totalPoints, softSkills, burnout);
+          renderDeskSVG();
+        }
+      }
+    }
+    if (deskModsOwned.includes(idx)) {
+      group.classList.add("desk-hotspot-bought");
+      group.querySelector("g").innerHTML = DESK_MODS[idx].svg;
+    } else {
+      group.classList.add(softSkills >= DESK_MODS[idx].cost ? "" : "desk-hotspot-locked");
+    }
+  }
+}
+function showDeskTooltip(idx, group) {
+  const tooltip = document.getElementById("desk-tooltip");
+  const box = group.getBoundingClientRect();
+  tooltip.innerHTML = `<b>${DESK_MODS[idx].emoji} ${DESK_MODS[idx].name}</b><br>
+    <span style="color:#946;-webkit-font-smoothing:antialiased;line-height:1.5">
+      ${DESK_MODS[idx].desc}</span>
+    <br>${deskModsOwned.includes(idx) ? '<span style="color:#53a055">Kupiono</span>' : `<b>Koszt:</b> ${DESK_MODS[idx].cost} <span style="color:#bbb">Soft Skill${DESK_MODS[idx].cost>1?"e":""}</span>`}`;
+  tooltip.style.display = "block";
+  tooltip.style.opacity = 1;
+  // Pozycja
+  tooltip.style.left = (box.left + box.width/2 + window.scrollX) + "px";
+  tooltip.style.top = (box.top - 45 + window.scrollY) + "px";
+}
+function hideDeskTooltip() {
+  const tooltip = document.getElementById("desk-tooltip");
+  tooltip.style.opacity = 0;
+  tooltip.style.display = "none";
+}
+
+window.renderDeskSVG = renderDeskSVG;
+document.addEventListener("DOMContentLoaded", renderDeskSVG);  
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
   const ACHIEVEMENTS = [
     {
@@ -311,20 +359,7 @@ function getBarCycleMs(task) {
   }
 
   // ---- ZAKŁADKA "Biurko" renderowanie ----
-function renderDeskTab() {
-  let html = DESK_MODS.map((mod, i) => `
-    <div class="desk-mod">
-      <span class="emoji">${mod.emoji}</span>
-      <b>${mod.name}</b>
-      <div class="desk-desc">${mod.desc}</div>
-      <span style="margin-left:10px;">Koszt: ${mod.cost} Soft Skill${mod.cost > 1 ? "e" : ""}</span>
-      <button onclick="buyDeskMod(${i})" ${deskModsOwned.includes(i) || softSkills < mod.cost ? "disabled" : ""}>
-        ${deskModsOwned.includes(i) ? "Kupiono" : "Kup"}
-      </button>
-    </div>
-  `).join('');
-  document.getElementById('deskModsList').innerHTML = html;
-}
+
 const gameState = {
   tasks,
   softcapShift: 0,
@@ -345,18 +380,7 @@ function applyDeskModsEffects() {
     }
   });
 }
-function buyDeskMod(idx) {
-  if (!deskModsOwned.includes(idx) && softSkills >= DESK_MODS[idx].cost) {
-    deskModsOwned.push(idx);
-    softSkills -= DESK_MODS[idx].cost;
-    if (typeof DESK_MODS[idx].effect === "function") {
-      DESK_MODS[idx].effect(gameState);
-    }
-    renderDeskTab();
-    saveGame();
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
-  }
-}
+
 
   function renderMultipliersBar() {
     const bar = document.getElementById('multipliersBar');
@@ -505,19 +529,18 @@ function init() {
 window.addEventListener("load", init);
 
 // ------ Przełączanie zakładek menu
-window.renderDeskTab = renderDeskTab;
-window.buyDeskMod = buyDeskMod;
+window.renderDeskSVG = renderDeskSVG;
 window.closeModal = closeModal;
 
 window.addEventListener('DOMContentLoaded', function() {
   const deskBtn = document.getElementById('deskTabBtn');
-  const deskTab = document.getElementById('deskTab');
+  const deskTab = document.getElementById('panel-biurko');
   const appTab = document.getElementById('app');
   if(deskBtn && deskTab && appTab){
     deskBtn.onclick = () => {
       deskTab.style.display = "block";
       appTab.style.display = "none";
-      renderDeskTab();
+      renderDeskSVG();
     };
     // PRZYKŁADOWY powrót – zmień na swój właściwy przycisk (np. 'mainTabBtn')
     const mainBtn = document.getElementById('mainTabBtn');
