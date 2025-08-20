@@ -1,24 +1,25 @@
 (() => {
   'use strict';
+
   // Bazowe wartości za klik
   const BASE_CLICKS = [1, 2, 4, 7, 11, 16, 23, 33, 46, 64, 88, 121, 166, 227, 311, 426];
   const TASKS = [
-    { name: "Robienie kawy Szefowi", unlocked: true,  level: 0, baseClick: BASE_CLICKS[0],  baseIdle: 0.02, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 0 },
+    { name: "Robienie kawy Szefowi", unlocked: true,  level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.02, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 0 },
     { name: "Ctrl+C, Ctrl+V", unlocked: false,  level: 0, baseClick: BASE_CLICKS[1],  baseIdle: 0.04, cycleTime: 2000, multiplier: 1, progress: 0, active: false, unlockCost: 40 },
     { name: "Przerzucanie maili do folderu", unlocked: false,  level: 0, baseClick: BASE_CLICKS[2],  baseIdle: 0.06, cycleTime: 2600, multiplier: 1, progress: 0, active: false, unlockCost: 120 },
     { name: "Small talk w kuchni", unlocked: false,  level: 0, baseClick: BASE_CLICKS[3],  baseIdle: 0.09, cycleTime: 2700, multiplier: 1, progress: 0, active: false, unlockCost: 260 },
     { name: "Zlecenie ticketu w JIRZE", unlocked: false,  level: 0, baseClick: BASE_CLICKS[4],  baseIdle: 0.13, cycleTime: 3150, multiplier: 1, progress: 0, active: false, unlockCost: 850 },
-    { name: "Wklejka do Excela", unlocked: false,  level: 0, baseClick: BASE_CLICKS[5],  baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
-    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS[6],  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
-    { name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS[7],  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
-    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS[8],  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
-    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS[9],  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
-    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS[10], baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
-    { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS[11], baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
-    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS[12], baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
-    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS[13], baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
-    { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS[14], baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
-    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS[15], baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
+    { name: "Wklejka do Excela", unlocked: false,  level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
+    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
+    { name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
+    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
+    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
+    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
+    { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
+    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
+    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
+    { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
+    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
   ];
 
   // --- ACHIEVEMENTY ---
@@ -29,7 +30,7 @@
       desc: "Wykonaj pierwszy klik",
       unlocked: false,
       reward: { taskIdx: 0, multiplierInc: 0.05 },
-      condition: () => topClicks[0] >= 1
+      condition: () => topClicks >= 1
     },
     {
       id: 'mail-master',
@@ -45,7 +46,7 @@
       desc: "Uzyskaj 1000 punktów z pracy „Robienie kawy Szefowi” (Lvl * bazowy klik >= 1000)",
       unlocked: false,
       reward: { taskIdx: 0, multiplierInc: 0.10 },
-      condition: () => tasks[0].level * BASE_CLICKS >= 1000
+      condition: () => tasks.level * BASE_CLICKS >= 1000
     },
     {
       id: 'idle-starter',
@@ -77,7 +78,7 @@
       desc: "Odblokuj zadanie „Delegowanie lemingowi”",
       unlocked: false,
       reward: { taskIdx: 11, multiplierInc: 0.15 },
-      condition: () => tasks[11].unlocked
+      condition: () => tasks.unlocked
     },
     {
       id: 'giphy-enthusiast',
@@ -85,7 +86,7 @@
       desc: "Kliknij 25 razy w „Wysyłanie GIF-ów”",
       unlocked: false,
       reward: { taskIdx: 13, multiplierInc: 0.08 },
-      condition: () => topClicks[13] >= 25
+      condition: () => topClicks >= 25
     },
     {
       id: 'linkedin-pro',
@@ -93,7 +94,7 @@
       desc: "Uzyskaj 500 punktów z „Przeklikanie LinkedIna” (Lvl * bazowy klik >= 500)",
       unlocked: false,
       reward: { taskIdx: 14, multiplierInc: 0.10 },
-      condition: () => tasks[14].level * BASE_CLICKS >= 500
+      condition: () => tasks.level * BASE_CLICKS >= 500
     },
     {
       id: 'burnout-survivor',
@@ -104,6 +105,9 @@
       condition: () => softSkills >= 1
     }
   ];
+
+  // Udostępnij globalnie ACHIEVEMENTS do UI
+  window.ACHIEVEMENTS = ACHIEVEMENTS;
 
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
   let pointsHistory = []; // do wykresu
@@ -153,6 +157,8 @@
     }
     // Upewnij się, że automaty idle ruszają
     tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
+    // Od razu po loadzie odśwież osiągnięcia
+    ui.renderAchievements(window.ACHIEVEMENTS);
   }
 
   function clearSave() {
@@ -190,13 +196,14 @@
         totalPoints += idlePts;
         task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + 0.01;
         tryUnlockTask(idx + 1);
-        checkAchievements();   // <- SPRAWDZANIE ACHIEVEMENTÓW
+        checkAchievements();
         saveGame();
         ui.renderAll(tasks, totalPoints, softSkills, burnout);
         ui.renderProgress(idx, task.progress, task.multiplier);
         renderMultipliersBar();
         floatingScore(idlePts, idx, "#87c686");
         flashPoints();
+        ui.renderAchievements(window.ACHIEVEMENTS);
       }
       ui.renderProgress(idx, task.progress, task.multiplier);
     }, 1000 / 30);
@@ -208,12 +215,13 @@
       totalPoints += task.baseClick || 1;
       topClicks[idx] += 1;
       tryUnlockTask(idx + 1);
-      checkAchievements();    // <- TU TEŻ!
+      checkAchievements();
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
       renderMultipliersBar();
       floatingScore(task.baseClick || 1, idx, "#1976d2");
       flashPoints();
+      ui.renderAchievements(window.ACHIEVEMENTS);
     }
     if (!task.active) startIdle(idx);
   }
@@ -228,7 +236,8 @@
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
       ui.renderUpgradeAffordances(tasks, totalPoints);
       renderMultipliersBar();
-      checkAchievements(); // Achievement za ulepszenie
+      checkAchievements();
+      ui.renderAchievements(window.ACHIEVEMENTS);
     }
   }
 
@@ -239,12 +248,13 @@
     burnout += 1;
     totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
-    checkAchievements(); // Achievement za prestige
+    checkAchievements();
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
     confetti();
+    ui.renderAchievements(window.ACHIEVEMENTS);
   }
 
   function renderMultipliersBar() {
@@ -261,19 +271,15 @@
         .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
   }
 
-  // Funkcja sprawdzająca i przyznająca achievementy (i nagrody)
   function checkAchievements() {
     ACHIEVEMENTS.forEach(a => {
       if (!a.unlocked && (!a.condition || a.condition())) {
         a.unlocked = true;
-        // przyznanie nagrody
         if (a.reward.taskIdx !== null) {
           tasks[a.reward.taskIdx].multiplier += a.reward.multiplierInc;
         } else {
-          // globalny bonus do wszystkich unlocked
           tasks.forEach(t => { if (t.unlocked) t.multiplier += a.reward.multiplierInc; });
         }
-        // powiadomienie gracza
         if (window.IdleUI && typeof window.IdleUI.showAchievement === 'function') {
           window.IdleUI.showAchievement(a);
         } else {
@@ -281,6 +287,7 @@
         }
         saveGame();
         ui.renderAll(tasks, totalPoints, softSkills, burnout);
+        ui.renderAchievements(window.ACHIEVEMENTS);
       }
     });
   }
@@ -378,6 +385,7 @@
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
     updatePointsChart();
+    ui.renderAchievements(window.ACHIEVEMENTS); // <- po starcie
   }
   window.addEventListener("load", init);
 })();
