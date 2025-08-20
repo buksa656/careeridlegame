@@ -25,14 +25,6 @@
   // --- ACHIEVEMENTY ---
   const ACHIEVEMENTS = [
     {
-      id: 'first-click',
-      name: "Pierwszy Klik",
-      desc: "Wykonaj pierwszy klik",
-      unlocked: false,
-      reward: { taskIdx: 0, multiplierInc: 0.05 },
-      condition: () => topClicks >= 1
-    },
-    {
       id: 'mail-master',
       name: "Mailowy Mistrz",
       desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
@@ -47,14 +39,6 @@
       unlocked: false,
       reward: { taskIdx: 0, multiplierInc: 0.10 },
       condition: () => tasks.level * BASE_CLICKS >= 1000
-    },
-    {
-      id: 'idle-starter',
-      name: "Pierwsze Idle",
-      desc: "Uzyskaj punkty przez pracę z idle",
-      unlocked: false,
-      reward: { taskIdx: 1, multiplierInc: 0.05 },
-      condition: () => tasks.some(t => t.active && t.multiplier > 1)
     },
     {
       id: 'level-up-5',
