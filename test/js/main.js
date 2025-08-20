@@ -121,8 +121,7 @@ function hideDeskTooltip() {
   tooltip.style.display = "none";
 }
 
-window.renderDeskSVG = renderDeskSVG;
-document.addEventListener("DOMContentLoaded", renderDeskSVG);  
+window.renderDeskSVG = renderDeskSVG; 
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
   const ACHIEVEMENTS = [
     {
@@ -518,6 +517,9 @@ function init() {
   updatePointsChart();
   ui.renderAchievements(window.ACHIEVEMENTS);
   setMarqueeQuote();
+
+  // TUTAJ: odpal panelNav z ui.js, nie swój własny handler!
+  IdleUI.panelNav(); // aktywuje obsługę zakładek przez prawidłowy system
 }
 
 window.addEventListener("load", init);
@@ -525,25 +527,4 @@ window.addEventListener("load", init);
 // ------ Przełączanie zakładek menu
 window.renderDeskSVG = renderDeskSVG;
 window.closeModal = closeModal;
-
-window.addEventListener('DOMContentLoaded', function() {
-  const deskBtn = document.getElementById('deskTabBtn');
-  const deskTab = document.getElementById('panel-biurko');
-  const appTab = document.getElementById('app');
-  if(deskBtn && deskTab && appTab){
-    deskBtn.onclick = () => {
-      deskTab.style.display = "block";
-      appTab.style.display = "none";
-      renderDeskSVG();
-    };
-    // PRZYKŁADOWY powrót – zmień na swój właściwy przycisk (np. 'mainTabBtn')
-    const mainBtn = document.getElementById('mainTabBtn');
-    if(mainBtn){
-      mainBtn.onclick = () => {
-        deskTab.style.display = "none";
-        appTab.style.display = "block";
-      };
-    }
-  }
-});
 })();
