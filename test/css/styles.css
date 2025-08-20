@@ -357,3 +357,4 @@ main#app {
   padding:18px; margin:10px 0; display:flex; gap:20px; align-items:center;}
 .desk-mod .emoji { font-size:2em; margin-right:7px;}
 .desk-mod button {margin-left:auto; font-size:0.97em;}
+.desk-desc { color:#888; font-size:0.98em; margin:2px 0 8px 0; }
