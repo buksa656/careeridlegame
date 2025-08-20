@@ -176,20 +176,32 @@
 
   // --------- ACHIEVEMENTY, wyświetlanie ------------
 
-  function renderAchievements(achArr) {
-    const container = document.getElementById('achievements-container');
-    if (!container) return;
-    container.innerHTML = achArr.map(a => `
+function renderAchievements(achArr) {
+  const container = document.getElementById('achievements-container');
+  if (!container) return;
+  container.innerHTML = achArr.map(a => {
+    // Opis nagrody
+    let rewardText = '';
+    if (a.reward) {
+      if (a.reward.taskIdx !== null) {
+        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika do zadania`;
+      } else {
+        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika globalnego`;
+      }
+    }
+    return `
       <div class="ach-item${a.unlocked ? ' completed' : ''}">
         <div class="emoji">${a.unlocked ? '🏆' : '🔒'}</div>
         <div>
           <div class="ach-name">${a.name}</div>
           <div class="ach-desc">${a.desc}</div>
-          ${a.unlocked ? `<div class="ach-date">Odkryte!</div>` : ''}
+          <div class="ach-reward">${rewardText}</div>
+          ${a.unlocked ? `<div class="ach-date">Zdobyte</div>` : ''}
         </div>
       </div>
-    `).join('');
-  }
+    `;
+  }).join('');
+}
 
 function showAchievement(a) {
   let toast = document.getElementById('achievement-toast');
