@@ -154,29 +154,42 @@ main#app {
   display: flex; flex-direction: column; gap: 14px; margin-top: 18px; max-width: 600px;
 }
 .ach-item {
-  background: #fffef7;
-  border: 1.5px solid #dac793;
+  background: #ededed;
+  border: 1.5px solid #c7c7c7;
   border-radius: 9px;
   padding: 13px 18px;
   line-height: 1.65;
-  font-size: 1.03em;
-  box-shadow: 0 1px 3px #dcc77a12;
+  font-size: 1.04em;
+  box-shadow: 0 1px 3px #bbb8a612;
   display: flex;
   align-items: flex-start;
   gap: 13px;
   position: relative;
+  opacity: 0.6;
+  filter: grayscale(0.8);
+  transition: background 0.25s, border-color 0.2s, opacity .17s, filter 0.19s;
 }
 .ach-item.completed {
-  background: #f7ffe0;
-  border-color: #b5e07f;
-  color: #526952;
+  background: #e2ffe4;
+  border-color: #79e684;
+  color: #3a6245;
+  opacity: 1;
+  filter: grayscale(0);
 }
 .ach-item .emoji { font-size: 1.62em; margin-right: 7px; }
 .ach-item .ach-name { font-weight: 700; color: #735b0a; }
 .ach-item .ach-desc { font-size: .92em; color: #7e876a; }
 .ach-item .ach-date {
-  color: #999; font-size: .82em;
+  color: #6cb265;
+  font-size: .85em;
   position: absolute; bottom: 8px; right: 18px;
+  font-weight: 700;
+}
+.ach-item .ach-reward {
+  margin-top: 3px;
+  color: #a38208;
+  font-size: 0.97em;
+  font-weight: 500;
 }
 #reward-modal {
   position: fixed; left: 50%; top: 30%;
