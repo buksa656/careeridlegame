@@ -191,9 +191,29 @@
     `).join('');
   }
 
-  function showAchievement(a) {
-    alert(`Osiągnięcie odblokowane: ${a.name}!\n${a.desc}`);
+function showAchievement(a) {
+  let toast = document.getElementById('achievement-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'achievement-toast';
+    document.body.appendChild(toast);
   }
+  toast.innerHTML = `
+    <span class="emoji">🏆</span>
+    <div>
+      <div style="font-weight:bold;font-size:1.1em;letter-spacing:0.2px">${a.name}</div>
+      <div class="desc">${a.desc}</div>
+    </div>
+  `;
+  toast.classList.add("visible");
+  toast.style.display = "flex";
+
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove("visible");
+    setTimeout(() => { toast.style.display = "none"; }, 370);
+  }, 3200);
+}
 
   // --- eksport API ---
   window.IdleUI = {
