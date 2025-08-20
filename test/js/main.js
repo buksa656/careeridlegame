@@ -382,13 +382,8 @@ function init() {
   renderMultipliersBar();
   updatePointsChart();
   ui.renderAchievements(window.ACHIEVEMENTS); // <- po starcie
-}
-
-// To NA ZEWNĄTRZ funkcji init!
-window.addEventListener("load", function() {
-  init();
   setMarqueeQuote();
-});
+}
     // START IDLE od razu dla odblokowanych!
     tasks.forEach((task, idx) => { if(task.unlocked) startIdle(idx); });
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
