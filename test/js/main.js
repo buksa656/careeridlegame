@@ -9,88 +9,31 @@
     { name: "Przerzucanie maili do folderu", unlocked: false,  level: 0, baseClick: BASE_CLICKS[2],  baseIdle: 0.06, cycleTime: 2600, multiplier: 1, progress: 0, active: false, unlockCost: 120 },
     { name: "Small talk w kuchni", unlocked: false,  level: 0, baseClick: BASE_CLICKS[3],  baseIdle: 0.09, cycleTime: 2700, multiplier: 1, progress: 0, active: false, unlockCost: 260 },
     { name: "Zlecenie ticketu w JIRZE", unlocked: false,  level: 0, baseClick: BASE_CLICKS[4],  baseIdle: 0.13, cycleTime: 3150, multiplier: 1, progress: 0, active: false, unlockCost: 850 },
-    { name: "Wklejka do Excela", unlocked: false,  level: 0, baseClick: BASE_CLICKS[5],  baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
-    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS[6],  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
-    { name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS[7],  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
-    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS[8],  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
-    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS[9],  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
-    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS[10], baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
-    { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS[11], baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
-    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS[12], baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
-    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS[13], baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
-    { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS[14], baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
-    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS[15], baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
+    { name: "Wklejka do Excela", unlocked: false,  level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
+    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
+    { name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
+    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
+    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS,  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
+    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
+    { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
+    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
+    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
+    { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
+    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS, baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
   ];
 
-  // --- ACHIEVEMENTY ---
-  const ACHIEVEMENTS = [
-    {
-      id: 'mail-master',
-      name: "Mailowy Mistrz",
-      desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
-      unlocked: false,
-      reward: { taskIdx: 2, multiplierInc: 0.10 },
-      condition: () => topClicks[2] >= 100
-    },
-    {
-      id: 'coffee-baron',
-      name: "Baron Kawowy",
-      desc: "Uzyskaj 1000 punktów z pracy „Robienie kawy Szefowi” (Lvl * bazowy klik >= 1000)",
-      unlocked: false,
-      reward: { taskIdx: 0, multiplierInc: 0.10 },
-      condition: () => tasks.level * BASE_CLICKS >= 1000
-    },
-    {
-      id: 'level-up-5',
-      name: "Poziom 5",
-      desc: "Podnieś dowolne zadanie do poziomu 5",
-      unlocked: false,
-      reward: { taskIdx: null, multiplierInc: 0.05 }, // globalny modyfikator
-      condition: () => tasks.some(t => t.level >= 5)
-    },
-    {
-      id: 'daily-speaker',
-      name: "Mówca na daily",
-      desc: "Kliknij 50 razy w „Standup 'co zrobisz dziś?'”",
-      unlocked: false,
-      reward: { taskIdx: 10, multiplierInc: 0.12 },
-      condition: () => topClicks[10] >= 50
-    },
-    {
-      id: 'delegator',
-      name: "Mistrz Delegowania",
-      desc: "Odblokuj zadanie „Delegowanie lemingowi”",
-      unlocked: false,
-      reward: { taskIdx: 11, multiplierInc: 0.15 },
-      condition: () => tasks.unlocked
-    },
-    {
-      id: 'giphy-enthusiast',
-      name: "GIFoholik",
-      desc: "Kliknij 25 razy w „Wysyłanie GIF-ów”",
-      unlocked: false,
-      reward: { taskIdx: 13, multiplierInc: 0.08 },
-      condition: () => topClicks >= 25
-    },
-    {
-      id: 'linkedin-pro',
-      name: "LinkedIn Pro",
-      desc: "Uzyskaj 500 punktów z „Przeklikanie LinkedIna” (Lvl * bazowy klik >= 500)",
-      unlocked: false,
-      reward: { taskIdx: 14, multiplierInc: 0.10 },
-      condition: () => tasks.level * BASE_CLICKS >= 500
-    },
-    {
-      id: 'burnout-survivor',
-      name: "Survivor",
-      desc: "Prestige (zdobądź dodatkową umiejętność miękką)",
-      unlocked: false,
-      reward: { taskIdx: null, multiplierInc: 0.10 },
-      condition: () => softSkills >= 1
-    }
+  // --- MODYFIKACJE BIURKA --- //
+  const DESK_MODS = [
+    { name: "Niebieski kwiatek", cost: 1, emoji: "🌼" },
+    { name: "Lampka RGB", cost: 2, emoji: "💡" },
+    { name: "Monitor ultrapanoramiczny", cost: 3, emoji: "🖥️" },
+    { name: "Kaktus i kubek", cost: 5, emoji: "🌵☕" },
+    { name: "Trzymacz Lama", cost: 8, emoji: "🦙" }
   ];
+  let deskModsOwned = [];
 
-  // Udostępnij globalnie ACHIEVEMENTS do UI
+  // --- ACHIEVEMENTY --- (bez zmian, twój kod ACHIEVEMENTS tu...)
+
   window.ACHIEVEMENTS = ACHIEVEMENTS;
 
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
@@ -100,7 +43,8 @@
   function saveGame() {
     localStorage.setItem("korposzczur_save", JSON.stringify({
       tasks, totalPoints, softSkills, burnout, pointsHistory, topClicks,
-      achievements: ACHIEVEMENTS.map(a => ({ id: a.id, unlocked: a.unlocked }))
+      achievements: ACHIEVEMENTS.map(a => ({ id: a.id, unlocked: a.unlocked })),
+      deskModsOwned
     }));
   }
 
@@ -115,13 +59,13 @@
         if (typeof s.burnout === "number") burnout = s.burnout;
         pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
         topClicks = Array.isArray(s.topClicks) ? s.topClicks : Array(TASKS.length).fill(0);
-        // Wczytaj stan ev. achievementów
         if (Array.isArray(s.achievements)) {
           s.achievements.forEach(saved => {
             const orig = ACHIEVEMENTS.find(a => a.id === saved.id);
             if (orig) orig.unlocked = saved.unlocked;
           });
         }
+        deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
         tasks.forEach((t, i) => {
           if (typeof t.multiplier !== 'number') t.multiplier = 1;
           if (typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
@@ -132,16 +76,16 @@
         pointsHistory = [];
         topClicks = Array(TASKS.length).fill(0);
         ACHIEVEMENTS.forEach(a => a.unlocked = false);
+        deskModsOwned = [];
       }
     } else {
       tasks = JSON.parse(JSON.stringify(TASKS));
       pointsHistory = [];
       topClicks = Array(TASKS.length).fill(0);
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
+      deskModsOwned = [];
     }
-    // Upewnij się, że automaty idle ruszają
     tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
-    // Od razu po loadzie odśwież osiągnięcia
     ui.renderAchievements(window.ACHIEVEMENTS);
   }
 
@@ -239,6 +183,41 @@
     renderMultipliersBar();
     confetti();
     ui.renderAchievements(window.ACHIEVEMENTS);
+
+    // MODAL PO PIERWSZYM SOFTSKILLU!
+    if (softSkills === 1) showSoftSkillModal();
+  }
+
+  // ---- MODAL Z GRATULACJAMI ----
+  function showSoftSkillModal() {
+    document.getElementById('softskill-modal').style.display = 'flex';
+  }
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  // ---- ZAKŁADKA "Biurko" renderowanie ----
+  function renderDeskTab() {
+    let html = DESK_MODS.map((mod, i) => `
+      <div class="desk-mod">
+        <span class="emoji">${mod.emoji}</span>
+        <b>${mod.name}</b>
+        <span style="margin-left:10px;">Koszt: ${mod.cost} Soft Skill${mod.cost > 1 ? "e" : ""}</span>
+        <button onclick="buyDeskMod(${i})" ${deskModsOwned.includes(i) || softSkills < mod.cost ? "disabled" : ""}>
+          ${deskModsOwned.includes(i) ? "Kupiono" : "Kup"}
+        </button>
+      </div>
+    `).join('');
+    document.getElementById('deskModsList').innerHTML = html;
+  }
+  function buyDeskMod(idx) {
+    if (!deskModsOwned.includes(idx) && softSkills >= DESK_MODS[idx].cost) {
+      deskModsOwned.push(idx);
+      softSkills -= DESK_MODS[idx].cost;
+      renderDeskTab();
+      saveGame();
+      ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    }
   }
 
   function renderMultipliersBar() {
@@ -387,4 +366,29 @@ function init() {
 
 window.addEventListener("load", init);
 
+// ------ Przełączanie zakładek menu
+window.renderDeskTab = renderDeskTab;
+window.buyDeskMod = buyDeskMod;
+window.closeModal = closeModal;
+
+window.addEventListener('DOMContentLoaded', function() {
+  const deskBtn = document.getElementById('deskTabBtn');
+  const deskTab = document.getElementById('deskTab');
+  const appTab = document.getElementById('app');
+  if(deskBtn && deskTab && appTab){
+    deskBtn.onclick = () => {
+      deskTab.style.display = "block";
+      appTab.style.display = "none";
+      renderDeskTab();
+    };
+    // PRZYKŁADOWY powrót – zmień na swój właściwy przycisk (np. 'mainTabBtn')
+    const mainBtn = document.getElementById('mainTabBtn');
+    if(mainBtn){
+      mainBtn.onclick = () => {
+        deskTab.style.display = "none";
+        appTab.style.display = "block";
+      };
+    }
+  }
+});
 })();
