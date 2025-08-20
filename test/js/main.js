@@ -417,22 +417,16 @@ function applyDeskModsEffects() {
     });
   }
 
-  function floatingScore(points, idx, color) {
-    const list = document.querySelectorAll(".kafelek");
-    const el = list[idx];
-    if (!el) return;
-    const float = document.createElement("div");
-    float.className = "floating-score";
-    float.style.color = color || "#1976d2";
-    float.textContent = "+" + (points % 1 === 0 ? points : points.toFixed(3));
-    float.style.left = "47%";
-    float.style.top = "25px";
-    el.appendChild(float);
-    setTimeout(() => { float.style.transform = "translateY(-32px) scale(1.15)"; float.style.opacity = "0"; }, 10);
-    setTimeout(() => el.removeChild(float), 600);
-    el.classList.add("clicked-anim");
-    setTimeout(() => el.classList.remove("clicked-anim"), 320);
-  }
+function floatingScore(points, idx, color) {
+  const list = document.querySelectorAll(".kafelek");
+  const el = list[idx];
+  if (!el) return;
+  el.classList.remove("clicked-anim");
+  // Aby animacja zawsze się odpaliła, nawet po szybkim kliku
+  void el.offsetWidth;
+  el.classList.add("clicked-anim");
+  setTimeout(() => el.classList.remove("clicked-anim"), 180);
+}
   function flashPoints() {
     const score = document.getElementById('top-total-points');
     if(!score) return;
