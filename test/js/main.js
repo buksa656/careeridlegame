@@ -23,13 +23,56 @@
   ];
 
   // --- MODYFIKACJE BIURKA --- //
-  const DESK_MODS = [
-    { name: "Niebieski kwiatek", cost: 1, emoji: "🌼" },
-    { name: "Lampka RGB", cost: 2, emoji: "💡" },
-    { name: "Monitor ultrapanoramiczny", cost: 3, emoji: "🖥️" },
-    { name: "Kaktus i kubek", cost: 5, emoji: "🌵☕" },
-    { name: "Trzymacz Lama", cost: 8, emoji: "🦙" }
-  ];
+const DESK_MODS = [
+  {
+    name: "Niebieski kwiatek",
+    cost: 1,
+    emoji: "🌼",
+    desc: "Dodaje pozytywną aurę – o 5% większy mnożnik idle.",
+    effect: (state) => {
+      // Bonus: +5% do wszystkich mnożników zadań
+      state.tasks.forEach(t => t.multiplier *= 1.05);
+    }
+  },
+  {
+    name: "Lampka RGB",
+    cost: 2,
+    emoji: "💡",
+    desc: "Barwy RGB pobudzają kreatywność! Softcap poziomu tasków przesunięty o +3.",
+    effect: (state) => {
+      // Bonus: przesuwa softcap z 15 na 18 przy liczeniu getBarCycleMs
+      state.softcapShift = 3;
+    }
+  },
+  {
+    name: "Monitor ultrapanoramiczny",
+    cost: 3,
+    emoji: "🖥️",
+    desc: "Więcej miejsca na taski – idle szybciej o 10%!",
+    effect: (state) => {
+      // Wszystkie cycleTime skracają się o 10%
+      state.tasks.forEach(t => t.cycleTime *= 0.90);
+    }
+  },
+  {
+    name: "Kaktus i kubek",
+    cost: 5,
+    emoji: "🌵☕",
+    desc: "Każda kawa to mniej stresu. Burnout wolniej o 10%.",
+    effect: (state) => {
+      state.burnoutReduction = 0.10; // Można obsłużyć obniżanie burnoutu w mechanice
+    }
+  },
+  {
+    name: "Trzymacz Lama",
+    cost: 8,
+    emoji: "🦙",
+    desc: "Bardziej relaksująca praca – idle mnożniki zamiast +0.01 rosną +0.013.",
+    effect: (state) => {
+      state.idleMultiplierGrow = 0.013;
+    }
+  }
+];
   let deskModsOwned = [];
 
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
@@ -166,12 +209,15 @@
       tasks[idx].unlocked = true;
   }
 
-  function getBarCycleMs(task) {
-    const speedGrowth = 0.94;
-    const lvl = Math.min(task.level, 15);
-    const softcap = task.level > 15 ? Math.pow(0.98, task.level - 15) : 1;
-    return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap / Math.max(0.001, (typeof task.multiplier === 'number' ? task.multiplier : 1));
-  }
+function getBarCycleMs(task) {
+  const speedGrowth = 0.94;
+  // Użyj z gameState.softcapShift (domyślnie 0, po lampce będzie 3)
+  const lvl = Math.min(task.level, 15 + (gameState.softcapShift || 0));
+  const softcap = task.level > (15 + (gameState.softcapShift || 0))
+    ? Math.pow(0.98, task.level - (15 + (gameState.softcapShift || 0)))
+    : 1;
+  return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap / Math.max(0.001, (typeof task.multiplier === 'number' ? task.multiplier : 1));
+}
 
   function startIdle(idx) {
     if (tasks[idx].active) return;
@@ -188,7 +234,7 @@
         task.progress = 0;
         const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
         totalPoints += idlePts;
-        task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + 0.01;
+        task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
         tryUnlockTask(idx + 1);
         checkAchievements();
         saveGame();
@@ -263,28 +309,39 @@
   }
 
   // ---- ZAKŁADKA "Biurko" renderowanie ----
-  function renderDeskTab() {
-    let html = DESK_MODS.map((mod, i) => `
-      <div class="desk-mod">
-        <span class="emoji">${mod.emoji}</span>
-        <b>${mod.name}</b>
-        <span style="margin-left:10px;">Koszt: ${mod.cost} Soft Skill${mod.cost > 1 ? "e" : ""}</span>
-        <button onclick="buyDeskMod(${i})" ${deskModsOwned.includes(i) || softSkills < mod.cost ? "disabled" : ""}>
-          ${deskModsOwned.includes(i) ? "Kupiono" : "Kup"}
-        </button>
-      </div>
-    `).join('');
-    document.getElementById('deskModsList').innerHTML = html;
-  }
-  function buyDeskMod(idx) {
-    if (!deskModsOwned.includes(idx) && softSkills >= DESK_MODS[idx].cost) {
-      deskModsOwned.push(idx);
-      softSkills -= DESK_MODS[idx].cost;
-      renderDeskTab();
-      saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
+function renderDeskTab() {
+  let html = DESK_MODS.map((mod, i) => `
+    <div class="desk-mod">
+      <span class="emoji">${mod.emoji}</span>
+      <b>${mod.name}</b>
+      <div class="desk-desc">${mod.desc}</div>
+      <span style="margin-left:10px;">Koszt: ${mod.cost} Soft Skill${mod.cost > 1 ? "e" : ""}</span>
+      <button onclick="buyDeskMod(${i})" ${deskModsOwned.includes(i) || softSkills < mod.cost ? "disabled" : ""}>
+        ${deskModsOwned.includes(i) ? "Kupiono" : "Kup"}
+      </button>
+    </div>
+  `).join('');
+  document.getElementById('deskModsList').innerHTML = html;
+}
+const gameState = {
+  tasks,
+  softcapShift: 0,
+  burnoutReduction: 0,
+  idleMultiplierGrow: 0.01 // domyślnie jak w bazowej mechanice
+};
+
+function buyDeskMod(idx) {
+  if (!deskModsOwned.includes(idx) && softSkills >= DESK_MODS[idx].cost) {
+    deskModsOwned.push(idx);
+    softSkills -= DESK_MODS[idx].cost;
+    if (typeof DESK_MODS[idx].effect === "function") {
+      DESK_MODS[idx].effect(gameState);
     }
+    renderDeskTab();
+    saveGame();
+    ui.renderAll(tasks, totalPoints, softSkills, burnout);
   }
+}
 
   function renderMultipliersBar() {
     const bar = document.getElementById('multipliersBar');
