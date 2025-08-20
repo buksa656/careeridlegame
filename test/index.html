@@ -17,21 +17,22 @@
   <nav>
     <button class="tab-btn" data-panel="kariera">Kariera</button>
     <button class="tab-btn" data-panel="osiagniecia">Osiągnięcia</button>
-    <button class="tab-btn" id="deskTabBtn">🖥️ Biurko</button>
+    <button class="tab-btn" data-panel="biurko" id="deskTabBtn">🖥️ Biurko</button>
     <button class="tab-btn" data-panel="ustawienia">Ustawienia</button>
   </nav>
 </header>
 <main id="app">
   <section id="panel-kariera" class="panel"></section>
   <section id="panel-osiagniecia" class="panel" style="display:none;">
-  <h2>Osiągnięcia</h2>
-  <div id="achievements-container"></div>
+    <h2>Osiągnięcia</h2>
+    <div id="achievements-container"></div>
+  </section>
+  <section id="panel-biurko" class="panel" style="display:none;">
+    <h2>Twoje Biurko</h2>
+    <div id="deskModsList"></div>
+  </section>
   <section id="panel-firma" class="panel" style="display:none;"></section>
   <section id="panel-ustawienia" class="panel" style="display:none;"></section>
-</main>
-<main id="deskTab" style="display:none;">
-  <h2>Twoje Biurko</h2>
-  <div id="deskModsList"></div>
 </main>
 <script src="js/ui.js"></script>
 <script src="js/main.js"></script>
