@@ -316,13 +316,29 @@
     "Robimy szybki brainstorming",
     "Wyślij mi briefa na maila"
   ];
-function randomQuote() {
+let quoteIndex = -1;
+
+function setMarqueeQuote(idx = null) {
   const el = document.getElementById('quote');
-  let idx = Math.floor(Math.random() * OFFICE_QUOTES.length);
-  el.innerHTML = `<span>💬 ${OFFICE_QUOTES[idx]}</span>`;
+  let nextIdx;
+  do {
+    nextIdx = typeof idx === "number"
+      ? idx
+      : Math.floor(Math.random() * OFFICE_QUOTES.length);
+  } while (nextIdx === quoteIndex && OFFICE_QUOTES.length > 1);
+  quoteIndex = nextIdx;
+
+  // Ustaw cytat z resetem animacji
+  el.innerHTML = `<span>💬 ${OFFICE_QUOTES[quoteIndex]}</span>`;
+  const span = el.querySelector('span');
+  span.style.animation = 'none';
+  // trigger reflow
+  void span.offsetWidth;
+  span.style.animation = null;
+
+  // Po zakończeniu przewijania, wywołaj kolejny cytat
+  span.addEventListener('animationend', () => setMarqueeQuote(), { once: true });
 }
-  setInterval(randomQuote, 42000);
-  setTimeout(randomQuote, 2000);
   function updatePointsChart() {
     if (!window.pointsHistory) window.pointsHistory = [];
     pointsHistory.push(totalPoints);
@@ -351,15 +367,28 @@ function randomQuote() {
       <table>${rows}</table></div>`;
   }
   const ui = window.IdleUI;
-  function init() {
-    loadGame();
-    timers = Array(tasks.length).fill(null);
-    ui.init({
-      onClickTask: clickTask,
-      onUpgradeTask: upgradeTask,
-      onPrestige: prestige,
-      onClearSave: clearSave
-    });
+function init() {
+  loadGame();
+  timers = Array(tasks.length).fill(null);
+  ui.init({
+    onClickTask: clickTask,
+    onUpgradeTask: upgradeTask,
+    onPrestige: prestige,
+    onClearSave: clearSave
+  });
+  // inne rzeczy ustawiane przy starcie gry...
+  ui.renderAll(tasks, totalPoints, softSkills, burnout);
+  ui.renderUpgradeAffordances(tasks, totalPoints);
+  renderMultipliersBar();
+  updatePointsChart();
+  ui.renderAchievements(window.ACHIEVEMENTS); // <- po starcie
+}
+
+// To NA ZEWNĄTRZ funkcji init!
+window.addEventListener("load", function() {
+  init();
+  setMarqueeQuote();
+});
     // START IDLE od razu dla odblokowanych!
     tasks.forEach((task, idx) => { if(task.unlocked) startIdle(idx); });
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
