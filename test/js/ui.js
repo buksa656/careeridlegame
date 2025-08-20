@@ -55,12 +55,19 @@
         const target = btn.dataset.panel;
         btn.classList.add("active");
         document.getElementById("panel-" + target).style.display = "";
+        // --- POPRAWKA: renderuj osiągnięcia gdy wejdziemy na panel zakładki
+        if (target === "osiagniecia" && window.ACHIEVEMENTS) {
+          renderAchievements(window.ACHIEVEMENTS);
+        }
       });
     });
+    // Ustaw panel startowy (Kariera)
     document.querySelector('.tab-btn[data-panel="kariera"]').classList.add("active");
     document.getElementById("panel-kariera").style.display = "";
     document.getElementById("panel-firma").style.display = "none";
     document.getElementById("panel-ustawienia").style.display = "none";
+    const panelAch = document.getElementById("panel-osiagniecia");
+    if (panelAch) panelAch.style.display = "none";
   }
 
   function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
@@ -71,7 +78,6 @@
       if (tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
       else if (i === maxUnlockedIdx + 1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
     }
-    // Biuro-punkty — szare "grosze"
     let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
     let [intPart, fracPart] = totalPointsStr.split(',');
     e("#top-total-points").innerHTML =
@@ -98,8 +104,7 @@
     }
     addEvents(tasks.length);
     updateTopClicks();
-    // Wyświetl osiągnięcia automatycznie, jeśli taka sekcja istnieje
-    if (window.ACHIEVEMENTS) renderAchievements(window.ACHIEVEMENTS);
+    // Osiągnięcia renderowane będą tylko, gdy panel jest aktywny
   }
 
   function renderMultipliersBar(tasks) {
@@ -187,7 +192,6 @@
   }
 
   function showAchievement(a) {
-    // tu można zrobić modal zamiast alert
     alert(`Osiągnięcie odblokowane: ${a.name}!\n${a.desc}`);
   }
 
