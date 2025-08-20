@@ -344,3 +344,16 @@ main#app {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%);}
 }
+/* Modal Styl */
+.modal { display:flex; align-items:center; justify-content:center;
+  position:fixed; left:0; top:0; width:100vw; height:100vh; z-index:999;
+  background:#26323f77; }
+.modal-content { background:#fff; padding:36px 38px; border-radius:16px;
+  box-shadow:0 4px 44px #26323f22; text-align:center; min-width:320px; }
+.modal-content .emoji { font-size:2.5em; margin-bottom:10px; }
+
+#deskTab h2 { margin-top:0; }
+.desk-mod { background:#f9f5ff; border:1.5px solid #ccd0db; border-radius:9px;
+  padding:18px; margin:10px 0; display:flex; gap:20px; align-items:center;}
+.desk-mod .emoji { font-size:2em; margin-right:7px;}
+.desk-mod button {margin-left:auto; font-size:0.97em;}
