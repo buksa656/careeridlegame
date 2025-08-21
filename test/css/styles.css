@@ -92,40 +92,25 @@ main#app {
   border-radius: 18px;
   box-shadow: 0 4px 20px #1976d21c, 0 2px 9px #3251790d;
   border: 1.5px solid #e4e9f0;
-  padding: 17px 20px 13px 20px;   /* DUŻY padding wewnątrz! */
-  min-height: 196px;
+  padding: 19px 20px 14px 20px;
+  min-height: 188px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 5px;
-  margin-bottom: 7px;
-  transition: box-shadow .19s, border-color .13s, background .13s;
+  gap: 7px;
   position: relative;
+  margin-bottom: 0;
+  transition: box-shadow .19s, border-color .13s, background .13s;
 }
 /* Każdy kafelek trzymany w identycznym kontenerze */
 .kafelek-outer {
+  flex: 0 1 230px;
+  max-width: 230px;
+  min-width: 180px;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin-bottom: 24px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 148px;
-  min-width: 132px;
-  position: relative;
-  margin-bottom: 14px;
-}
-.kafelek-svg-wrap {
-  position: relative;
-  width: 134px;
-  height: 140px;
-  z-index: 1;
-}
-.kafelek-border-progress {
-  position: absolute;
-  top: 0; left: 0;
-  width: 134px;
-  height: 190px;
-  pointer-events: none;
-  z-index: 2;
-  display: block;
 }
 .kafelek-progress {
   min-height: 134px; /* lub 120px */
@@ -150,27 +135,18 @@ main#app {
   border-color: #5bc2fa;
 }
 .kafelek-bottom-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 9px;
-  width: 96%;
-  position: absolute;
-  bottom: 8px; left: 2%;
-  z-index: 11;
+  display: flex; flex-direction: row; justify-content: center;
+  gap: 10px; margin-top: 13px; margin-bottom: 0;
 }
-.kafelek:hover, .kafelek:focus-visible{   
+.kafelek:hover, .kafelek:focus-visible {
   box-shadow: 0 8px 32px #176ec249, 0 3.5px 18px #22344719;
   border-color: #8cc9fd;
   z-index: 2;
 }
 .kafelek:active { border: 2px solid var(--accent);}
 .kafelek.locked {
-  opacity: 0.59;
-  filter: grayscale(0.7);
-  pointer-events: none;
+  opacity: 0.59; filter: grayscale(0.7); pointer-events: none;
   box-shadow: 0 4px 16px #8492a62c;
-  opacity: 0.59;
   border: 1.5px solid #e8e8ee;
   background: #f7fafe;
 }
@@ -183,32 +159,23 @@ main#app {
   65%  { transform: scale(0.97);}
   100% { transform: scale(1);}
 }
-.kafelek-info {
-  padding: 17px 10px 36px 13px;
-  font-size: 0.97em;
-}
+.kafelek-info { padding: 0; font-size: .99em; }
 .kafelek-info .funny { color: #e79522; font-size: .95em; margin: 2px 0 0 0; }
 .kafelek-info .title { font-weight: 700; font-size: 1.13em; color: var(--accent); margin-bottom: 5px; }
-.kafelek-row   { color: var(--muted); font-size: .97em; margin: 2px 0; }
-.kafelek-row.stats {
-  font-size: 0.95em;
-  color: #5d709a;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  font-size: .98em;
-}
+.kafelek-row { color: #8492a6; font-size: .97em; margin: 2px 0;}
+.kafelek-row.stats { font-size: 0.95em; color: #5d709a;}
 .kafelek-row.asc-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   background: #eceffc;
   color: #1862a6;
   border-radius: 8px;
-  padding: 3px 8px 3px 9px;
+  padding: 3px 8px;
   font-size: .97em;
-  font-weight: 700;
+  font-weight: 600;
   width: fit-content;
-  margin: 6px 0 11px 0;
+  margin: 9px 0 7px 0;
 }
 /* --- PASEK PROGRESU --- */
 .kafelek-progbar {
@@ -230,19 +197,21 @@ main#app {
 }
 .asc-badge { font-size: 0.99em; margin-bottom:7px }
 .asc-perc { color: #206dbb; margin-left: 5px; }
-.ascend-btn, .kafelek-ulepsz-btn {
+.kafelek-ulepsz-btn, .ascend-btn {
   border-radius: 9px;
   font-weight: 600;
-  white-space: normal;
-  padding: 6px 10px;
+  padding: 6px 9px;
+  font-size: .97em;
   border: 1.1px solid #a7d0fe;
   background: #e8f1fe;
   color: #1761a5;
+  flex: 1 0 0;
+  min-width: 0;
   cursor: pointer;
   box-shadow: 0 1.5px 7px #3574a918;
   transition: background .13s, border-color .12s;
 }
-.ascend-btn:hover, .kafelek-ulepsz-btn:hover{
+.ascend-btn:hover, .kafelek-ulepsz-btn:hover {
   background: #b4deff;
   color: #133b65;
   border-color: #7ab5e6;
@@ -255,11 +224,19 @@ main#app {
   box-shadow: 0 3px 17px #a5cdf877, 0 1px 7px #99b9c333;
   border-color: var(--accent);
 }
-.kafelek-ulepsz-btn:disabled {
-  background: #f0f3fb;
-  color: #7c94ae;
-  cursor: not-allowed;
-  border-color: #e4eaf3;
+.kafelek-ulepsz-btn, .ascend-btn {
+  border-radius: 9px;
+  font-weight: 600;
+  padding: 6px 9px;
+  font-size: .97em;
+  border: 1.1px solid #a7d0fe;
+  background: #e8f1fe;
+  color: #1761a5;
+  flex: 1 0 0;
+  min-width: 0;
+  cursor: pointer;
+  box-shadow: 0 1.5px 7px #3574a918;
+  transition: background .13s, border-color .12s;
 }
 
 /* --- RESPONSYWNOĹšÄ† KAFELKĂ“W --- */
