@@ -19,7 +19,7 @@
   const colorByLevel = lvl =>
     lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
 
-  function taskTile(task, idx, totalPoints, locked = false) {
+function taskTile(task, idx, totalPoints, locked = false) {
     const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
     const ascendStage = ASCEND_STAGES[ascendLevel];
     const nextStage = ASCEND_STAGES[ascendLevel + 1];
@@ -42,7 +42,7 @@
           <div class="title">${task.name}</div>
           <div class="kafelek-ascend-row">
             <span style="font-size:.98em; color:#425;">
-              Poziom awansu: <b>${stage.name}</b>
+              Poziom awansu: <b>${ascendStage.name}</b>
             </span>
           <div class="asc-bonus" style="font-size:.96em; color:#625;">
             Premia idle: <b>+${Math.round((ascendStage.idleMult - 1)*100)}%</b>
@@ -74,6 +74,7 @@
         </div>
       </div>`;
   }
+
 
 function panelNav() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
