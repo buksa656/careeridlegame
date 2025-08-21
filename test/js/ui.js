@@ -102,7 +102,7 @@ function renderSingleTile(idx, task, totalPoints) {
     addEvents(1);
   }
 }
-  function updateSingleTile(idx, task, totalPoints) {
+function updateSingleTile(idx, task, totalPoints) {
   const kafelek = document.querySelector(`.kafelek[data-taskidx="${idx}"]`);
   if (!kafelek) return;
 
@@ -118,27 +118,27 @@ function renderSingleTile(idx, task, totalPoints) {
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
   const nextStage = ASCEND_STAGES[ascendLevel + 1] || null;
 
-  // Aktualizacja poziomu/kosztu/idle/mnożnika/clicków
-  kafelek.querySelector('.tile-stage').innerText = ascendStage.name;
-  kafelek.querySelector('.tile-asc-perc').innerText = `+${Math.round((ascendStage.idleMult - 1) * 100)}% idle`;
-  kafelek.querySelector('.tile-lvl').innerText = task.level;
-  kafelek.querySelector('.tile-idle').innerText = perSec;
-  kafelek.querySelector('.tile-mult').innerText = `(x${multiplierLabel})`;
-  kafelek.querySelector('.tile-click').innerText = clickVal;
-  kafelek.querySelector('.tile-clicks').innerText = window.topClicks ? window.topClicks[idx] : 0;
-  kafelek.querySelector('.tile-prestige').innerText = window.prestigeClicks ? window.prestigeClicks[idx] : 0;
+  if (kafelek.querySelector('.tile-stage')) kafelek.querySelector('.tile-stage').innerText = ascendStage.name;
+  if (kafelek.querySelector('.tile-asc-perc')) kafelek.querySelector('.tile-asc-perc').innerText = `+${Math.round((ascendStage.idleMult - 1) * 100)}% idle`;
+  if (kafelek.querySelector('.tile-lvl')) kafelek.querySelector('.tile-lvl').innerText = task.level;
+  if (kafelek.querySelector('.tile-idle')) kafelek.querySelector('.tile-idle').innerText = perSec;
+  if (kafelek.querySelector('.tile-mult')) kafelek.querySelector('.tile-mult').innerText = `(x${multiplierLabel})`;
+  if (kafelek.querySelector('.tile-click')) kafelek.querySelector('.tile-click').innerText = clickVal;
+  if (kafelek.querySelector('.tile-clicks')) kafelek.querySelector('.tile-clicks').innerText = window.topClicks ? window.topClicks[idx] : 0;
+  if (kafelek.querySelector('.tile-prestige')) kafelek.querySelector('.tile-prestige').innerText = window.prestigeClicks ? window.prestigeClicks[idx] : 0;
 
-  // Jeśli masz unlock cost wyświetl, jeśli nie – pomin
+  // Jeśli masz unlock cost:
   const unlock = kafelek.querySelector('.tile-unlock');
   if (unlock && typeof task.unlockCost === 'number') unlock.innerText = fmt(task.unlockCost);
 
-  // Ewentualnie aktualizacja tekstu przycisków (jeśli masz dynamiczne koszty)
+  // Przycisk optymalizuj
   const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost() : Math.floor(20 * Math.pow(2.25, task.level));
   const btnUpg = kafelek.querySelector('.kafelek-ulepsz-btn');
   if (btnUpg) btnUpg.innerHTML = `Optymalizuj<br>(${fmt(upgCost)})`;
   if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
 
+  // Przycisk awans
   const btnAsc = kafelek.querySelector('.ascend-btn');
   if (btnAsc && nextStage)
     btnAsc.innerHTML = `Awans<br>(${nextStage.cost})`;
