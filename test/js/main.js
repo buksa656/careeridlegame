@@ -296,38 +296,41 @@ function getBarCycleMs(task) {
   return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap / Math.max(0.001, (typeof task.multiplier === 'number' ? task.multiplier : 1));
 }
 
-  function startIdle(idx) {
-    if (tasks[idx].active) return;
-    tasks[idx].active = true;
-    tasks[idx].progress = 0;
-    let prev = Date.now();
-    timers[idx] = setInterval(() => {
-      const task = tasks[idx];
-      const barMs = getBarCycleMs(task);
-      const now = Date.now();
-      task.progress += (now - prev) / barMs;
-      prev = now;
-      if (task.progress >= 1) {
-        task.progress = 0;
-        const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-        const ascendStage = ASCEND_STAGES[ascendLevel];
-        const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-          * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-          * ascendStage.idleMult;
-        totalPoints += idlePts;
-        task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
-        tryUnlockTask(idx + 1);
-        checkAchievements();
-        saveGame();
-        ui.renderProgress(idx, task.progress, task.multiplier);
-        renderMultipliersBar();
-        floatingScore(idlePts, idx, "#87c686");
-        flashPoints();
-        ui.renderAchievements(window.ACHIEVEMENTS);
-      }
-      ui.renderProgress(idx, task.progress, task.multiplier);
-    }, 1000 / 30);
-  }
+function startIdle(idx) {
+  if (tasks[idx].active) return;
+  tasks[idx].active = true;
+  tasks[idx].progress = 0;
+  let prev = Date.now();
+  timers[idx] = setInterval(() => {
+    const task = tasks[idx];
+    const barMs = getBarCycleMs(task);
+    const now = Date.now();
+    task.progress += (now - prev) / barMs;
+    prev = now;
+    if (task.progress >= 1) {
+      task.progress = 0;
+      const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+      const ascendStage = ASCEND_STAGES[ascendLevel];
+      const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+        * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+        * ascendStage.idleMult;
+      totalPoints += idlePts;
+      task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
+      tryUnlockTask(idx + 1);
+      checkAchievements();
+      saveGame();
+      // --- NAJWAŻNIEJSZE: pełny re-render całego UI po punktach idle! ---
+      ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      renderMultipliersBar();
+      floatingScore(idlePts, idx, "#87c686");
+      flashPoints();
+      ui.renderAchievements(window.ACHIEVEMENTS);
+      return; // zakończ obecny tick
+    }
+    // Normalny, płynny progres — tylko update paska!
+    ui.renderProgress(idx, task.progress, task.multiplier);
+  }, 1000 / 30);
+}
 
 function clickTask(idx) {
   const task = tasks[idx];
