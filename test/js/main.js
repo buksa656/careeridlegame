@@ -1,7 +1,3 @@
-// Statystyki kliknięć – GLOBALNIE dla całej gry
-window.topClicks = Array(16).fill(0);        // kliknięcia wszystkich tasków globalnie
-window.prestigeClicks = Array(16).fill(0);   // kliknięcia wszystkich tasków od ostatniego prestiżu
-
 (() => {
   'use strict';
 
@@ -25,7 +21,8 @@ window.prestigeClicks = Array(16).fill(0);   // kliknięcia wszystkich tasków o
     { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS[14], baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
     { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS[15], baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
   ];
-
+  window.topClicks = Array(TASKS.length).fill(0);        // kliknięcia wszystkich tasków globalnie
+  window.prestigeClicks = Array(TASKS.length).fill(0);   // kliknięcia wszystkich tasków od ostatniego prestiżu
   // --- MODYFIKACJE BIURKA --- //
 const DESK_MODS = [
   {
@@ -142,7 +139,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Zdobywaj łącznie 2500 punktów z „Robienie kawy Szefowi”",
     unlocked: false,
     reward: { taskIdx: 0, multiplierInc: 0.12 }, // większy bonus
-    condition: () => tasks.level * BASE_CLICKS >= 2500
+    condition: () => tasks.level * TASKS.baseClick >= 2500
     },
     {
       id: 'level-up-5',
@@ -158,7 +155,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Kliknij 75 razy w „Standup 'co zrobisz dziś?'”",
     unlocked: false,
     reward: { taskIdx: 10, multiplierInc: 0.18 },
-    condition: () => window.topClicks >= 75
+    condition: () => window.topClicks[10] >= 75
     },
     {
     id: 'delegator',
@@ -530,14 +527,14 @@ function setMarqueeQuote(idx = null) {
     ctx.stroke();
   }
   setInterval(updatePointsChart, 2000);
-  function topClickersTable() {
-    let rows = topClicks.map((c, i) =>
-      c > 0 ? `<tr><td>${TASKS[i].name}</td><td>${c}</td></tr>` : ''
-    ).filter(Boolean).join('');
-    if (!rows) return '';
-    return `<div class="topk-table"><b>Twoje top klikane zadania:</b>
-      <table>${rows}</table></div>`;
-  }
+function topClickersTable() {
+  let rows = window.topClicks.map((c, i) =>
+    c > 0 ? `<tr><td>${TASKS[i].name}</td><td>${c}</td></tr>` : ''
+  ).filter(Boolean).join('');
+  if (!rows) return '';
+  return `<div class="topk-table"><b>Twoje top klikane zadania:</b>
+    <table>${rows}</table></div>`;
+}
 const ui = window.IdleUI; // lub używaj window.IdleUI bezpośrednio
 
 function init() {
