@@ -567,7 +567,8 @@ function init() {
     onClickTask: clickTask,
     onUpgradeTask: upgradeTask,
     onPrestige: prestige,
-    onClearSave: clearSave
+    onClearSave: clearSave,
+    onAscendTask: ascendTask
   });
   tasks.forEach((task, idx) => { if (task.unlocked) startIdle(idx); });
   ui.renderAll(tasks, totalPoints, softSkills, burnout);
