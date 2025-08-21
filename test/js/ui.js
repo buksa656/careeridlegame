@@ -226,6 +226,12 @@ function renderProgress(idx, progress) {
         }
       }
     });
+    document.querySelectorAll('.ascend-btn').forEach(btn => {
+      btn.onclick = (e) => {
+      const idx = Number(btn.dataset.task);
+      eventHandlers.onAscendTask(idx);
+      }
+    });
     document.querySelectorAll('[data-do="upg"]').forEach(btn =>
       btn.onclick = (e) => {
         e.stopPropagation();
