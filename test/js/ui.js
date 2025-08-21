@@ -21,19 +21,17 @@
 
   function taskTile(task, idx, totalPoints, locked = false) {
     const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-    const stage = ASCEND_STAGES[ascendLevel];
+    const ascendStage = ASCEND_STAGES[ascendLvl];
     const nextStage = ASCEND_STAGES[ascendLevel + 1];
     const upgCost = typeof task.getUpgradeCost === "function"
       ? task.getUpgradeCost()
       : Math.floor(20 * Math.pow(2.25, task.level));
     const canUpgrade = totalPoints >= upgCost;
-    const ascendLvl = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-    const ascendStage = ASCEND_STAGES[ascendLvl];
-
-    const gainIdle =
-    (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-        * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-        * ascendStage.idleMult;   // <--- TU DODANY MULTIPLIKATOR ASCEND!
+    const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+      * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+      * ascendStage.idleMult;
+    const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
+      * ascendStage.clickMult;
     const barMs = getBarCycleMs(task);
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
@@ -47,9 +45,9 @@
               Poziom awansu: <b>${stage.name}</b>
             </span>
           <div class="asc-bonus" style="font-size:.96em; color:#625;">
-            Premia idle: <b>+${Math.round((stage.idleMult-1)*100)}%</b>
+            Premia idle: <b>+${Math.round((ascendStage.idleMult - 1)*100)}%</b>
             &nbsp;|&nbsp;
-            za klik: <b>+${Math.round((stage.clickMult-1)*100)}%</b>
+            za klik: <b>+${Math.round((ascendStage.clickMult - 1)*100)}%</b>
           </div>
           ${
           nextStage
@@ -62,8 +60,8 @@
           }
           </div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-          <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
-          <div class="kafelek-row">Za klik: <b>${task.baseClick || 1}</b></div>
+          <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel} + ascend)</span></div>
+          <div class="kafelek-row">Za klik: <b>${clickVal}</b></div>
             <div class="kafelek-row stats">
               <span title="Kliknięcia w całej grze">Kliknięć łącznie: <b>${window.topClicks ? window.topClicks[idx] : 0}</b></span>
               <span title="Kliknięcia od ostatniego prestiżu" style="margin-left:12px">
