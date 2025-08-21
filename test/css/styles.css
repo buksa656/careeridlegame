@@ -137,7 +137,7 @@ main#app {
   display: flex; 
   flex-direction: row; 
   justify-content: center;
-  gap: 9px; 
+  gap: 7px; 
   margin-top: 12px; 
   margin-bottom: 0;
 }
@@ -222,7 +222,7 @@ main#app {
   border-radius: 9px;
   font-weight: 600;
   padding: 6px 9px;
-  font-size: .97em;
+  font-size: .91em;
   border: 1.1px solid #a7d0fe;
   background: #e8f1fe;
   color: #1761a5;
