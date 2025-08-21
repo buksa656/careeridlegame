@@ -90,6 +90,10 @@ main#app {
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* elementy od góry */
+  box-shadow: 0 4px 18px #1976d22c, 0 1.5px 8px #38588710;
+  border-radius: 14px;
+  background: linear-gradient(140deg, #ffffff 80%, #f0f6fd 100%);
+  border: 1.5px solid #e8eaf0;
 }
 /* Każdy kafelek trzymany w identycznym kontenerze */
 .kafelek-outer {
@@ -101,12 +105,19 @@ main#app {
   display: flex;
   flex-direction: column;
 }
-.kafelek:hover { box-shadow: 0 6px 24px #8ebbf73a, var(--shadow);}
-.kafelek:active, .kafelek:focus-visible { border: 2px solid var(--accent);}
+.kafelek:hover, .kafelek:focus-visible{   
+  box-shadow: 0 6px 24px #1976d249, 0 2.5px 10px #1976d21c;
+  border: 2px solid #1976d2;
+  z-index: 2;
+}
+.kafelek:active { border: 2px solid var(--accent);}
 .kafelek.locked {
   opacity: 0.47;
   filter: grayscale(0.7);
   pointer-events: none;
+  box-shadow: 0 4px 16px #8492a62c;
+  opacity: 0.59;
+  border: 1.5px solid #e3e5ef;
 }
 .kafelek.clicked-anim {
   animation: kafel-pulse 0.16s cubic-bezier(.55,1.6,.6,1.01);
