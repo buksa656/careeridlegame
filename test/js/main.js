@@ -202,15 +202,15 @@ window.renderDeskSVG = renderDeskSVG;
 
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
   let pointsHistory = []; // do wykresu
-  let topClicks = Array(TASKS.length).fill(0);
-
-  function saveGame() {
-    localStorage.setItem("korposzczur_save", JSON.stringify({
-      tasks, totalPoints, softSkills, burnout, pointsHistory, topClicks,
-      achievements: ACHIEVEMENTS.map(a => ({ id: a.id, unlocked: a.unlocked })),
-      deskModsOwned
-    }));
-  }
+  let topClicks = Array(TASKS.length).fill(0);            // całkowite od startu gry
+  let prestigeClicks = Array(TASKS.length).fill(0);       // liczone od ostatniego prestige
+function saveGame() {
+  localStorage.setItem("korposzczur_save", JSON.stringify({
+    tasks, totalPoints, softSkills, burnout, pointsHistory, topClicks, prestigeClicks,
+    achievements: ACHIEVEMENTS.map(a => ({ id: a.id, unlocked: a.unlocked })),
+    deskModsOwned
+  }));
+}
 
   function loadGame() {
     const saveString = localStorage.getItem("korposzczur_save");
@@ -252,6 +252,7 @@ window.renderDeskSVG = renderDeskSVG;
     }
     tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
     ui.renderAchievements(window.ACHIEVEMENTS);
+    prestigeClicks = Array.isArray(s.prestigeClicks) ? s.prestigeClicks : Array(TASKS.length).fill(0);
   }
 
   function clearSave() {
@@ -310,6 +311,7 @@ function getBarCycleMs(task) {
     if (task.unlocked) {
       totalPoints += task.baseClick || 1;
       topClicks[idx] += 1;
+      prestigeClicks[idx] += 1; // NOWE liczenie od prestiżu
       tryUnlockTask(idx + 1);
       checkAchievements();
       saveGame();
@@ -352,7 +354,7 @@ function getBarCycleMs(task) {
     renderMultipliersBar();
     confetti();
     ui.renderAchievements(window.ACHIEVEMENTS);
-
+    prestigeClicks = Array(tasks.length).fill(0);
     // MODAL PO PIERWSZYM SOFTSKILLU!
     if (softSkills === 1) showSoftSkillModal();
   }
