@@ -89,9 +89,19 @@ function panelNav() {
       `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
     e("#top-soft-skills").textContent = fmt(softSkills);
     renderMultipliersBar(tasks);
-    e("#panel-kariera").innerHTML = `
-      <h2>Twoja kariera w korpo</h2>
-      <div class="career-list">${visibleTasks.join('')}</div>
+let softSkillBtn = '';
+const SOFTSKILL_COST = 10000;
+if (totalPoints >= SOFTSKILL_COST) {
+  softSkillBtn = `
+    <button id="get-softskill-btn" class="get-softskill-btn">
+      Jesteś gotowy na nowe umiejętności. Zbierz 1 soft-skill (koszt: ${SOFTSKILL_COST})
+    </button>
+  `;
+}
+e("#panel-kariera").innerHTML = `
+  <h2>Twoja kariera w korpo</h2>
+  ${softSkillBtn}
+  <div class="career-list">${visibleTasks.join('')}</div>
       <div class="softskill-info">
         <span>Soft Skills: <b>${softSkills}</b></span>
         ${burnout ? ` |  Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
