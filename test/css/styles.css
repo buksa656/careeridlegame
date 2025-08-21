@@ -158,7 +158,28 @@ main#app {
   background: var(--accent);
   transition: width 0.13s; border-radius: 7px;
 }
-
+/* --- ASCEND --- */
+.kafelek-ascend-row {
+  margin: 2px 0 7px 0;
+  padding: 4px 3px 0 0;
+  border-bottom: 1px dotted #ddd;
+}
+.ascend-btn {
+  margin-top: 1px;
+  font-size: 0.96em;
+  padding: 3px 12px;
+  border: 1.1px solid #a7d0fe;
+  background: #e8f1fe;
+  border-radius: 8px;
+  color: #1761a5;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background .16s;
+}
+.ascend-btn:hover {
+  background: #b4deff;
+  color: #133b65;
+}
 /* --- ULEPSZENIE --- */
 .kafelek-ulepsz-btn {
   display: block;
