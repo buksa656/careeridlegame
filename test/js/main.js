@@ -309,7 +309,11 @@ function getBarCycleMs(task) {
       prev = now;
       if (task.progress >= 1) {
         task.progress = 0;
-        const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
+        const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+        const ascendStage = ASCEND_STAGES[ascendLevel];
+        const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+          * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+          * ascendStage.idleMult;
         totalPoints += idlePts;
         task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
         tryUnlockTask(idx + 1);
@@ -329,20 +333,23 @@ function getBarCycleMs(task) {
 function clickTask(idx) {
   const task = tasks[idx];
   if (task.unlocked) {
-    totalPoints += task.baseClick || 1;
+    const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+    const ascendStage = ASCEND_STAGES[ascendLevel];
+    const clickPts = (typeof task.baseClick === "number" ? task.baseClick : 1) * ascendStage.clickMult;
+    totalPoints += clickPts;
     window.topClicks[idx] += 1;
     window.prestigeClicks[idx] += 1;
-      tryUnlockTask(idx + 1);
-      checkAchievements();
-      saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
-      renderMultipliersBar();
-      floatingScore(task.baseClick || 1, idx, "#1976d2");
-      flashPoints();
-      ui.renderAchievements(window.ACHIEVEMENTS);
-    }
-    if (!task.active) startIdle(idx);
+    tryUnlockTask(idx + 1);
+    checkAchievements();
+    saveGame();
+    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    renderMultipliersBar();
+    floatingScore(clickPts, idx, "#1976d2");
+    flashPoints();
+    ui.renderAchievements(window.ACHIEVEMENTS);
   }
+  if (!task.active) startIdle(idx);
+}
 
   function upgradeTask(idx) {
     const task = tasks[idx];
