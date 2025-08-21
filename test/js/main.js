@@ -125,20 +125,20 @@ window.renderDeskSVG = renderDeskSVG;
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
   const ACHIEVEMENTS = [
     {
-      id: 'mail-master',
-      name: "Mailowy Mistrz",
-      desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
-      unlocked: false,
-      reward: { taskIdx: 2, multiplierInc: 0.10 },
-      condition: () => topClicks[2] >= 100
+    id: 'mail-master',
+    name: "Mailowy Mistrz",
+    desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
+    unlocked: false,
+    reward: { taskIdx: 2, multiplierInc: 0.10 },
+    condition: () => topClicks[2] >= 100
     },
     {
-      id: 'coffee-baron',
-      name: "Baron Kawowy",
-      desc: "Uzyskaj 1000 punktów z pracy „Robienie kawy Szefowi” (Lvl * bazowy klik >= 1000)",
-      unlocked: false,
-      reward: { taskIdx: 0, multiplierInc: 0.10 },
-      condition: () => tasks[0].level * BASE_CLICKS >= 1000
+    id: 'coffee-baron',
+    name: "Baron Kawowy",
+    desc: "Zdobywaj łącznie 2500 punktów z „Robienie kawy Szefowi”",
+    unlocked: false,
+    reward: { taskIdx: 0, multiplierInc: 0.12 }, // większy bonus
+    condition: () => tasks.level * BASE_CLICKS >= 2500
     },
     {
       id: 'level-up-5',
@@ -149,44 +149,44 @@ window.renderDeskSVG = renderDeskSVG;
       condition: () => tasks.some(t => t.level >= 5)
     },
     {
-      id: 'daily-speaker',
-      name: "Mówca na daily",
-      desc: "Kliknij 50 razy w „Standup 'co zrobisz dziś?'”",
-      unlocked: false,
-      reward: { taskIdx: 10, multiplierInc: 0.12 },
-      condition: () => topClicks[10] >= 50
+    id: 'daily-speaker',
+    name: "Mówca na daily",
+    desc: "Kliknij 75 razy w „Standup 'co zrobisz dziś?'”",
+    unlocked: false,
+    reward: { taskIdx: 10, multiplierInc: 0.18 },
+    condition: () => topClicks[10] >= 75
     },
     {
-      id: 'delegator',
-      name: "Mistrz Delegowania",
-      desc: "Odblokuj zadanie „Delegowanie lemingowi”",
-      unlocked: false,
-      reward: { taskIdx: 11, multiplierInc: 0.15 },
-      condition: () => tasks.unlocked
+    id: 'delegator',
+    name: "Mistrz Delegowania",
+    desc: "Podnieś „Delegowanie lemingowi” do poziomu 3",
+    unlocked: false,
+    reward: { taskIdx: 11, multiplierInc: 0.14 },
+    condition: () => tasks.level >= 3
     },
     {
-      id: 'giphy-enthusiast',
-      name: "GIFoholik",
-      desc: "Kliknij 25 razy w „Wysyłanie GIF-ów”",
-      unlocked: false,
-      reward: { taskIdx: 13, multiplierInc: 0.08 },
-      condition: () => topClicks >= 25
+    id: 'giphy-enthusiast',
+    name: "GIFoholik",
+    desc: "Kliknij 40 razy w „Wysyłanie GIF-ów”",
+    unlocked: false,
+    reward: { taskIdx: 13, multiplierInc: 0.10 },
+    condition: () => topClicks >= 40
     },
     {
-      id: 'linkedin-pro',
-      name: "LinkedIn Pro",
-      desc: "Uzyskaj 500 punktów z „Przeklikanie LinkedIna” (Lvl * bazowy klik >= 500)",
-      unlocked: false,
-      reward: { taskIdx: 14, multiplierInc: 0.10 },
-      condition: () => tasks[14].level * BASE_CLICKS >= 500
+    id: 'unlock-all',
+    name: "KorpoLemur",
+    desc: "Odblokuj wszystkie zadania kariery!",
+    unlocked: false,
+    reward: { taskIdx: null, multiplierInc: 0.14 },
+    condition: () => tasks.every(t => t.unlocked)
     },
     {
-      id: 'burnout-survivor',
-      name: "Survivor",
-      desc: "Prestige (zdobądź dodatkową umiejętność miękką)",
-      unlocked: false,
-      reward: { taskIdx: null, multiplierInc: 0.10 },
-      condition: () => softSkills >= 1
+  id: 'first-softskill',
+  name: 'Nowa Umiejętność',
+  desc: 'Zgromadź pierwszy soft-skill przy pomocy przycisku!',
+  unlocked: false,
+  reward: { taskIdx: null, multiplierInc: 0.05 },
+  condition: () => softSkills >= 1
     }
   ];
 
