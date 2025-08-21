@@ -21,7 +21,7 @@
 
   function taskTile(task, idx, totalPoints, locked = false) {
     const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-    const ascendStage = ASCEND_STAGES[ascendLvl];
+    const ascendStage = ASCEND_STAGES[ascendLevel];
     const nextStage = ASCEND_STAGES[ascendLevel + 1];
     const upgCost = typeof task.getUpgradeCost === "function"
       ? task.getUpgradeCost()
