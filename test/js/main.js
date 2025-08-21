@@ -173,12 +173,12 @@ window.renderDeskSVG = renderDeskSVG;
     condition: () => topClicks >= 40
     },
     {
-    id: 'unlock-all',
-    name: "KorpoLemur",
-    desc: "Odblokuj wszystkie zadania kariery!",
-    unlocked: false,
-    reward: { taskIdx: null, multiplierInc: 0.14 },
-    condition: () => tasks.every(t => t.unlocked)
+  id: 'unlock-all',
+  name: "KorpoLemur",
+  desc: "Odblokuj wszystkie zadania kariery – każdy klik jest teraz mocniejszy!",
+  unlocked: false,
+  reward: { type: "baseClick", value: 2 }, // +2 do każdego kliknięcia wszędzie!
+  condition: () => tasks.every(t => t.unlocked)
     },
     {
   id: 'first-softskill',
@@ -187,7 +187,15 @@ window.renderDeskSVG = renderDeskSVG;
   unlocked: false,
   reward: { taskIdx: null, multiplierInc: 0.05 },
   condition: () => softSkills >= 1
-    }
+    },
+    {
+  id: 'baseclick-power',
+  name: "TurboKliki",
+  desc: "Zdobądź 5 różnych osiągnięć – wszystkie Twoje kliknięcia stają się mocniejsze!",
+  unlocked: false,
+  reward: { type: "baseClick", value: 2 },
+  condition: () => ACHIEVEMENTS.filter(a => a.unlocked).length >= 5
+}
   ];
 
   window.ACHIEVEMENTS = ACHIEVEMENTS;
@@ -395,26 +403,38 @@ function applyDeskModsEffects() {
         .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
   }
 
-  function checkAchievements() {
-    ACHIEVEMENTS.forEach(a => {
-      if (!a.unlocked && (!a.condition || a.condition())) {
-        a.unlocked = true;
-        if (a.reward.taskIdx !== null) {
-          tasks[a.reward.taskIdx].multiplier += a.reward.multiplierInc;
-        } else {
-          tasks.forEach(t => { if (t.unlocked) t.multiplier += a.reward.multiplierInc; });
-        }
-        if (window.IdleUI && typeof window.IdleUI.showAchievement === 'function') {
-          window.IdleUI.showAchievement(a);
-        } else {
-          alert(`Osiągnięcie odblokowane: ${a.name}!`);
-        }
-        saveGame();
-        ui.renderAll(tasks, totalPoints, softSkills, burnout);
-        ui.renderAchievements(window.ACHIEVEMENTS);
+function checkAchievements() {
+  ACHIEVEMENTS.forEach(a => {
+    if (!a.unlocked && (!a.condition || a.condition())) {
+      a.unlocked = true;
+
+      // Ulepszenie baseClick dla wszystkich zadań
+      if (a.reward && a.reward.type === "baseClick") {
+        tasks.forEach(t => {
+          t.baseClick = (t.baseClick || 1) + a.reward.value;
+        });
       }
-    });
-  }
+      // Mnożnik wybranego tasku
+      else if (a.reward && typeof a.reward.taskIdx === "number" && a.reward.taskIdx !== null) {
+        tasks[a.reward.taskIdx].multiplier += a.reward.multiplierInc;
+      }
+      // Globalny mnożnik
+      else if (a.reward && typeof a.reward.multiplierInc === "number") {
+        tasks.forEach(t => { if (t.unlocked) t.multiplier += a.reward.multiplierInc; });
+      }
+
+      // Komunikat/gratulacje
+      if (window.IdleUI && typeof window.IdleUI.showAchievement === 'function') {
+        window.IdleUI.showAchievement(a);
+      } else {
+        alert(`Osiągnięcie odblokowane: ${a.name}!`);
+      }
+      saveGame();
+      ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      ui.renderAchievements(window.ACHIEVEMENTS);
+    }
+  });
+}
 
 function floatingScore(points, idx, color) {
   const list = document.querySelectorAll(".kafelek");
