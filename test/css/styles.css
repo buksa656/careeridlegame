@@ -133,12 +133,37 @@ main#app {
 /* --- ULEPSZENIE --- */
 .kafelek-ulepsz-btn {
   display: block;
-  margin: 6px auto 10px auto;
+  width: 90%;
+  min-width: 93px;
+  margin: 10px auto 4px auto;
+  padding: 7px 0 5px 0;
+  font-size: 1em;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  background: #f2f8ff;
+  border: 1.5px solid #bcdcfa;
+  border-radius: 9px;
+  box-shadow: 0 2px 8px #a1bdf90c;
+  cursor: pointer;
+  transition: background .18s, color .13s, box-shadow .17s;
+  outline: none;
+  letter-spacing: 0.4px;
+}
+.kafelek-ulepsz-btn:hover:not(:disabled),
+.kafelek-ulepsz-btn:focus-visible:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 17px #a5cdf877, 0 1px 7px #99b9c333;
+  border-color: var(--accent);
 }
 .kafelek-ulepsz-btn:disabled {
-  background: #eee;
-  color: #bbb;
+  background: #f1f1f1;
+  color: #c0cad6;
+  border-color: #e1e1e1;
+  box-shadow: none;
   cursor: not-allowed;
+  opacity: 0.85;
 }
 
 /* --- RESPONSYWNOĹšÄ† KAFELKĂ“W --- */
