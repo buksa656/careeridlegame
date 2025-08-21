@@ -102,6 +102,12 @@ main#app {
   margin-bottom: 0;
   transition: box-shadow .19s, border-color .13s, background .13s;
 }
+.kafelek, .kafelek * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
 /* Każdy kafelek trzymany w identycznym kontenerze */
 .kafelek-outer {
   display: flex;
