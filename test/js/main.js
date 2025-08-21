@@ -130,7 +130,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
     unlocked: false,
     reward: { taskIdx: 2, multiplierInc: 0.10 },
-    condition: () => topClicks[2] >= 100
+    condition: () => window.topClicks[2] >= 100
     },
     {
     id: 'coffee-baron',
@@ -154,7 +154,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Kliknij 75 razy w „Standup 'co zrobisz dziś?'”",
     unlocked: false,
     reward: { taskIdx: 10, multiplierInc: 0.18 },
-    condition: () => topClicks[10] >= 75
+    condition: () => window.topClicks >= 75
     },
     {
     id: 'delegator',
@@ -162,7 +162,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Podnieś „Delegowanie lemingowi” do poziomu 3",
     unlocked: false,
     reward: { taskIdx: 11, multiplierInc: 0.14 },
-    condition: () => tasks.level >= 3
+    condition: () => tasks[11].level >= 3
     },
     {
     id: 'giphy-enthusiast',
@@ -170,7 +170,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Kliknij 40 razy w „Wysyłanie GIF-ów”",
     unlocked: false,
     reward: { taskIdx: 13, multiplierInc: 0.10 },
-    condition: () => topClicks >= 40
+    ondition: () => window.topClicks >= 40
     },
     {
   id: 'unlock-all',
@@ -202,11 +202,14 @@ window.renderDeskSVG = renderDeskSVG;
 
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
   let pointsHistory = []; // do wykresu
-  let topClicks = Array(TASKS.length).fill(0);            // całkowite od startu gry
-  let prestigeClicks = Array(TASKS.length).fill(0);       // liczone od ostatniego prestige
-function saveGame() {
+  window.topClicks = Array(TASKS.length).fill(0);
+  window.prestigeClicks = Array(TASKS.length).fill(0);       // liczone od ostatniego prestige
+
+  function saveGame() {
   localStorage.setItem("korposzczur_save", JSON.stringify({
-    tasks, totalPoints, softSkills, burnout, pointsHistory, topClicks, prestigeClicks,
+    tasks, totalPoints, softSkills, burnout, pointsHistory,
+    topClicks: window.topClicks,
+    prestigeClicks: window.prestigeClicks,
     achievements: ACHIEVEMENTS.map(a => ({ id: a.id, unlocked: a.unlocked })),
     deskModsOwned
   }));
