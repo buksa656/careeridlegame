@@ -36,7 +36,7 @@ function taskTile(task, idx, totalPoints, locked = false) {
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
     const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
-    return `
+return `
   <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0" ${style}>
     <div class="kafelek-info">
       <div class="title">${task.name}</div>
@@ -54,8 +54,26 @@ function taskTile(task, idx, totalPoints, locked = false) {
       <div class="kafelek-progbar">
         <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress || 0) * 100)}%"></div>
       </div>
-      ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b></div>` : ''}
-     
+      ${locked && typeof task.unlockCost === 'number'
+        ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b></div>` : ''
+      }
+      <!-- PRZYCISKI NA DOLE KAFELKA, zawsze w srodku -->
+      <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:13px;">
+        <button class="kafelek-ulepsz-btn"
+            data-do="upg"
+            data-idx="${idx}"
+            style="flex:1;min-width:0;"
+            ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
+          Ulepsz<br>(${fmt(upgCost)})
+        </button>
+        ${
+          nextStage
+            ? `<button class="ascend-btn" data-task="${idx}" style="flex:1;min-width:0;">
+                Awans<br>(${nextStage.cost})
+               </button>`
+            : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
+        }
+      </div>
     </div>
   </div>
   `;
@@ -92,7 +110,6 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   let maxUnlockedIdx = -1;
   for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
 
-  // Składamy kafelki z buttonem ulepsz pod spodem!
   let visibleTasks = [];
   for (let i = 0; i < tasks.length; ++i) {
     let kafel = '';
@@ -101,46 +118,17 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     } else if (i === maxUnlockedIdx + 1) {
       kafel += taskTile(tasks[i], i, totalPoints, true);
     }
-    // Dodaj button "Ulepsz" tylko pod aktywnymi/odblokowanymi
-if (kafel) {
-  const upgCost = typeof tasks[i].getUpgradeCost === "function"
-    ? tasks[i].getUpgradeCost()
-    : Math.floor(20 * Math.pow(2.25, tasks[i].level));
-  const canUpgrade = totalPoints >= upgCost;
-  visibleTasks.push(`
-    <div class="kafelek-outer">
-      ${kafel}
-      <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:12px;">
-        <button class="kafelek-ulepsz-btn"
-                data-do="upg"
-                data-idx="${i}"
-                style="flex:1;min-width:0;"
-                ${(!tasks[i].unlocked || !canUpgrade) ? "disabled" : ""}>
-          Ulepsz<br>(${fmt(upgCost)})
-        </button>
-        ${
-          (() => {
-            const ascendLevel = typeof tasks[i].ascendLevel === "number" ? tasks[i].ascendLevel : 0;
-            const nextStage = ASCEND_STAGES[ascendLevel + 1];
-            return nextStage
-              ? `<button class="ascend-btn" data-task="${i}" style="flex:1;min-width:0;">
-                    Awans<br>(${nextStage.cost})
-                 </button>`
-              : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
-          })()
-        }
-      </div>
-    </div>
-  `);
-}
+    if (kafel) {
+      // JEDYNA zawartość: jeden kafelek (przyciski są już jego częścią)
+      visibleTasks.push(`<div class="kafelek-outer">${kafel}</div>`);
+    }
   }
 
   // Zliczanie punktów do wyświetlenia
   let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   let [intPart, fracPart] = totalPointsStr.split(',');
 
-  e("#top-total-points").innerHTML =
-    `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
+  e("#top-total-points").innerHTML = `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
   e("#top-soft-skills").textContent = fmt(softSkills);
 
   renderMultipliersBar(tasks);
@@ -156,7 +144,6 @@ if (kafel) {
     `;
   }
 
-  // Główna sekcja panelu
   e("#panel-kariera").innerHTML = `
     <h2>Twoja kariera w korpo</h2>
     ${softSkillBtn}
