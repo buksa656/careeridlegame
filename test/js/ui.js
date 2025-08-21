@@ -249,7 +249,13 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   addEvents(tasks.length); // obsługa klików kafelków i "ulepsz"
   updateTopClicks();
 }
-
+function updateTotalPoints(points) {
+  let totalPointsStr = Number(points).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  let [intPart, fracPart] = totalPointsStr.split(',');
+  const score = document.querySelector("#top-total-points");
+  if(score)
+    score.innerHTML = `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
+}
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
     bar.innerHTML =
