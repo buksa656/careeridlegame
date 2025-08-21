@@ -118,7 +118,11 @@ main#app {
 .kafelek-info .funny { color: #e79522; font-size: .95em; margin: 2px 0 0 0; }
 .kafelek-info .title { font-weight: 700; font-size: 1.13em; color: var(--accent); margin-bottom: 5px; }
 .kafelek-row   { color: var(--muted); font-size: .97em; margin: 2px 0; }
-
+.kafelek-row.stats {
+  font-size: 0.95em;
+  color: #5d709a;
+  margin-top: 2px;
+}
 /* --- PASEK PROGRESU --- */
 .kafelek-progbar {
   width: 100%; height: 13px; background: var(--progress-bg);
