@@ -37,7 +37,7 @@ function taskTile(task, idx, totalPoints, locked = false) {
     const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
     const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
 return `
-  <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0" ${style}>
+  <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
     <div class="kafelek-info">
       <div class="title">${task.name}</div>
       <div class="kafelek-row asc-badge">
@@ -57,23 +57,23 @@ return `
       ${locked && typeof task.unlockCost === 'number'
         ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b></div>` : ''
       }
-      <!-- PRZYCISKI NA DOLE KAFELKA, zawsze w srodku -->
-      <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:13px;">
+    </div>
+    <!-- PRZYCISKI PONIŻEJ karty, nie w .kafelek-info! -->
+    <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:13px;">
       <button class="kafelek-ulepsz-btn"
-              data-do="upg"
-              data-idx="${idx}"
-              style="flex:1;min-width:0;"
-              ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
+          data-do="upg"
+          data-idx="${idx}"
+          style="flex:1;min-width:0;"
+          ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
         Optymalizuj<br>(${fmt(upgCost)})
       </button>
-        ${
-          nextStage
-            ? `<button class="ascend-btn" data-task="${idx}" style="flex:1;min-width:0;">
-                Awans<br>(${nextStage.cost})
-               </button>`
-            : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
-        }
-      </div>
+      ${
+        nextStage
+          ? `<button class="ascend-btn" data-task="${idx}" style="flex:1;min-width:0;">
+              Awans<br>(${nextStage.cost})
+             </button>`
+          : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
+      }
     </div>
   </div>
   `;
@@ -224,20 +224,21 @@ function renderProgress(idx, progress) {
   }
 
   function addEvents(tasksLen) {
-    document.querySelectorAll(".kafelek").forEach((el) => {
-      el.onclick = (e) => {
-        if (e.target.classList.contains("kafelek-ulepsz-btn")) return;
-        if (el.classList.contains("locked")) return;
-        const idx = Number(el.dataset.taskidx);
+  document.querySelectorAll(".kafelek-info").forEach((el) => {
+    el.onclick = (e) => {
+      // jeżeli kafelek zablokowany – zwróć
+      if (el.closest(".kafelek").classList.contains("locked")) return;
+      const idx = Number(el.closest(".kafelek").dataset.taskidx);
+      eventHandlers.onClickTask(idx);
+    };
+    el.onkeydown = (e) => {
+      if ((e.key === "Enter" || e.key === " ") && !el.closest(".kafelek").classList.contains("locked")) {
+        e.preventDefault();
+        const idx = Number(el.closest(".kafelek").dataset.taskidx);
         eventHandlers.onClickTask(idx);
-      };
-      el.onkeydown = (e) => {
-        if ((e.key === "Enter" || e.key === " ") && !el.classList.contains("locked")) {
-          e.preventDefault();
-          eventHandlers.onClickTask(Number(el.dataset.taskidx));
-        }
       }
-    });
+    }
+  });
     document.querySelectorAll('.ascend-btn').forEach(btn => {
       btn.onclick = (e) => {
       const idx = Number(btn.dataset.task);
