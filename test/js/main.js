@@ -321,6 +321,7 @@ function startIdle(idx) {
       saveGame();
       // --- NAJWAŻNIEJSZE: pełny re-render całego UI po punktach idle! ---
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      renderSingleTile(idx, task, totalPoints);
       renderMultipliersBar();
       floatingScore(idlePts, idx, "#87c686");
       flashPoints();
