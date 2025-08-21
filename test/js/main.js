@@ -4,25 +4,39 @@
   // Bazowe wartości za klik
   const BASE_CLICKS = [1, 2, 4, 7, 11, 16, 23, 33, 46, 64, 88, 121, 166, 227, 311, 426];
   const TASKS = [
-    { name: "Robienie kawy Szefowi", unlocked: true,  level: 0, baseClick: BASE_CLICKS[0],  baseIdle: 0.02, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 0 },
-    { name: "Ctrl+C, Ctrl+V", unlocked: false,  level: 0, baseClick: BASE_CLICKS[1],  baseIdle: 0.04, cycleTime: 2000, multiplier: 1, progress: 0, active: false, unlockCost: 40 },
-    { name: "Przerzucanie maili do folderu", unlocked: false,  level: 0, baseClick: BASE_CLICKS[2],  baseIdle: 0.06, cycleTime: 2600, multiplier: 1, progress: 0, active: false, unlockCost: 120 },
-    { name: "Small talk w kuchni", unlocked: false,  level: 0, baseClick: BASE_CLICKS[3],  baseIdle: 0.09, cycleTime: 2700, multiplier: 1, progress: 0, active: false, unlockCost: 260 },
-    { name: "Zlecenie ticketu w JIRZE", unlocked: false,  level: 0, baseClick: BASE_CLICKS[4],  baseIdle: 0.13, cycleTime: 3150, multiplier: 1, progress: 0, active: false, unlockCost: 850 },
-    { name: "Wklejka do Excela", unlocked: false,  level: 0, baseClick: BASE_CLICKS[5],  baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850 },
-    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS[6],  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000 },
-    { name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS[7],  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200 },
-    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS[8],  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500 },
-    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS[9],  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000 },
-    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS[10], baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000 },
-    { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS[11], baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000 },
-    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS[12], baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000 },
-    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS[13], baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000 },
-    { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS[14], baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000 },
-    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS[15], baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000 }
+    { name: "Robienie kawy Szefowi", unlocked: true,  level: 0, baseClick: BASE_CLICKS[0],  baseIdle: 0.02, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel:0 },
+    { name: "Ctrl+C, Ctrl+V", unlocked: false,  level: 0, baseClick: BASE_CLICKS[1],  baseIdle: 0.04, cycleTime: 2000, multiplier: 1, progress: 0, active: false, unlockCost: 40, ascendLevel:0 },
+    { name: "Przerzucanie maili do folderu", unlocked: false,  level: 0, baseClick: BASE_CLICKS[2],  baseIdle: 0.06, cycleTime: 2600, multiplier: 1, progress: 0, active: false, unlockCost: 120, ascendLevel:0 },
+    { name: "Small talk w kuchni", unlocked: false,  level: 0, baseClick: BASE_CLICKS[3],  baseIdle: 0.09, cycleTime: 2700, multiplier: 1, progress: 0, active: false, unlockCost: 260, ascendLevel:0 },
+    { name: "Zlecenie ticketu w JIRZE", unlocked: false,  level: 0, baseClick: BASE_CLICKS[4],  baseIdle: 0.13, cycleTime: 3150, multiplier: 1, progress: 0, active: false, unlockCost: 850, ascendLevel:0 },
+    { name: "Wklejka do Excela", unlocked: false,  level: 0, baseClick: BASE_CLICKS[5],  baseIdle: 0.18, cycleTime: 4050, multiplier: 1, progress: 0, active: false, unlockCost: 1850, ascendLevel:0 },
+    { name: "Prezentacja na Teamsy", unlocked: false, level: 0, baseClick: BASE_CLICKS[6],  baseIdle: 0.24, cycleTime: 5000, multiplier: 1, progress: 0, active: false, unlockCost: 4000, ascendLevel:0 },
+    { name: "Fake brainstorming", unlocked: false, level: 0, baseClick: BASE_CLICKS[7],  baseIdle: 0.30, cycleTime: 6000, multiplier: 1, progress: 0, active: false, unlockCost: 7200, ascendLevel:0 },
+    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseClick: BASE_CLICKS[8],  baseIdle: 0.36, cycleTime: 7200, multiplier: 1, progress: 0, active: false, unlockCost: 11500, ascendLevel:0 },
+    { name: "Zebranie (udawaj, że słuchasz)", unlocked: false, level: 0, baseClick: BASE_CLICKS[9],  baseIdle: 0.47, cycleTime: 9000, multiplier: 1, progress: 0, active: false, unlockCost: 18000, ascendLevel:0 },
+    { name: "Standup 'co zrobisz dziś?'", unlocked: false,  level: 0, baseClick: BASE_CLICKS[10], baseIdle: 0.60, cycleTime: 11000, multiplier: 1, progress: 0, active: false, unlockCost: 29000, ascendLevel:0 },
+    { name: "Delegowanie lemingowi", unlocked: false,  level: 0, baseClick: BASE_CLICKS[11], baseIdle: 0.75, cycleTime: 13000, multiplier: 1, progress: 0, active: false, unlockCost: 52000, ascendLevel:0 },
+    { name: "Lunch break", unlocked: false,  level: 0, baseClick: BASE_CLICKS[12], baseIdle: 0.9, cycleTime: 17000, multiplier: 1, progress: 0, active: false, unlockCost: 76000, ascendLevel:0 },
+    { name: "Wysyłanie GIF-ów", unlocked: false,  level: 0, baseClick: BASE_CLICKS[13], baseIdle: 1.12, cycleTime: 22000, multiplier: 1, progress: 0, active: false, unlockCost: 120000, ascendLevel:0 },
+    { name: "Przeklikanie LinkedIna", unlocked: false,  level: 0, baseClick: BASE_CLICKS[14], baseIdle: 1.35, cycleTime: 32000, multiplier: 1, progress: 0, active: false, unlockCost: 230000, ascendLevel:0 },
+    { name: "Król Open Space", unlocked: false,  level: 0, baseClick: BASE_CLICKS[15], baseIdle: 2.17, cycleTime: 47000, multiplier: 1, progress: 0, active: false, unlockCost: 450000, ascendLevel:0 }
   ];
   window.topClicks = Array(TASKS.length).fill(0);        // kliknięcia wszystkich tasków globalnie
   window.prestigeClicks = Array(TASKS.length).fill(0);   // kliknięcia wszystkich tasków od ostatniego prestiżu
+
+  const ASCEND_STAGES = [
+  { name: "Junior",    idleMult: 1.0, clickMult: 1.0, cost: 0 },
+  { name: "Mid",       idleMult: 1.25, clickMult: 1.15, cost: 100 },
+  { name: "Senior",    idleMult: 1.5, clickMult: 1.30, cost: 300 },
+  { name: "Manager",   idleMult: 1.8, clickMult: 1.50, cost: 900 },
+  { name: "Principal", idleMult: 2.15, clickMult: 1.85, cost: 2600 },
+  { name: "Director",  idleMult: 2.6, clickMult: 2.2, cost: 6000 },
+  { name: "Expert",    idleMult: 3.2, clickMult: 2.6, cost: 13000 },
+  { name: "C-Level",   idleMult: 4.0, clickMult: 3.3, cost: 25000 },
+  { name: "Korpo Yoda",idleMult: 5.0, clickMult: 4.2, cost: 62000 },
+  { name: "Legenda Open Space",idleMult: 6.3, clickMult: 5.3, cost: 150000 }
+];
+  
   // --- MODYFIKACJE BIURKA --- //
 const DESK_MODS = [
   {
@@ -344,7 +358,22 @@ function clickTask(idx) {
       ui.renderAchievements(window.ACHIEVEMENTS);
     }
   }
-
+function ascendTask(idx) {
+  const task = tasks[idx];
+  const current = task.ascendLevel || 0;
+  const next = current + 1;
+  if (!ASCEND_STAGES[next]) return; // już max awans
+  const cost = ASCEND_STAGES[next].cost;
+  if (totalPoints >= cost) {
+    totalPoints -= cost;
+    task.ascendLevel = next;
+    // Reset tylko bazowego idle (reszta premii/trwałych boostów zostają):
+    task.baseIdle = TASKS[idx].baseIdle;
+    saveGame();
+    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    renderMultipliersBar();
+  }
+}
   function prestige() {
     timers.forEach(t => clearInterval(t));
     if (totalPoints < 10000) return;
@@ -352,6 +381,7 @@ function clickTask(idx) {
     burnout += 1;
     totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
+    tasks.forEach(t => t.ascendLevel = 0);
     applyDeskModsEffects();
     checkAchievements();
     saveGame();
