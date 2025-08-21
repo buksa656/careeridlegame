@@ -30,8 +30,8 @@
     const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
     const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
     return `
-      <div class="kafelek${locked ? ' locked' : ''} ${task.level >= 10 && !locked ? "lvled" : ""}" data-taskidx="${idx}" tabindex="0" ${style}>
-        <div class="kafelek-info">
+  <div class="kafelek${locked ? ' locked' : ''} ..." data-taskidx="${idx}" tabindex="0" ${style}>
+    <div class="kafelek-info">
           <div class="title">${task.name}</div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
           <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
@@ -41,9 +41,9 @@
           </div>
           ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b> biuro-pkt</div>` : ''}
         </div>
-        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${locked || !canUpgrade ? "disabled" : ""}>
-          Ulepsz<br>(${fmt(upgCost)})
-        </button>
+<button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${locked || !canUpgrade ? "disabled" : ""}>
+    Ulepsz<br>(${fmt(upgCost)})
+  </button>
       </div>`;
   }
 
@@ -75,51 +75,99 @@ function panelNav() {
   });
 }
 
-  function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
-    let maxUnlockedIdx = -1;
-    for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
-    let visibleTasks = [];
-    for (let i = 0; i < tasks.length; ++i) {
-      if (tasks[i].unlocked) visibleTasks.push(taskTile(tasks[i], i, totalPoints, false));
-      else if (i === maxUnlockedIdx + 1) visibleTasks.push(taskTile(tasks[i], i, totalPoints, true));
+function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
+  let maxUnlockedIdx = -1;
+  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
+
+  // Składamy kafelki z buttonem ulepsz pod spodem!
+  let visibleTasks = [];
+  for (let i = 0; i < tasks.length; ++i) {
+    let kafel = '';
+    if (tasks[i].unlocked) {
+      kafel += taskTile(tasks[i], i, totalPoints, false);
+    } else if (i === maxUnlockedIdx + 1) {
+      kafel += taskTile(tasks[i], i, totalPoints, true);
     }
-    let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-    let [intPart, fracPart] = totalPointsStr.split(',');
-    e("#top-total-points").innerHTML =
-      `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
-    e("#top-soft-skills").textContent = fmt(softSkills);
-    renderMultipliersBar(tasks);
-let softSkillBtn = '';
-const SOFTSKILL_COST = 10000;
-if (totalPoints >= SOFTSKILL_COST) {
-  softSkillBtn = `
-    <button id="get-softskill-btn" class="get-softskill-btn">
-      Jesteś gotowy na nowe umiejętności. Zbierz 1 soft-skill (koszt: ${SOFTSKILL_COST})
-    </button>
-  `;
-}
-e("#panel-kariera").innerHTML = `
-  <h2>Twoja kariera w korpo</h2>
-  ${softSkillBtn}
-  <div class="career-list">${visibleTasks.join('')}</div>
-      <div class="softskill-info">
-        <span>Soft Skills: <b>${softSkills}</b></span>
-        ${burnout ? ` |  Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
-      </div>
-      <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
-      <div id="grid-progress"></div>
-    `;
-    const next = tasks[maxUnlockedIdx + 1];
-    if (next && next.unlockCost) {
-      const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
-      e("#grid-progress").innerHTML = `<div class="unlock-progress">
-        <div class="unlock-progress-bar" style="width:${(prog * 100).toFixed(1)}%"></div>
-        <span>${Math.min((prog * 100), 100).toFixed(0)}% do odblokowania nowej pracy</span>
-      </div>`;
+    // Dodaj button "Ulepsz" tylko pod aktywnymi/odblokowanymi
+    if (kafel) {
+      const upgCost = typeof tasks[i].getUpgradeCost === "function"
+        ? tasks[i].getUpgradeCost()
+        : Math.floor(20 * Math.pow(2.25, tasks[i].level));
+      const canUpgrade = totalPoints >= upgCost;
+      visibleTasks.push(`
+        <div class="kafelek-outer">
+          ${kafel}
+          <button class="kafelek-ulepsz-btn"
+                  data-do="upg"
+                  data-idx="${i}"
+                  ${(!tasks[i].unlocked || !canUpgrade) ? "disabled" : ""}>
+            Ulepsz<br>(${fmt(upgCost)})
+          </button>
+        </div>
+      `);
     }
-    addEvents(tasks.length);
-    updateTopClicks();
   }
+
+  // Zliczanie punktów do wyświetlenia
+  let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  let [intPart, fracPart] = totalPointsStr.split(',');
+
+  e("#top-total-points").innerHTML =
+    `<span>${intPart}</span><span class="fraction">,${fracPart}</span>`;
+  e("#top-soft-skills").textContent = fmt(softSkills);
+
+  renderMultipliersBar(tasks);
+
+  // Button do zbierania soft-skill
+  let softSkillBtn = '';
+  const SOFTSKILL_COST = 10000;
+  if (totalPoints >= SOFTSKILL_COST) {
+    softSkillBtn = `
+      <button id="get-softskill-btn" class="get-softskill-btn">
+        Jesteś gotowy na nowe umiejętności. Zbierz 1 soft-skill (koszt: ${SOFTSKILL_COST})
+      </button>
+    `;
+  }
+
+  // Główna sekcja panelu
+  e("#panel-kariera").innerHTML = `
+    <h2>Twoja kariera w korpo</h2>
+    ${softSkillBtn}
+    <div class="career-list">${visibleTasks.join('')}</div>
+    <div class="softskill-info">
+      <span>Soft Skills: <b>${softSkills}</b></span>
+      ${burnout ? ` |  Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
+    </div>
+    <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
+    <div id="grid-progress"></div>
+  `;
+
+  // Pasek postępu do odblokowania nowej pracy:
+  const next = tasks[maxUnlockedIdx + 1];
+  if (next && next.unlockCost) {
+    const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
+    e("#grid-progress").innerHTML = `<div class="unlock-progress">
+      <div class="unlock-progress-bar" style="width:${(prog * 100).toFixed(1)}%"></div>
+      <span>${Math.min((prog * 100), 100).toFixed(0)}% do odblokowania nowej pracy</span>
+    </div>`;
+  }
+
+  // Handler soft-skilla
+  if (totalPoints >= SOFTSKILL_COST) {
+    const btn = document.getElementById('get-softskill-btn');
+    btn.onclick = () => {
+      if (window.totalPoints >= SOFTSKILL_COST) {
+        window.totalPoints -= SOFTSKILL_COST;
+        window.softSkills += 1;
+        saveGame();
+        renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+      }
+    };
+  }
+
+  addEvents(tasks.length); // obsługa klików kafelków i "ulepsz"
+  updateTopClicks();
+}
 
   function renderMultipliersBar(tasks) {
     const bar = document.getElementById('multipliersBar');
@@ -135,10 +183,10 @@ e("#panel-kariera").innerHTML = `
         .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
   }
 
-  function renderProgress(idx, progress) {
-    const bar = document.querySelector(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
-    if (bar) bar.style.width = Math.round(progress * 100) + "%";
-  }
+function renderProgress(idx, progress) {
+  const bar = document.querySelector(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
+  if (bar) bar.style.width = Math.round(progress * 100) + "%";
+}
 
   function renderUpgradeAffordances(tasks, totalPoints) {
     document.querySelectorAll('.kafelek-ulepsz-btn').forEach((btn, idx) => {
