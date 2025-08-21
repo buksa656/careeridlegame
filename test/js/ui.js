@@ -59,13 +59,13 @@ return `
       }
       <!-- PRZYCISKI NA DOLE KAFELKA, zawsze w srodku -->
       <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:13px;">
-        <button class="kafelek-ulepsz-btn"
-            data-do="upg"
-            data-idx="${idx}"
-            style="flex:1;min-width:0;"
-            ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
-          Ulepsz<br>(${fmt(upgCost)})
-        </button>
+      <button class="kafelek-ulepsz-btn"
+              data-do="upg"
+              data-idx="${idx}"
+              style="flex:1;min-width:0;"
+              ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
+        Optymalizuj<br>(${fmt(upgCost)})
+      </button>
         ${
           nextStage
             ? `<button class="ascend-btn" data-task="${idx}" style="flex:1;min-width:0;">
