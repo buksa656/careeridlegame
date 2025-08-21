@@ -1,3 +1,7 @@
+// Statystyki kliknięć – GLOBALNIE dla całej gry
+window.topClicks = Array(16).fill(0);        // kliknięcia wszystkich tasków globalnie
+window.prestigeClicks = Array(16).fill(0);   // kliknięcia wszystkich tasków od ostatniego prestiżu
+
 (() => {
   'use strict';
 
@@ -170,7 +174,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Kliknij 40 razy w „Wysyłanie GIF-ów”",
     unlocked: false,
     reward: { taskIdx: 13, multiplierInc: 0.10 },
-    ondition: () => window.topClicks >= 40
+    condition: () => window.topClicks >= 40
     },
     {
   id: 'unlock-all',
@@ -205,7 +209,7 @@ window.renderDeskSVG = renderDeskSVG;
   window.topClicks = Array(TASKS.length).fill(0);
   window.prestigeClicks = Array(TASKS.length).fill(0);       // liczone od ostatniego prestige
 
-  function saveGame() {
+function saveGame() {
   localStorage.setItem("korposzczur_save", JSON.stringify({
     tasks, totalPoints, softSkills, burnout, pointsHistory,
     topClicks: window.topClicks,
@@ -215,17 +219,18 @@ window.renderDeskSVG = renderDeskSVG;
   }));
 }
 
-  function loadGame() {
-    const saveString = localStorage.getItem("korposzczur_save");
-    if (saveString) {
-      try {
-        const s = JSON.parse(saveString);
+function loadGame() {
+  const saveString = localStorage.getItem("korposzczur_save");
+  if (saveString) {
+    try {
+      const s = JSON.parse(saveString);
         if (Array.isArray(s.tasks)) tasks = s.tasks;
         if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
         if (typeof s.softSkills === "number") softSkills = s.softSkills;
         if (typeof s.burnout === "number") burnout = s.burnout;
         pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
-        topClicks = Array.isArray(s.topClicks) ? s.topClicks : Array(TASKS.length).fill(0);
+        window.topClicks = Array.isArray(s.topClicks) ? s.topClicks : Array(16).fill(0);
+        window.prestigeClicks = Array.isArray(s.prestigeClicks) ? s.prestigeClicks : Array(16).fill(0);
         if (Array.isArray(s.achievements)) {
           s.achievements.forEach(saved => {
             const orig = ACHIEVEMENTS.find(a => a.id === saved.id);
@@ -238,7 +243,15 @@ window.renderDeskSVG = renderDeskSVG;
           if (typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
           if (typeof t.baseClick !== 'number') t.baseClick = BASE_CLICKS[i];
         });
-      } catch (e) {
+          } catch (e) {
+            // Przy braku save/init błędzie:
+            window.topClicks = Array(16).fill(0);
+            window.prestigeClicks = Array(16).fill(0);
+          }
+        } else {
+          window.topClicks = Array(16).fill(0);
+          window.prestigeClicks = Array(16).fill(0);
+        }
         tasks = JSON.parse(JSON.stringify(TASKS));
         pointsHistory = [];
         topClicks = Array(TASKS.length).fill(0);
@@ -309,12 +322,12 @@ function getBarCycleMs(task) {
     }, 1000 / 30);
   }
 
-  function clickTask(idx) {
-    const task = tasks[idx];
-    if (task.unlocked) {
-      totalPoints += task.baseClick || 1;
-      topClicks[idx] += 1;
-      prestigeClicks[idx] += 1; // NOWE liczenie od prestiżu
+function clickTask(idx) {
+  const task = tasks[idx];
+  if (task.unlocked) {
+    totalPoints += task.baseClick || 1;
+    window.topClicks[idx] += 1;
+    window.prestigeClicks[idx] += 1;
       tryUnlockTask(idx + 1);
       checkAchievements();
       saveGame();
@@ -357,7 +370,7 @@ function getBarCycleMs(task) {
     renderMultipliersBar();
     confetti();
     ui.renderAchievements(window.ACHIEVEMENTS);
-    prestigeClicks = Array(tasks.length).fill(0);
+    window.prestigeClicks = Array(tasks.length).fill(0);
     // MODAL PO PIERWSZYM SOFTSKILLU!
     if (softSkills === 1) showSoftSkillModal();
   }
