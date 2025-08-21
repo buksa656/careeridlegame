@@ -135,8 +135,12 @@ main#app {
   border-color: #5bc2fa;
 }
 .kafelek-bottom-row {
-  display: flex; flex-direction: row; justify-content: center;
-  gap: 10px; margin-top: 13px; margin-bottom: 0;
+  display: flex; 
+  flex-direction: row; 
+  justify-content: center;
+  gap: 9px; 
+  margin-top: 12px; 
+  margin-bottom: 0;
 }
 .kafelek:hover, .kafelek:focus-visible {
   box-shadow: 0 8px 32px #176ec249, 0 3.5px 18px #22344719;
