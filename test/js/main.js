@@ -319,7 +319,6 @@ function getBarCycleMs(task) {
         tryUnlockTask(idx + 1);
         checkAchievements();
         saveGame();
-        ui.renderAll(tasks, totalPoints, softSkills, burnout);
         ui.renderProgress(idx, task.progress, task.multiplier);
         renderMultipliersBar();
         floatingScore(idlePts, idx, "#87c686");
