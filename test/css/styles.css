@@ -73,6 +73,7 @@ main#app {
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
+  justify-content: flex-start;
 }
 @media (max-width: 900px) {
   .career-list { grid-template-columns: repeat(2, 1fr);}
@@ -83,18 +84,22 @@ main#app {
 
 /* --- POJEDYNCZY KAFEL --- */
 .kafelek {
-  background: var(--panel);
-  border-radius: 13px;
-  box-shadow: var(--shadow);
-  padding: 14px 14px 11px 14px;
-  position: relative;
-  transition: box-shadow 0.16s;
-  cursor: pointer;
-  min-width: 0;
+  height: 195px;            /* DOPASUJ wysokość, np. 195-210px zależnie od contentu */
+  width: 100%;              /* zawsze na całą szerokość kontenera */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  user-select: none;
-  border: 2px solid transparent;
+  justify-content: flex-start; /* elementy od góry */
+}
+/* Każdy kafelek trzymany w identycznym kontenerze */
+.kafelek-outer {
+  flex: 0 1 240px;
+  max-width: 240px;
+  width: 240px;
+  min-width: 200px;
+  /* wymusza identyczne rozmiary w rzędzie */
+  display: flex;
+  flex-direction: column;
 }
 .kafelek:hover { box-shadow: 0 6px 24px #8ebbf73a, var(--shadow);}
 .kafelek:active, .kafelek:focus-visible { border: 2px solid var(--accent);}
@@ -121,7 +126,16 @@ main#app {
 .kafelek-row.stats {
   font-size: 0.95em;
   color: #5d709a;
-  margin-top: 2px;
+  margin-top:/* Każdy kafelek trzymany w identycznym kontenerze */
+.kafelek-outer {
+  flex: 0 1 240px;
+  max-width: 240px;
+  width: 240px;
+  min-width: 200px;
+  /* wymusza identyczne rozmiary w rzędzie */
+  display: flex;
+  flex-direction: column;
+} 2px;
 }
 /* --- PASEK PROGRESU --- */
 .kafelek-progbar {
@@ -139,7 +153,7 @@ main#app {
   display: block;
   width: 90%;
   min-width: 93px;
-  margin: 10px auto 4px auto;
+  margin: 8px auto 0 auto;
   padding: 7px 0 5px 0;
   font-size: 1em;
   font-family: inherit;
