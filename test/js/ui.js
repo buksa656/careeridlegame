@@ -78,6 +78,17 @@ return `
   </div>
   `;
 }
+  function renderSingleTile(idx, task, totalPoints) {
+  // Wygeneruj nowy HTML tylko dla jednego kafelka:
+  const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
+  // Znajdź wrapper OUter:
+  const outer = document.querySelector(`.kafelek-outer:nth-child(${idx+1})`);
+  if (outer) {
+    outer.innerHTML = kafelHtml;
+    // Podłącz ponownie obsługę zdarzeń do kafelka i przycisków:
+    addEvents(1); // możesz dodać specjalną wersję dodającą eventy tylko do jednego kafla!
+  }
+}
 function panelNav() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", e => {
