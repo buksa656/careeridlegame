@@ -139,7 +139,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Zdobywaj łącznie 2500 punktów z „Robienie kawy Szefowi”",
     unlocked: false,
     reward: { taskIdx: 0, multiplierInc: 0.12 }, // większy bonus
-    condition: () => tasks.level * TASKS.baseClick >= 2500
+    condition: () => tasks[0].level * tasks.baseClick >= 2500
     },
     {
       id: 'level-up-5',
@@ -171,7 +171,7 @@ window.renderDeskSVG = renderDeskSVG;
     desc: "Kliknij 40 razy w „Wysyłanie GIF-ów”",
     unlocked: false,
     reward: { taskIdx: 13, multiplierInc: 0.10 },
-    condition: () => window.topClicks >= 40
+    condition: () => window.topClicks[13] >= 40
     },
     {
   id: 'unlock-all',
@@ -203,8 +203,6 @@ window.renderDeskSVG = renderDeskSVG;
 
   let tasks = [], totalPoints = 0, softSkills = 0, burnout = 0, timers = [];
   let pointsHistory = []; // do wykresu
-  window.topClicks = Array(TASKS.length).fill(0);
-  window.prestigeClicks = Array(TASKS.length).fill(0);       // liczone od ostatniego prestige
 
 function saveGame() {
   localStorage.setItem("korposzczur_save", JSON.stringify({
@@ -221,52 +219,47 @@ function loadGame() {
   if (saveString) {
     try {
       const s = JSON.parse(saveString);
-        if (Array.isArray(s.tasks)) tasks = s.tasks;
-        if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
-        if (typeof s.softSkills === "number") softSkills = s.softSkills;
-        if (typeof s.burnout === "number") burnout = s.burnout;
-        pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
-        window.topClicks = Array.isArray(s.topClicks) ? s.topClicks : Array(16).fill(0);
-        window.prestigeClicks = Array.isArray(s.prestigeClicks) ? s.prestigeClicks : Array(16).fill(0);
-        if (Array.isArray(s.achievements)) {
-          s.achievements.forEach(saved => {
-            const orig = ACHIEVEMENTS.find(a => a.id === saved.id);
-            if (orig) orig.unlocked = saved.unlocked;
-          });
-        }
-        deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
-        tasks.forEach((t, i) => {
-          if (typeof t.multiplier !== 'number') t.multiplier = 1;
-          if (typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
-          if (typeof t.baseClick !== 'number') t.baseClick = BASE_CLICKS[i];
+      if (Array.isArray(s.tasks)) tasks = s.tasks;
+      if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
+      if (typeof s.softSkills === "number") softSkills = s.softSkills;
+      if (typeof s.burnout === "number") burnout = s.burnout;
+      pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
+      window.topClicks = Array.isArray(s.topClicks) ? s.topClicks : Array(TASKS.length).fill(0);
+      window.prestigeClicks = Array.isArray(s.prestigeClicks) ? s.prestigeClicks : Array(TASKS.length).fill(0);
+      if (Array.isArray(s.achievements)) {
+        s.achievements.forEach(saved => {
+          const orig = ACHIEVEMENTS.find(a => a.id === saved.id);
+          if (orig) orig.unlocked = saved.unlocked;
         });
-          } catch (e) {
-            // Przy braku save/init błędzie:
-            window.topClicks = Array(16).fill(0);
-            window.prestigeClicks = Array(16).fill(0);
-          }
-        } else {
-          window.topClicks = Array(16).fill(0);
-          window.prestigeClicks = Array(16).fill(0);
-        }
-        tasks = JSON.parse(JSON.stringify(TASKS));
-        pointsHistory = [];
-        topClicks = Array(TASKS.length).fill(0);
-        ACHIEVEMENTS.forEach(a => a.unlocked = false);
-        deskModsOwned = [];
-        applyDeskModsEffects();
       }
-    } else {
+      deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
+      tasks.forEach((t, i) => {
+        if (typeof t.multiplier !== 'number') t.multiplier = 1;
+        if (typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
+        if (typeof t.baseClick !== 'number') t.baseClick = BASE_CLICKS[i];
+      });
+    } catch (e) {
+      // Brak save/błąd: reset do defa
       tasks = JSON.parse(JSON.stringify(TASKS));
       pointsHistory = [];
-      topClicks = Array(TASKS.length).fill(0);
+      window.topClicks = Array(TASKS.length).fill(0);
+      window.prestigeClicks = Array(TASKS.length).fill(0);
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
+      applyDeskModsEffects();
     }
-    tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
-    ui.renderAchievements(window.ACHIEVEMENTS);
-    prestigeClicks = Array.isArray(s.prestigeClicks) ? s.prestigeClicks : Array(TASKS.length).fill(0);
+  } else {
+    // Brak save: reset jawny
+    tasks = JSON.parse(JSON.stringify(TASKS));
+    pointsHistory = [];
+    window.topClicks = Array(TASKS.length).fill(0);
+    window.prestigeClicks = Array(TASKS.length).fill(0);
+    ACHIEVEMENTS.forEach(a => a.unlocked = false);
+    deskModsOwned = [];
   }
+  tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
+  ui.renderAchievements(window.ACHIEVEMENTS);
+}
 
   function clearSave() {
     timers.forEach(t => clearInterval(t));
