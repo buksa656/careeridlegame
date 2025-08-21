@@ -100,14 +100,47 @@ main#app {
 }
 /* Każdy kafelek trzymany w identycznym kontenerze */
 .kafelek-outer {
-  flex: 0 1 250px;
-  max-width: 250px;
-  min-width: 210px;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  padding: 0;
+  align-items: center;
+  max-width: 142px;
+  min-width: 140px;
+  position: relative;
+  margin-bottom: 14px;
+}
+.kafelek-svg-wrap {
+  position: relative;
+  width: 134px;
+  height: 190px;
+  z-index: 1;
+}
+.kafelek-border-progress {
+  position: absolute;
+  top: 0; left: 0;
+  width: 134px;
+  height: 190px;
+  pointer-events: none;
+  z-index: 2;
+  display: block;
+}
+.kafelek-progress {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #1976d21b, 0 1.5px 8px #3858870a;
+  border: 1.5px solid #e8eaf0;
+  padding: 0 0 0 0;
+  min-height: 176px;
+  width: 120px;
+  position: absolute;
+  left: 7px;top: 7px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow .19s, border-color .14s, background .14s;
+}
+.kafelek-bottom-row {
+  margin-top: 8px;
+  margin-bottom: 0;
 }
 .kafelek:hover, .kafelek:focus-visible{   
   box-shadow: 0 8px 32px #176ec249, 0 3.5px 18px #22344719;
@@ -134,10 +167,8 @@ main#app {
   100% { transform: scale(1);}
 }
 .kafelek-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3.5px;
-  flex: 1 1 auto;
+  padding: 17px 10px 6px 13px;
+  font-size: 0.97em;
 }
 .kafelek-info .funny { color: #e79522; font-size: .95em; margin: 2px 0 0 0; }
 .kafelek-info .title { font-weight: 700; font-size: 1.13em; color: var(--accent); margin-bottom: 5px; }
@@ -148,16 +179,6 @@ main#app {
   margin-top: 2px;
   margin-bottom: 2px;
   font-size: .98em;
-}
-.kafelek-outer {
-  flex: 0 1 240px;
-  max-width: 240px;
-  width: 240px;
-  min-width: 200px;
-  /* wymusza identyczne rozmiary w rzędzie */
-  display: flex;
-  flex-direction: column;
-} 2px;
 }
 /* --- PASEK PROGRESU --- */
 .kafelek-progbar {
@@ -177,20 +198,21 @@ main#app {
   padding: 6px 0 0 0;
   border-bottom: 1.5px dashed #e8eaf7;
 }
+.asc-badge { font-size: 0.99em; margin-bottom:7px }
+.asc-perc { color: #206dbb; margin-left: 5px; }
 .ascend-btn, .kafelek-ulepsz-btn {
-  margin-top: 5px;
-  font-size: 0.97em;
-  padding: 6px 16px;
-  border: 1.2px solid #a6cafd;
+  border-radius: 9px;
+  font-weight: 600;
+  white-space: normal;
+  padding: 6px 10px;
+  border: 1.1px solid #a7d0fe;
   background: #e8f1fe;
-  border-radius: 8px;
   color: #1761a5;
   cursor: pointer;
-  font-weight: 600;
+  box-shadow: 0 1.5px 7px #3574a918;
   transition: background .13s, border-color .12s;
-  box-shadow: 0 2px 4px #3574a91a;
 }
-.ascend-btn:hover {
+.ascend-btn:hover, .kafelek-ulepsz-btn:hover{
   background: #b4deff;
   color: #133b65;
   border-color: #7ab5e6;
@@ -204,12 +226,10 @@ main#app {
   border-color: var(--accent);
 }
 .kafelek-ulepsz-btn:disabled {
-  background: #f1f1f1;
-  color: #c0cad6;
-  border-color: #e1e1e1;
-  box-shadow: none;
+  background: #f0f3fb;
+  color: #7c94ae;
   cursor: not-allowed;
-  opacity: 0.85;
+  border-color: #e4eaf3;
 }
 
 /* --- RESPONSYWNOĹšÄ† KAFELKĂ“W --- */
