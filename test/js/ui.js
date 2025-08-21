@@ -36,10 +36,11 @@
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
           <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
           <div class="kafelek-row">Za klik: <b>${task.baseClick || 1}</b></div>
-          <div class="kafelek-row stats">
-            <span title="Kliknięcia w całej grze">Kliknięć łącznie: <b>${topClicks[idx]}</b></span>
-            <span title="Kliknięcia od ostatniego prestiżu" style="margin-left:12px">od prestiżu: <b>${prestigeClicks[idx]}</b></span>
-          </div>
+            <div class="kafelek-row stats">
+              <span title="Kliknięcia w całej grze">Kliknięć łącznie: <b>${window.topClicks ? window.topClicks[idx] : 0}</b></span>
+              <span title="Kliknięcia od ostatniego prestiżu" style="margin-left:12px">
+                od prestiżu: <b>${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b></span>
+            </div>
           <div class="kafelek-progbar">
             <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress || 0) * 100)}%"></div>
           </div>
