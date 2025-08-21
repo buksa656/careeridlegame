@@ -36,7 +36,7 @@
   { name: "Korpo Yoda",idleMult: 5.0, clickMult: 4.2, cost: 62000 },
   { name: "Legenda Open Space",idleMult: 6.3, clickMult: 5.3, cost: 150000 }
 ];
-  
+  window.ASCEND_STAGES = ASCEND_STAGES;
   // --- MODYFIKACJE BIURKA --- //
 const DESK_MODS = [
   {
