@@ -158,7 +158,7 @@ window.renderDeskSVG = renderDeskSVG;
     {
       id: 'level-up-5',
       name: "Poziom 5",
-      desc: "Podnieś dowolne zadanie do poziomu 5",
+      desc: "Optymalizuj dowolne zadanie do poziomu 5",
       unlocked: false,
       reward: { taskIdx: null, multiplierInc: 0.05 }, // globalny modyfikator
       condition: () => tasks.some(t => t.level >= 5)
