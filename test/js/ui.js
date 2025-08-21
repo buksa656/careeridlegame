@@ -20,94 +20,61 @@
     lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
 
 function taskTile(task, idx, totalPoints, locked = false) {
-  // --- ASCEND LOGIKA ---
-  const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-  const ascendStage = ASCEND_STAGES[ascendLevel];
-  const nextStage = ASCEND_STAGES[ascendLevel + 1];
-  const ascendProgress = ascendLevel / (ASCEND_STAGES.length - 1); // 0–1
-
-  // --- ULEPSZ/NAGRODY ---
-  const upgCost = typeof task.getUpgradeCost === "function"
-    ? task.getUpgradeCost()
-    : Math.floor(20 * Math.pow(2.25, task.level));
-  const canUpgrade = totalPoints >= upgCost;
-
-  // --- STATYSTYKI ---
-  const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-    * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-    * ascendStage.idleMult;
-  const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
-    * ascendStage.clickMult;
-
-  const barMs = getBarCycleMs(task);
-  const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
-  const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
-
-  // --- SVG PROGRESS RAMKA ---
-  const rectWidth = 108, rectHeight = 164, rectRx = 18;
-  const svgPerimeter = 2 * (rectWidth + rectHeight - 4 * rectRx) + 2 * Math.PI * rectRx;
-  const svgProgress = svgPerimeter * (1 - ascendProgress);
-
-  // --- STYL ---
-  const style = colorByLevel(task.level) && !locked
-    ? `style="border-color:${colorByLevel(task.level)}"`
-    : '';
-
-  return `
-  <div class="kafelek-outer">
-    <div class="kafelek-svg-wrap" style="width:134px; height:190px; margin:auto; position:relative;">
-      <svg class="kafelek-border-progress" width="134" height="190" viewBox="0 0 134 190" style="position:absolute;top:0;left:0;">
-        <rect x="4" y="4" width="108" height="164" rx="18"
-              fill="none" stroke="#e5e8f3" stroke-width="5"/>
-        <rect x="4" y="4" width="108" height="164" rx="18"
-              fill="none" stroke="#2a91eb" stroke-width="5"
-              stroke-dasharray="${svgPerimeter}"
-              stroke-dashoffset="${svgProgress}" style="transition:stroke-dashoffset 0.45s;"/>
-      </svg>
-      <div class="kafelek kafelek-progress" ${style} data-taskidx="${idx}" tabindex="0"
-          style="width:120px; height:176px; margin:7px 0 0 7px; box-sizing:border-box; position:absolute; top:0; left:0;">
-        <div class="kafelek-info">
-          <div class="title" style="font-size:1.05em">${task.name}</div>
-          <div class="kafelek-row asc-badge" style="margin-bottom:8px;">
-            <span style="color:#425;font-size:.97em;">${ascendStage.name}</span>
-            <span class="asc-perc" style="color:#2477c7;font-weight:700;margin-left:7px;font-size:0.98em;">+${Math.round((ascendStage.idleMult - 1)*100)}% idle</span>
-          </div>
-          <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-          <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
-          <div class="kafelek-row">Za klik: <b>${clickVal}</b></div>
-          <div class="kafelek-row stats" style="font-size:.96em;margin-bottom:2px;">
-            <span title="Kliknięcia w całej grze">Kliknięć: <b>${window.topClicks ? window.topClicks[idx] : 0}</b></span>
-            <span style="margin-left:13px">od prestiżu: <b>${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b></span>
-          </div>
-          <div class="kafelek-progbar">
-            <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress || 0) * 100)}%"></div>
-          </div>
-          ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b></div>` : ''}
-        </div>
-        <!-- PRZYCISKI NA DOLE, jedna linia! -->
-        <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:12px;">
-          <button class="kafelek-ulepsz-btn"
-                  data-do="upg"
-                  data-idx="${idx}"
-                  style="flex:1; min-width:0; padding:6px 6px; font-size:.96em;"
-                  ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
-            Ulepsz<br>(${fmt(upgCost)})
-          </button>
-          ${
-            nextStage
-              ? `<button class="ascend-btn" data-task="${idx}" style="flex:1; min-width:0; font-size:.97em;">
-                  Awans<br>(${nextStage.cost})
-                 </button>`
-              : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
-          }
-        </div>
+    const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+    const ascendStage = ASCEND_STAGES[ascendLevel];
+    const nextStage = ASCEND_STAGES[ascendLevel + 1];
+    const upgCost = typeof task.getUpgradeCost === "function"
+      ? task.getUpgradeCost()
+      : Math.floor(20 * Math.pow(2.25, task.level));
+    const canUpgrade = totalPoints >= upgCost;
+    const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+      * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+      * ascendStage.idleMult;
+    const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
+      * ascendStage.clickMult;
+    const barMs = getBarCycleMs(task);
+    const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
+    const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
+    const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
+    return `
+  <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0" ${style}>
+    <div class="kafelek-info">
+      <div class="title">${task.name}</div>
+      <div class="kafelek-row asc-badge">
+        <span style="color:#425;font-size:.97em;">${ascendStage.name}</span>
+        <span class="asc-perc" style="color:#2477c7;font-weight:700;margin-left:7px;font-size:0.98em;">+${Math.round((ascendStage.idleMult - 1)*100)}% idle</span>
+      </div>
+      <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
+      <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
+      <div class="kafelek-row">Za klik: <b>${clickVal}</b></div>
+      <div class="kafelek-row stats">
+        <span>Kliknięć: <b>${window.topClicks ? window.topClicks[idx] : 0}</b></span>
+        <span style="margin-left:13px">od prestiżu: <b>${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b></span>
+      </div>
+      <div class="kafelek-progbar">
+        <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress || 0) * 100)}%"></div>
+      </div>
+      ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b></div>` : ''}
+      <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:14px;">
+        <button class="kafelek-ulepsz-btn"
+                data-do="upg"
+                data-idx="${idx}"
+                style="flex:1;min-width:0;"
+                ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
+          Ulepsz<br>(${fmt(upgCost)})
+        </button>
+        ${
+          nextStage
+            ? `<button class="ascend-btn" data-task="${idx}" style="flex:1;min-width:0;">
+                Awans<br>(${nextStage.cost})
+               </button>`
+            : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
+        }
       </div>
     </div>
   </div>
   `;
 }
-
-
 function panelNav() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", e => {
