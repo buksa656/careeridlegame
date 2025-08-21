@@ -104,13 +104,12 @@ main#app {
 }
 /* Każdy kafelek trzymany w identycznym kontenerze */
 .kafelek-outer {
-  flex: 0 1 230px;
-  max-width: 230px;
-  min-width: 180px;
-  justify-content: flex-start;
-  align-items: stretch;
-  margin-bottom: 24px;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 232px;
+  min-width: 180px;
+  margin-bottom: 18px;
 }
 .kafelek-progress {
   min-height: 134px; /* lub 120px */
