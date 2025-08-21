@@ -153,15 +153,6 @@ main#app {
   border: 1.5px solid #e8e8ee;
   background: #f7fafe;
 }
-.kafelek.clicked-anim {
-  animation: kafel-pulse 0.16s cubic-bezier(.55,1.6,.6,1.01);
-}
-@keyframes kafel-pulse {
-  0%   { transform: scale(1);}
-  30%  { transform: scale(1.08);}
-  65%  { transform: scale(0.97);}
-  100% { transform: scale(1);}
-}
 .kafelek-info { padding: 0; font-size: .99em; }
 .kafelek-info .funny { color: #e79522; font-size: .95em; margin: 2px 0 0 0; }
 .kafelek-info .title { font-weight: 700; font-size: 1.13em; color: var(--accent); margin-bottom: 5px; }
@@ -189,7 +180,7 @@ main#app {
 .kafelek-progbar-inner {
   position: absolute; left: 0; top: 0; height: 100%;
   background: var(--accent);
-  transition: width 0.13s; border-radius: 7px;
+  border-radius: 7px;
 }
 /* --- ASCEND --- */
 .kafelek-ascend-row {
