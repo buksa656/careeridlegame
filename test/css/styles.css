@@ -191,20 +191,6 @@ main#app {
 }
 .asc-badge { font-size: 0.99em; margin-bottom:7px }
 .asc-perc { color: #206dbb; margin-left: 5px; }
-.kafelek-ulepsz-btn, .ascend-btn {
-  border-radius: 9px;
-  font-weight: 600;
-  padding: 6px 9px;
-  font-size: .97em;
-  border: 1.1px solid #a7d0fe;
-  background: #e8f1fe;
-  color: #1761a5;
-  flex: 1 0 0;
-  min-width: 0;
-  cursor: pointer;
-  box-shadow: 0 1.5px 7px #3574a918;
-  transition: background .13s, border-color .12s;
-}
 .ascend-btn:hover, .kafelek-ulepsz-btn:hover {
   background: #b4deff;
   color: #133b65;
@@ -222,7 +208,7 @@ main#app {
   border-radius: 9px;
   font-weight: 600;
   padding: 6px 9px;
-  font-size: .91em;
+  font-size: .80em;
   border: 1.1px solid #a7d0fe;
   background: #e8f1fe;
   color: #1761a5;
