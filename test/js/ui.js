@@ -20,6 +20,9 @@
     lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
 
   function taskTile(task, idx, totalPoints, locked = false) {
+    const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+    const stage = ASCEND_STAGES[ascendLevel];
+    const nextStage = ASCEND_STAGES[ascendLevel + 1];
     const upgCost = typeof task.getUpgradeCost === "function"
       ? task.getUpgradeCost()
       : Math.floor(20 * Math.pow(2.25, task.level));
@@ -33,6 +36,25 @@
   <div class="kafelek${locked ? ' locked' : ''} ..." data-taskidx="${idx}" tabindex="0" ${style}>
     <div class="kafelek-info">
           <div class="title">${task.name}</div>
+          <div class="kafelek-ascend-row">
+            <span style="font-size:.98em; color:#425;">
+              Poziom awansu: <b>${stage.name}</b>
+            </span>
+          <div class="asc-bonus" style="font-size:.96em; color:#625;">
+            Premia idle: <b>+${Math.round((stage.idleMult-1)*100)}%</b>
+            &nbsp;|&nbsp;
+            za klik: <b>+${Math.round((stage.clickMult-1)*100)}%</b>
+          </div>
+          ${
+          nextStage
+          ? `<button
+            class="ascend-btn"
+            data-task="${idx}">
+            Awansuj na ${nextStage.name} (koszt: ${nextStage.cost})
+             </button>`
+          : `<span style="color:#c89; font-size:.97em;">Max awans!</span>`
+          }
+          </div>
           <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
           <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
           <div class="kafelek-row">Za klik: <b>${task.baseClick || 1}</b></div>
