@@ -27,7 +27,13 @@
       ? task.getUpgradeCost()
       : Math.floor(20 * Math.pow(2.25, task.level));
     const canUpgrade = totalPoints >= upgCost;
-    const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01) * (typeof task.multiplier === 'number' ? task.multiplier : 1);
+    const ascendLvl = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+    const ascendStage = ASCEND_STAGES[ascendLvl];
+
+    const gainIdle =
+    (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+        * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+        * ascendStage.idleMult;   // <--- TU DODANY MULTIPLIKATOR ASCEND!
     const barMs = getBarCycleMs(task);
     const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
     const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
