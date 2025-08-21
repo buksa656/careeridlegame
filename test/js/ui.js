@@ -41,9 +41,6 @@
           </div>
           ${locked && typeof task.unlockCost === 'number' ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b> biuro-pkt</div>` : ''}
         </div>
-<button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" ${locked || !canUpgrade ? "disabled" : ""}>
-    Ulepsz<br>(${fmt(upgCost)})
-  </button>
       </div>`;
   }
 
