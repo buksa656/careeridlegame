@@ -224,13 +224,13 @@ function renderProgress(idx, progress) {
   }
 
   function addEvents(tasksLen) {
-  document.querySelectorAll(".kafelek-info").forEach((el) => {
-    el.onclick = (e) => {
-      // jeżeli kafelek zablokowany – zwróć
-      if (el.closest(".kafelek").classList.contains("locked")) return;
-      const idx = Number(el.closest(".kafelek").dataset.taskidx);
-      eventHandlers.onClickTask(idx);
-    };
+document.querySelectorAll(".kafelek-info").forEach((el) => {
+  el.onclick = (e) => {
+    e.stopPropagation();
+    if (el.closest(".kafelek").classList.contains("locked")) return;
+    const idx = Number(el.closest(".kafelek").dataset.taskidx);
+    eventHandlers.onClickTask(idx);
+  };
     el.onkeydown = (e) => {
       if ((e.key === "Enter" || e.key === " ") && !el.closest(".kafelek").classList.contains("locked")) {
         e.preventDefault();
@@ -241,6 +241,7 @@ function renderProgress(idx, progress) {
   });
     document.querySelectorAll('.ascend-btn').forEach(btn => {
       btn.onclick = (e) => {
+        e.stopPropagation();
       const idx = Number(btn.dataset.task);
       eventHandlers.onAscendTask(idx);
       }
