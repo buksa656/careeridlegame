@@ -243,14 +243,16 @@ function renderAchievements(achArr) {
   if (!container) return;
   container.innerHTML = achArr.map(a => {
     // Opis nagrody
-    let rewardText = '';
-    if (a.reward) {
-      if (a.reward.taskIdx !== null) {
-        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika do zadania`;
-      } else {
-        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika globalnego`;
-      }
-    }
+let rewardText = '';
+if (a.reward) {
+  if (a.reward.type === 'baseClick') {
+    rewardText = `Nagroda: <b>+${a.reward.value}</b> do kliku we wszystkich zadaniach`;
+  } else if (typeof a.reward.taskIdx === "number" && a.reward.taskIdx !== null) {
+    rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika do zadania`;
+  } else {
+    rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika globalnego`;
+  }
+}
     return `
       <div class="ach-item${a.unlocked ? ' completed' : ''}">
         <div class="emoji">${a.unlocked ? '🏆' : '🔒'}</div>
