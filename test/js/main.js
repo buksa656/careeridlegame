@@ -481,16 +481,7 @@ function checkAchievements() {
   });
 }
 
-function floatingScore(points, idx, color) {
-  const list = document.querySelectorAll(".kafelek");
-  const el = list[idx];
-  if (!el) return;
-  el.classList.remove("clicked-anim");
-  // Aby animacja zawsze się odpaliła, nawet po szybkim kliku
-  void el.offsetWidth;
-  el.classList.add("clicked-anim");
-  setTimeout(() => el.classList.remove("clicked-anim"), 180);
-}
+function floatingScore(points, idx, color) {}
   function flashPoints() {
     const score = document.getElementById('top-total-points');
     if(!score) return;
