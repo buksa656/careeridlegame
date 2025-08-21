@@ -20,45 +20,56 @@
     lvl >= 30 ? "#caa806" : lvl >= 20 ? "#299a4d" : lvl >= 10 ? "#1976d2" : "";
 
 function taskTile(task, idx, totalPoints, locked = false) {
-    const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-    const ascendStage = ASCEND_STAGES[ascendLevel];
-    const nextStage = ASCEND_STAGES[ascendLevel + 1];
-    const upgCost = typeof task.getUpgradeCost === "function"
-      ? task.getUpgradeCost()
-      : Math.floor(20 * Math.pow(2.25, task.level));
-    const canUpgrade = totalPoints >= upgCost;
-    const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-      * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-      * ascendStage.idleMult;
-    const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
-      * ascendStage.clickMult;
-    const barMs = getBarCycleMs(task);
-    const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
-    const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
-    const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
-return `
+  const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+  const ascendStage = ASCEND_STAGES[ascendLevel];
+  const nextStage = ASCEND_STAGES[ascendLevel + 1];
+  const upgCost = typeof task.getUpgradeCost === "function"
+    ? task.getUpgradeCost()
+    : Math.floor(20 * Math.pow(2.25, task.level));
+  const canUpgrade = totalPoints >= upgCost;
+  const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+    * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+    * ascendStage.idleMult;
+  const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
+    * ascendStage.clickMult;
+  const barMs = getBarCycleMs(task);
+  const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
+  const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
+  const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
+
+  return `
   <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
     <div class="kafelek-info">
       <div class="title">${task.name}</div>
       <div class="kafelek-row asc-badge">
-        <span style="color:#425;font-size:.97em;">${ascendStage.name}</span>
-        <span class="asc-perc" style="color:#2477c7;font-weight:700;margin-left:7px;font-size:0.98em;">+${Math.round((ascendStage.idleMult - 1)*100)}% idle</span>
+        <span class="tile-stage" style="color:#425;font-size:.97em;">${ascendStage.name}</span>
+        <span class="tile-asc-perc asc-perc"
+           style="color:#2477c7;font-weight:700;margin-left:7px;font-size:0.98em;">
+           +${Math.round((ascendStage.idleMult - 1)*100)}% idle
+        </span>
       </div>
-      <div class="kafelek-row">Poziom: <b>${task.level}</b></div>
-      <div class="kafelek-row">Idle: <b>${perSec}</b> pkt/s <span style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span></div>
-      <div class="kafelek-row">Za klik: <b>${clickVal}</b></div>
+      <div class="kafelek-row">Poziom: <b class="tile-lvl">${task.level}</b></div>
+      <div class="kafelek-row">
+        Idle: <b class="tile-idle">${perSec}</b> pkt/s 
+        <span class="tile-mult" style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span>
+      </div>
+      <div class="kafelek-row">
+        Za klik: <b class="tile-click">${clickVal}</b>
+      </div>
       <div class="kafelek-row stats">
-        <span>Kliknięć: <b>${window.topClicks ? window.topClicks[idx] : 0}</b></span>
-        <span style="margin-left:13px">od prestiżu: <b>${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b></span>
+        <span>Kliknięć: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
+        <span style="margin-left:13px">
+          od prestiżu: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
+        </span>
       </div>
       <div class="kafelek-progbar">
         <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress || 0) * 100)}%"></div>
       </div>
       ${locked && typeof task.unlockCost === 'number'
-        ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b>${fmt(task.unlockCost)}</b></div>` : ''
+        ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
       }
     </div>
-    <!-- PRZYCISKI PONIŻEJ karty, nie w .kafelek-info! -->
+    <!-- PRZYCISKI (i cała reszta) pozostają BEZ zmian -->
     <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:13px;">
       <button class="kafelek-ulepsz-btn"
           data-do="upg"
@@ -90,6 +101,49 @@ function renderSingleTile(idx, task, totalPoints) {
     // UWAGA: Jeśli masz addEvents bazujące na wszystkich kaflach, możesz ograniczyć do tego outers[idx]!
     addEvents(1);
   }
+}
+  function updateSingleTile(idx, task, totalPoints) {
+  const kafelek = document.querySelector(`.kafelek[data-taskidx="${idx}"]`);
+  if (!kafelek) return;
+
+  const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+  const ascendStage = ASCEND_STAGES[ascendLevel];
+  const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+    * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+    * ascendStage.idleMult;
+  const barMs = getBarCycleMs(task);
+  const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
+  const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
+    * ascendStage.clickMult;
+  const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
+  const nextStage = ASCEND_STAGES[ascendLevel + 1] || null;
+
+  // Aktualizacja poziomu/kosztu/idle/mnożnika/clicków
+  kafelek.querySelector('.tile-stage').innerText = ascendStage.name;
+  kafelek.querySelector('.tile-asc-perc').innerText = `+${Math.round((ascendStage.idleMult - 1) * 100)}% idle`;
+  kafelek.querySelector('.tile-lvl').innerText = task.level;
+  kafelek.querySelector('.tile-idle').innerText = perSec;
+  kafelek.querySelector('.tile-mult').innerText = `(x${multiplierLabel})`;
+  kafelek.querySelector('.tile-click').innerText = clickVal;
+  kafelek.querySelector('.tile-clicks').innerText = window.topClicks ? window.topClicks[idx] : 0;
+  kafelek.querySelector('.tile-prestige').innerText = window.prestigeClicks ? window.prestigeClicks[idx] : 0;
+
+  // Jeśli masz unlock cost wyświetl, jeśli nie – pomin
+  const unlock = kafelek.querySelector('.tile-unlock');
+  if (unlock && typeof task.unlockCost === 'number') unlock.innerText = fmt(task.unlockCost);
+
+  // Ewentualnie aktualizacja tekstu przycisków (jeśli masz dynamiczne koszty)
+  const upgCost = typeof task.getUpgradeCost === "function"
+    ? task.getUpgradeCost() : Math.floor(20 * Math.pow(2.25, task.level));
+  const btnUpg = kafelek.querySelector('.kafelek-ulepsz-btn');
+  if (btnUpg) btnUpg.innerHTML = `Optymalizuj<br>(${fmt(upgCost)})`;
+  if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
+
+  const btnAsc = kafelek.querySelector('.ascend-btn');
+  if (btnAsc && nextStage)
+    btnAsc.innerHTML = `Awans<br>(${nextStage.cost})`;
+  if (btnAsc && !nextStage)
+    btnAsc.outerHTML = `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
 }
 function panelNav() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
