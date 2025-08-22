@@ -23,20 +23,30 @@
   ];
   window.topClicks = Array(TASKS.length).fill(0);        // kliknięcia wszystkich tasków globalnie
   window.prestigeClicks = Array(TASKS.length).fill(0);   // kliknięcia wszystkich tasków od ostatniego prestiżu
+  // 1. Progresywny koszt unlocku kafelków
+  for (let i = 1; i < TASKS.length; ++i) {
+    TASKS[i].unlockCost = Math.floor(55 * Math.pow(3.25, i));
+  }
 
-  const ASCEND_STAGES = [
-  { name: "Junior",    idleMult: 1.0, clickMult: 1.0, cost: 0 },
-  { name: "Mid",       idleMult: 1.25, clickMult: 1.15, cost: 100 },
-  { name: "Senior",    idleMult: 1.5, clickMult: 1.30, cost: 300 },
-  { name: "Manager",   idleMult: 1.8, clickMult: 1.50, cost: 900 },
-  { name: "Principal", idleMult: 2.15, clickMult: 1.85, cost: 2600 },
-  { name: "Director",  idleMult: 2.6, clickMult: 2.2, cost: 6000 },
-  { name: "Expert",    idleMult: 3.2, clickMult: 2.6, cost: 13000 },
-  { name: "C-Level",   idleMult: 4.0, clickMult: 3.3, cost: 25000 },
-  { name: "Korpo Yoda",idleMult: 5.0, clickMult: 4.2, cost: 62000 },
-  { name: "Legenda Open Space",idleMult: 6.3, clickMult: 5.3, cost: 150000 }
-  ];
-  window.ASCEND_STAGES = ASCEND_STAGES;
+  // 2. Dynamiczne koszty ulepszeń (optymalizacji)
+  TASKS.forEach((t, i) => {
+    t.getUpgradeCost = function() {
+      return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+    };
+  });
+const ASCEND_STAGES = [
+  { name: "Junior",    idleMult: 1.0, clickMult: 1.0 },
+  { name: "Mid",       idleMult: 1.25, clickMult: 1.15 },
+  { name: "Senior",    idleMult: 1.5, clickMult: 1.30 },
+  { name: "Manager",   idleMult: 1.8, clickMult: 1.50 },
+  { name: "Principal", idleMult: 2.15, clickMult: 1.85 },
+  { name: "Director",  idleMult: 2.6, clickMult: 2.2 },
+  { name: "Expert",    idleMult: 3.2, clickMult: 2.6 },
+  { name: "C-Level",   idleMult: 4.0, clickMult: 3.3 },
+  { name: "Korpo Yoda",idleMult: 5.0, clickMult: 4.2 },
+  { name: "Legenda Open Space",idleMult: 6.3, clickMult: 5.3 }
+];
+window.ASCEND_STAGES = ASCEND_STAGES;
   // --- MODYFIKACJE BIURKA --- //
 const DESK_MODS = [
   {
@@ -77,6 +87,27 @@ const DESK_MODS = [
     svg: `<ellipse cx="115" cy="194" rx="8" ry="5" fill="#fff9f6"/>
           <ellipse cx="115" cy="189" rx="3" ry="4" fill="#fff"/>
           <rect x="112" y="188" width="6" height="8" rx="2.5" fill="#f7dcc3"/>`
+  },
+    {
+    id: "ekspres", name: "Ekspres do kawy", emoji: "☕",
+    desc: "Idle we wszystkich zadaniach +12%",
+    cost: 8,
+    svg: "<ellipse cx='165' cy='165' rx='13' ry='13' fill='#eee'/>",
+    effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.12 }
+  },
+  {
+    id: "podkladka", name: "Antystresowa podkładka", emoji: "🖱️",
+    desc: "Kliky +10% (trwały efekt)",
+    cost: 12,
+    svg: "<rect x='50' y='180' width='24' height='9' rx='4.5' fill='#def'/>",
+    effect: gs => { gs.baseClick = (gs.baseClick || 1) * 1.1; }
+  },
+  {
+    id: "prestiżowe-biurko", name: "BIURKOWY PRESTIŻ", emoji: "💎",
+    desc: "Globalny mnożnik idle *1.17. Najwyższy biurowy upgrade.",
+    cost: 25,
+    svg: "<ellipse cx='290' cy='190' rx='11' ry='11' fill='#87c4ff'/><ellipse cx='290' cy='190' rx='7' ry='7' fill='#fff'/>",
+    effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.17; }
   }
 ];
   const hotspotMap = {
@@ -192,7 +223,7 @@ const ACHIEVEMENTS = [
     id: "dzial-it",
     name: "Wsparcie IT",
     desc: "Kup przedmiot na biurko o temacie informatycznym.",
-    condition: gs => gs.deskModsOwned && gs.deskModsOwned.includes('laptop'),
+    condition: gs => gs.deskModsOwned && gs.deskModsOwned.includes('monitor'),
     reward: { type: "multiplierInc", multiplierInc: 0.05, taskIdx: 2 }
   },
   {
@@ -220,7 +251,7 @@ const ACHIEVEMENTS = [
     id: "król-softskill",
     name: "Król Soft Skill",
     desc: "Kup najdroższy przedmiot z biurka.",
-    condition: gs => gs.deskModsOwned && gs.deskModsOwned.includes("biurowy-prestiz"),
+    condition: gs => gs.deskModsOwned && gs.deskModsOwned.includes("prestiżowe-biurko"),
     reward: { type: "multiplierInc", multiplierInc: 0.13 }
   },
   {
@@ -233,8 +264,8 @@ const ACHIEVEMENTS = [
   {
     id: "mistrz-softskilli",
     name: "Mistrz Soft Skilli",
-    desc: "Uzbieraj co najmniej 10 Soft Skills.",
-    condition: gs => gs.softSkills >= 10,
+    desc: "Uzbieraj co najmniej 100 Soft Skills.",
+    condition: gs => gs.softSkills >= 100,
     reward: { type: "baseClick", value: 50 }
   },
   {
@@ -407,7 +438,7 @@ function clickTask(idx) {
 
   function upgradeTask(idx) {
     const task = tasks[idx];
-    const cost = Math.floor(20 * Math.pow(2.25, task.level));
+    const cost = task.getUpgradeCost();
     if (totalPoints >= cost) {
       task.level += 1;
       totalPoints -= cost;
@@ -430,7 +461,8 @@ function ascendTask(idx) {
   const current = task.ascendLevel || 0;
   const next = current + 1;
   if (!ASCEND_STAGES[next]) return; // już max awans
-  const cost = ASCEND_STAGES[next].cost;
+  // const cost = ASCEND_STAGES[next].cost;   // <--- ZAMIEŃ NA:
+  const cost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
   if (totalPoints >= cost) {
     totalPoints -= cost;
     task.ascendLevel = next;
