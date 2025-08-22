@@ -26,7 +26,14 @@ function fmt(n) {
 function taskTile(task, idx, totalPoints, locked = false) {
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
-  const nextStage = ASCEND_STAGES[ascendLevel + 1];
+  const next = ascendLevel + 1;
+  const nextStage = ASCEND_STAGES[next];
+  // Dynamiczny koszt awansu!
+  let ascendCost = null;
+  if (nextStage) {
+    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
+  }
+
   const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost()
     : Math.floor(20 * Math.pow(2.25, task.level));
@@ -41,14 +48,14 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
   const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
 
-return `
+  return `
 <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
   <div class="kafelek-info">
     <div class="title">${task.name}</div>
     <div class="kafelek-row asc-badge">
       <span class="tile-stage">${ascendStage.name}</span>
       <span class="tile-asc-perc asc-perc">
-         +${Math.round((ascendStage.idleMult - 1)*100)}% idle
+         +${Math.round((ascendStage.idleMult - 1) * 100)}% idle
       </span>
     </div>
     <div class="kafelek-row">Poz.: <b class="tile-lvl">${task.level}</b></div>
@@ -79,7 +86,7 @@ return `
     ${
       nextStage
         ? `<button class="ascend-btn" data-task="${idx}">
-            Awans<br>(${nextStage.cost})
+            Awans<br>(${ascendCost})
            </button>`
         : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
     }
