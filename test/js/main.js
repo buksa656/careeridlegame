@@ -353,7 +353,7 @@ function clickTask(idx) {
     tryUnlockTask(idx + 1);
     checkAchievements();
     saveGame();
-    updateSingleTile(idx, tasks[idx], totalPoints);
+    window.IdleUI.updateSingleTile(idx, tasks[idx], totalPoints);
     if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
     renderMultipliersBar();
     floatingScore(clickPts, idx, "#1976d2");
