@@ -98,7 +98,6 @@ function renderSingleTile(idx, task, totalPoints) {
 function updateSingleTile(idx, task, totalPoints) {
   const kafelek = document.querySelector(`.kafelek[data-taskidx="${idx}"]`);
   if (!kafelek) return;
-
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
