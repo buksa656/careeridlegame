@@ -150,7 +150,8 @@ function panelNav() {
       // Tu uruchamiaj odpowiedni renderer:
       if (target === "kariera" && window.tasks) {
         renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-          if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+        window.tasks = tasks;  
+        if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
       } else if (target === "osiagniecia" && window.ACHIEVEMENTS) {
         renderAchievements(window.ACHIEVEMENTS);
       } else if (target === "biurko" && typeof window.renderDeskSVG === "function") {
