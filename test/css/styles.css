@@ -141,13 +141,6 @@ main#app {
   transition: box-shadow .14s, border-color .11s, background .12s;
   font-size: 0.91em;
 }
-.kafelek, .kafelek * {
- padding: 8px 10px 7px 10px !important;
-  min-height: 90px !important;
-  border-radius: 13px !important;
-  font-size: 0.97em !important;
-  gap: 2px !important;
-}
 .kafelek-info { padding: 0; font-size: .93em; }
 .kafelek-row { color: #6a7998; font-size: 0.91em; margin: 1px 0; }
 .kafelek-row.stats { font-size: 0.88em; color: #5d709a;}
