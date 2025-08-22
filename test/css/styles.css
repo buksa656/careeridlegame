@@ -208,6 +208,13 @@ main#app {
 .ach-list {
   display: flex; flex-direction: column; gap: 14px; margin-top: 18px; max-width: 600px;
 }
+#achievements-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+  max-width: 540px;
+  margin: 0 auto;
+}
 .ach-item {
   background: #ededed;
   border: 1.5px solid #c7c7c7;
@@ -218,11 +225,14 @@ main#app {
   box-shadow: 0 1px 3px #bbb8a612;
   display: flex;
   align-items: flex-start;
-  gap: 13px;
+  gap: 9px;
   position: relative;
   opacity: 0.6;
   filter: grayscale(0.8);
   transition: background 0.25s, border-color 0.2s, opacity .17s, filter 0.19s;
+}
+@media (max-width: 600px) {
+  #achievements-container { grid-template-columns: 1fr; }
 }
 .ach-item.completed {
   background: #e2ffe4;
