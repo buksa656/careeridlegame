@@ -128,7 +128,7 @@ function updateSingleTile(idx, task, totalPoints) {
   const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost() : Math.floor(20 * Math.pow(2.25, task.level));
   const btnUpg = kafelek.querySelector('.kafelek-ulepsz-btn');
-  if (btnUpg) btnUpg.innerHTML = `Optymalizuj<br>(${fmt(upgCost)})`;
+  if (btnUpg) btnUpg.innerHTML = `Opt.<br>(${fmt(upgCost)})`;
   if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
 
   // Przycisk awans
