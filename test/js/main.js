@@ -138,80 +138,113 @@ function hideDeskTooltip() {
 
 window.renderDeskSVG = renderDeskSVG; 
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
-  const ACHIEVEMENTS = [
-    {
-    id: 'mail-master',
-    name: "Mailowy Mistrz",
-    desc: "Kliknij 100 razy w zadanie „Przerzucanie maili do folderu”",
-    unlocked: false,
-    reward: { taskIdx: 2, multiplierInc: 0.10 },
-    condition: () => window.topClicks[2] >= 100
-    },
-    {
-    id: 'coffee-baron',
-    name: "Baron Kawowy",
-    desc: "Zdobywaj łącznie 2500 punktów z „Robienie kawy Szefowi”",
-    unlocked: false,
-    reward: { taskIdx: 0, multiplierInc: 0.12 }, // większy bonus
-    condition: () => tasks[0].level * tasks.baseClick >= 2500
-    },
-    {
-      id: 'level-up-5',
-      name: "Poziom 5",
-      desc: "Optymalizuj dowolne zadanie do poziomu 5",
-      unlocked: false,
-      reward: { taskIdx: null, multiplierInc: 0.05 }, // globalny modyfikator
-      condition: () => tasks.some(t => t.level >= 5)
-    },
-    {
-    id: 'daily-speaker',
-    name: "Mówca na daily",
-    desc: "Kliknij 75 razy w „Standup 'co zrobisz dziś?'”",
-    unlocked: false,
-    reward: { taskIdx: 10, multiplierInc: 0.18 },
-    condition: () => window.topClicks[10] >= 75
-    },
-    {
-    id: 'delegator',
-    name: "Mistrz Delegowania",
-    desc: "Podnieś „Delegowanie lemingowi” do poziomu 3",
-    unlocked: false,
-    reward: { taskIdx: 11, multiplierInc: 0.14 },
-    condition: () => tasks[11].level >= 3
-    },
-    {
-    id: 'giphy-enthusiast',
-    name: "GIFoholik",
-    desc: "Kliknij 40 razy w „Wysyłanie GIF-ów”",
-    unlocked: false,
-    reward: { taskIdx: 13, multiplierInc: 0.10 },
-    condition: () => window.topClicks[13] >= 40
-    },
-    {
-  id: 'unlock-all',
-  name: "KorpoLemur",
-  desc: "Odblokuj wszystkie zadania kariery – każdy klik jest teraz mocniejszy!",
-  unlocked: false,
-  reward: { type: "baseClick", value: 2 }, // +2 do każdego kliknięcia wszędzie!
-  condition: () => tasks.every(t => t.unlocked)
-    },
-    {
-  id: 'first-softskill',
-  name: 'Nowa Umiejętność',
-  desc: 'Zgromadź pierwszy soft-skill przy pomocy przycisku!',
-  unlocked: false,
-  reward: { taskIdx: null, multiplierInc: 0.05 },
-  condition: () => softSkills >= 1
-    },
-    {
-  id: 'baseclick-power',
-  name: "TurboKliki",
-  desc: "Zdobądź 5 różnych osiągnięć – wszystkie Twoje kliknięcia stają się mocniejsze!",
-  unlocked: false,
-  reward: { type: "baseClick", value: 2 },
-  condition: () => ACHIEVEMENTS.filter(a => a.unlocked).length >= 5
-}
-  ];
+const ACHIEVEMENTS = [
+  {
+    id: "pracownik-roku",
+    name: "Pracownik Roku",
+    desc: "Zdobądź pierwszy 1.000 biuro-punktów.",
+    condition: gs => gs.totalPoints >= 1000,
+    reward: { type: "baseClick", value: 3 }
+  },
+  {
+    id: "kawowy-mistrz",
+    name: "Kawowy Mistrz",
+    desc: "Kliknij 50 razy w kafelek 'Kawa'.",
+    condition: gs => gs.topClicks && gs.topClicks[0] >= 50,
+    reward: { type: "multiplierInc", multiplierInc: 0.045, taskIdx: 0 }
+  },
+  {
+    id: "excel-heros",
+    name: "Excel Heros",
+    desc: "Osiągnij 1. poziom w Excelu.",
+    condition: gs => gs.tasks && gs.tasks.level >= 1,
+    reward: { type: "multiplierInc", multiplierInc: 0.06, taskIdx: 5 }
+  },
+  {
+    id: "maraton-sesji",
+    name: "Maraton Sesji",
+    desc: "Zarób 100.000 biuro-punktów jednym prestige runem.",
+    condition: gs => gs.sessionPoints && gs.sessionPoints >= 100000,
+    reward: { type: "multiplierInc", multiplierInc: 0.10 }
+  },
+  {
+    id: "ranna-kawa",
+    name: "Ranna Kawa",
+    desc: "Zgromadź 5 Soft Skills przed 10:00 rano.",
+    condition: gs => (new Date()).getHours() < 10 && gs.softSkills >= 5,
+    reward: { type: "baseClick", value: 7 }
+  },
+  {
+    id: "awansator",
+    name: "Awansator",
+    desc: "Wykonaj 15 awansów (ascendów) w sumie.",
+    condition: gs => gs.ascendCount >= 15,
+    reward: { type: "multiplierInc", multiplierInc: 0.08 }
+  },
+  {
+    id: "optymalizator",
+    name: "Optymalizator",
+    desc: "Zoptymalizuj dowolne zadanie 30 razy.",
+    condition: gs => gs.upgradeCount >= 30,
+    reward: { type: "baseClick", value: 13 }
+  },
+  {
+    id: "dzial-it",
+    name: "Wsparcie IT",
+    desc: "Kup przedmiot na biurko o temacie informatycznym.",
+    condition: gs => gs.deskModsOwned && gs.deskModsOwned.includes('laptop'),
+    reward: { type: "multiplierInc", multiplierInc: 0.05, taskIdx: 2 }
+  },
+  {
+    id: "meeting-pro",
+    name: "Meeting Pro",
+    desc: "Zakończ 100 cykli idle na zadaniu 'Zebranie'.",
+    condition: gs => gs.tasks[9] && gs.tasks.idleCycles >= 100,
+    reward: { type: "baseClick", value: 20 }
+  },
+  {
+    id: "korpo-pacykarz",
+    name: "Korpo Pacykarz",
+    desc: "Kliknij wszystkie kafelki przynajmniej raz.",
+    condition: gs => gs.topClicks && gs.topClicks.every(cnt => cnt > 0),
+    reward: { type: "multiplierInc", multiplierInc: 0.07 }
+  },
+  {
+    id: "sztos-biurko",
+    name: "Sztos Biurko",
+    desc: "Zbierz co najmniej 4 przedmioty na biurko.",
+    condition: gs => gs.deskModsOwned && gs.deskModsOwned.length >= 4,
+    reward: { type: "multiplierInc", multiplierInc: 0.10 }
+  },
+  {
+    id: "król-softskill",
+    name: "Król Soft Skill",
+    desc: "Kup najdroższy przedmiot z biurka.",
+    condition: gs => gs.deskModsOwned && gs.deskModsOwned.includes("biurowy-prestiz"),
+    reward: { type: "multiplierInc", multiplierInc: 0.13 }
+  },
+  {
+    id: "dziesiec-karier",
+    name: "Dziesięć Karier",
+    desc: "Odblokuj wszystkie zadania (16 kafli).",
+    condition: gs => gs.tasks && gs.tasks.filter(t=>t.unlocked).length === 16,
+    reward: { type: "multiplierInc", multiplierInc: 0.15 }
+  },
+  {
+    id: "mistrz-softskilli",
+    name: "Mistrz Soft Skilli",
+    desc: "Uzbieraj co najmniej 10 Soft Skills.",
+    condition: gs => gs.softSkills >= 10,
+    reward: { type: "baseClick", value: 50 }
+  },
+  {
+    id: "przeciazenie-epizod2",
+    name: "Przeciążenie soft-skilli",
+    desc: "Do zobaczenia w kolejnym update gry! 🔒",
+    condition: gs => false, // NIEREALIZOWALNE, tylko teaser nowej wersji
+    reward: null // lub pusta/ukryta
+  }
+];
 
   window.ACHIEVEMENTS = ACHIEVEMENTS;
 
