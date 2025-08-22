@@ -292,7 +292,7 @@ function saveGame() {
     deskModsOwned
   }));
 }
-
+window.saveGame = saveGame;
 function loadGame() {
   const saveString = localStorage.getItem("korposzczur_save");
   if (saveString) {
