@@ -323,7 +323,7 @@ function startIdle(idx) {
         * ascendStage.idleMult;
       totalPoints += idlePts;
       task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
-      tryUnlockTask(idx + 1); // jeśli unlockował, będzie już renderAll
+      tryUnlockTask(idx + 1); // wywoła renderAll + dashboard jeśli unlock
       checkAchievements();
       saveGame();
       window.IdleUI.updateSingleTile(idx, task, totalPoints);
@@ -334,9 +334,9 @@ function startIdle(idx) {
       window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
       if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
-      return; // zakończ tick
+      return;
     }
-    // Tylko płynny progres (nie dashboard co 33ms!)
+    // Tylko płynny pasek
     ui.renderProgress(idx, task.progress, task.multiplier);
   }, 1000 / 30);
 }
