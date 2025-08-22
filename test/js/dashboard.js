@@ -141,8 +141,11 @@ function drawKpiHexDashboard(progresses) {
   });
 }
 
-// pierwsze wywołanie
-drawKpiHexDashboard(progressArr);
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("kpi-dashboard")) {
+    drawKpiHexDashboard(progressArr);
+  }
+});
 
 // PRZYKŁAD: dynamiczny update np. po idlu/clicku/awansie taska
 // progressArr[2] = 0.93; drawKpiHexDashboard(progressArr);
