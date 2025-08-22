@@ -188,7 +188,7 @@ const ACHIEVEMENTS = [
     id: "excel-heros",
     name: "Excel Heros",
     desc: "Osiągnij 1. poziom w Excelu.",
-    condition: gs => gs.tasks && gs.tasks[5] && gs.tasks.level >= 1,
+    condition: gs => gs.tasks && gs.tasks && gs.tasks.level >= 1,
     reward: { type: "multiplierInc", multiplierInc: 0.06, taskIdx: 5 }
   },
   {
