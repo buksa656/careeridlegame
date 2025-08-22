@@ -552,6 +552,7 @@ function setMarqueeQuote(idx = null) {
 function getAllTaskProgresses() {
   return tasks.map(t => t.unlocked ? t.progress : 0);
 }
+window.getAllTaskProgresses = getAllTaskProgresses;
 window.refreshHexKpiDashboard = function() {
   if (typeof drawKpiHexDashboard === "function") {
     drawKpiHexDashboard(getAllTaskProgresses());
