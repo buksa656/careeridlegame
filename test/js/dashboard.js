@@ -44,6 +44,7 @@ function hexPoints(cx, cy, r) {
 const svgNS = "http://www.w3.org/2000/svg";
 function drawKpiHexDashboard(progresses) {
   const container = document.getElementById("kpi-dashboard");
+  if (!container) return;  // ⇦ dodaj ten warunek! Jeśli nie ma diva, nie próbuj nic robić.
   container.innerHTML = "";
   // Tooltip
   let tooltip = document.createElement("div"); tooltip.className="kpi-tooltip";
