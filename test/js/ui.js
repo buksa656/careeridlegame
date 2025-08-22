@@ -180,7 +180,6 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
       kafel += taskTile(tasks[i], i, totalPoints, true);
     }
     if (kafel) {
-      // JEDYNA zawartość: jeden kafelek (przyciski są już jego częścią)
       visibleTasks.push(`<div class="kafelek-outer">${kafel}</div>`);
     }
   }
@@ -208,6 +207,8 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
       </button>
     `;
   }
+
+  // ---- TU NASTĘPUJE GENEROWANIE CAŁEJ ZAWARTOŚCI panelu-kariera: ----
   e("#panel-kariera").innerHTML = `
     <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
     ${softSkillBtn}
@@ -219,6 +220,9 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
     <div id="grid-progress"></div>
   `;
+
+  // ---- I NATYCHMIAST PO WYGENEROWANIU HTML-a panelu --> dashboard!
+  if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
 
   // Pasek postępu do odblokowania nowej pracy:
   const next = tasks[maxUnlockedIdx + 1];
@@ -243,7 +247,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     };
   }
 
-  addEvents(tasks.length); // obsługa klików kafelków i "ulepsz"
+  addEvents(tasks.length);
   updateTopClicks();
 }
 function updateTotalPoints(points) {
