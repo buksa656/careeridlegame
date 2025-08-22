@@ -57,8 +57,8 @@ return `
     </div>
     <div class="kafelek-row stats">
       <span>Klik: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
-      <span style="margin-left:9px">
-        od prez.: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
+      <span style="margin-left:1px">
+        |od prez.: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
       </span>
     </div>
     ${locked && typeof task.unlockCost === 'number'
