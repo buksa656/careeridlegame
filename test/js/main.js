@@ -351,7 +351,8 @@ function clickTask(idx) {
     tryUnlockTask(idx + 1);
     checkAchievements();
     saveGame();
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    updateSingleTile(idx, tasks[idx], totalPoints);
+    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
     renderMultipliersBar();
     floatingScore(clickPts, idx, "#1976d2");
     flashPoints();
