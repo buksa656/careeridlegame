@@ -333,6 +333,7 @@ function startIdle(idx) {
       checkAchievements();
       saveGame();
       window.IdleUI.updateSingleTile(idx, task, totalPoints);
+      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
       floatingScore(idlePts, idx, "#87c686");
@@ -360,6 +361,7 @@ function clickTask(idx) {
     checkAchievements();
     saveGame();
     window.IdleUI.updateSingleTile(idx, tasks[idx], totalPoints);
+    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
     if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
     renderMultipliersBar();
     floatingScore(clickPts, idx, "#1976d2");
@@ -381,6 +383,7 @@ function clickTask(idx) {
       renderMultipliersBar();
       checkAchievements();
       ui.renderAchievements(window.ACHIEVEMENTS);
+      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
     }
   }
   function refreshHexKpiDashboard() {
@@ -402,6 +405,7 @@ function ascendTask(idx) {
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     renderMultipliersBar();
+    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
   }
 }
   function prestige() {
@@ -422,6 +426,7 @@ function ascendTask(idx) {
     confetti();
     ui.renderAchievements(window.ACHIEVEMENTS);
     window.prestigeClicks = Array(tasks.length).fill(0);
+    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
     // MODAL PO PIERWSZYM SOFTSKILLU!
     if (softSkills === 1) showSoftSkillModal();
   }
