@@ -351,6 +351,7 @@ function clickTask(idx) {
     tryUnlockTask(idx + 1);
     checkAchievements();
     saveGame();
+    task.progress = 0;
     updateSingleTile(idx, tasks[idx], totalPoints);
     if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
     renderMultipliersBar();
