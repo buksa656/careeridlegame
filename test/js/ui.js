@@ -106,6 +106,8 @@ function renderSingleTile(idx, task, totalPoints) {
 function updateSingleTile(idx, task, totalPoints) {
   const kafelek = document.querySelector(`.kafelek[data-taskidx="${idx}"]`);
   if (!kafelek) return;
+
+  // Deklarujemy ascendLevel tylko raz!
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
@@ -116,7 +118,14 @@ function updateSingleTile(idx, task, totalPoints) {
   const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
     * ascendStage.clickMult;
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
-  const nextStage = ASCEND_STAGES[ascendLevel + 1] || null;
+
+  // Wartość nextStage i koszt awansu
+  const next = ascendLevel + 1;
+  const nextStage = ASCEND_STAGES[next] || null;
+  let ascendCost = null;
+  if (nextStage) {
+    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
+  }
 
   if (kafelek.querySelector('.tile-stage')) kafelek.querySelector('.tile-stage').innerText = ascendStage.name;
   if (kafelek.querySelector('.tile-asc-perc')) kafelek.querySelector('.tile-asc-perc').innerText = `+${Math.round((ascendStage.idleMult - 1) * 100)}% idle`;
@@ -138,17 +147,11 @@ function updateSingleTile(idx, task, totalPoints) {
   if (btnUpg) btnUpg.innerHTML = `Opt.<br>(${fmt(upgCost)})`;
   if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
 
-  // Przycisk awans
+// Przycisk awans – tu już NIE deklarujemy drugi raz ascendLevel!
   const btnAsc = kafelek.querySelector('.ascend-btn');
-  const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-  const next = ascendLevel + 1;
-  let ascendCost = null;
-  if (ASCEND_STAGES[next]) {
-    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
-  }
-  if (btnAsc && ASCEND_STAGES[next])
+  if (btnAsc && nextStage)
     btnAsc.innerHTML = `Awans<br>(${ascendCost})`;
-  if (btnAsc && !ASCEND_STAGES[next])
+  if (btnAsc && !nextStage)
     btnAsc.outerHTML = `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
 }
 function panelNav() {
