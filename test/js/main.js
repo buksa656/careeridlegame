@@ -544,10 +544,14 @@ function setMarqueeQuote(idx = null) {
   span.addEventListener('animationend', () => setMarqueeQuote(), { once: true });
 }
   
-  function getAllTaskProgresses() {
-  // Zwraca tablicę z postępami każdego zadania (idle progress/cykl, 0..1)
+function getAllTaskProgresses() {
   return tasks.map(t => t.unlocked ? t.progress : 0);
 }
+window.refreshHexKpiDashboard = function() {
+  if (typeof drawKpiHexDashboard === "function") {
+    drawKpiHexDashboard(getAllTaskProgresses());
+  }
+};
   
   function updatePointsChart() {
     if (!window.pointsHistory) window.pointsHistory = [];
