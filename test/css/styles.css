@@ -83,7 +83,7 @@ html, body {
     gap: 8px;
   }
   #footer-quote-row {
-    font-size: 0.89em;
+    font-size: 0.79em;
     padding: 6px 0 2px;
   }
 }
@@ -112,6 +112,7 @@ nav {
 /* --- MAIN KORPO KONTEKST --- */
 main#app {
   padding: 32px 6vw;
+  padding-bottom: 95px;
   max-width: 900px;
   margin: 0 auto;
 }
