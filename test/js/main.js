@@ -313,9 +313,9 @@ function loadGame() {
       }
       deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
       tasks.forEach((t, i) => {
-        if (typeof t.multiplier !== 'number') t.multiplier = 1;
-        if (typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
-        if (typeof t.baseClick !== 'number') t.baseClick = BASE_CLICKS[i];
+        t.getUpgradeCost = function() {
+          return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+        };
       });
 
       // KLUCZOWA LINIA — ustawiamy window.tasks na końcu udanego wczytania!
