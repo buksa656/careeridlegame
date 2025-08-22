@@ -172,7 +172,6 @@ function renderGridProgress(tasks, totalPoints) {
   for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
   const next = tasks[maxUnlockedIdx + 1];
   const progressDiv = document.getElementById("grid-progress");
-  const progressDiv = document.getElementById("grid-progress");
   const softSkillBtn = document.getElementById("get-softskill-btn");
   if (progressDiv && softSkillBtn) {
   const prog = progressDiv.querySelector('.unlock-progress');
