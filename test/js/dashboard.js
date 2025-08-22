@@ -1,4 +1,3 @@
-// Przygotuj dane tasków:
 const TASKS_KPI = [
   {name:"Kawa",   icon:"☕", color:"#3888d7"},
   {name:"Mail",   icon:"📧", color:"#3ebfae"},
@@ -18,31 +17,76 @@ const TASKS_KPI = [
   {name:"Król Biura",icon:"👑",color:"#f8a33a"}
 ];
 
-// Geometry, helpers
 const centerX = 235, centerY = 210, HEX_R = 50;
 const layout = [
   {q:0, r:0}, {q:1,r:0}, {q:0,r:1}, {q:-1,r:1}, {q:-1,r:0}, {q:0,r:-1}, {q:1,r:-1}, {q:2,r:0},
   {q:1,r:1}, {q:0,r:2}, {q:-1,r:2}, {q:-2,r:1}, {q:-2,r:0}, {q:-1,r:-1}, {q:0,r:-2}, {q:1,r:-2}
 ];
+
 function axialToPixel(q, r) {
     const x = centerX + HEX_R * Math.sqrt(3) * (q + r/2);
     const y = centerY + HEX_R * 1.5 * r;
     return {x, y};
 }
-function hexPoints(cx, cy, r) {
-    const pts = [];
-    for(let a=0; a<6; a++) {
-        let ang = Math.PI/3 * a - Math.PI/6;
-        pts.push((cx + r*Math.cos(ang)) + "," + (cy + r*Math.sin(ang)));
+
+function hexPointsFill(cx, cy, r, progress) {
+  // Zwraca punkty dla górnej części hexu (od dołu do wysokości = progress)
+  // progress 0—1, fill od dołu
+  const pts = [];
+  let n = 6;
+  let angleStep = Math.PI / 3;
+  let baseAngle = -Math.PI / 6;
+  for (let i = 0; i < n; i++) {
+    let ang = i * angleStep + baseAngle;
+    let px = cx + r * Math.cos(ang);
+    let py = cy + r * Math.sin(ang);
+    pts.push([px, py]);
+  }
+  // Hex to 6 wierzchołków, posortuj od lewego do prawego przez dół
+  // Chcemy zamknąć górę na wysokości fillH
+  let fillH = 2 * r * progress; // pełna wysokość rysowania
+  let yBottom = cy + r;
+  let yCut = yBottom - fillH;
+
+  // Przechodzimy kolejne punkty od dołu, dodając te > yCut,
+  // a następnie doklejamy punkty na przecięciu z linią yCut
+  let up = [];
+  let down = [];
+  for (let i = 0; i < pts.length; i++) {
+    let [x1, y1] = pts[i];
+    let [x2, y2] = pts[(i + 1) % n];
+    if (y1 >= yCut) up.push([x1, y1]);
+    if ((y1 >= yCut && y2 < yCut) || (y1 < yCut && y2 >= yCut)) {
+      // Przecięcie z linią yCut
+      let t = (yCut - y1) / (y2 - y1);
+      let xx = x1 + t * (x2 - x1);
+      up.push([xx, yCut]);
     }
-    return pts.join(" ");
+  }
+  return up.map(([x, y]) => x + ',' + y).join(' ');
 }
+
+function hexPoints(cx, cy, r) {
+  const pts = [];
+  for(let a=0; a<6; a++) {
+    let ang = Math.PI/3 * a - Math.PI/6;
+    pts.push((cx + r*Math.cos(ang)) + "," + (cy + r*Math.sin(ang)));
+  }
+  return pts.join(" ");
+}
+
 const svgNS = "http://www.w3.org/2000/svg";
 
 function drawKpiHexDashboard(progresses) {
   const container = document.getElementById("kpi-dashboard");
   if (!container) return;
   container.innerHTML = "";
+
+  // Jeśli masz globalne "tasks", to lepiej:
+  // const unlockedArr = window.tasks ? window.tasks.map(t=>!!t.unlocked) : progresses.map(()=>true);
+
+  // Domyślnie: zakładam, że przekazujesz progress[i] = 0 dla nieodblokowanych tasków,
+  // więc hexa nie rysujemy jeśli progress == 0 lub progress nie istnieje.
 
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", 470); svg.setAttribute("height", 410);
@@ -51,34 +95,31 @@ function drawKpiHexDashboard(progresses) {
   container.appendChild(svg);
 
   layout.forEach((coord, i) => {
-    const {x,y} = axialToPixel(coord.q, coord.r);
+    const {x, y} = axialToPixel(coord.q, coord.r);
     const clr = TASKS_KPI[i].color;
-    const hex = document.createElementNS(svgNS,"polygon");
+    // Warunek: rysujemy tylko unlocked taski!
+    const unlocked = typeof window !== "undefined" && window.tasks
+      ? window.tasks[i] && window.tasks[i].unlocked
+      : (progresses[i] > 0 || progresses[i] > 0.01);
+
+    if (!unlocked) return;
+
+    // HEX border
+    const hex = document.createElementNS(svgNS, "polygon");
     hex.setAttribute("points", hexPoints(x, y, HEX_R));
     hex.setAttribute("fill", "#f9fbfd");
-    hex.setAttribute("stroke", progresses[i]>0?"#1370b8":"#abb5c6");
+    hex.setAttribute("stroke", "#1370b8");
     hex.setAttribute("stroke-width", "3");
     svg.appendChild(hex);
 
-    if(progresses[i]>0.04) {
-      const angle = Math.max(0.05, progresses[i]) * 2*Math.PI;
-      const arcR = HEX_R*0.79;
-      const x1 = x + arcR * Math.cos(-Math.PI/2);
-      const y1 = y + arcR * Math.sin(-Math.PI/2);
-      const x2 = x + arcR * Math.cos(angle - Math.PI/2);
-      const y2 = y + arcR * Math.sin(angle - Math.PI/2);
-      const largeArc = progresses[i]>=0.5?1:0;
-      let d = [
-        `M ${x} ${y}`,
-        `L ${x1} ${y1}`,
-        `A ${arcR} ${arcR} 0 ${largeArc} 1 ${x2} ${y2}`,
-        "Z"
-      ].join(" ");
-      const arc = document.createElementNS(svgNS,"path");
-      arc.setAttribute("d",d);
-      arc.setAttribute("fill", clr);
-      arc.setAttribute("opacity","0.72");
-      svg.appendChild(arc);
+    // HEX fill progress (DO WEWNĄTRZ!)
+    let progress = Math.max(0, Math.min(1, progresses[i]));
+    if (progress > 0.005) {
+      const fill = document.createElementNS(svgNS, "polygon");
+      fill.setAttribute("points", hexPointsFill(x, y, HEX_R, progress));
+      fill.setAttribute("fill", clr);
+      fill.setAttribute("opacity", "0.65");
+      svg.appendChild(fill);
     }
 
     // Ikona/emotka
@@ -103,14 +144,14 @@ function drawKpiHexDashboard(progresses) {
     svg.appendChild(label);
 
     // Progress number
-    if(progresses[i]>0.08) {
+    if(progress > 0.08) {
       const txt = document.createElementNS(svgNS,"text");
       txt.setAttribute("x", x);
       txt.setAttribute("y", y+42);
       txt.setAttribute("text-anchor", "middle");
       txt.setAttribute("font-size", "0.82em");
       txt.setAttribute("fill","#444");
-      txt.textContent = Math.round(progresses[i]*100)+'%';
+      txt.textContent = Math.round(progress*100)+'%';
       svg.appendChild(txt);
     }
   });
