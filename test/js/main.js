@@ -325,7 +325,7 @@ function startIdle(idx) {
       renderMultipliersBar();
       floatingScore(idlePts, idx, "#87c686");
       flashPoints();
-      updateTotalPoints(totalPoints);
+      window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
       return; // zakończ obecny tick
     }
