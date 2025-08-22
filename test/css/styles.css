@@ -44,37 +44,23 @@ html, body {
   flex-direction: column;
 }
 #main-nav-bar nav { display: flex; gap: 24px; }
-
-#footer-quote-row {
-  width: 100vw;
-  padding: 8px 0 3px 0;
-  display: flex;
-  justify-content: center;
-  background: #f7fafc;
-  border-bottom: 1px solid #edeef4;
+#footer-quote-row, .quote-marquee {
+  font-size: 0.93em;
+  padding: 2px 0 2px 0 !important;
+  min-height: 22px !important;
 }
-
 #footer-menu-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  padding: 4px 0 6px 0;
+  padding: 9px 0 11px 0 !important;
+  gap: 40px !important;
 }
-
 #footer-menu-row .brand {
-  margin-right: 24px;
-  color: #3481b6;
-  font-size: 1.13em;
-  font-weight: bold;
-  letter-spacing: .02em;
+  font-size: 1.22em !important;
+  letter-spacing: 0.03em;
 }
-
 #footer-menu-row nav {
   display: flex;
   gap: 18px;
 }
-
 @media (max-width: 600px) {
   #footer-menu-row .brand {
     display: none;
@@ -82,11 +68,6 @@ html, body {
   #footer-menu-row nav {
     gap: 8px;
   }
-  #footer-quote-row {
-    font-size: 0.79em;
-    padding: 6px 0 2px;
-  }
-}
 .brand {
   font-weight: 700; font-size: 1.28em; color: var(--accent);
 }
@@ -94,21 +75,22 @@ nav {
   display: flex; gap: 8px;
 }
 .tab-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1em;
-  font-weight: 600;
-  padding: 3px 12px;
-  cursor: pointer;
-  border-radius: 7px;
-  transition: background 0.1s, color 0.1s;
+  background: #ddeaf5;
+  color: #225688;
+  font-size: 1.13em !important;
+  font-weight: 700;
+  padding: 8px 18px !important;
+  border-radius: 9px !important;
+  border: 1.5px solid #b1cbed !important;
+  box-shadow: 0 2px 6px #a7bbf022;
+  margin: 0 3px;
+  transition: background 0.15s, color 0.11s, border-color 0.11s;
 }
-.tab-btn.active, .tab-btn:hover {
-  background: var(--accent);
-  color: #fff;
+.tab-btn.active, .tab-btn:hover, .tab-btn:focus {
+  background: #1976d2 !important;
+  color: #fff !important;
+  border-color: #155ca1 !important;
 }
-
 /* --- MAIN KORPO KONTEKST --- */
 main#app {
   padding: 32px 6vw;
@@ -116,22 +98,25 @@ main#app {
   max-width: 900px;
   margin: 0 auto;
 }
-
 /* --- KAFELKI W GRIDA 4x4 --- */
 .career-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-   align-items: stretch;
+  gap: 14px !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr);
 }
-@media (max-width: 900px) {
-  .career-list { grid-template-columns: repeat(2, 1fr);}
+@media (max-width: 1200px) {
+  .career-list { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 950px) {
+  .career-list { grid-template-columns: repeat(3, 1fr);}
 }
 @media (max-width: 700px) {
-  .career-list { flex-direction: row; gap: 11px; }
+  #footer-menu-row { gap: 13px !important; }
+  .tab-btn { padding: 6px 10px !important; font-size: 1em !important; }
+  .career-list { grid-template-columns: repeat(2, 1fr);}
   .kafelek-outer { max-width: 92vw; min-width: 120px; }
 }
-@media (max-width: 600px) {
+@media (max-width: 520px) {
   .career-list { grid-template-columns: 1fr;}
 }
 /* --- POJEDYNCZY KAFEL --- */
@@ -151,19 +136,16 @@ main#app {
   transition: box-shadow .19s, border-color .13s, background .13s;
 }
 .kafelek, .kafelek * {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+ padding: 8px 10px 7px 10px !important;
+  min-height: 90px !important;
+  border-radius: 13px !important;
+  font-size: 0.97em !important;
+  gap: 2px !important;
 }
 /* Każdy kafelek trzymany w identycznym kontenerze */
 .kafelek-outer {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  max-width: 232px;
-  min-width: 180px;
-  margin-bottom: 18px;
+  max-width: 170px !important;
+  min-width: 120px !important;
 }
 .kafelek-progress {
   min-height: 134px; /* lub 120px */
@@ -207,20 +189,20 @@ main#app {
   border: 1.5px solid #e8e8ee;
   background: #f7fafe;
 }
-.kafelek-info { padding: 0; font-size: .99em; }
+.kafelek-info { padding: 0; font-size: 0.95em !important;}
 .kafelek-info .funny { color: #e79522; font-size: .95em; margin: 2px 0 0 0; }
-.kafelek-info .title { font-weight: 700; font-size: 1.13em; color: var(--accent); margin-bottom: 5px; }
-.kafelek-row { color: #8492a6; font-size: .97em; margin: 2px 0;}
-.kafelek-row.stats { font-size: 0.95em; color: #5d709a;}
+.kafelek-info .title { font-weight: 700; font-size: 1.05em !important; color: var(--accent); margin-bottom: 5px; }
+.kafelek-row { color: #8492a6; font-size: 0.95em !important; margin: 2px 0;}
+.kafelek-row.stats { font-size: 0.95em !important; color: #5d709a;}
 .kafelek-row.asc-badge {
   display: flex;
   align-items: center;
   gap: 7px;
   background: #eceffc;
   color: #1862a6;
-  border-radius: 8px;
-  padding: 3px 8px;
-  font-size: .97em;
+  border-radius: 6px !important;
+  padding: 2px 6px !important;
+  font-size: 0.91em !important;
   font-weight: 600;
   width: fit-content;
   margin: 9px 0 7px 0;
@@ -443,21 +425,9 @@ main#app {
   font-size: 0.95em;
   margin-top: 3px;
 }
-.quote-marquee {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-  position: relative;
-  min-height: 30px;
-  padding: 8px 0 9px 0;
-}
 .quote-marquee span {
-  display: inline-block;
-  padding-left: 100%;
-  animation: quote-scroll 16s linear;
-  font-size: 1.18em;
-  color: #746bda;
+  font-size: 0.97em !important;
+  padding-bottom: 0 !important;
 }
 @keyframes quote-scroll {
   0% { transform: translateX(0); }
