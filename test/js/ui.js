@@ -211,14 +211,9 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   // ---- TU NASTĘPUJE GENEROWANIE CAŁEJ ZAWARTOŚCI panelu-kariera: ----
   e("#panel-kariera").innerHTML = `
     <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
+    <div id="grid-progress"></div>
     ${softSkillBtn}
     <div class="career-list">${visibleTasks.join('')}</div>
-    <div class="softskill-info">
-      <span>Soft Skills: <b>${softSkills}</b></span>
-      ${burnout ? ` |  Burnout Level: <b style="color:#a22">${burnout}</b>` : ''}
-    </div>
-    <div style="color:#e79522;margin-top:10px;font-size:1.02em"><b>Tip:</b> Klikaj na kafelki żeby pracować! Pasek idle się wyświetla, a mnożniki znajdziesz pod Biuro-punktami.</div>
-    <div id="grid-progress"></div>
   `;
 
   // ---- I NATYCHMIAST PO WYGENEROWANIU HTML-a panelu --> dashboard!
