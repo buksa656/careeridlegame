@@ -43,8 +43,6 @@ function drawKpiHexDashboard(progresses) {
   const container = document.getElementById("kpi-dashboard");
   if (!container) return;
   container.innerHTML = "";
-  let tooltip = document.createElement("div"); tooltip.className="kpi-tooltip";
-  document.body.appendChild(tooltip);
 
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", 470); svg.setAttribute("height", 410);
@@ -115,25 +113,5 @@ function drawKpiHexDashboard(progresses) {
       txt.textContent = Math.round(progresses[i]*100)+'%';
       svg.appendChild(txt);
     }
-
-    [hex, ico, label].forEach(elem => {
-      elem.addEventListener("mouseenter", (e) => {
-        tooltip.innerHTML = `<b>${TASKS_KPI[i].icon}&nbsp;${TASKS_KPI[i].name}</b><br>
-        Progres: <b>${Math.round(progresses[i]*100)}%</b>`;
-        tooltip.style.left = (e.clientX+8) + "px";
-        tooltip.style.top = (e.clientY-24) + "px";
-        tooltip.style.display = "block";
-      });
-      elem.addEventListener("mousemove", (e)=>{
-        tooltip.style.left = (e.clientX+8) + "px";
-        tooltip.style.top = (e.clientY-24) + "px";
-      });
-      elem.addEventListener("mouseleave", ()=>{
-        tooltip.style.display = "none";
-      });
-    });
   });
 }
-
-// NIE wywołuj drawKpiHexDashboard automatycznie tutaj!
-// Tylko przez refreshHexKpiDashboard z main.js/ui.js po renderAll/panelNav!
