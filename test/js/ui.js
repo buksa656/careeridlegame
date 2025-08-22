@@ -140,9 +140,15 @@ function updateSingleTile(idx, task, totalPoints) {
 
   // Przycisk awans
   const btnAsc = kafelek.querySelector('.ascend-btn');
-  if (btnAsc && nextStage)
-    btnAsc.innerHTML = `Awans<br>(${nextStage.cost})`;
-  if (btnAsc && !nextStage)
+  const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+  const next = ascendLevel + 1;
+  let ascendCost = null;
+  if (ASCEND_STAGES[next]) {
+    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
+  }
+  if (btnAsc && ASCEND_STAGES[next])
+    btnAsc.innerHTML = `Awans<br>(${ascendCost})`;
+  if (btnAsc && !ASCEND_STAGES[next])
     btnAsc.outerHTML = `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
 }
 function panelNav() {
