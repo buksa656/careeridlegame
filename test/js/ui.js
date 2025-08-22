@@ -62,9 +62,6 @@ function taskTile(task, idx, totalPoints, locked = false) {
           od prestiżu: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
         </span>
       </div>
-      <div class="kafelek-progbar">
-        <div class="kafelek-progbar-inner" style="width:${Math.round((task.progress || 0) * 100)}%"></div>
-      </div>
       ${locked && typeof task.unlockCost === 'number'
         ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
       }
