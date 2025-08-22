@@ -101,43 +101,45 @@ main#app {
 /* KAFELEK GRID */
 .career-list {
   display: grid;
-  grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: 18px 12px;
+  grid-template-columns: repeat(4, minmax(114px,1fr));
+  gap: 6px 6px;
   justify-items: stretch;
+  margin-top: 0; 
+  margin-bottom: 0;
 }
 @media (max-width: 1200px) {
   .career-list { grid-template-columns: repeat(4, 1fr); }
 }
 @media (max-width: 950px) {
-  .career-list { grid-template-columns: repeat(3, 1fr); }
+  .career-list { grid-template-columns: repeat(3, minmax(100px,1fr)); }
 }
 @media (max-width: 700px) {
-  .career-list { grid-template-columns: repeat(2, 1fr); }
+  .career-list { grid-template-columns: repeat(2, minmax(100px,1fr)); }
 }
 @media (max-width: 500px) {
   .career-list { grid-template-columns: 1fr; }
 }
 /* KAFELKI MINI/COMPACT */
 .kafelek-outer {
-  max-width: 170px;
-  min-width: 136px;
+  max-width: 124px;
+  min-width: 82px;
   width: 100%;
   margin-bottom: 0;
-  padding:0;
+  padding: 0;
 }
 .kafelek {
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 3px 14px #1976d215, 0 1.5px 7px #3251790a;
-  border: 1.1px solid #d3dcef;
-  padding: 13px 13px 9px 13px;
-  min-height: 105px;
+  border-radius: 11px;
+  box-shadow: 0 1.5px 9px #bcd7fc11;
+  border: 1px solid #ccd7eb;
+  padding: 7px 7px 5px 7px;
+  min-height: 60px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1.5px;
   margin-bottom: 0;
   transition: box-shadow .14s, border-color .11s, background .12s;
-  font-size: 0.93em;
+  font-size: 0.91em;
 }
 .kafelek, .kafelek * {
  padding: 8px 10px 7px 10px !important;
@@ -147,7 +149,7 @@ main#app {
   gap: 2px !important;
 }
 .kafelek-info { padding: 0; font-size: .93em; }
-.kafelek-row { color: #6a7998; font-size: 0.91em; margin: 2px 0; }
+.kafelek-row { color: #6a7998; font-size: 0.91em; margin: 1px 0; }
 .kafelek-row.stats { font-size: 0.88em; color: #5d709a;}
 .kafelek-row.asc-badge {
   display: flex;
@@ -156,19 +158,21 @@ main#app {
   background: #ecf2fb !important;
   color: #2060a6;
   border-radius: 5px;
-  padding: 2.5px 8px 1.5px 8px;
+  padding: 1.9px 6px 1.5px 6px;
   font-size: 0.87em;
   font-weight: 600;
   width: fit-content;
-  margin: 6px 0 5px 0;
+  margin: 4px 0 3px 0;
   justify-content: flex-start;
   box-shadow: 0 1px 3px #e2eefa09;
 }
-.kafelek-info .title { font-weight: 700; font-size: 1.05em; color: var(--accent); margin-bottom: 2.5px; }
+.kafelek-info .title { font-weight: 700; font-size: 0.97em; color: var(--accent); margin-bottom: 1px; }
 .kafelek-bottom-row {
   display: flex; flex-direction: row; justify-content: center; gap: 5px;
   margin-top: 7px; margin-bottom: 0;
 }
+.kafelek { line-height: 1.08; }
+.kafelek-info, .kafelek-row, .kafelek-row.stats { line-height: 1.10; }
 .kafelek:active { border: 1.6px solid var(--accent);}
 .kafelek.locked {
   opacity: 0.62; filter: grayscale(0.68); pointer-events: none;
@@ -181,9 +185,9 @@ main#app {
 }
 /* BUTTONY W KAFELKACH */
 .kafelek-ulepsz-btn, .ascend-btn {
-  border-radius: 7px;
+  border-radius: 5px;
   font-weight: 600;
-  padding: 4px 7px;
+  padding: 2px 5px;
   font-size: .68em;
   border: 1px solid #a7d0fe;
   background: #e8f1fe;
