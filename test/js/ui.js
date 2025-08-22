@@ -209,7 +209,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     `;
   }
   e("#panel-kariera").innerHTML = `
-    <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:45px;"></div>
+    <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
     ${softSkillBtn}
     <div class="career-list">${visibleTasks.join('')}</div>
     <div class="softskill-info">
