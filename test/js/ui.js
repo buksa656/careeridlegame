@@ -208,9 +208,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
       </button>
     `;
   }
-
   e("#panel-kariera").innerHTML = `
-    <h2>Twoja kariera w korpo</h2>
     <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:45px;"></div>
     ${softSkillBtn}
     <div class="career-list">${visibleTasks.join('')}</div>
