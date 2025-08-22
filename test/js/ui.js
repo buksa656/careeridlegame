@@ -37,54 +37,51 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
   const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
 
-  return `
-  <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
-    <div class="kafelek-info">
-      <div class="title">${task.name}</div>
-      <div class="kafelek-row asc-badge">
-        <span class="tile-stage" style="color:#425;font-size:.97em;">${ascendStage.name}</span>
-        <span class="tile-asc-perc asc-perc"
-           style="color:#2477c7;font-weight:700;margin-left:7px;font-size:0.98em;">
-           +${Math.round((ascendStage.idleMult - 1)*100)}% idle
-        </span>
-      </div>
-      <div class="kafelek-row">Lvl: <b class="tile-lvl">${task.level}</b></div>
-      <div class="kafelek-row">
-        Idle: <b class="tile-idle">${perSec}</b> pkt/s 
-        <span class="tile-mult" style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span>
-      </div>
-      <div class="kafelek-row">
-        Klik: <b class="tile-click">${clickVal}</b>
-      </div>
-      <div class="kafelek-row stats">
-        <span>Kliki: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
-        <span style="margin-left:13px">
-          ta kariera: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
-        </span>
-      </div>
-      ${locked && typeof task.unlockCost === 'number'
-        ? `<div class="kafelek-row" style="color:#b7630b;">Koszt: <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
-      }
+return `
+<div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
+  <div class="kafelek-info">
+    <div class="title">${task.name}</div>
+    <div class="kafelek-row asc-badge">
+      <span class="tile-stage">${ascendStage.name}</span>
+      <span class="tile-asc-perc asc-perc">
+         +${Math.round((ascendStage.idleMult - 1)*100)}% idle
+      </span>
     </div>
-    <!-- PRZYCISKI (i cała reszta) pozostają BEZ zmian -->
-    <div class="kafelek-bottom-row" style="display:flex;gap:9px; margin-top:13px;">
-      <button class="kafelek-ulepsz-btn"
-          data-do="upg"
-          data-idx="${idx}"
-          style="flex:1;min-width:0;"
-          ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
-        Optymalizuj<br>(${fmt(upgCost)})
-      </button>
-      ${
-        nextStage
-          ? `<button class="ascend-btn" data-task="${idx}" style="flex:1;min-width:0;">
-              Awans<br>(${nextStage.cost})
-             </button>`
-          : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
-      }
+    <div class="kafelek-row">Poz.: <b class="tile-lvl">${task.level}</b></div>
+    <div class="kafelek-row">
+      Idle: <b class="tile-idle">${perSec}</b> pkt/s 
+      <span class="tile-mult">(x${multiplierLabel})</span>
     </div>
+    <div class="kafelek-row">
+      Klik: <b class="tile-click">${clickVal}</b>
+    </div>
+    <div class="kafelek-row stats">
+      <span>Klik: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
+      <span style="margin-left:9px">
+        od prez.: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
+      </span>
+    </div>
+    ${locked && typeof task.unlockCost === 'number'
+      ? `<div class="kafelek-row" style="color:#b7630b;">Koszt: <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
+    }
   </div>
-  `;
+  <div class="kafelek-bottom-row">
+    <button class="kafelek-ulepsz-btn"
+        data-do="upg"
+        data-idx="${idx}"
+        ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
+      Opt.<br>(${fmt(upgCost)})
+    </button>
+    ${
+      nextStage
+        ? `<button class="ascend-btn" data-task="${idx}">
+            Awans<br>(${nextStage.cost})
+           </button>`
+        : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
+    }
+  </div>
+</div>
+`;
 }
 function renderSingleTile(idx, task, totalPoints) {
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
