@@ -275,11 +275,11 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 if (totalPoints >= SOFTSKILL_COST) {
   const btn = document.getElementById('get-softskill-btn');
   btn.onclick = () => {
-    if (window.totalPoints >= SOFTSKILL_COST) {
-      window.totalPoints -= SOFTSKILL_COST;
-      window.softSkills += 1;
+    if (totalPoints >= SOFTSKILL_COST) { 
+      totalPoints -= SOFTSKILL_COST;
+      softSkills += 1;
       saveGame();
-      renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+      renderAll(tasks, totalPoints, softSkills, burnout);
     }
   };
 }
