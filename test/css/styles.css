@@ -85,19 +85,6 @@ main#app {
 @media (max-width: 600px) {
   .career-list { grid-template-columns: 1fr;}
 }
-.kpi-tooltip {
-  position: absolute;
-  background: #fff7db;
-  color: #222;
-  border: 1.5px solid #ffeabb;
-  border-radius: 6px;
-  font-size: 1.03em;
-  box-shadow: 0 4px 16px #6682a910;
-  padding: 10px 20px;
-  z-index: 40;
-  pointer-events: none;
-  display: none;
-}
 /* --- POJEDYNCZY KAFEL --- */
 .kafelek {
   background: #fff;
