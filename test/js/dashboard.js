@@ -1,19 +1,19 @@
 const TASKS_KPI = [
   {name:"Kawa",   icon:"☕", color:"#3888d7"},
+  {name:"Kopiuj", icon:"🗂️",color:"#886b20"},
   {name:"Mail",   icon:"📧", color:"#3ebfae"},
-  {name:"Excel",  icon:"📊", color:"#e1be17"},
-  {name:"Teams",  icon:"💼", color:"#8655db"},
   {name:"Small Talk",icon:"💬",color:"#7aa82b"},
-  {name:"PowerPoint",icon:"📈",color:"#e15dc9"},
-  {name:"Deleguj",icon:"🦙",color:"#f3921c"},
-  {name:"GIFy", icon:"🖼️",color:"#4ec7ff"},
-  {name:"Lunch", icon:"🍱",color:"#d45390"},
-  {name:"LinkedIn", icon:"🔗",color:"#085777"},
-  {name:"Google Docs",icon:"📝",color:"#34a853"},
-  {name:"Raport", icon:"🗂️",color:"#886b20"},
   {name:"Ticket JIRA",icon:"🎟️",color:"#258cc6"},
+  {name:"Excel",  icon:"📊", color:"#e1be17"},
+  {name:"PowerPoint",icon:"📈",color:"#e15dc9"},
+  {name:"Teams",  icon:"💼", color:"#8655db"},
+  {name:"Google Docs",icon:"📝",color:"#34a853"},
+  {name:"Zebranie",icon:"📡",color:"#78c2ad"},
   {name:"Standup", icon:"🎤",color:"#cf465e"},
-  {name:"OpenSpace",icon:"📡",color:"#78c2ad"},
+  {name:"Deleguj",icon:"🦙",color:"#f3921c"},
+  {name:"Lunch", icon:"🍱",color:"#d45390"},
+  {name:"GIFy", icon:"🖼️",color:"#4ec7ff"},
+  {name:"LinkedIn", icon:"🔗",color:"#085777"},
   {name:"Król Biura",icon:"👑",color:"#f8a33a"}
 ];
 
@@ -30,8 +30,6 @@ function axialToPixel(q, r) {
 }
 
 function hexPointsFill(cx, cy, r, progress) {
-  // Zwraca punkty dla górnej części hexu (od dołu do wysokości = progress)
-  // progress 0—1, fill od dołu
   const pts = [];
   let n = 6;
   let angleStep = Math.PI / 3;
@@ -42,14 +40,9 @@ function hexPointsFill(cx, cy, r, progress) {
     let py = cy + r * Math.sin(ang);
     pts.push([px, py]);
   }
-  // Hex to 6 wierzchołków, posortuj od lewego do prawego przez dół
-  // Chcemy zamknąć górę na wysokości fillH
-  let fillH = 2 * r * progress; // pełna wysokość rysowania
+  let fillH = 2 * r * progress; 
   let yBottom = cy + r;
   let yCut = yBottom - fillH;
-
-  // Przechodzimy kolejne punkty od dołu, dodając te > yCut,
-  // a następnie doklejamy punkty na przecięciu z linią yCut
   let up = [];
   let down = [];
   for (let i = 0; i < pts.length; i++) {
@@ -75,19 +68,27 @@ function hexPoints(cx, cy, r) {
   return pts.join(" ");
 }
 
+// --- DODANE: funkcja obliczająca idle zadania przez index
+function getTaskIdle(idx) {
+  if (!window.tasks || !window.tasks[idx]) return 0;
+  const t = window.tasks[idx];
+  const ascendStages = window.ASCEND_STAGES || [ { idleMult: 1 } ];
+  const ascendLevel = typeof t.ascendLevel === "number" ? t.ascendLevel : 0;
+  const ascendStage = ascendStages[ascendLevel] || { idleMult: 1 };
+  return (
+      (typeof t.baseIdle === "number" ? t.baseIdle : 0.01)
+    * (typeof t.multiplier === "number" ? t.multiplier : 1)
+    * ascendStage.idleMult
+  );
+}
+
 const svgNS = "http://www.w3.org/2000/svg";
 
+// --- PEŁNY PATCH: HEX się wypełnia na stałe gdy idle >= 5
 function drawKpiHexDashboard(progresses) {
   const container = document.getElementById("kpi-dashboard");
   if (!container) return;
   container.innerHTML = "";
-
-  // Jeśli masz globalne "tasks", to lepiej:
-  // const unlockedArr = window.tasks ? window.tasks.map(t=>!!t.unlocked) : progresses.map(()=>true);
-
-  // Domyślnie: zakładam, że przekazujesz progress[i] = 0 dla nieodblokowanych tasków,
-  // więc hexa nie rysujemy jeśli progress == 0 lub progress nie istnieje.
-
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", 470); svg.setAttribute("height", 410);
   svg.style.display = "block";
@@ -112,13 +113,27 @@ function drawKpiHexDashboard(progresses) {
     hex.setAttribute("stroke-width", "3");
     svg.appendChild(hex);
 
-    // HEX fill progress (DO WEWNĄTRZ!)
+    // --- KLUCZ: jeśli idle >= 5 → pełny HEX statyczny kolor (brak animacji), inaczej klasyczny progress ---
+    // Obliczanie gainIdle:
+    const gainIdle = getTaskIdle(i);
+
     let progress = Math.max(0, Math.min(1, progresses[i]));
+    let overlayColor = clr;
+    let overlayOpacity = "0.65";
+    let drawAsFull = false;
+
+    if (gainIdle >= 5) {
+      progress = 1.0;
+      overlayColor = "#7dbbcf"; // identyczny jak unlock-progress-bar, możesz dopasować
+      overlayOpacity = "0.88";
+      drawAsFull = true;
+    }
+
     if (progress > 0.005) {
       const fill = document.createElementNS(svgNS, "polygon");
       fill.setAttribute("points", hexPointsFill(x, y, HEX_R, progress));
-      fill.setAttribute("fill", clr);
-      fill.setAttribute("opacity", "0.65");
+      fill.setAttribute("fill", overlayColor);
+      fill.setAttribute("opacity", overlayOpacity);
       svg.appendChild(fill);
     }
 
@@ -143,8 +158,8 @@ function drawKpiHexDashboard(progresses) {
     label.textContent = TASKS_KPI[i].name;
     svg.appendChild(label);
 
-    // Progress number
-    if(progress > 0.08) {
+    // Progress number (tylko jeśli animowany)
+    if (!drawAsFull && progress > 0.08) {
       const txt = document.createElementNS(svgNS,"text");
       txt.setAttribute("x", x);
       txt.setAttribute("y", y+42);
