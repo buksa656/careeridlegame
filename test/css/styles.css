@@ -32,16 +32,61 @@ html, body {
 
 #main-nav-bar {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  left: 0; right: 0; bottom: 0;
   z-index: 120;
-  height: 56px;
+  width: 100vw;
   background: #f7fafc;
   border-top: 1.5px solid #e5e8ee;
-  display: flex; align-items: center;
-  justify-content: center;
-  box-shadow: 0 -3px 18px #a2afd266;
+  box-shadow: 0 -3px 16px #a2afd222;
+  font-size: 1.02em;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 #main-nav-bar nav { display: flex; gap: 24px; }
+
+#footer-quote-row {
+  width: 100vw;
+  padding: 8px 0 3px 0;
+  display: flex;
+  justify-content: center;
+  background: #f7fafc;
+  border-bottom: 1px solid #edeef4;
+}
+
+#footer-menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 4px 0 6px 0;
+}
+
+#footer-menu-row .brand {
+  margin-right: 24px;
+  color: #3481b6;
+  font-size: 1.13em;
+  font-weight: bold;
+  letter-spacing: .02em;
+}
+
+#footer-menu-row nav {
+  display: flex;
+  gap: 18px;
+}
+
+@media (max-width: 600px) {
+  #footer-menu-row .brand {
+    display: none;
+  }
+  #footer-menu-row nav {
+    gap: 8px;
+  }
+  #footer-quote-row {
+    font-size: 0.89em;
+    padding: 6px 0 2px;
+  }
+}
 .brand {
   font-weight: 700; font-size: 1.28em; color: var(--accent);
 }
