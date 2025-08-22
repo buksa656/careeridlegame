@@ -18,10 +18,8 @@ const TASKS_KPI = [
   {name:"Król Biura",icon:"👑",color:"#f8a33a"}
 ];
 
-// Niech progressy będą na start losowe dla efektu wow:
-const progressArr = Array(16).fill(0).map((_,i)=> i<3? 0.7 : Math.random()*0.93);
-
-const centerX = 235, centerY = 210, HEX_R = 50; // central point, hex radius
+// Geometry, helpers
+const centerX = 235, centerY = 210, HEX_R = 50;
 const layout = [
   {q:0, r:0}, {q:1,r:0}, {q:0,r:1}, {q:-1,r:1}, {q:-1,r:0}, {q:0,r:-1}, {q:1,r:-1}, {q:2,r:0},
   {q:1,r:1}, {q:0,r:2}, {q:-1,r:2}, {q:-2,r:1}, {q:-2,r:0}, {q:-1,r:-1}, {q:0,r:-2}, {q:1,r:-2}
@@ -31,22 +29,20 @@ function axialToPixel(q, r) {
     const y = centerY + HEX_R * 1.5 * r;
     return {x, y};
 }
-
 function hexPoints(cx, cy, r) {
     const pts = [];
     for(let a=0; a<6; a++) {
-        let ang = Math.PI/3 * a - Math.PI/6; // -30deg
+        let ang = Math.PI/3 * a - Math.PI/6;
         pts.push((cx + r*Math.cos(ang)) + "," + (cy + r*Math.sin(ang)));
     }
     return pts.join(" ");
 }
-
 const svgNS = "http://www.w3.org/2000/svg";
+
 function drawKpiHexDashboard(progresses) {
   const container = document.getElementById("kpi-dashboard");
-  if (!container) return;  // ⇦ dodaj ten warunek! Jeśli nie ma diva, nie próbuj nic robić.
+  if (!container) return;
   container.innerHTML = "";
-  // Tooltip
   let tooltip = document.createElement("div"); tooltip.className="kpi-tooltip";
   document.body.appendChild(tooltip);
 
@@ -59,7 +55,6 @@ function drawKpiHexDashboard(progresses) {
   layout.forEach((coord, i) => {
     const {x,y} = axialToPixel(coord.q, coord.r);
     const clr = TASKS_KPI[i].color;
-    // Hex tło
     const hex = document.createElementNS(svgNS,"polygon");
     hex.setAttribute("points", hexPoints(x, y, HEX_R));
     hex.setAttribute("fill", "#f9fbfd");
@@ -67,7 +62,6 @@ function drawKpiHexDashboard(progresses) {
     hex.setAttribute("stroke-width", "3");
     svg.appendChild(hex);
 
-    // Arc progress
     if(progresses[i]>0.04) {
       const angle = Math.max(0.05, progresses[i]) * 2*Math.PI;
       const arcR = HEX_R*0.79;
@@ -122,7 +116,6 @@ function drawKpiHexDashboard(progresses) {
       svg.appendChild(txt);
     }
 
-    // Tooltip mini
     [hex, ico, label].forEach(elem => {
       elem.addEventListener("mouseenter", (e) => {
         tooltip.innerHTML = `<b>${TASKS_KPI[i].icon}&nbsp;${TASKS_KPI[i].name}</b><br>
@@ -142,11 +135,5 @@ function drawKpiHexDashboard(progresses) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("kpi-dashboard")) {
-    drawKpiHexDashboard(progressArr);
-  }
-});
-
-// PRZYKŁAD: dynamiczny update np. po idlu/clicku/awansie taska
-// progressArr[2] = 0.93; drawKpiHexDashboard(progressArr);
+// NIE wywołuj drawKpiHexDashboard automatycznie tutaj!
+// Tylko przez refreshHexKpiDashboard z main.js/ui.js po renderAll/panelNav!
