@@ -312,6 +312,7 @@ function loadGame() {
         });
       }
       deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
+      // PATCH: zawsze napraw funkcję po loadzie!
       tasks.forEach((t, i) => {
         t.getUpgradeCost = function() {
           return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
@@ -329,6 +330,12 @@ function loadGame() {
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
       applyDeskModsEffects();
+      // PATCH: napraw funkcję po resecie!
+      tasks.forEach((t, i) => {
+        t.getUpgradeCost = function() {
+          return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+        };
+      });
       window.tasks = tasks; // <-- KLUCZOWE TUTAJ TEŻ
     }
   } else {
@@ -339,6 +346,12 @@ function loadGame() {
     window.prestigeClicks = Array(TASKS.length).fill(0);
     ACHIEVEMENTS.forEach(a => a.unlocked = false);
     deskModsOwned = [];
+    // PATCH: napraw funkcję po resecie!
+    tasks.forEach((t, i) => {
+      t.getUpgradeCost = function() {
+        return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+      };
+    });
     window.tasks = tasks; // <-- KLUCZOWE! 
   }
   tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
@@ -482,6 +495,11 @@ function ascendTask(idx) {
     burnout += 1;
     totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
+    tasks.forEach((t, i) => {
+    t.getUpgradeCost = function() {
+      return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+    };
+    });
     tasks.forEach(t => t.ascendLevel = 0);
     applyDeskModsEffects();
     checkAchievements();
