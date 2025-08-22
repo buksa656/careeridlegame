@@ -242,17 +242,17 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   }
 
   // Handler soft-skilla
-  if (totalPoints >= SOFTSKILL_COST) {
-    const btn = document.getElementById('get-softskill-btn');
-    btn.onclick = () => {
-      if (window.totalPoints >= SOFTSKILL_COST) {
-        window.totalPoints -= SOFTSKILL_COST;
-        window.softSkills += 1;
-        saveGame();
-        renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-      }
-    };
-  }
+if (totalPoints >= SOFTSKILL_COST) {
+  const btn = document.getElementById('get-softskill-btn');
+  btn.onclick = () => {
+    if (window.totalPoints >= SOFTSKILL_COST) {
+      window.totalPoints -= SOFTSKILL_COST;
+      window.softSkills += 1;
+      saveGame();
+      renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+    }
+  };
+}
 
   addEvents(tasks.length);
   updateTopClicks();
