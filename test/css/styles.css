@@ -219,7 +219,6 @@ main#app {
   .kafelek { flex-direction: column; gap: 10px; }
   .brand { font-size: 1.05em;}
 }
-
 /* --- ACHIEVEMENTY, REWARDY, AUTOMATY itd (PRZYSZĹOĹšÄ†) --- */
 .ach-list {
   display: flex; flex-direction: column; gap: 14px; margin-top: 18px; max-width: 600px;
