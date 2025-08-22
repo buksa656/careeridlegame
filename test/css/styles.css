@@ -439,3 +439,71 @@ main#app {
 .desk-hotspot-hover circle { fill: #ffe887; opacity:0.32 }
 .desk-hotspot-locked circle { fill: #ccc; opacity:0.15 }
 .desk-hotspot-bought circle { fill: #aeeeab; opacity:0.19 }
+
+.get-softskill-btn {
+    background: linear-gradient(90deg, #e8ffb6 2%, #fecd5e 49%, #ffe2b0 100%);
+    border: none;
+    color: #305353;
+    font-size: 1.18em;
+    font-family: inherit;
+    border-radius: 22px;
+    padding: 15px 38px 14px 20px;
+    margin: 18px 0 22px 0;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 18px #ffdc6e38, 0 1px 0 #b1a3411d;
+    letter-spacing: .01em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    transition: box-shadow 0.14s, transform 0.09s;
+    outline: none;
+}
+.get-softskill-btn:active {
+    transform: scale(0.97);
+}
+
+.get-softskill-btn .ss-badge {
+    font-size: 2.0em;
+    margin-right: 5px;
+    text-shadow: 1px 2px 5px #fffad2bb, 0 2px 8px #f9d65c59;
+}
+
+.get-softskill-btn .ss-label b {
+    color: #e6b700;
+    font-size: 1.01em;
+    letter-spacing: .03em;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.get-softskill-btn .ss-desc {
+    color: #836500;
+    font-size: .99em;
+    margin-top: 4px;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+.get-softskill-btn:hover, .get-softskill-btn:focus {
+    background: linear-gradient(90deg, #f6ff80 0%, #ffea95 45%, #ffe2ad 100%);
+    box-shadow: 0 7px 28px #fecb5533, 0 3px 16px #fdeeb92c;
+    color: #5b4400;
+    outline: 2.5px solid #ffe78790;
+}
+
+.get-softskill-btn:after {
+    content: "★";
+    position: absolute;
+    top: 8px; right: 20px;
+    font-size: 1.36em;
+    color: #ffe566b7;
+    opacity: 0.7;
+    transition: transform 0.22s;
+    pointer-events: none;
+}
+.get-softskill-btn:hover:after {
+    transform: scale(1.18) rotate(-8deg);
+    opacity: 1;
+}
