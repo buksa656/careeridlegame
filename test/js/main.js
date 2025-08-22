@@ -674,7 +674,6 @@ function topClickersTable() {
   return `<div class="topk-table"><b>Twoje top klikane zadania:</b>
     <table>${rows}</table></div>`;
 }
-const ui = window.IdleUI; // lub używaj window.IdleUI bezpośrednio
 
 function init() {
   loadGame();
