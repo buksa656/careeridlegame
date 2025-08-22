@@ -30,15 +30,18 @@ html, body {
   border-bottom: 2px solid #f4eac4;
 }
 
-header#topbar {
-  background: var(--panel);
-  color: var(--accent);
-  box-shadow: var(--shadow);
+#main-nav-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 120;
+  height: 56px;
+  background: #f7fafc;
+  border-top: 1.5px solid #e5e8ee;
   display: flex; align-items: center;
-  gap: 20px; padding: 18px 30px;
-  border-bottom: 1px solid #dde3ed;
-  position: sticky; top: 0; z-index: 2;
+  justify-content: center;
+  box-shadow: 0 -3px 18px #a2afd266;
 }
+#main-nav-bar nav { display: flex; gap: 24px; }
 .brand {
   font-weight: 700; font-size: 1.28em; color: var(--accent);
 }
@@ -342,7 +345,7 @@ main#app {
 .lvled { box-shadow: 0 0 8px #e5cd71,0 2px 9px #9efaef33!important; border-color: #f5d70c!important;}
 /* cytat */
 .quote {
-  color:#746bda; background: #faf8fd; font-size: 1.1em;
+  color:#746bda; background: #faf8fd; font-size: .88em;
   letter-spacing:.8px; text-align:center; margin:0 0 5px 0; padding:8px 5vw 9px 7vw;
   min-height:30px; border-bottom:1px solid #e8e0fa;
   transition: background .25s;
