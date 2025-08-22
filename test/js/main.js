@@ -284,7 +284,12 @@ function loadGame() {
 function tryUnlockTask(idx) {
   if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost) {
     tasks[idx].unlocked = true;
-    refreshHexKpiDashboard();
+    startIdle(idx);
+    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    ui.renderUpgradeAffordances(tasks, totalPoints);
+    renderMultipliersBar();
+    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+    ui.renderAchievements(window.ACHIEVEMENTS);
   }
 }
 
@@ -318,24 +323,21 @@ function startIdle(idx) {
         * ascendStage.idleMult;
       totalPoints += idlePts;
       task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
-      tryUnlockTask(idx + 1);
+      tryUnlockTask(idx + 1); // jeśli unlockował, będzie już renderAll
       checkAchievements();
       saveGame();
-      // --- NAJWAŻNIEJSZE: pełny re-render całego UI po punktach idle! ---
       window.IdleUI.updateSingleTile(idx, task, totalPoints);
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
       floatingScore(idlePts, idx, "#87c686");
       flashPoints();
-      refreshHexKpiDashboard();
       window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
-      refreshHexKpiDashboard();
-      return; // zakończ obecny tick
+      if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+      return; // zakończ tick
     }
-    // Normalny, płynny progres — tylko update paska!
+    // Tylko płynny progres (nie dashboard co 33ms!)
     ui.renderProgress(idx, task.progress, task.multiplier);
-    refreshHexKpiDashboard();
   }, 1000 / 30);
 }
 
