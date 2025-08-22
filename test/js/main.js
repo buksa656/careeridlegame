@@ -252,6 +252,9 @@ function loadGame() {
         if (typeof t.baseIdle !== 'number') t.baseIdle = TASKS[i] && typeof TASKS[i].baseIdle === 'number' ? TASKS[i].baseIdle : 0.01;
         if (typeof t.baseClick !== 'number') t.baseClick = BASE_CLICKS[i];
       });
+
+      // KLUCZOWA LINIA — ustawiamy window.tasks na końcu udanego wczytania!
+      window.tasks = tasks;
     } catch (e) {
       // Brak save/błąd: reset do defa
       tasks = JSON.parse(JSON.stringify(TASKS));
@@ -261,6 +264,7 @@ function loadGame() {
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
       applyDeskModsEffects();
+      window.tasks = tasks; // <-- KLUCZOWE TUTAJ TEŻ
     }
   } else {
     // Brak save: reset jawny
@@ -270,6 +274,7 @@ function loadGame() {
     window.prestigeClicks = Array(TASKS.length).fill(0);
     ACHIEVEMENTS.forEach(a => a.unlocked = false);
     deskModsOwned = [];
+    window.tasks = tasks; // <-- KLUCZOWE! 
   }
   tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
   ui.renderAchievements(window.ACHIEVEMENTS);
@@ -285,6 +290,7 @@ function tryUnlockTask(idx) {
   if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost) {
     tasks[idx].unlocked = true;
     startIdle(idx);
+    window.tasks = tasks;
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
@@ -336,8 +342,8 @@ function startIdle(idx) {
       if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
       return;
     }
-    // Tylko płynny pasek
     ui.renderProgress(idx, task.progress, task.multiplier);
+    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
   }, 1000 / 30);
 }
 
@@ -409,6 +415,7 @@ function ascendTask(idx) {
     applyDeskModsEffects();
     checkAchievements();
     saveGame();
+    window.tasks = tasks;
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
