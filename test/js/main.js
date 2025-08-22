@@ -188,7 +188,7 @@ const ACHIEVEMENTS = [
     id: "excel-heros",
     name: "Excel Heros",
     desc: "Osiągnij 1. poziom w Excelu.",
-    condition: gs => gs.tasks && gs.tasks.level >= 1,
+    condition: gs => gs.tasks && gs.tasks[5] && gs.tasks.level >= 1,
     reward: { type: "multiplierInc", multiplierInc: 0.06, taskIdx: 5 }
   },
   {
@@ -230,7 +230,7 @@ const ACHIEVEMENTS = [
     id: "meeting-pro",
     name: "Meeting Pro",
     desc: "Zakończ 100 cykli idle na zadaniu 'Zebranie'.",
-    condition: gs => gs.tasks[9] && gs.tasks.idleCycles >= 100,
+    condition: gs => gs.tasks && gs.tasks && gs.tasks.idleCycles >= 100,
     reward: { type: "baseClick", value: 20 }
   },
   {
@@ -264,8 +264,8 @@ const ACHIEVEMENTS = [
   {
     id: "mistrz-softskilli",
     name: "Mistrz Soft Skilli",
-    desc: "Uzbieraj co najmniej 100 Soft Skills.",
-    condition: gs => gs.softSkills >= 100,
+    desc: "Uzbieraj co najmniej 20 Soft Skills.",
+    condition: gs => gs.softSkills >= 20,
     reward: { type: "baseClick", value: 50 }
   },
   {
@@ -544,8 +544,17 @@ function applyDeskModsEffects() {
   }
 
 function checkAchievements() {
+    const state = {
+    totalPoints,
+    softSkills,
+    burnout,
+    tasks,
+    topClicks: window.topClicks,
+    prestigeClicks: window.prestigeClicks,
+    deskModsOwned,
+  };
   ACHIEVEMENTS.forEach(a => {
-    if (!a.unlocked && (!a.condition || a.condition())) {
+    if (!a.unlocked && (!a.condition || a.condition(state))) {
       a.unlocked = true;
 
       // Ulepszenie baseClick dla wszystkich zadań
