@@ -397,6 +397,7 @@ window.IdleUI = {
   renderProgress,
   renderUpgradeAffordances,
   renderSingleTile,
+  updateSingleTile,
   renderAchievements,
   showAchievement
 };
