@@ -204,7 +204,11 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   if (totalPoints >= SOFTSKILL_COST) {
     softSkillBtn = `
       <button id="get-softskill-btn" class="get-softskill-btn">
-        Jesteś gotowy na nowe umiejętności. Zbierz 1 soft-skill (koszt: ${SOFTSKILL_COST})
+        <span class="ss-badge">🎓</span>
+        <span class="ss-label">
+          <b>Awans!</b>
+          <div class="ss-desc">Zbierz <b>1 Soft Skill</b><br><small>(koszt: ${SOFTSKILL_COST})</small></div>
+        </span>
       </button>
     `;
   }
