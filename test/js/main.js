@@ -117,6 +117,7 @@ const DESK_MODS = [
   "hotspot-monitor": 3,
   "hotspot-lama": 4
   };
+  const ui = window.IdleUI;
 let deskModsOwned = [];
 function renderDeskSVG() {
   for (const id in hotspotMap) {
@@ -188,7 +189,7 @@ const ACHIEVEMENTS = [
     id: "excel-heros",
     name: "Excel Heros",
     desc: "Osiągnij 1. poziom w Excelu.",
-    condition: gs => gs.tasks && gs.tasks && gs.tasks.level >= 1,
+    condition: gs => gs.tasks && gs.tasks && gs.tasks[5].level >= 1,
     reward: { type: "multiplierInc", multiplierInc: 0.06, taskIdx: 5 }
   },
   {
@@ -230,7 +231,7 @@ const ACHIEVEMENTS = [
     id: "meeting-pro",
     name: "Meeting Pro",
     desc: "Zakończ 100 cykli idle na zadaniu 'Zebranie'.",
-    condition: gs => gs.tasks && gs.tasks && gs.tasks.idleCycles >= 100,
+    condition: gs => gs.tasks && gs.tasks && gs.tasks[9].idleCycles >= 100,
     reward: { type: "baseClick", value: 20 }
   },
   {
@@ -396,7 +397,7 @@ function startIdle(idx) {
       tryUnlockTask(idx + 1); // wywoła renderAll + dashboard jeśli unlock
       checkAchievements();
       saveGame();
-      window.IdleUI.updateSingleTile(idx, task, totalPoints);
+      ui.updateSingleTile(idx, task, totalPoints);
       if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
@@ -425,7 +426,7 @@ function clickTask(idx) {
     checkAchievements();
     saveGame();
     if (typeof ui.updateTotalPoints === "function") ui.updateTotalPoints(totalPoints);
-    window.IdleUI.updateSingleTile(idx, tasks[idx], totalPoints);
+    ui.updateSingleTile(idx, task, totalPoints);
     if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
     if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
     renderMultipliersBar();
