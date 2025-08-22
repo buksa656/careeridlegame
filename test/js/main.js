@@ -320,7 +320,7 @@ function startIdle(idx) {
       checkAchievements();
       saveGame();
       // --- NAJWAŻNIEJSZE: pełny re-render całego UI po punktach idle! ---
-      updateSingleTile(idx, task, totalPoints);
+      window.IdleUI.updateSingleTile(idx, task, totalPoints);
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
       floatingScore(idlePts, idx, "#87c686");
