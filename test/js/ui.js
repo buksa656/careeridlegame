@@ -87,15 +87,11 @@ function taskTile(task, idx, totalPoints, locked = false) {
   `;
 }
 function renderSingleTile(idx, task, totalPoints) {
-  // Zakładam, że każdy kafelek ma otaczający go <div class="kafelek-outer"> jako n-tą child w .career-list
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
-  // Znajdź wrapper odpowiedniego kafelka (idx liczymy od 0!)
   const outers = document.querySelectorAll('.kafelek-outer');
   const outer = outers[idx];
   if (outer) {
     outer.innerHTML = kafelHtml;
-    // Odtwórz nasłuchiwacze klików tylko dla tego kafelka/przycisków
-    // UWAGA: Jeśli masz addEvents bazujące na wszystkich kaflach, możesz ograniczyć do tego outers[idx]!
     addEvents(1);
   }
 }
