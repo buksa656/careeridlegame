@@ -398,6 +398,7 @@ window.IdleUI = {
   renderUpgradeAffordances,
   renderSingleTile,
   updateSingleTile,
+  updateTotalPoints,
   renderAchievements,
   showAchievement
 };
