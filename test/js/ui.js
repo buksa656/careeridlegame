@@ -166,7 +166,22 @@ function panelNav() {
     if (panel.id !== "panel-kariera") panel.style.display = "none";
   });
 }
-
+function renderGridProgress(tasks, totalPoints) {
+  let maxUnlockedIdx = -1;
+  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
+  const next = tasks[maxUnlockedIdx + 1];
+  const progressDiv = document.getElementById("grid-progress");
+  if (next && next.unlockCost && progressDiv) {
+    const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
+    progressDiv.innerHTML = `<div class="unlock-progress">
+      <div class="unlock-progress-bar" style="width:${(prog * 100).toFixed(1)}%"></div>
+      <span>${Math.min((prog * 100), 100).toFixed(0)}% do odblokowania nowej pracy</span>
+    </div>`;
+  } else if (progressDiv) {
+    progressDiv.innerHTML = ""; // czyść jeśli wszystko już odblokowane
+  }
+}
+window.renderGridProgress = renderGridProgress;
 function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   let maxUnlockedIdx = -1;
   for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
