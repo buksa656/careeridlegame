@@ -511,14 +511,16 @@ function floatingScore(points, idx, color) {}
     setTimeout(() => c.remove(), 1200);
   }
   const OFFICE_QUOTES = [
-    "Czy był tu kiedyś onboarding?",
-    "Od tego jest PowerPoint!",
-    "Tak było na daily, nie pamiętasz?",
-    "Możesz to wrzucić na SLACKA?",
-    "Deadline wczoraj, prezentacja dziś",
-    "Daj mi 5 minut na prodzie",
-    "Robimy szybki brainstorming",
-    "Wyślij mi briefa na maila"
+    "Pierwszy dzień w biurze to 98% szkoleń BHP",
+    "95% statystyk w PowerPoincie nikt nie sprawdza",
+    "Microsoft Teams zjada rocznie 1 dzień Twojego życia",
+    "Biuro nigdy nie śpi... ale Ty musisz",
+    "Najlepsze pomysły wpadają przy kawie – rzadko na spotkaniach",
+    "Ctrl+F to najważniejsza umiejętność korposzczura",
+    "Mówienie: „Zaraz to wrzucę na SharePoint” – czasem wystarcza za wykonanie zadania",
+    "Najczęstszy powód spotkań: 'musimy się zsynchronizować'",
+    "Szansa na wpadnięcie na Prezesa: rośnie w windzie, spada przy windzie",
+    "Odpowiedź 'dziękuję, odnotowane' zazwyczaj kończy wątek mailowy",
   ];
 let quoteIndex = -1;
 
