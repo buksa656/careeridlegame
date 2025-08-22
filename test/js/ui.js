@@ -48,22 +48,22 @@ function taskTile(task, idx, totalPoints, locked = false) {
            +${Math.round((ascendStage.idleMult - 1)*100)}% idle
         </span>
       </div>
-      <div class="kafelek-row">Poziom: <b class="tile-lvl">${task.level}</b></div>
+      <div class="kafelek-row">Lvl: <b class="tile-lvl">${task.level}</b></div>
       <div class="kafelek-row">
         Idle: <b class="tile-idle">${perSec}</b> pkt/s 
         <span class="tile-mult" style="font-size:.96em;color:#888;font-weight:400;">(x${multiplierLabel})</span>
       </div>
       <div class="kafelek-row">
-        Za klik: <b class="tile-click">${clickVal}</b>
+        Klik: <b class="tile-click">${clickVal}</b>
       </div>
       <div class="kafelek-row stats">
-        <span>Kliknięć: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
+        <span>Kliki: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
         <span style="margin-left:13px">
-          od prestiżu: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
+          ta kariera: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
         </span>
       </div>
       ${locked && typeof task.unlockCost === 'number'
-        ? `<div class="kafelek-row" style="color:#b7630b;">Odblokuj za <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
+        ? `<div class="kafelek-row" style="color:#b7630b;">Koszt: <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
       }
     </div>
     <!-- PRZYCISKI (i cała reszta) pozostają BEZ zmian -->
