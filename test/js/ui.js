@@ -4,10 +4,14 @@
 
   function e(q) { return document.querySelector(q); }
 
-  function fmt(n) {
-    return typeof n === "number" && n >= 1000
-      ? n.toLocaleString("pl") : Math.round(n);
+function fmt(n) {
+  if (typeof n === 'number') {
+    if (Math.abs(n) < 100) return n.toFixed(2);
+    if (Math.abs(n) < 1000) return n.toFixed(1);
+    return Math.round(n).toLocaleString('pl');
   }
+  return n;
+}
 
   function getBarCycleMs(task) {
     const speedGrowth = 0.94;
@@ -49,11 +53,11 @@ return `
     </div>
     <div class="kafelek-row">Poz.: <b class="tile-lvl">${task.level}</b></div>
     <div class="kafelek-row">
-      Idle: <b class="tile-idle">${perSec}</b> pkt/s 
+      Idle: <b class="tile-idle">${fmt(perSec)}</b> pkt/s 
       <span class="tile-mult">(x${multiplierLabel})</span>
     </div>
     <div class="kafelek-row">
-      Klik: <b class="tile-click">${clickVal}</b>
+      Klik: <b class="tile-click">${fmt(clickVal)}</b>
     </div>
     <div class="kafelek-row stats">
       <span>Klik: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
@@ -168,6 +172,17 @@ function renderGridProgress(tasks, totalPoints) {
   for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
   const next = tasks[maxUnlockedIdx + 1];
   const progressDiv = document.getElementById("grid-progress");
+  const progressDiv = document.getElementById("grid-progress");
+  const softSkillBtn = document.getElementById("get-softskill-btn");
+  if (progressDiv && softSkillBtn) {
+  const prog = progressDiv.querySelector('.unlock-progress');
+  if (prog) {
+    softSkillBtn.style.width = `${prog.offsetWidth}px`;
+    softSkillBtn.style.maxWidth = `${prog.offsetWidth}px`;
+    softSkillBtn.style.display = 'block';
+    softSkillBtn.style.margin = '12px auto';
+    }
+  }
   if (next && next.unlockCost && progressDiv) {
     const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
     progressDiv.innerHTML = `<div class="unlock-progress">
