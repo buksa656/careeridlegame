@@ -360,6 +360,7 @@ function clickTask(idx) {
     tryUnlockTask(idx + 1);
     checkAchievements();
     saveGame();
+    if (typeof ui.updateTotalPoints === "function") ui.updateTotalPoints(totalPoints);
     window.IdleUI.updateSingleTile(idx, tasks[idx], totalPoints);
     if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
     if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
