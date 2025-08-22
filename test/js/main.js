@@ -281,10 +281,12 @@ function loadGame() {
     location.reload();
   }
 
-  function tryUnlockTask(idx) {
-    if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost)
-      tasks[idx].unlocked = true;
+function tryUnlockTask(idx) {
+  if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost) {
+    tasks[idx].unlocked = true;
+    refreshHexKpiDashboard();
   }
+}
 
 function getBarCycleMs(task) {
   const speedGrowth = 0.94;
@@ -325,12 +327,15 @@ function startIdle(idx) {
       renderMultipliersBar();
       floatingScore(idlePts, idx, "#87c686");
       flashPoints();
+      refreshHexKpiDashboard();
       window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
+      refreshHexKpiDashboard();
       return; // zakończ obecny tick
     }
     // Normalny, płynny progres — tylko update paska!
     ui.renderProgress(idx, task.progress, task.multiplier);
+    refreshHexKpiDashboard();
   }, 1000 / 30);
 }
 
@@ -369,6 +374,11 @@ function clickTask(idx) {
       ui.renderAchievements(window.ACHIEVEMENTS);
     }
   }
+  function refreshHexKpiDashboard() {
+  if (typeof drawKpiHexDashboard === "function") {
+    drawKpiHexDashboard(getAllTaskProgresses());
+  }
+}
 function ascendTask(idx) {
   const task = tasks[idx];
   const current = task.ascendLevel || 0;
@@ -533,6 +543,12 @@ function setMarqueeQuote(idx = null) {
   // Po zakończeniu przewijania, wywołaj kolejny cytat
   span.addEventListener('animationend', () => setMarqueeQuote(), { once: true });
 }
+  
+  function getAllTaskProgresses() {
+  // Zwraca tablicę z postępami każdego zadania (idle progress/cykl, 0..1)
+  return tasks.map(t => t.unlocked ? t.progress : 0);
+}
+  
   function updatePointsChart() {
     if (!window.pointsHistory) window.pointsHistory = [];
     pointsHistory.push(totalPoints);
