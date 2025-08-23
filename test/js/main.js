@@ -52,62 +52,62 @@ const DESK_MODS = [
   {
     id: "cup", name: "Kubek", emoji: "☕",
     desc: "Twój ulubiony kubek! Wszystkie zadania idle +5%.", cost: 1,
-    svg: `<ellipse cx="70" cy="175" rx="18" ry="22" fill="#fff"/>
-          <rect x="61" y="163" width="18" height="26" rx="4.2" fill="#c8a869" />
-          <ellipse cx="70" cy="180" rx="16" ry="8" fill="#faa" opacity="0.25"/>`,
+    svg: `<ellipse cx="0" cy="0" rx="18" ry="22" fill="#fff"/>
+          <rect x="-9" y="-11" width="18" height="22" rx="4" fill="#c8a869" />
+          <ellipse cx="0" cy="12" rx="16" ry="6" fill="#faa" opacity="0.25"/>`,
     effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.05; }
   },
   {
     id: "flower", name: "Kwiatuszek", emoji: "🌼",
     desc: "Każdy task idle +5%.", cost: 2,
-    svg: `<circle cx="320" cy="157" r="20" fill="#aef4e9"/>
-         <circle cx="320" cy="157" r="12" fill="#fff"/>
-         <circle cx="320" cy="157" r="5.8" fill="#ffe45e"/>
-         <ellipse cx="320" cy="150" rx="4" ry="10" fill="#fff"/>
-         <ellipse cx="326" cy="157" rx="10" ry="4" fill="#fff"/>
-         <ellipse cx="320" cy="164" rx="4" ry="10" fill="#fff"/>
-         <ellipse cx="314" cy="157" rx="10" ry="4" fill="#fff"/>`,
+    svg: `<circle cx="0" cy="0" r="20" fill="#aef4e9"/>
+         <circle cx="0" cy="0" r="12" fill="#fff"/>
+         <circle cx="0" cy="0" r="6" fill="#ffe45e"/>
+         <ellipse cx="0" cy="-14" rx="3" ry="10" fill="#fff"/>
+         <ellipse cx="13" cy="0" rx="9" ry="3" fill="#fff"/>
+         <ellipse cx="0" cy="14" rx="3" ry="10" fill="#fff"/>
+         <ellipse cx="-13" cy="0" rx="9" ry="3" fill="#fff"/>`,
     effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.05; }
   },
   {
     id: "lamp", name: "Lampka RGB", emoji: "💡",
     desc: "Softcap poziomu tasków +3.", cost: 3,
-    svg: `<ellipse cx="205" cy="112" rx="20" ry="12" fill="#eaf"/> 
-          <rect x="189" y="113" width="26" height="42" rx="8" fill="#bbb"/>
-          <ellipse cx="205" cy="137" rx="12" ry="4" fill="#eaeaea"/>`,
+    svg: `<ellipse cx="0" cy="-14" rx="18" ry="9" fill="#eaf"/> 
+          <rect x="-13" y="-13" width="26" height="32" rx="8" fill="#bbb"/>
+          <ellipse cx="0" cy="11" rx="10" ry="3" fill="#eaeaea"/>`,
     effect: gs => { gs.softcapShift = (gs.softcapShift || 0) + 3; }
   },
   {
     id: "monitor", name: "Monitor", emoji: "🖥️",
     desc: "Wszystkie taski idle szybciej o 10%.", cost: 4,
-    svg: `<rect x="238" y="112" width="48" height="28" rx="4" fill="#333"/>
-          <rect x="246" y="120" width="32" height="14" rx="3" fill="#0cc" opacity="0.63"/>`,
+    svg: `<rect x="-22" y="-14" width="44" height="28" rx="4" fill="#333"/>
+          <rect x="-14" y="-4" width="28" height="14" rx="3" fill="#0cc" opacity="0.63"/>`,
     effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.10; }
   },
   {
     id: "lama", name: "Lama", emoji: "🦙",
     desc: "Idle mnożniki rosną szybciej (+30%).", cost: 5,
-    svg: `<ellipse cx="115" cy="194" rx="16" ry="10" fill="#fff9f6"/>
-          <ellipse cx="115" cy="189" rx="6" ry="8" fill="#fff"/>
-          <rect x="106" y="184" width="18" height="16" rx="5" fill="#f7dcc3"/>`,
+    svg: `<ellipse cx="0" cy="4" rx="16" ry="10" fill="#fff9f6"/>
+          <ellipse cx="0" cy="-4" rx="6" ry="8" fill="#fff"/>
+          <rect x="-9" y="-11" width="18" height="16" rx="5" fill="#f7dcc3"/>`,
     effect: gs => { gs.idleMultiplierGrow = (gs.idleMultiplierGrow || 0.01) * 1.3; }
   },
   {
     id: "ekspres", name: "Ekspres do kawy", emoji: "☕",
     desc: "Idle we wszystkich zadaniach +12%.", cost: 8,
-    svg: "<ellipse cx='170' cy='165' rx='26' ry='26' fill='#eee'/>",
+    svg: `<ellipse cx="0" cy="0" rx="26" ry="26" fill="#eee"/>`,
     effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.12; }
   },
   {
     id: "podkladka", name: "Antystresowa podkładka", emoji: "🖱️",
     desc: "Kliky +10% (trwały efekt).", cost: 12,
-    svg: "<rect x='38' y='172' width='48' height='18' rx='9' fill='#def'/>",
+    svg: `<rect x="-22" y="-9" width="44" height="18" rx="9" fill="#def"/>`,
     effect: gs => { gs.baseClick = (gs.baseClick || 1) * 1.1; }
   },
   {
     id: "prestiżowe-biurko", name: "BIURKOWY PRESTIŻ", emoji: "💎",
     desc: "Globalny mnożnik idle *1.17. Najwyższy biurowy upgrade.", cost: 25,
-    svg: "<ellipse cx='290' cy='190' rx='22' ry='22' fill='#87c4ff'/><ellipse cx='290' cy='190' rx='14' ry='14' fill='#fff'/>",
+    svg: `<ellipse cx="0" cy="0" rx="22" ry="22" fill="#87c4ff"/><ellipse cx="0" cy="0" rx="14" ry="14" fill="#fff"/>`,
     effect: gs => { gs.idleMultiplier = (gs.idleMultiplier || 1) * 1.17; }
   }
 ];
