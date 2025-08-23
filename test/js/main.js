@@ -152,6 +152,17 @@ function renderDeskSVG() {
       group.classList.add("desk-hotspot-bought");
       group.querySelector("g").innerHTML = DESK_MODS[idx].svg;
     } else {
+      if (softSkills < DESK_MODS[idx].cost) {
+        group.classList.add("desk-hotspot-locked");
+      }
+    }
+  }
+}
+
+    if (deskModsOwned.includes(idx)) {
+      group.classList.add("desk-hotspot-bought");
+      group.querySelector("g").innerHTML = DESK_MODS[idx].svg;
+    } else {
       // POPRAWKA: NIE dodaj pustego stringa!
       if (softSkills < DESK_MODS[idx].cost) {
         group.classList.add("desk-hotspot-locked");
