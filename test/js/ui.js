@@ -164,9 +164,10 @@ function panelNav() {
       document.getElementById("panel-" + target).style.display = "";
 
       // Tu uruchamiaj odpowiedni renderer:
-      if (target === "kariera" && window.tasks) {
-        renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-        window.tasks = tasks;  
+        if (target === "kariera" && window.tasks) {
+            // Używaj globalnych let (nie window!)
+            renderAll(tasks, totalPoints, softSkills, burnout);
+            window.tasks = tasks;
         if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
       } else if (target === "osiagniecia" && window.ACHIEVEMENTS) {
         renderAchievements(window.ACHIEVEMENTS);
