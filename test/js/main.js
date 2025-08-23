@@ -169,7 +169,7 @@ function renderDeskSVG() {
       }
     }
   }
-}
+
 function showDeskTooltip(idx, group) {
   const tooltip = document.getElementById("desk-tooltip");
   const box = group.getBoundingClientRect();
