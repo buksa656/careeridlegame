@@ -276,7 +276,7 @@ if (totalPoints >= SOFTSKILL_COST) {
   const btn = document.getElementById('get-softskill-btn');
   btn.onclick = () => {
     if (totalPoints >= SOFTSKILL_COST) {
-      prestige();
+      window.prestige();
       // totalPoints -= SOFTSKILL_COST;
       // softSkills += 1;
       // tasks = JSON.parse(JSON.stringify(TASKS));
