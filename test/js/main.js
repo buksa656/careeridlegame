@@ -488,30 +488,30 @@ function ascendTask(idx) {
     if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
   }
 }
-  function prestige() {
-    console.log("PRESTIGE TRIGGERED!");
-    timers.forEach(t => clearInterval(t));
-    if (!ignorePointsRequirement && totalPoints < 10000) return;
-    softSkills += 1;
-    burnout += 1;
-    tasks = JSON.parse(JSON.stringify(TASKS));
-    tasks.forEach((t, i) => {
+function prestige(ignorePointsRequirement = false) {
+  console.log("PRESTIGE TRIGGERED!");
+  timers.forEach(t => clearInterval(t));
+  if (!ignorePointsRequirement && totalPoints < 10000) return;
+  softSkills += 1;
+  burnout += 1;
+  tasks = JSON.parse(JSON.stringify(TASKS));
+  tasks.forEach((t, i) => {
     t.getUpgradeCost = function() {
       return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
     };
-    });
-    totalPoints = 0;
-    tasks.forEach(t => t.ascendLevel = 0);
-    applyDeskModsEffects();
-    saveGame();
-    window.tasks = tasks;
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
-    ui.renderUpgradeAffordances(tasks, totalPoints);
-    renderMultipliersBar();
-    if (typeof renderDeskSVG === "function") renderDeskSVG();
-    window.prestigeClicks = Array(tasks.length).fill(0); // Jeśli liczysz od nowa prestiżowe kliknięcia
-    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-    if (softSkills === 1) showSoftSkillModal();
+  });
+  totalPoints = 0;
+  tasks.forEach(t => t.ascendLevel = 0);
+  applyDeskModsEffects();
+  saveGame();
+  window.tasks = tasks;
+  ui.renderAll(tasks, totalPoints, softSkills, burnout);
+  ui.renderUpgradeAffordances(tasks, totalPoints);
+  renderMultipliersBar();
+  if (typeof renderDeskSVG === "function") renderDeskSVG();
+  window.prestigeClicks = Array(tasks.length).fill(0);
+  if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+  if (softSkills === 1) showSoftSkillModal();
 }
   // ---- MODAL Z GRATULACJAMI ----
   function showSoftSkillModal() {
