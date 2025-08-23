@@ -157,7 +157,6 @@ function renderDeskSVG() {
       }
     }
   }
-}
 
     if (deskModsOwned.includes(idx)) {
       group.classList.add("desk-hotspot-bought");
@@ -169,7 +168,7 @@ function renderDeskSVG() {
       }
     }
   }
-
+}
 function showDeskTooltip(idx, group) {
   const tooltip = document.getElementById("desk-tooltip");
   const box = group.getBoundingClientRect();
