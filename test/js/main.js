@@ -489,6 +489,7 @@ function ascendTask(idx) {
   }
 }
   function prestige() {
+    console.log("PRESTIGE TRIGGERED!");
     timers.forEach(t => clearInterval(t));
     if (totalPoints < 10000) return;
     softSkills += 1;
