@@ -119,6 +119,7 @@ const DESK_MODS = [
   };
   const ui = window.IdleUI;
 let deskModsOwned = [];
+  
 function renderDeskSVG() {
   for (const id in hotspotMap) {
     let idx = hotspotMap[id];
@@ -126,8 +127,14 @@ function renderDeskSVG() {
     group.classList.remove("desk-hotspot-hover", "desk-hotspot-bought", "desk-hotspot-locked");
     group.querySelector("g").innerHTML = "";
 
-    group.onmouseenter = (ev) => { showDeskTooltip(idx, group); group.classList.add("desk-hotspot-hover"); }
-    group.onmouseleave = (ev) => { hideDeskTooltip(); group.classList.remove("desk-hotspot-hover"); }
+    group.onmouseenter = (ev) => {
+      showDeskTooltip(idx, group);
+      group.classList.add("desk-hotspot-hover");
+    }
+    group.onmouseleave = (ev) => {
+      hideDeskTooltip();
+      group.classList.remove("desk-hotspot-hover");
+    }
     group.onclick = () => {
       if (!deskModsOwned.includes(idx)) {
         if (softSkills >= DESK_MODS[idx].cost) {
@@ -145,7 +152,10 @@ function renderDeskSVG() {
       group.classList.add("desk-hotspot-bought");
       group.querySelector("g").innerHTML = DESK_MODS[idx].svg;
     } else {
-      group.classList.add(softSkills >= DESK_MODS[idx].cost ? "" : "desk-hotspot-locked");
+      // POPRAWKA: NIE dodaj pustego stringa!
+      if (softSkills < DESK_MODS[idx].cost) {
+        group.classList.add("desk-hotspot-locked");
+      }
     }
   }
 }
