@@ -277,7 +277,7 @@ if (totalPoints >= SOFTSKILL_COST) {
   btn.onclick = () => {
     if (totalPoints >= SOFTSKILL_COST) {
       console.log("BUTTON CLICKED, calling prestige");
-      eventHandlers.onPrestige();
+      eventHandlers.onPrestige(true);
     }
   };
 }
