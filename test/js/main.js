@@ -158,18 +158,6 @@ function renderDeskSVG() {
     }
   }
 }
-
-    if (deskModsOwned.includes(idx)) {
-      group.classList.add("desk-hotspot-bought");
-      group.querySelector("g").innerHTML = DESK_MODS[idx].svg;
-    } else {
-      // POPRAWKA: NIE dodaj pustego stringa!
-      if (softSkills < DESK_MODS[idx].cost) {
-        group.classList.add("desk-hotspot-locked");
-      }
-    }
-  }
-}
 function showDeskTooltip(idx, group) {
   const tooltip = document.getElementById("desk-tooltip");
   const box = group.getBoundingClientRect();
