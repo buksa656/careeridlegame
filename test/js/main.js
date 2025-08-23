@@ -491,32 +491,28 @@ function ascendTask(idx) {
   function prestige() {
     console.log("PRESTIGE TRIGGERED!");
     timers.forEach(t => clearInterval(t));
-    if (totalPoints < 10000) return;
+    if (!ignorePointsRequirement && totalPoints < 10000) return;
     softSkills += 1;
     burnout += 1;
-    totalPoints = 0;
     tasks = JSON.parse(JSON.stringify(TASKS));
     tasks.forEach((t, i) => {
     t.getUpgradeCost = function() {
       return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
     };
     });
+    totalPoints = 0;
     tasks.forEach(t => t.ascendLevel = 0);
     applyDeskModsEffects();
-    checkAchievements();
     saveGame();
     window.tasks = tasks;
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
-    confetti();
-    ui.renderAchievements(window.ACHIEVEMENTS);
-    window.prestigeClicks = Array(tasks.length).fill(0);
+    if (typeof renderDeskSVG === "function") renderDeskSVG();
+    window.prestigeClicks = Array(tasks.length).fill(0); // Jeśli liczysz od nowa prestiżowe kliknięcia
     if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-    // MODAL PO PIERWSZYM SOFTSKILLU!
     if (softSkills === 1) showSoftSkillModal();
-  }
-
+}
   // ---- MODAL Z GRATULACJAMI ----
   function showSoftSkillModal() {
     document.getElementById('softskill-modal').style.display = 'flex';
