@@ -117,6 +117,9 @@ const DESK_MODS = [
   "hotspot-lamp": 2,
   "hotspot-monitor": 3,
   "hotspot-lama": 4
+  "hotspot-ekspres": 5
+  "hotspot-podkladka": 6
+  "hotspot-prestiżowe-biurko": 7
   };
   const ui = window.IdleUI;
 let deskModsOwned = [];
