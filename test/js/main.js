@@ -140,6 +140,7 @@ function renderDeskSVG() {
         if (softSkills >= DESK_MODS[idx].cost) {
           deskModsOwned.push(idx);
           softSkills -= DESK_MODS[idx].cost;
+          window.softSkills = softSkills;
           if (typeof DESK_MODS[idx].effect === "function") DESK_MODS[idx].effect(gameState);
           applyDeskModsEffects();
           saveGame();
@@ -310,6 +311,7 @@ function loadGame() {
       if (Array.isArray(s.tasks)) tasks = s.tasks;
       if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
       if (typeof s.softSkills === "number") softSkills = s.softSkills;
+      window.softSkills = softSkills;
       if (typeof s.burnout === "number") burnout = s.burnout;
       pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
       window.topClicks = Array.isArray(s.topClicks) ? s.topClicks : Array(TASKS.length).fill(0);
@@ -502,6 +504,7 @@ function prestige(ignorePointsRequirement = false) {
   timers.forEach(t => clearInterval(t));
   if (!ignorePointsRequirement && totalPoints < 10000) return;
   softSkills += 1;
+  window.softSkills = softSkills;
   burnout += 1;
   tasks = JSON.parse(JSON.stringify(TASKS));
   tasks.forEach((t, i) => {
