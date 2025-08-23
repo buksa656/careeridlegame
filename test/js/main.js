@@ -157,6 +157,7 @@ function renderDeskSVG() {
       }
     }
   }
+}
 
     if (deskModsOwned.includes(idx)) {
       group.classList.add("desk-hotspot-bought");
