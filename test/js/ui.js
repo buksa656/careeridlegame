@@ -275,11 +275,25 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 if (totalPoints >= SOFTSKILL_COST) {
   const btn = document.getElementById('get-softskill-btn');
   btn.onclick = () => {
-    if (totalPoints >= SOFTSKILL_COST) { 
-      totalPoints -= SOFTSKILL_COST;
-      softSkills += 1;
-      saveGame();
-      renderAll(tasks, totalPoints, softSkills, burnout);
+    if (totalPoints >= SOFTSKILL_COST) {
+      prestige();
+      // totalPoints -= SOFTSKILL_COST;
+      // softSkills += 1;
+      // tasks = JSON.parse(JSON.stringify(TASKS));
+      // tasks.forEach((t, i) => {
+      // t.getUpgradeCost = function() {
+      //  return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+      // };
+      // });
+      // totalPoints = 0;
+      // burnout += 1;
+      // applyDeskModsEffects();
+      // saveGame();
+      // window.tasks = tasks;
+      // ui.renderAll(tasks, totalPoints, softSkills, burnout);
+      // ui.renderUpgradeAffordances(tasks, totalPoints);
+      // renderMultipliersBar();
+      // if (typeof renderDeskSVG === "function") renderDeskSVG();
     }
   };
 }
