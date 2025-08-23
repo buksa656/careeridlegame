@@ -128,23 +128,29 @@ function renderDeskSVG() {
   for (const id in hotspotMap) {
     let idx = hotspotMap[id];
     const group = document.getElementById(id);
+
+    // WAŻNE: jeśli nie masz elementu SVG o tym id, pomiń!
+    if (!group) continue;
+
     group.classList.remove("desk-hotspot-hover", "desk-hotspot-bought", "desk-hotspot-locked");
-    group.querySelector("g").innerHTML = "";
+    // Sprawdzenie czy g istnieje (np. dla czystych hotspotów!):
+    let gElement = group.querySelector("g");
+    if (gElement) gElement.innerHTML = "";
 
     group.onmouseenter = (ev) => {
       showDeskTooltip(idx, group);
       group.classList.add("desk-hotspot-hover");
-    }
+    };
     group.onmouseleave = (ev) => {
       hideDeskTooltip();
       group.classList.remove("desk-hotspot-hover");
-    }
+    };
     group.onclick = () => {
       if (!deskModsOwned.includes(idx)) {
         if (softSkills >= DESK_MODS[idx].cost) {
           deskModsOwned.push(idx);
           softSkills -= DESK_MODS[idx].cost;
-          window.softSkills = softSkills;
+          window.softSkills = softSkills; // zawsze synchronizuj window
           if (typeof DESK_MODS[idx].effect === "function") DESK_MODS[idx].effect(gameState);
           applyDeskModsEffects();
           saveGame();
@@ -152,13 +158,19 @@ function renderDeskSVG() {
           renderDeskSVG();
         }
       }
-    }
+    };
+
     if (deskModsOwned.includes(idx)) {
       group.classList.add("desk-hotspot-bought");
-      group.querySelector("g").innerHTML = DESK_MODS[idx].svg;
+      if (gElement) gElement.innerHTML = DESK_MODS[idx].svg;
     } else {
       if (softSkills < DESK_MODS[idx].cost) {
         group.classList.add("desk-hotspot-locked");
+      }
+      // Dla pustych miejsc powiększ/zmień wygląd hotspotu
+      if (gElement) {
+        gElement.innerHTML = `<circle cx="0" cy="0" r="38" fill="#ffee90" stroke="#ffa800" stroke-width="7" opacity="0.9"/>` +
+                             `<text x="0" y="12" font-size="32" font-weight="bold" fill="#ffa800" text-anchor="middle" pointer-events="none">+</text>`;
       }
     }
   }
