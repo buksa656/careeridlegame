@@ -99,8 +99,8 @@ function drawKpiHexDashboard(progresses) {
   const COLS = Math.ceil(window.tasks.length / ROWS);
 
   // Ustal szerokość i wysokość SVG:
-  const WIDTH = 60 + COLS * SPACING_X;
-  const HEIGHT = 65 + Math.min(window.tasks.length, ROWS) * SPACING_Y + 20;
+  const WIDTH = 100 + COLS * SPACING_X;
+  const HEIGHT = 100 + Math.min(window.tasks.length, ROWS) * SPACING_Y + 20;
 
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", WIDTH);
@@ -112,8 +112,8 @@ function drawKpiHexDashboard(progresses) {
   for (let i = 0; i < window.tasks.length; ++i) {
     const row = i % ROWS;
     const col = Math.floor(i / ROWS);
-    const x = 50 + col * SPACING_X;
-    const y = 50 + row * SPACING_Y;
+    const x = 70 + col * SPACING_X;
+    const y = 70 + row * SPACING_Y;
     const clr = TASKS_KPI[i].color;
 
     // Rysuj tylko odblokowane taski!
