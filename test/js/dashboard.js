@@ -94,8 +94,8 @@ const ROWS = 3;
 const SPACING_X = HEX_R * 1.7;
 const SPACING_Y = HEX_R * 1.5;
 const COLS = Math.ceil(window.tasks.length / ROWS);
-const PADDING_X = 100;
-const PADDING_Y = 100;
+const PADDING_X = 24;
+const PADDING_Y = 4;
 
 const WIDTH = (COLS - 1) * SPACING_X + HEX_R * 2 + SPACING_X + PADDING_X * 2;
 const HEIGHT = (ROWS - 1) * SPACING_Y + HEX_R * 2 + PADDING_Y * 2;
@@ -106,6 +106,7 @@ svg.setAttribute("height", HEIGHT);
 svg.style.display = "block";
 svg.style.position = "relative";
 svg.style.margin = "0 auto";
+svg.style.marginBottom = "0"; 
 container.appendChild(svg);
 
 let idx = 0;
