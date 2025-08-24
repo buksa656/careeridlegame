@@ -84,26 +84,44 @@ function getTaskIdle(idx) {
 
 const svgNS = "http://www.w3.org/2000/svg";
 
-// --- PEŁNY PATCH: HEX się wypełnia na stałe gdy idle >= 5
 function drawKpiHexDashboard(progresses) {
   const container = document.getElementById("kpi-dashboard");
   if (!container) return;
   container.innerHTML = "";
+
+  // Parametry siatki, HEXY:
+  const HEX_R = 44;
+  const SPACING_X = 92; // szerokość między kolumnami
+  const SPACING_Y = 80; // wysokość między rzędami
+  const ROWS = 3;
+  
+  // Policz ile kolumn potrzeba:
+  const COLS = Math.ceil(window.tasks.length / ROWS);
+
+  // Ustal szerokość i wysokość SVG:
+  const WIDTH = 60 + COLS * SPACING_X;
+  const HEIGHT = 65 + Math.min(window.tasks.length, ROWS) * SPACING_Y + 20;
+
   const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("width", 470); svg.setAttribute("height", 410);
+  svg.setAttribute("width", WIDTH);
+  svg.setAttribute("height", HEIGHT);
   svg.style.display = "block";
   svg.style.position = "relative";
   container.appendChild(svg);
 
-  layout.forEach((coord, i) => {
-    const {x, y} = axialToPixel(coord.q, coord.r);
+  for (let i = 0; i < window.tasks.length; ++i) {
+    const row = i % ROWS;
+    const col = Math.floor(i / ROWS);
+    const x = 50 + col * SPACING_X;
+    const y = 50 + row * SPACING_Y;
     const clr = TASKS_KPI[i].color;
-    // Warunek: rysujemy tylko unlocked taski!
+
+    // Rysuj tylko odblokowane taski!
     const unlocked = typeof window !== "undefined" && window.tasks
       ? window.tasks[i] && window.tasks[i].unlocked
       : (progresses[i] > 0 || progresses[i] > 0.01);
 
-    if (!unlocked) return;
+    if (!unlocked) continue;
 
     // HEX border
     const hex = document.createElementNS(svgNS, "polygon");
@@ -113,10 +131,8 @@ function drawKpiHexDashboard(progresses) {
     hex.setAttribute("stroke-width", "3");
     svg.appendChild(hex);
 
-    // --- KLUCZ: jeśli idle >= 5 → pełny HEX statyczny kolor (brak animacji), inaczej klasyczny progress ---
-    // Obliczanie gainIdle:
+    // --- Progress hex (kolor wypełnienia) ---
     const gainIdle = getTaskIdle(i);
-
     let progress = Math.max(0, Math.min(1, progresses[i]));
     let overlayColor = clr;
     let overlayOpacity = "0.65";
@@ -124,7 +140,7 @@ function drawKpiHexDashboard(progresses) {
 
     if (gainIdle >= 5) {
       progress = 1.0;
-      overlayColor = "#7dbbcf"; // identyczny jak unlock-progress-bar, możesz dopasować
+      overlayColor = "#7dbbcf";
       overlayOpacity = "0.88";
       drawAsFull = true;
     }
@@ -137,20 +153,20 @@ function drawKpiHexDashboard(progresses) {
       svg.appendChild(fill);
     }
 
-    // Ikona/emotka
+    // Ikona
     const ico = document.createElementNS(svgNS, "text");
     ico.setAttribute("x", x);
-    ico.setAttribute("y", y-6);
+    ico.setAttribute("y", y - 6);
     ico.setAttribute("text-anchor", "middle");
     ico.setAttribute("font-size", "2.0em");
     ico.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
     ico.textContent = TASKS_KPI[i].icon;
     svg.appendChild(ico);
 
-    // Nazwa taska
+    // Nazwa
     const label = document.createElementNS(svgNS, "text");
     label.setAttribute("x", x);
-    label.setAttribute("y", y+22);
+    label.setAttribute("y", y + 22);
     label.setAttribute("text-anchor", "middle");
     label.setAttribute("font-size", "0.95em");
     label.setAttribute("fill", "#205288");
@@ -158,16 +174,17 @@ function drawKpiHexDashboard(progresses) {
     label.textContent = TASKS_KPI[i].name;
     svg.appendChild(label);
 
-    // Progress number (tylko jeśli animowany)
+    // Progress % (jeśli nie full)
     if (!drawAsFull && progress > 0.08) {
-      const txt = document.createElementNS(svgNS,"text");
+      const txt = document.createElementNS(svgNS, "text");
       txt.setAttribute("x", x);
-      txt.setAttribute("y", y+42);
+      txt.setAttribute("y", y + 42);
       txt.setAttribute("text-anchor", "middle");
       txt.setAttribute("font-size", "0.82em");
-      txt.setAttribute("fill","#444");
-      txt.textContent = Math.round(progress*100)+'%';
+      txt.setAttribute("fill", "#444");
+      txt.textContent = Math.round(progress * 100) + '%';
       svg.appendChild(txt);
     }
-  });
+  }
 }
+
