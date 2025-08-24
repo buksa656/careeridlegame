@@ -27,12 +27,12 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
   const upgCost = typeof task.getUpgradeCost === "function"
-    ? task.getUpgradeCost()
-    : Math.floor(20 * Math.pow(2.25, task.level));
+      ? task.getUpgradeCost()
+      : Math.floor(20 * Math.pow(2.25, task.level));
   const canUpgrade = totalPoints >= upgCost;
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-    * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-    * ascendStage.idleMult;
+      * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+      * ascendStage.idleMult;
   const barMs = getBarCycleMs(task);
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
   const next = ascendLevel + 1;
@@ -42,10 +42,18 @@ function taskTile(task, idx, totalPoints, locked = false) {
     ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
   }
 
-return `
+  return `
 <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
-  ...prawidłowa zawartość kafelka (ikona, idle itp.)...
-  ${locked && typeof task.unlockCost === 'number'
+  <!-- tu cała twoja własna zawartość kafelka -->
+  <div class="kafelek-info">
+    <div class="title">${task.name}</div>
+    <div class="kafelek-row asc-badge">
+      <span class="tile-stage">${ascendStage.name}</span>
+    </div>
+    <div class="kafelek-row">
+      Idle: <b class="tile-idle">${perSec}</b> pkt/s
+    </div>
+    ${(locked && typeof task.unlockCost === 'number')
       ? `<div class="kafelek-locked-overlay">
            <div class="overlay-content">
              <b>${task.name}</b>
@@ -53,8 +61,8 @@ return `
              Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
            </div>
          </div>`
-      : ''
-    }
+      : ''}
+  </div>
   <div class="kafelek-bottom-row">
     <button class="kafelek-ulepsz-btn"
         data-do="upg"
@@ -72,6 +80,7 @@ return `
   </div>
 </div>
 `;
+}
 function renderStats() {
   const statsDiv = document.getElementById('stats-content');
   const totalClicks = window.topClicks ? window.topClicks.reduce((a, b) => a + b, 0) : 0;
