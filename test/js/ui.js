@@ -203,20 +203,13 @@ function renderGridProgress(tasks, totalPoints) {
 window.renderGridProgress = renderGridProgress;
 
 function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
-  let maxUnlockedIdx = -1;
-  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
-
   let visibleTasks = [];
   for (let i = 0; i < tasks.length; ++i) {
-    let kafel = '';
-    if (tasks[i].unlocked) {
-      kafel += taskTile(tasks[i], i, totalPoints, false);
-    } else if (i === maxUnlockedIdx + 1) {
-      kafel += taskTile(tasks[i], i, totalPoints, true);
-    }
-    if (kafel) {
-      visibleTasks.push(`<div class="kafelek-outer">${kafel}</div>`);
-    }
+    visibleTasks.push(
+      `<div class="kafelek-outer">${
+        taskTile(tasks[i], i, totalPoints, !tasks[i].unlocked)
+      }</div>`
+    );
   }
 
   // Zliczanie punktów do wyświetlenia
@@ -255,6 +248,8 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
 
   // Pasek postępu do odblokowania nowej pracy:
+  let maxUnlockedIdx = -1;
+  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
   const next = tasks[maxUnlockedIdx + 1];
   if (next && next.unlockCost) {
     const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
@@ -265,15 +260,15 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   }
 
   // Handler soft-skilla
-if (totalPoints >= SOFTSKILL_COST) {
-  const btn = document.getElementById('get-softskill-btn');
-  btn.onclick = () => {
-    if (totalPoints >= SOFTSKILL_COST) {
-      console.log("BUTTON CLICKED, calling prestige");
-      eventHandlers.onPrestige(true);
-    }
-  };
-}
+  if (totalPoints >= SOFTSKILL_COST) {
+    const btn = document.getElementById('get-softskill-btn');
+    btn.onclick = () => {
+      if (totalPoints >= SOFTSKILL_COST) {
+        console.log("BUTTON CLICKED, calling prestige");
+        eventHandlers.onPrestige(true);
+      }
+    };
+  }
 
   addEvents(tasks.length);
 }
