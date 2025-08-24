@@ -2,26 +2,26 @@
   'use strict';
 
 const TASKS = [
-    { name: "Robienie kawy Szefowi", unlocked: false,  level: 0, baseIdle: 0.19, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
-    { name: "Obsługa kserokopiarki", unlocked: false, level: 0, baseIdle: 0.31, cycleTime: 1450, multiplier: 1, progress: 0, active: false, unlockCost: 60, ascendLevel: 0 },
-    { name: "Przerzucanie maili do folderu", unlocked: false, level: 0, baseIdle: 0.46, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 180, ascendLevel: 0 },
-    { name: "Small talk w kuchni", unlocked: false, level: 0, baseIdle: 0.61, cycleTime: 1850, multiplier: 1, progress: 0, active: false, unlockCost: 410, ascendLevel: 0 },
-    { name: "Raportowanie błędów do HelpDesku", unlocked: false, level: 0, baseIdle: 0.80, cycleTime: 2250, multiplier: 1, progress: 0, active: false, unlockCost: 1300, ascendLevel: 0 },
-    { name: "Wklejka do Excela", unlocked: false, level: 0, baseIdle: 1.01, cycleTime: 3100, multiplier: 1, progress: 0, active: false, unlockCost: 2950, ascendLevel: 0 },
-    { name: "Tworzenie Prezentacji do Statusu", unlocked: false, level: 0, baseIdle: 1.31, cycleTime: 3800, multiplier: 1, progress: 0, active: false, unlockCost: 5000, ascendLevel: 0 },
-    { name: "Szkolenie z Microsoft Teams", unlocked: false, level: 0, baseIdle: 1.68, cycleTime: 4250, multiplier: 1, progress: 0, active: false, unlockCost: 8000, ascendLevel: 0 },
-    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseIdle: 2.10, cycleTime: 5100, multiplier: 1, progress: 0, active: false, unlockCost: 14200, ascendLevel: 0 },
-    { name: "Zebranie (udawaj zainteresowanego)", unlocked: false, level: 0, baseIdle: 2.37, cycleTime: 6650, multiplier: 1, progress: 0, active: false, unlockCost: 22800, ascendLevel: 0 },
-    { name: "Showtime dla Zarządu", unlocked: false, level: 0, baseIdle: 2.86, cycleTime: 8000, multiplier: 1, progress: 0, active: false, unlockCost: 34000, ascendLevel: 0 },
-    { name: "Rytuał poniedziałkowego calla", unlocked: false, level: 0, baseIdle: 3.47, cycleTime: 9300, multiplier: 1, progress: 0, active: false, unlockCost: 64000, ascendLevel: 0 },
-    { name: "Lunch break", unlocked: false, level: 0, baseIdle: 5.5, cycleTime: 12000, multiplier: 1, progress: 0, active: false, unlockCost: 95000, ascendLevel: 0 },
-    { name: "Wysyłanie GIF-ów", unlocked: false, level: 0, baseIdle: 6, cycleTime: 16000, multiplier: 1, progress: 0, active: false, unlockCost: 170000, ascendLevel: 0 },
-    { name: "Networking na LinkedInie", unlocked: false, level: 0, baseIdle: 7.44, cycleTime: 26000, multiplier: 1, progress: 0, active: false, unlockCost: 350000, ascendLevel: 0 },
-    { name: "Król Open Space", unlocked: false, level: 0, baseIdle: 9.4, cycleTime: 43000, multiplier: 1, progress: 0, active: false, unlockCost: 650000, ascendLevel: 0 }
+    { name: "Robienie kawy Szefowi", unlocked: false,  level: 0, baseIdle: 0.21, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
+    { name: "Obsługa kserokopiarki", unlocked: false, level: 0, baseIdle: 0.34, cycleTime: 1450, multiplier: 1, progress: 0, active: false, unlockCost: 60, ascendLevel: 0 },
+    { name: "Przerzucanie maili do folderu", unlocked: false, level: 0, baseIdle: 0.51, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 180, ascendLevel: 0 },
+    { name: "Small talk w kuchni", unlocked: false, level: 0, baseIdle: 0.67, cycleTime: 1850, multiplier: 1, progress: 0, active: false, unlockCost: 410, ascendLevel: 0 },
+    { name: "Raportowanie błędów do HelpDesku", unlocked: false, level: 0, baseIdle: 0.88, cycleTime: 2250, multiplier: 1, progress: 0, active: false, unlockCost: 1300, ascendLevel: 0 },
+    { name: "Wklejka do Excela", unlocked: false, level: 0, baseIdle: 1.1, cycleTime: 3100, multiplier: 1, progress: 0, active: false, unlockCost: 2950, ascendLevel: 0 },
+    { name: "Tworzenie Prezentacji do Statusu", unlocked: false, level: 0, baseIdle: 1.45, cycleTime: 3800, multiplier: 1, progress: 0, active: false, unlockCost: 5000, ascendLevel: 0 },
+    { name: "Szkolenie z Microsoft Teams", unlocked: false, level: 0, baseIdle: 1.81, cycleTime: 4250, multiplier: 1, progress: 0, active: false, unlockCost: 8000, ascendLevel: 0 },
+    { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseIdle: 2.32, cycleTime: 5100, multiplier: 1, progress: 0, active: false, unlockCost: 14200, ascendLevel: 0 },
+    { name: "Zebranie (udawaj zainteresowanego)", unlocked: false, level: 0, baseIdle: 2.56, cycleTime: 6650, multiplier: 1, progress: 0, active: false, unlockCost: 22800, ascendLevel: 0 },
+    { name: "Showtime dla Zarządu", unlocked: false, level: 0, baseIdle: 3.02, cycleTime: 8000, multiplier: 1, progress: 0, active: false, unlockCost: 34000, ascendLevel: 0 },
+    { name: "Rytuał poniedziałkowego calla", unlocked: false, level: 0, baseIdle: 3.83, cycleTime: 9300, multiplier: 1, progress: 0, active: false, unlockCost: 64000, ascendLevel: 0 },
+    { name: "Lunch break", unlocked: false, level: 0, baseIdle: 6.1, cycleTime: 12000, multiplier: 1, progress: 0, active: false, unlockCost: 95000, ascendLevel: 0 },
+    { name: "Wysyłanie GIF-ów", unlocked: false, level: 0, baseIdle: 6.6, cycleTime: 16000, multiplier: 1, progress: 0, active: false, unlockCost: 170000, ascendLevel: 0 },
+    { name: "Networking na LinkedInie", unlocked: false, level: 0, baseIdle: 8.22, cycleTime: 26000, multiplier: 1, progress: 0, active: false, unlockCost: 350000, ascendLevel: 0 },
+    { name: "Król Open Space", unlocked: false, level: 0, baseIdle: 11, cycleTime: 43000, multiplier: 1, progress: 0, active: false, unlockCost: 650000, ascendLevel: 0 }
   ];
   // 1. Progresywny koszt unlocku kafelków
   for (let i = 1; i < TASKS.length; ++i) {
-    TASKS[i].unlockCost = Math.floor(35 * Math.pow(2.6, i));
+    TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.4, i));
   }
 
   // 2. Dynamiczne koszty ulepszeń (optymalizacji)
