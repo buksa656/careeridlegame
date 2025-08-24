@@ -26,9 +26,11 @@ const TASKS = [
 
   // 2. Dynamiczne koszty ulepszeń (optymalizacji)
   TASKS.forEach((t, i) => {
-    t.getUpgradeCost = function() {
-      return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
-    };
+const a = 12;         // koszt początkowy: 12 BP
+const b = 1.41;       // progresja: 1.41 (wolno rośnie!)
+t.getUpgradeCost = function() {
+  return Math.floor(a * Math.pow(b, this.level));
+};
   });
   const ASCEND_STAGES = [
     { name: "Junior",    idleMult: 1.0, rewardMult: 1.0 },
@@ -325,7 +327,7 @@ function loadGame() {
         applyDeskModsEffects();
         tasks.forEach((t, i) => {
           t.getUpgradeCost = function() {
-            return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+            return Math.floor(12 * Math.pow(1.41, this.level)); // ŁAGODNA progresja
           };
         });
         window.tasks = tasks;
@@ -337,7 +339,7 @@ function loadGame() {
       deskModsOwned = [];
       tasks.forEach((t, i) => {
         t.getUpgradeCost = function() {
-          return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
+          return Math.floor(12 * Math.pow(1.41, this.level)); // ŁAGODNA progresja
         };
       });
       window.tasks = tasks;
