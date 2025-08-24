@@ -660,7 +660,11 @@ window.refreshHexKpiDashboard = function() {
       onClearSave: clearSave,
       onAscendTask: ascendTask
     });
-    tasks.forEach((task, idx) => { if (task.unlocked) startIdle(idx); });
+tasks.forEach((task, idx) => {
+  // Startuj idle TYLKO dla odblokowanych, ALE NIE pierwotnie/tylko po kliknięciu!
+  if (task.unlocked && idx > 0) startIdle(idx);
+  // Czyli for the first task (idx=0) NIE aktywuj na starcie
+});
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     ui.renderUpgradeAffordances(tasks, totalPoints);
     renderMultipliersBar();
