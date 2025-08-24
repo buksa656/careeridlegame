@@ -89,35 +89,31 @@ function drawKpiHexDashboard(progresses) {
   if (!container) return;
   container.innerHTML = "";
 
-  const HEX_R = 60;
-  const ROWS = 3;
-  const SPACING_X = HEX_R * 1.75;
-  const SPACING_Y = HEX_R * 1.52;
-  
-  // Wylicz ile kolumn potrzeba na tyle tasków (liczymy po rows, bo plastry są w WIERZACH)
-  const COLS = Math.ceil(window.tasks.length / ROWS);
+const HEX_R = 60;
+const ROWS = 3;
+const SPACING_X = HEX_R * 1.75;
+const SPACING_Y = HEX_R * 1.52;
+const COLS = Math.ceil(window.tasks.length / ROWS);
+const PADDING_X = 100;
+const PADDING_Y = 80;
 
-  // Układ "honeycomb": wiersze, kolumny, dodajemy co drugi wiersz przesunięcie w X
-  // (jeśli tasków jest mniej w ostatniej kolumnie, to mogą być "puste" hexy)
-  // Obliczamy rozmiary SVG żeby było miejsce na wszystkie taski + margines
-  const WIDTH = (COLS - 1) * SPACING_X + HEX_R * 2 + SPACING_X / 2 + 40;
-  const HEIGHT = (ROWS - 1) * SPACING_Y + HEX_R * 2 + 40;
+const WIDTH = (COLS - 1) * SPACING_X + HEX_R * 2 + SPACING_X + PADDING_X * 2;
+const HEIGHT = (ROWS - 1) * SPACING_Y + HEX_R * 2 + PADDING_Y * 2;
 
-  const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("width", WIDTH);
-  svg.setAttribute("height", HEIGHT);
-  svg.style.display = "block";
-  svg.style.position = "relative";
-  container.appendChild(svg);
+const svg = document.createElementNS(svgNS, "svg");
+svg.setAttribute("width", WIDTH);
+svg.setAttribute("height", HEIGHT);
+svg.style.display = "block";
+svg.style.position = "relative";
+svg.style.margin = "0 auto";
+container.appendChild(svg);
 
-  let idx = 0;
-  for (let row = 0; row < ROWS; row++) {
-    for (let col = 0; col < COLS; col++) {
-      if (idx >= window.tasks.length) continue;
-      
-      // CO DRUGI WIERSZ przesuwamy w prawo o SPACING_X / 2!
-      const x = 40 + col * SPACING_X + ((row % 2) ? SPACING_X / 2 : 0);
-      const y = 40 + row * SPACING_Y;
+let idx = 0;
+for (let row = 0; row < ROWS; row++) {
+  for (let col = 0; col < COLS; col++) {
+    if (idx >= window.tasks.length) continue;
+    const x = PADDING_X + col * SPACING_X + ((row % 2) ? SPACING_X / 2 : 0);
+    const y = PADDING_Y + row * SPACING_Y;
 
       const clr = TASKS_KPI[idx].color;
       const unlocked = window.tasks[idx]?.unlocked;
