@@ -203,16 +203,27 @@ function renderGridProgress(tasks, totalPoints) {
 window.renderGridProgress = renderGridProgress;
 
 function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
+  let maxUnlockedIdx = -1;
+  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
+
   let visibleTasks = [];
   for (let i = 0; i < tasks.length; ++i) {
-    visibleTasks.push(
-      `<div class="kafelek-outer">${
-        taskTile(tasks[i], i, totalPoints, !tasks[i].unlocked)
-      }</div>`
-    );
+    if (tasks[i].unlocked) {
+      visibleTasks.push(
+        `<div class="kafelek-outer">${taskTile(tasks[i], i, totalPoints, false)}</div>`
+      );
+    } else if (i === maxUnlockedIdx + 1) {
+      // TYLKO JEDEN „kolejny do odblokowania” pokazujemy jako locked!
+      visibleTasks.push(
+        `<div class="kafelek-outer">${taskTile(tasks[i], i, totalPoints, true)}</div>`
+      );
+    } else {
+      // Reszta – nic nie renderujemy, albo możesz dodać ultra-blady kafelek/placeholder
+      // visibleTasks.push('<div class="kafelek-outer placeholder"></div>');
+    }
   }
 
-  // Zliczanie punktów do wyświetlenia
+  // ...reszta funkcji bez zmian...
   let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   let [intPart, fracPart] = totalPointsStr.split(',');
 
@@ -221,7 +232,6 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 
   renderMultipliersBar(tasks);
 
-  // Button do zbierania soft-skill
   let softSkillBtn = '';
   const SOFTSKILL_COST = 10000;
   if (totalPoints >= SOFTSKILL_COST) {
@@ -236,7 +246,6 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     `;
   }
 
-  // ---- TU NASTĘPUJE GENEROWANIE CAŁEJ ZAWARTOŚCI panelu-kariera: ----
   e("#panel-kariera").innerHTML = `
     <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
     <div id="grid-progress"></div>
@@ -244,12 +253,8 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     <div class="career-list">${visibleTasks.join('')}</div>
   `;
 
-  // ---- I NATYCHMIAST PO WYGENEROWANIU HTML-a panelu --> dashboard!
   if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
 
-  // Pasek postępu do odblokowania nowej pracy:
-  let maxUnlockedIdx = -1;
-  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
   const next = tasks[maxUnlockedIdx + 1];
   if (next && next.unlockCost) {
     const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
@@ -259,7 +264,6 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     </div>`;
   }
 
-  // Handler soft-skilla
   if (totalPoints >= SOFTSKILL_COST) {
     const btn = document.getElementById('get-softskill-btn');
     btn.onclick = () => {
@@ -272,6 +276,7 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 
   addEvents(tasks.length);
 }
+
 function updateTotalPoints(points) {
   let totalPointsStr = Number(points).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   let [intPart, fracPart] = totalPointsStr.split(',');
