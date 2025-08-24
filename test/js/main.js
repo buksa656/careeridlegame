@@ -433,7 +433,6 @@ function startIdle(idx) {
         * (typeof task.multiplier === 'number' ? task.multiplier : 1)
         * ascendStage.idleMult;
       totalPoints += idlePts;
-      task.multiplier = ((typeof task.multiplier === 'number') ? task.multiplier : 1) + (gameState.idleMultiplierGrow || 0.01);
       tryUnlockTask(idx + 1); // wywoła renderAll + dashboard jeśli unlock
       checkAchievements();
       saveGame();
@@ -455,26 +454,9 @@ function startIdle(idx) {
 
 function clickTask(idx) {
   const task = tasks[idx];
-  if (task.unlocked) {
-    const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-    const ascendStage = ASCEND_STAGES[ascendLevel];
-    const clickPts = (typeof task.baseClick === "number" ? task.baseClick : 1) * ascendStage.clickMult;
-    totalPoints += clickPts;
-    window.topClicks[idx] += 1;
-    window.prestigeClicks[idx] += 1;
-    tryUnlockTask(idx + 1);
-    checkAchievements();
-    saveGame();
-    if (typeof ui.updateTotalPoints === "function") ui.updateTotalPoints(totalPoints);
-    ui.updateSingleTile(idx, task, totalPoints);
-    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
-    renderMultipliersBar();
-    floatingScore(clickPts, idx, "#1976d2");
-    flashPoints();
-    ui.renderAchievements(window.ACHIEVEMENTS);
+  if (task.unlocked && !task.active) {
+    startIdle(idx); 
   }
-  if (!task.active) startIdle(idx);
 }
 
   function upgradeTask(idx) {
