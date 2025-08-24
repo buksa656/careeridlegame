@@ -35,16 +35,16 @@
     };
   });
 const ASCEND_STAGES = [
-  { name: "Junior",    idleMult: 1.0, clickMult: 1.0 },
-  { name: "Mid",       idleMult: 1.25, clickMult: 1.15 },
-  { name: "Senior",    idleMult: 1.5, clickMult: 1.30 },
-  { name: "Manager",   idleMult: 1.8, clickMult: 1.50 },
-  { name: "Principal", idleMult: 2.15, clickMult: 1.85 },
-  { name: "Director",  idleMult: 2.6, clickMult: 2.2 },
-  { name: "Expert",    idleMult: 3.2, clickMult: 2.6 },
-  { name: "C-Level",   idleMult: 4.0, clickMult: 3.3 },
-  { name: "Korpo Yoda",idleMult: 5.0, clickMult: 4.2 },
-  { name: "Legenda Open Space",idleMult: 6.3, clickMult: 5.3 }
+  { name: "Junior",    idleMult: 1.0, rewardMult: 1.0 },
+  { name: "Mid",       idleMult: 1.25, rewardMult: 1.15 },
+  { name: "Senior",    idleMult: 1.5, rewardMult: 1.30 },
+  { name: "Manager",   idleMult: 1.8, rewardMult: 1.50 },
+  { name: "Principal", idleMult: 2.15, rewardMult: 1.85 },
+  { name: "Director",  idleMult: 2.6, rewardMult: 2.2 },
+  { name: "Expert",    idleMult: 3.2, rewardMult: 2.6 },
+  { name: "C-Level",   idleMult: 4.0, rewardMult: 3.3 },
+  { name: "Korpo Yoda",idleMult: 5.0, rewardMult: 4.2 },
+  { name: "Legenda Open Space",idleMult: 6.3, rewardMult: 5.3 }
 ];
 window.ASCEND_STAGES = ASCEND_STAGES;
   // --- MODYFIKACJE BIURKA --- //
@@ -426,13 +426,13 @@ function startIdle(idx) {
     task.progress += (now - prev) / barMs;
     prev = now;
     if (task.progress >= 1) {
-      task.progress = 0;
-      const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-      const ascendStage = ASCEND_STAGES[ascendLevel];
-      const idlePts = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-        * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-        * ascendStage.idleMult;
-      totalPoints += idlePts;
+    task.progress = 0;
+    const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+    const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
+    const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+      * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+      * (stage.rewardMult || 1);
+    totalPoints += reward;
       tryUnlockTask(idx + 1); // wywoła renderAll + dashboard jeśli unlock
       checkAchievements();
       saveGame();
@@ -440,7 +440,7 @@ function startIdle(idx) {
       if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
-      floatingScore(idlePts, idx, "#87c686");
+      floatingScore(reward, idx, "#87c686");
       flashPoints();
       window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
