@@ -94,7 +94,7 @@ const ROWS = 3;
 const SPACING_X = HEX_R * 1.7;
 const SPACING_Y = HEX_R * 1.5;
 const COLS = Math.ceil(window.tasks.length / ROWS);
-const PADDING_X = 24;
+const PADDING_X = 150;
 const PADDING_Y = 150;
 
 const WIDTH = (COLS - 1) * SPACING_X + HEX_R * 2 + SPACING_X + PADDING_X * 2;
