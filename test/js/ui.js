@@ -200,26 +200,28 @@ window.renderGridProgress = renderGridProgress;
 
 function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   let maxUnlockedIdx = -1;
-  for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
+  for (let i = 0; i < tasks.length; ++i) {
+    if (tasks[i].unlocked) maxUnlockedIdx = i;
+  }
 
   let visibleTasks = [];
+  let lockedShown = false;
   for (let i = 0; i < tasks.length; ++i) {
     if (tasks[i].unlocked) {
       visibleTasks.push(
         `<div class="kafelek-outer">${taskTile(tasks[i], i, totalPoints, false)}</div>`
       );
-    } else if (i === maxUnlockedIdx + 1) {
-      // TYLKO JEDEN „kolejny do odblokowania” pokazujemy jako locked!
+    } else if (!lockedShown) {
+      // Pokaż tylko PIERWSZY zablokowany kafelek, bez względu na kolejność
       visibleTasks.push(
         `<div class="kafelek-outer">${taskTile(tasks[i], i, totalPoints, true)}</div>`
       );
-    } else {
-      // Reszta – nic nie renderujemy, albo możesz dodać ultra-blady kafelek/placeholder
-      // visibleTasks.push('<div class="kafelek-outer placeholder"></div>');
+      lockedShown = true;
+      // Pozostałe taski ukryte
     }
+    // Możesz też renderować ultra blade kafelki dalej używając placeholdera
   }
 
-  // ...reszta funkcji bez zmian...
   let totalPointsStr = Number(totalPoints).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   let [intPart, fracPart] = totalPointsStr.split(',');
 
@@ -251,7 +253,8 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 
   if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
 
-  const next = tasks[maxUnlockedIdx + 1];
+  // USTAWIANIE PROGRESU DO KOLEJNEGO UNLOCKA
+  const next = tasks.find((t) => !t.unlocked);
   if (next && next.unlockCost) {
     const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
     e("#grid-progress").innerHTML = `<div class="unlock-progress">
