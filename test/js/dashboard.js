@@ -90,12 +90,15 @@ function drawKpiHexDashboard(progresses) {
   container.innerHTML = "";
 
   const HEX_R = 60;
-  const SPACING_X = 125;
-  const SPACING_Y = 110;
   const ROWS = 3;
+  const SPACING_X = HEX_R * 1.7;
+  const SPACING_Y = HEX_R * 1.5;
+  const PADDING = 60;
+
   const COLS = Math.ceil(window.tasks.length / ROWS);
-  const WIDTH = 100 + COLS * SPACING_X;
-  const HEIGHT = 100 + Math.min(window.tasks.length, ROWS) * SPACING_Y + 20;
+  const WIDTH = PADDING * 2 + COLS * SPACING_X;
+  const HEIGHT = PADDING * 2 + (ROWS - 1) * SPACING_Y + HEX_R * 2;
+
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", WIDTH);
   svg.setAttribute("height", HEIGHT);
@@ -106,8 +109,12 @@ function drawKpiHexDashboard(progresses) {
   for (let i = 0; i < window.tasks.length; ++i) {
     const row = i % ROWS;
     const col = Math.floor(i / ROWS);
-    const x = 70 + col * SPACING_X;
-    const y = 70 + row * SPACING_Y;
+
+    // Typowy offset jak plaster miodu!
+    const offsetY = (col % 2 === 1) ? SPACING_Y / 2 : 0;
+    const x = PADDING + col * SPACING_X;
+    const y = PADDING + row * SPACING_Y + offsetY;
+
     const clr = TASKS_KPI[i].color;
     const unlocked = window.tasks[i]?.unlocked;
 
@@ -173,7 +180,6 @@ function drawKpiHexDashboard(progresses) {
       }
     } else {
       // ZABLOKOWANY: KŁÓDKA I PRZYCIEMNIONY LABEL
-      // Kłódka:
       const lock = document.createElementNS(svgNS, "text");
       lock.setAttribute("x", x);
       lock.setAttribute("y", y - 6);
@@ -185,7 +191,6 @@ function drawKpiHexDashboard(progresses) {
       lock.textContent = "🔒";
       svg.appendChild(lock);
 
-      // Label zadania
       const label = document.createElementNS(svgNS, "text");
       label.setAttribute("x", x);
       label.setAttribute("y", y + 22);
@@ -199,4 +204,5 @@ function drawKpiHexDashboard(progresses) {
     }
   }
 }
+
 
