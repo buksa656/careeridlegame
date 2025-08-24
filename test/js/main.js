@@ -26,8 +26,8 @@ const TASKS = [
 
   // 2. Dynamiczne koszty ulepszeń (optymalizacji)
   TASKS.forEach((t, i) => {
-const a = 12;         // koszt początkowy: 12 BP
-const b = 1.41;       // progresja: 1.41 (wolno rośnie!)
+const a = 3;         // koszt początkowy: 12 BP
+const b = 1.28;       // progresja: 1.41 (wolno rośnie!)
 t.getUpgradeCost = function() {
   return Math.floor(a * Math.pow(b, this.level));
 };
