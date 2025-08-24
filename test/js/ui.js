@@ -296,40 +296,40 @@ function renderProgress(idx, progress) {
     });
   }
 
-  function addEvents(tasksLen) {
-document.querySelectorAll(".kafelek-info").forEach((el) => {
-  el.onclick = (e) => {
-    e.stopPropagation();
-    if (el.closest(".kafelek").classList.contains("locked")) return;
-    const idx = Number(el.closest(".kafelek").dataset.taskidx);
-    eventHandlers.onClickTask(idx);
-  };
+function addEvents(tasksLen) {
+  document.querySelectorAll(".kafelek-info").forEach((el) => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      // NIE sprawdzaj tutaj, czy .locked – każdy kafelek powinien być klikalny!
+      const idx = Number(el.closest(".kafelek").dataset.taskidx);
+      eventHandlers.onClickTask(idx);
+    };
     el.onkeydown = (e) => {
-      if ((e.key === "Enter" || e.key === " ") && !el.closest(".kafelek").classList.contains("locked")) {
+      if ((e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
         const idx = Number(el.closest(".kafelek").dataset.taskidx);
         eventHandlers.onClickTask(idx);
       }
     }
   });
-    document.querySelectorAll('.ascend-btn').forEach(btn => {
-      btn.onclick = (e) => {
-        e.stopPropagation();
+  document.querySelectorAll('.ascend-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
       const idx = Number(btn.dataset.task);
       eventHandlers.onAscendTask(idx);
-      }
-    });
-    document.querySelectorAll('[data-do="upg"]').forEach(btn =>
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        eventHandlers.onUpgradeTask(Number(btn.dataset.idx));
-      }
-    );
-    const pbtn = document.getElementById("prestige-btn");
-    if (pbtn) pbtn.onclick = () => eventHandlers.onPrestige();
-    const rbtn = document.getElementById("reset-btn");
-    if (rbtn) rbtn.onclick = () => eventHandlers.onClearSave();
-  }
+    }
+  });
+  document.querySelectorAll('[data-do="upg"]').forEach(btn =>
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      eventHandlers.onUpgradeTask(Number(btn.dataset.idx));
+    }
+  );
+  const pbtn = document.getElementById("prestige-btn");
+  if (pbtn) pbtn.onclick = () => eventHandlers.onPrestige();
+  const rbtn = document.getElementById("reset-btn");
+  if (rbtn) rbtn.onclick = () => eventHandlers.onClearSave();
+}
 
   // --------- ACHIEVEMENTY, wyświetlanie ------------
 
