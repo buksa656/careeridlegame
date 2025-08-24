@@ -27,12 +27,12 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
   const upgCost = typeof task.getUpgradeCost === "function"
-      ? task.getUpgradeCost()
-      : Math.floor(20 * Math.pow(2.25, task.level));
+    ? task.getUpgradeCost()
+    : Math.floor(20 * Math.pow(2.25, task.level));
   const canUpgrade = totalPoints >= upgCost;
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-      * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-      * ascendStage.idleMult;
+    * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+    * ascendStage.idleMult;
   const barMs = getBarCycleMs(task);
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
   const next = ascendLevel + 1;
@@ -42,10 +42,31 @@ function taskTile(task, idx, totalPoints, locked = false) {
     ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
   }
   const canUnlock = locked && (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
+
+  // Gdy ZABLOKOWANY TASK: renderujemy TYLKO overlay z info o unlock
+  if (locked) {
+    return `
+<div class="kafelek locked${canUnlock ? ' can-unlock' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
+  <div class="kafelek-info">
+    <div class="title">${task.name}</div>
+    <div class="kafelek-row asc-badge">
+      <span class="tile-stage">${ascendStage.name || ''}</span>
+    </div>
+    <div class="kafelek-locked-overlay">
+      <div class="overlay-content">
+        <b>${task.name}</b>
+        <br>
+        Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
+      </div>
+    </div>
+  </div>
+</div>
+    `;
+  }
+
+  // Gdy unlocked: standardowy kafelek!
   return `
-  
-<div class="kafelek${locked ? ' locked' : ''}${canUnlock ? ' can-unlock' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
-  <!-- tu cała twoja własna zawartość kafelka -->
+<div class="kafelek" data-taskidx="${idx}" tabindex="0" style="position:relative;">
   <div class="kafelek-info">
     <div class="title">${task.name}</div>
     <div class="kafelek-row asc-badge">
@@ -54,15 +75,6 @@ function taskTile(task, idx, totalPoints, locked = false) {
     <div class="kafelek-row">
       Idle: <b class="tile-idle">${perSec}</b> pkt/s
     </div>
-    ${(locked && typeof task.unlockCost === 'number')
-      ? `<div class="kafelek-locked-overlay">
-           <div class="overlay-content">
-             <b>${task.name}</b>
-             <br>
-             Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
-           </div>
-         </div>`
-      : ''}
   </div>
   <div class="kafelek-bottom-row">
     <button class="kafelek-ulepsz-btn"
@@ -75,13 +87,14 @@ function taskTile(task, idx, totalPoints, locked = false) {
       nextStage
         ? `<button class="ascend-btn" data-task="${idx}">
             Awans<br>(${ascendCost})
-           </button>`
+          </button>`
         : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
     }
   </div>
 </div>
-`;
+  `;
 }
+
 function renderSingleTile(idx, task, totalPoints) {
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
   const outers = document.querySelectorAll('.kafelek-outer');
