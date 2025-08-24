@@ -19,7 +19,6 @@ html, body {
 }
 #kpi-dashboard {
   width: 100%;
-  min-height: 450px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -34,7 +33,7 @@ svg {
   padding: 10px 18px 6px 18px;
   background: #fff9e4;
   color: #46412c;
-  font-size: 1.09em;
+  font-size: 1.12em;
   font-weight: 600;
   letter-spacing: 0.18px;
   position: sticky; top: 0; z-index: 4;
