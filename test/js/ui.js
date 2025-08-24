@@ -41,8 +41,9 @@ function taskTile(task, idx, totalPoints, locked = false) {
   if (nextStage) {
     ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
   }
-
+  const canUnlock = locked && (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
   return `
+  
 <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
   <!-- tu cała twoja własna zawartość kafelka -->
   <div class="kafelek-info">
