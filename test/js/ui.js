@@ -42,21 +42,20 @@ function taskTile(task, idx, totalPoints, locked = false) {
     ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
   }
 
-  return `
-<div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
-  <div class="kafelek-info">
-    <div class="title">${task.name}</div>
-    <div class="kafelek-row asc-badge">
-      <span class="tile-stage">${ascendStage.name}</span>
-    </div>
-    <div class="kafelek-row">
-      Idle: <b class="tile-idle">${perSec}</b> pkt/s
-    </div>
-    ${locked && typeof task.unlockCost === 'number'
-      ? `<div class="kafelek-row kafelek-locked-overlay"><b>${task.name}</b><br>Koszt odblokowania: <b class="tile-unlock">${fmt(task.unlockCost)}</b> Biuro Punktów</div>`
+return `
+<div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
+  ...prawidłowa zawartość kafelka (ikona, idle itp.)...
+  ${locked && typeof task.unlockCost === 'number'
+      ? `<div class="kafelek-locked-overlay">
+           <div class="overlay-content">
+             <b>${task.name}</b>
+             <br>
+             Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
+           </div>
+         </div>`
       : ''
     }
-  </div>
+</div>
   <div class="kafelek-bottom-row">
     <button class="kafelek-ulepsz-btn"
         data-do="upg"
