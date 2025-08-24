@@ -26,6 +26,24 @@ function fmt(n) {
 function taskTile(task, idx, totalPoints, locked = false) {
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
+
+  // Dla zablokowanego — WYŁĄCZNIE overlay/info!
+  if (locked) {
+    const canUnlock = (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
+    return `
+<div class="kafelek locked${canUnlock ? ' can-unlock' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
+  <div class="kafelek-locked-overlay">
+    <div class="overlay-content">
+      <b>${task.name}</b>
+      <br>
+      Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
+    </div>
+  </div>
+</div>
+    `;
+  }
+
+  // Dla unlocked — PEŁNA wersja kafelka (tu możesz mieć dotychczasowy kod)
   const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost()
     : Math.floor(20 * Math.pow(2.25, task.level));
@@ -41,30 +59,7 @@ function taskTile(task, idx, totalPoints, locked = false) {
   if (nextStage) {
     ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
   }
-  const canUnlock = locked && (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
 
-  // Gdy ZABLOKOWANY TASK: renderujemy TYLKO overlay z info o unlock
-  if (locked) {
-    return `
-<div class="kafelek locked${canUnlock ? ' can-unlock' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
-  <div class="kafelek-info">
-    <div class="title">${task.name}</div>
-    <div class="kafelek-row asc-badge">
-      <span class="tile-stage">${ascendStage.name || ''}</span>
-    </div>
-    <div class="kafelek-locked-overlay">
-      <div class="overlay-content">
-        <b>${task.name}</b>
-        <br>
-        Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
-      </div>
-    </div>
-  </div>
-</div>
-    `;
-  }
-
-  // Gdy unlocked: standardowy kafelek!
   return `
 <div class="kafelek" data-taskidx="${idx}" tabindex="0" style="position:relative;">
   <div class="kafelek-info">
@@ -94,7 +89,6 @@ function taskTile(task, idx, totalPoints, locked = false) {
 </div>
   `;
 }
-
 function renderSingleTile(idx, task, totalPoints) {
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
   const outers = document.querySelectorAll('.kafelek-outer');
