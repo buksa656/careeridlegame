@@ -423,7 +423,8 @@ function startIdle(idx) {
         * (typeof task.multiplier === 'number' ? task.multiplier : 1)
         * (stage.rewardMult || 1);
       totalPoints += reward;
-
+window.totalPoints = totalPoints;
+window.IdleUI.updateTotalPoints(totalPoints);
       // TYLKO sprawdź unlock następnego taska i osiągnięcia
       tryUnlockTask(idx + 1);
       checkAchievements();
