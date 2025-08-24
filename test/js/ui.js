@@ -28,20 +28,22 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const ascendStage = ASCEND_STAGES[ascendLevel];
 
   // Dla zablokowanego — WYŁĄCZNIE overlay/info!
-  if (locked) {
-    const canUnlock = (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
-    return `
+if (locked) {
+  const canUnlock = (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
+  return `
 <div class="kafelek locked${canUnlock ? ' can-unlock' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
-  <div class="kafelek-locked-overlay">
-    <div class="overlay-content">
-      <b>${task.name}</b>
-      <br>
-      Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
+  <div class="kafelek-info">
+    <div class="kafelek-locked-overlay">
+      <div class="overlay-content">
+        <b>${task.name}</b>
+        <br>
+        Koszt odblokowania: <b>${fmt(task.unlockCost)}</b> BP
+      </div>
     </div>
   </div>
 </div>
-    `;
-  }
+  `;
+}
 
   // Dla unlocked — PEŁNA wersja kafelka (tu możesz mieć dotychczasowy kod)
   const upgCost = typeof task.getUpgradeCost === "function"
