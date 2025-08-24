@@ -90,9 +90,9 @@ function drawKpiHexDashboard(progresses) {
   container.innerHTML = "";
 
   // Parametry siatki, HEXY:
-  const HEX_R = 44;
-  const SPACING_X = 92; // szerokość między kolumnami
-  const SPACING_Y = 80; // wysokość między rzędami
+  const HEX_R = 60;
+  const SPACING_X = 125; // szerokość między kolumnami
+  const SPACING_Y = 110; // wysokość między rzędami
   const ROWS = 3;
   
   // Policz ile kolumn potrzeba:
