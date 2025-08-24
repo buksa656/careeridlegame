@@ -2,7 +2,7 @@
   'use strict';
 
 const TASKS = [
-    { name: "Robienie kawy Szefowi", unlocked: true,  level: 0, baseIdle: 0.16, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
+    { name: "Robienie kawy Szefowi", unlocked: false,  level: 0, baseIdle: 0.16, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
     { name: "Obsługa kserokopiarki", unlocked: false, level: 0, baseIdle: 0.28, cycleTime: 1450, multiplier: 1, progress: 0, active: false, unlockCost: 60, ascendLevel: 0 },
     { name: "Przerzucanie maili do folderu", unlocked: false, level: 0, baseIdle: 0.42, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 180, ascendLevel: 0 },
     { name: "Small talk w kuchni", unlocked: false, level: 0, baseIdle: 0.55, cycleTime: 1850, multiplier: 1, progress: 0, active: false, unlockCost: 410, ascendLevel: 0 },
@@ -352,18 +352,23 @@ function loadGame() {
     location.reload();
   }
 
-  function tryUnlockTask(idx) {
-    if (idx < tasks.length && !tasks[idx].unlocked && totalPoints >= tasks[idx].unlockCost) {
-      tasks[idx].unlocked = true;
-      startIdle(idx);
-      window.tasks = tasks;
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
-      ui.renderUpgradeAffordances(tasks, totalPoints);
-      renderMultipliersBar();
-      if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
-      ui.renderAchievements(window.ACHIEVEMENTS);
-    }
+function tryUnlockTask(idx) {
+  if (
+    idx < tasks.length &&
+    !tasks[idx].unlocked &&
+    (totalPoints >= tasks[idx].unlockCost || tasks[idx].unlockCost === 0)
+  ) {
+    tasks[idx].unlocked = true;
+    // startIdle(idx); <-- starter idle dopiero po odblokowaniu!
+    startIdle(idx);
+    window.tasks = tasks;
+    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    ui.renderUpgradeAffordances(tasks, totalPoints);
+    renderMultipliersBar();
+    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+    ui.renderAchievements(window.ACHIEVEMENTS);
   }
+}
 
   function getBarCycleMs(task) {
     const speedGrowth = 0.94;
