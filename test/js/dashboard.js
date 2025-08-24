@@ -91,21 +91,23 @@ function drawKpiHexDashboard(progresses) {
 
   const HEX_R = 60;
   const ROWS = 3;
-  const SPACING_X = HEX_R * 1.75; // spacing szerszy
+  const SPACING_X = HEX_R * 1.75;
   const SPACING_Y = HEX_R * 1.52;
-  const PADDING_X = 70;
-  const PADDING_Y = 60;
-
-  // Max ile potrzeba kolumn, by pomieścić taski
   const COLS = Math.ceil(window.tasks.length / ROWS);
 
-  // True hex grid: współrzędne
-  const WIDTH = PADDING_X * 2 + (COLS - 1) * SPACING_X + HEX_R * 2;
-  const HEIGHT = PADDING_Y * 2 + (ROWS - 1) * SPACING_Y + HEX_R * 2;
+  // Rozmiar planszy plastra
+  const totalWidth = (COLS - 1) * SPACING_X + HEX_R * 2;
+  const totalHeight = (ROWS - 1) * SPACING_Y + HEX_R * 2;
+  const SVG_WIDTH = totalWidth + 80;    // Większy padding/margines na sides
+  const SVG_HEIGHT = totalHeight + 80;
+
+  // Przesunięcie środka planszy do SVG
+  const offsetX = (SVG_WIDTH - totalWidth) / 2;
+  const offsetY = (SVG_HEIGHT - totalHeight) / 2;
 
   const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("width", WIDTH);
-  svg.setAttribute("height", HEIGHT);
+  svg.setAttribute("width", SVG_WIDTH);
+  svg.setAttribute("height", SVG_HEIGHT);
   svg.style.display = "block";
   svg.style.position = "relative";
   container.appendChild(svg);
@@ -115,8 +117,8 @@ function drawKpiHexDashboard(progresses) {
     const row = i % ROWS;
 
     // Prawdziwy plaster miodu: przesuwamy Y co drugą kolumnę
-    const x = PADDING_X + col * SPACING_X;
-    const y = PADDING_Y + row * SPACING_Y + ((col % 2) * (SPACING_Y / 2));
+    const x = offsetX + col * SPACING_X;
+    const y = offsetY + row * SPACING_Y + ((col % 2) * (SPACING_Y / 2));
 
     const clr = TASKS_KPI[i].color;
     const unlocked = window.tasks[i]?.unlocked;
@@ -131,7 +133,7 @@ function drawKpiHexDashboard(progresses) {
     svg.appendChild(hex);
 
     if (unlocked) {
-      // Progress bar
+      // Progress bar w hexie
       const gainIdle = getTaskIdle(i);
       let progress = Math.max(0, Math.min(1, progresses[i]));
       let overlayColor = clr;
@@ -150,7 +152,8 @@ function drawKpiHexDashboard(progresses) {
         fill.setAttribute("opacity", overlayOpacity);
         svg.appendChild(fill);
       }
-      // Ikona
+
+      // Ikona główna
       const ico = document.createElementNS(svgNS, "text");
       ico.setAttribute("x", x);
       ico.setAttribute("y", y - 6);
@@ -160,7 +163,7 @@ function drawKpiHexDashboard(progresses) {
       ico.textContent = TASKS_KPI[i].icon;
       svg.appendChild(ico);
 
-      // Label
+      // Nazwa zadania
       const label = document.createElementNS(svgNS, "text");
       label.setAttribute("x", x);
       label.setAttribute("y", y + 22);
@@ -182,7 +185,7 @@ function drawKpiHexDashboard(progresses) {
         svg.appendChild(txt);
       }
     } else {
-      // ZABLOKOWANY: KŁÓDKA I PRZYCIEMNIONY LABEL
+      // ZABLOKOWANY: KŁÓDKA + blady label
       const lock = document.createElementNS(svgNS, "text");
       lock.setAttribute("x", x);
       lock.setAttribute("y", y - 6);
