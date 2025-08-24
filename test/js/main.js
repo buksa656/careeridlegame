@@ -382,42 +382,47 @@ function tryUnlockTask(idx) {
   }
   
 function startIdle(idx) {
-    if (tasks[idx].active) return;
-    tasks[idx].active = true;
-    tasks[idx].progress = 0;
-    let prev = Date.now();
-    timers[idx] = setInterval(() => {
-      const task = tasks[idx];
-      const barMs = getBarCycleMs(task);
-      const now = Date.now();
-      task.progress += (now - prev) / barMs;
-      prev = now;
-      if (task.progress >= 1) {
-        task.progress = 0;
-        const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-        const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
-        const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-          * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-          * (stage.rewardMult || 1);
-        totalPoints += reward;
-        tryUnlockTask(idx + 1);
-        checkAchievements();
-        saveGame();
-        ui.updateSingleTile(idx, task, totalPoints);
-        if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-        ui.renderProgress(idx, task.progress, task.multiplier);
-        renderMultipliersBar();
-        floatingScore(reward, idx, "#87c686");
-        flashPoints();
-        window.IdleUI.updateTotalPoints(totalPoints);
-        ui.renderAchievements(window.ACHIEVEMENTS);
-        if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
-        return;
-      }
+  if (tasks[idx].active) return;
+  tasks[idx].active = true;
+  tasks[idx].progress = 0;
+  let prev = Date.now();
+  timers[idx] = setInterval(() => {
+    const task = tasks[idx];
+    const barMs = getBarCycleMs(task);
+    const now = Date.now();
+    task.progress += (now - prev) / barMs;
+    prev = now;
+    if (task.progress >= 1) {
+      task.progress = 0;
+
+      // Nagroda za cykl idle
+      const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+      const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
+      const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+        * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+        * (stage.rewardMult || 1);
+      totalPoints += reward;
+
+      // TYLKO sprawdź unlock następnego taska i osiągnięcia
+      tryUnlockTask(idx + 1);
+      checkAchievements();
+      saveGame();
+
+      ui.updateSingleTile(idx, task, totalPoints);
+      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
       ui.renderProgress(idx, task.progress, task.multiplier);
+      renderMultipliersBar();
+      floatingScore(reward, idx, "#87c686");
+      flashPoints();
+      window.IdleUI.updateTotalPoints(totalPoints);
+      ui.renderAchievements(window.ACHIEVEMENTS);
       if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
-    }, 1000 / 30);
-  }
+      return;
+    }
+    ui.renderProgress(idx, task.progress, task.multiplier);
+    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+  }, 1000 / 30);
+}
 
 
 function clickTask(idx) {
