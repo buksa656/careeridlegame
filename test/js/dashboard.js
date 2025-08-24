@@ -91,13 +91,17 @@ function drawKpiHexDashboard(progresses) {
 
   const HEX_R = 60;
   const ROWS = 3;
-  const SPACING_X = HEX_R * 1.7;
-  const SPACING_Y = HEX_R * 1.5;
-  const PADDING = 60;
+  const SPACING_X = HEX_R * 1.75; // spacing szerszy
+  const SPACING_Y = HEX_R * 1.52;
+  const PADDING_X = 70;
+  const PADDING_Y = 60;
 
+  // Max ile potrzeba kolumn, by pomieścić taski
   const COLS = Math.ceil(window.tasks.length / ROWS);
-  const WIDTH = PADDING * 2 + COLS * SPACING_X;
-  const HEIGHT = PADDING * 2 + (ROWS - 1) * SPACING_Y + HEX_R * 2;
+
+  // True hex grid: współrzędne
+  const WIDTH = PADDING_X * 2 + (COLS - 1) * SPACING_X + HEX_R * 2;
+  const HEIGHT = PADDING_Y * 2 + (ROWS - 1) * SPACING_Y + HEX_R * 2;
 
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", WIDTH);
@@ -107,13 +111,12 @@ function drawKpiHexDashboard(progresses) {
   container.appendChild(svg);
 
   for (let i = 0; i < window.tasks.length; ++i) {
-    const row = i % ROWS;
     const col = Math.floor(i / ROWS);
+    const row = i % ROWS;
 
-    // Typowy offset jak plaster miodu!
-    const offsetY = (col % 2 === 1) ? SPACING_Y / 2 : 0;
-    const x = PADDING + col * SPACING_X;
-    const y = PADDING + row * SPACING_Y + offsetY;
+    // Prawdziwy plaster miodu: przesuwamy Y co drugą kolumnę
+    const x = PADDING_X + col * SPACING_X;
+    const y = PADDING_Y + row * SPACING_Y + ((col % 2) * (SPACING_Y / 2));
 
     const clr = TASKS_KPI[i].color;
     const unlocked = window.tasks[i]?.unlocked;
