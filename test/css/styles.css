@@ -17,7 +17,18 @@ html, body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   font-size: 16px;
 }
-
+#kpi-dashboard {
+  width: 100%;
+  min-height: 450px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+svg {
+  display: block;
+  margin: 0 auto;
+  overflow: visible;
+}
 /* SCOREBAR */
 #scorebar {
   padding: 10px 18px 6px 18px;
