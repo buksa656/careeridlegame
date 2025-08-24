@@ -134,7 +134,7 @@ function updateSingleTile(idx, task, totalPoints) {
   if (btnUpg) btnUpg.innerHTML = `Opt.<br>(${fmt(upgCost)})`;
   if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
 
-onst btnAsc = kafelek.querySelector('.ascend-btn');
+const btnAsc = kafelek.querySelector('.ascend-btn');
 if (btnAsc && nextStage && ascendCost)
   btnAsc.innerHTML = `Awans<br>(${fmt(ascendCost)})`;
 if (btnAsc && !nextStage)
