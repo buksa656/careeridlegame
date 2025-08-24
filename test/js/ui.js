@@ -81,19 +81,6 @@ function taskTile(task, idx, totalPoints, locked = false) {
 </div>
 `;
 }
-function renderStats() {
-  const statsDiv = document.getElementById('stats-content');
-  const totalClicks = window.topClicks ? window.topClicks.reduce((a, b) => a + b, 0) : 0;
-  const totalPrestigeClicks = window.prestigeClicks ? window.prestigeClicks.reduce((a, b) => a + b, 0) : 0;
-  statsDiv.innerHTML = `
-    <div>
-      <h3>Aktywność manualna</h3>
-      <p>Wszystkich kliknięć w kafelki: <b>${totalClicks}</b></p>
-      <p>Kliknięć od prestiżu (od ostatniego resetu): <b>${totalPrestigeClicks}</b></p>
-    </div>
-  `;
-}
-window.renderStats = renderStats;
 function renderSingleTile(idx, task, totalPoints) {
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
   const outers = document.querySelectorAll('.kafelek-outer');
@@ -106,8 +93,6 @@ function renderSingleTile(idx, task, totalPoints) {
 function updateSingleTile(idx, task, totalPoints) {
   const kafelek = document.querySelector(`.kafelek[data-taskidx="${idx}"]`);
   if (!kafelek) return;
-
-  // Deklarujemy ascendLevel tylko raz!
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
@@ -115,11 +100,8 @@ function updateSingleTile(idx, task, totalPoints) {
     * ascendStage.idleMult;
   const barMs = getBarCycleMs(task);
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
-  const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
-    * ascendStage.clickMult;
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
 
-  // Wartość nextStage i koszt awansu
   const next = ascendLevel + 1;
   const nextStage = ASCEND_STAGES[next] || null;
   let ascendCost = null;
@@ -132,22 +114,16 @@ function updateSingleTile(idx, task, totalPoints) {
   if (kafelek.querySelector('.tile-lvl')) kafelek.querySelector('.tile-lvl').innerText = task.level;
   if (kafelek.querySelector('.tile-idle')) kafelek.querySelector('.tile-idle').innerText = perSec;
   if (kafelek.querySelector('.tile-mult')) kafelek.querySelector('.tile-mult').innerText = `(x${multiplierLabel})`;
-  if (kafelek.querySelector('.tile-click')) kafelek.querySelector('.tile-click').innerText = clickVal;
-  if (kafelek.querySelector('.tile-clicks')) kafelek.querySelector('.tile-clicks').innerText = window.topClicks ? window.topClicks[idx] : 0;
-  if (kafelek.querySelector('.tile-prestige')) kafelek.querySelector('.tile-prestige').innerText = window.prestigeClicks ? window.prestigeClicks[idx] : 0;
 
-  // Jeśli masz unlock cost:
   const unlock = kafelek.querySelector('.tile-unlock');
   if (unlock && typeof task.unlockCost === 'number') unlock.innerText = fmt(task.unlockCost);
 
-  // Przycisk optymalizuj
   const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost() : Math.floor(20 * Math.pow(2.25, task.level));
   const btnUpg = kafelek.querySelector('.kafelek-ulepsz-btn');
   if (btnUpg) btnUpg.innerHTML = `Opt.<br>(${fmt(upgCost)})`;
   if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
 
-// Przycisk awans – tu już NIE deklarujemy drugi raz ascendLevel!
   const btnAsc = kafelek.querySelector('.ascend-btn');
   if (btnAsc && nextStage)
     btnAsc.innerHTML = `Awans<br>(${ascendCost})`;
@@ -286,7 +262,6 @@ if (totalPoints >= SOFTSKILL_COST) {
 }
 
   addEvents(tasks.length);
-  updateTopClicks();
 }
 function updateTotalPoints(points) {
   let totalPointsStr = Number(points).toLocaleString('pl-PL', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
@@ -319,20 +294,6 @@ function renderProgress(idx, progress) {
       const upgCost = Math.floor(20 * Math.pow(2.25, tasks[idx].level));
       btn.disabled = (!tasks[idx].unlocked || totalPoints < upgCost);
     });
-  }
-
-  function updateTopClicks() {
-    if (window.topClicks && window.TASKS) {
-      let rows = window.topClicks.map((c, i) =>
-        c > 0 ? `<tr><td>${window.TASKS[i].name}</td><td>${c}</td></tr>` : ''
-      ).filter(Boolean).join('');
-      let panel = document.getElementById("panel-kariera");
-      if (rows && panel) {
-        let html = `<div class="topk-table" style="margin-top:9px;"><b>Twoje top klikane zadania:</b>
-        <table>${rows}</table></div>`;
-        if (!document.querySelector(".topk-table")) panel.insertAdjacentHTML('beforeend', html);
-      }
-    }
   }
 
   function addEvents(tasksLen) {
@@ -376,17 +337,12 @@ function renderAchievements(achArr) {
   const container = document.getElementById('achievements-container');
   if (!container) return;
   container.innerHTML = achArr.map(a => {
-    // Opis nagrody
-let rewardText = '';
-if (a.reward) {
-  if (a.reward.type === 'baseClick') {
-    rewardText = `Nagroda: <b>+${a.reward.value}</b> do kliku we wszystkich zadaniach`;
-  } else if (typeof a.reward.taskIdx === "number" && a.reward.taskIdx !== null) {
-    rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika do zadania`;
-  } else {
-    rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika globalnego`;
-  }
-}
+    let rewardText = '';
+    if (a.reward && typeof a.reward.taskIdx === "number" && a.reward.taskIdx !== null) {
+      rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika do zadania`;
+    } else if (a.reward && typeof a.reward.multiplierInc === "number") {
+      rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika globalnego`;
+    }
     return `
       <div class="ach-item${a.unlocked ? ' completed' : ''}">
         <div class="emoji">${a.unlocked ? '🏆' : '🔒'}</div>
