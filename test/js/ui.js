@@ -55,7 +55,6 @@ return `
          </div>`
       : ''
     }
-</div>
   <div class="kafelek-bottom-row">
     <button class="kafelek-ulepsz-btn"
         data-do="upg"
