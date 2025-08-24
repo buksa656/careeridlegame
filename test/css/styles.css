@@ -139,7 +139,7 @@ main#app {
   gap: 1.5px;
   margin-bottom: 0;
   transition: box-shadow .14s, border-color .11s, background .12s;
-  font-size: 1.25em;
+  font-size: 0.98em;
 }
 .kafelek, .kafelek * {
   user-select: none;
@@ -147,7 +147,7 @@ main#app {
   -moz-user-select: none;
   -ms-user-select: none;
 }
-.kafelek-info { padding: 0; font-size: 1.25em; }
+.kafelek-info { padding: 0; font-size: 0.98em; }
 .kafelek-row { color: #6a7998; font-size: 1.05em; margin: 1px 0; }
 .kafelek-row.stats { font-size: 0.88em; color: #5d709a;}
 .kafelek-row.asc-badge {
@@ -165,7 +165,7 @@ main#app {
   justify-content: flex-start;
   box-shadow: 0 1px 3px #e2eefa09;
 }
-.kafelek-info .title { font-weight: 700; font-size: 1.21em; color: var(--accent); margin-bottom: 0.1em; }
+.kafelek-info .title { font-weight: 700; font-size: 0.98em; color: var(--accent); margin-bottom: 0.1em; }
 .kafelek-bottom-row {
   display: flex; flex-direction: row; justify-content: center; gap: 5px;
   margin-top: 7px; margin-bottom: 0;
