@@ -12,7 +12,7 @@ const TASKS = [
     { name: "Szkolenie z Microsoft Teams", unlocked: false, level: 0, baseIdle: 1.53, cycleTime: 4250, multiplier: 1, progress: 0, active: false, unlockCost: 8000, ascendLevel: 0 },
     { name: "Przeklejka z Google Docs", unlocked: false, level: 0, baseIdle: 1.91, cycleTime: 5100, multiplier: 1, progress: 0, active: false, unlockCost: 14200, ascendLevel: 0 },
     { name: "Zebranie (udawaj zainteresowanego)", unlocked: false, level: 0, baseIdle: 2.15, cycleTime: 6650, multiplier: 1, progress: 0, active: false, unlockCost: 22800, ascendLevel: 0 },
-    { name: "Sprint Review Excellence", unlocked: false, level: 0, baseIdle: 2.60, cycleTime: 8000, multiplier: 1, progress: 0, active: false, unlockCost: 34000, ascendLevel: 0 },
+    { name: "Showtime dla Zarządu", unlocked: false, level: 0, baseIdle: 2.60, cycleTime: 8000, multiplier: 1, progress: 0, active: false, unlockCost: 34000, ascendLevel: 0 },
     { name: "Rytuał poniedziałkowego calla", unlocked: false, level: 0, baseIdle: 3.15, cycleTime: 9300, multiplier: 1, progress: 0, active: false, unlockCost: 64000, ascendLevel: 0 },
     { name: "Lunch break", unlocked: false, level: 0, baseIdle: 3.9, cycleTime: 12000, multiplier: 1, progress: 0, active: false, unlockCost: 95000, ascendLevel: 0 },
     { name: "Wysyłanie GIF-ów", unlocked: false, level: 0, baseIdle: 5.0, cycleTime: 16000, multiplier: 1, progress: 0, active: false, unlockCost: 170000, ascendLevel: 0 },
@@ -419,11 +419,15 @@ function startIdle(idx) {
 
 
 function clickTask(idx) {
-    const task = tasks[idx];
-    if (task.unlocked && !task.active) {
-      startIdle(idx);
-    }
+  const task = tasks[idx];
+  if (!task.unlocked && task.unlockCost === 0) {
+    tryUnlockTask(idx);
+    return;
   }
+  if (task.unlocked && !task.active) {
+    startIdle(idx);
+  }
+}
 
 function upgradeTask(idx) {
     const task = tasks[idx];
