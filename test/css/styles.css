@@ -177,6 +177,28 @@ main#app {
   opacity: 0.62; filter: grayscale(0.68); pointer-events: none;
   background: #f5f8fd;
 }
+.kafelek.locked:hover {
+  box-shadow: 0 2px 18px #ffe77a77;
+}
+.kafelek-locked-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(255,255,255,0.94);
+  border-radius: 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  box-shadow: 0 2px 12px 0 #dda01033;
+}
+.kafelek-locked-overlay .overlay-content {
+  text-align: center;
+  color: #b7630b;
+  font-size: 1.13em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 .kafelek:hover, .kafelek:focus-visible {
   box-shadow: 0 7px 24px #176ec22c, 0 2.8px 13px #22344713;
   border-color: #8cc9fd;
