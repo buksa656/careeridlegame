@@ -190,7 +190,7 @@ function renderGridProgress(tasks, totalPoints) {
     const prog = Math.min(Number(totalPoints) / Number(next.unlockCost), 1);
     progressDiv.innerHTML = `<div class="unlock-progress">
       <div class="unlock-progress-bar" style="width:${(prog * 100).toFixed(1)}%"></div>
-      <span>${Math.min((prog * 100), 100).toFixed(0)}% do odblokowania nowej pracy</span>
+      <span>${Math.min((prog * 100), 100).toFixed(0)}% do odblokowania nowego zadania</span>
     </div>`;
   } else if (progressDiv) {
     progressDiv.innerHTML = ""; // czyść jeśli wszystko już odblokowane
