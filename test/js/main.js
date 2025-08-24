@@ -347,11 +347,13 @@ function loadGame() {
         ACHIEVEMENTS.forEach(a => a.unlocked = false);
         deskModsOwned = [];
         applyDeskModsEffects();
-        tasks.forEach((t, i) => {
-          t.getUpgradeCost = function() {
-            return Math.floor(12 * Math.pow(1.41, this.level)); // ŁAGODNA progresja
-          };
-        });
+tasks.forEach((t, i) => {
+  const a = 1;
+  const b = 1.33;
+  t.getUpgradeCost = function() {
+    return Math.floor(a * Math.pow(b, this.level));
+  };
+});
         window.tasks = tasks;
       }
     } else {
@@ -527,11 +529,13 @@ function ascendTask(idx) {
     window.softSkills = softSkills;
     burnout += 1;
     tasks = JSON.parse(JSON.stringify(TASKS));
-    tasks.forEach((t, i) => {
-      t.getUpgradeCost = function() {
-        return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
-      };
-    });
+tasks.forEach((t, i) => {
+  const a = 1;
+  const b = 1.33;
+  t.getUpgradeCost = function() {
+    return Math.floor(a * Math.pow(b, this.level));
+  };
+});
     totalPoints = 0;
     tasks.forEach(t => t.ascendLevel = 0);
     applyDeskModsEffects();
