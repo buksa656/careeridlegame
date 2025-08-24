@@ -26,14 +26,6 @@ function fmt(n) {
 function taskTile(task, idx, totalPoints, locked = false) {
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const ascendStage = ASCEND_STAGES[ascendLevel];
-  const next = ascendLevel + 1;
-  const nextStage = ASCEND_STAGES[next];
-  // Dynamiczny koszt awansu!
-  let ascendCost = null;
-  if (nextStage) {
-    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
-  }
-
   const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost()
     : Math.floor(20 * Math.pow(2.25, task.level));
@@ -41,12 +33,14 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
     * (typeof task.multiplier === 'number' ? task.multiplier : 1)
     * ascendStage.idleMult;
-  const clickVal = (typeof task.baseClick === 'number' ? task.baseClick : 1)
-    * ascendStage.clickMult;
   const barMs = getBarCycleMs(task);
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
-  const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
-  const style = colorByLevel(task.level) && !locked ? `style="border-color:${colorByLevel(task.level)}"` : '';
+  const next = ascendLevel + 1;
+  const nextStage = ASCEND_STAGES[next];
+  let ascendCost = null;
+  if (nextStage) {
+    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
+  }
 
   return `
 <div class="kafelek${locked ? ' locked' : ''}" data-taskidx="${idx}" tabindex="0">
@@ -54,26 +48,13 @@ function taskTile(task, idx, totalPoints, locked = false) {
     <div class="title">${task.name}</div>
     <div class="kafelek-row asc-badge">
       <span class="tile-stage">${ascendStage.name}</span>
-      <span class="tile-asc-perc asc-perc">
-         +${Math.round((ascendStage.idleMult - 1) * 100)}% idle
-      </span>
-    </div>
-    <div class="kafelek-row">Poz.: <b class="tile-lvl">${task.level}</b></div>
-    <div class="kafelek-row">
-      Idle: <b class="tile-idle">${fmt(perSec)}</b> pkt/s 
-      <span class="tile-mult">(x${multiplierLabel})</span>
     </div>
     <div class="kafelek-row">
-      Klik: <b class="tile-click">${fmt(clickVal)}</b>
-    </div>
-    <div class="kafelek-row stats">
-      <span>Klik: <b class="tile-clicks">${window.topClicks ? window.topClicks[idx] : 0}</b></span>
-      <span style="margin-left:1px">
-        |od prez.: <b class="tile-prestige">${window.prestigeClicks ? window.prestigeClicks[idx] : 0}</b>
-      </span>
+      Idle: <b class="tile-idle">${perSec}</b> pkt/s
     </div>
     ${locked && typeof task.unlockCost === 'number'
-      ? `<div class="kafelek-row" style="color:#b7630b;">Koszt: <b class="tile-unlock">${fmt(task.unlockCost)}</b></div>` : ''
+      ? `<div class="kafelek-row kafelek-locked-overlay"><b>${task.name}</b><br>Koszt odblokowania: <b class="tile-unlock">${fmt(task.unlockCost)}</b> Biuro Punktów</div>`
+      : ''
     }
   </div>
   <div class="kafelek-bottom-row">
@@ -93,7 +74,19 @@ function taskTile(task, idx, totalPoints, locked = false) {
   </div>
 </div>
 `;
+function renderStats() {
+  const statsDiv = document.getElementById('stats-content');
+  const totalClicks = window.topClicks ? window.topClicks.reduce((a, b) => a + b, 0) : 0;
+  const totalPrestigeClicks = window.prestigeClicks ? window.prestigeClicks.reduce((a, b) => a + b, 0) : 0;
+  statsDiv.innerHTML = `
+    <div>
+      <h3>Aktywność manualna</h3>
+      <p>Wszystkich kliknięć w kafelki: <b>${totalClicks}</b></p>
+      <p>Kliknięć od prestiżu (od ostatniego resetu): <b>${totalPrestigeClicks}</b></p>
+    </div>
+  `;
 }
+window.renderStats = renderStats;
 function renderSingleTile(idx, task, totalPoints) {
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
   const outers = document.querySelectorAll('.kafelek-outer');
@@ -164,15 +157,16 @@ function panelNav() {
       document.getElementById("panel-" + target).style.display = "";
 
       // Tu uruchamiaj odpowiedni renderer:
-        if (target === "kariera" && window.tasks) {
-            // Używaj globalnych let (nie window!)
-            renderAll(tasks, totalPoints, softSkills, burnout);
-            window.tasks = tasks;
+      if (target === "kariera" && window.tasks) {
+        renderAll(tasks, totalPoints, softSkills, burnout);
+        window.tasks = tasks;
         if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
       } else if (target === "osiagniecia" && window.ACHIEVEMENTS) {
         renderAchievements(window.ACHIEVEMENTS);
       } else if (target === "biurko" && typeof window.renderDeskSVG === "function") {
         window.renderDeskSVG();
+      } else if (target === "statystyki") {
+        renderStats();
       }
     });
   });
