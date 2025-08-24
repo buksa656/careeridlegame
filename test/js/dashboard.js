@@ -91,11 +91,11 @@ function drawKpiHexDashboard(progresses) {
 
 const HEX_R = 60;
 const ROWS = 3;
-const SPACING_X = HEX_R * 1.75;
-const SPACING_Y = HEX_R * 1.52;
+const SPACING_X = HEX_R * 1.52;
+const SPACING_Y = HEX_R * 1.20;
 const COLS = Math.ceil(window.tasks.length / ROWS);
-const PADDING_X = 24;
-const PADDING_Y = 18;
+const PADDING_X = 100;
+const PADDING_Y = 100;
 
 const WIDTH = (COLS - 1) * SPACING_X + HEX_R * 2 + SPACING_X + PADDING_X * 2;
 const HEIGHT = (ROWS - 1) * SPACING_Y + HEX_R * 2 + PADDING_Y * 2;
