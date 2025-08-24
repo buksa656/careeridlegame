@@ -89,19 +89,13 @@ function drawKpiHexDashboard(progresses) {
   if (!container) return;
   container.innerHTML = "";
 
-  // Parametry siatki, HEXY:
   const HEX_R = 60;
-  const SPACING_X = 125; // szerokość między kolumnami
-  const SPACING_Y = 110; // wysokość między rzędami
+  const SPACING_X = 125;
+  const SPACING_Y = 110;
   const ROWS = 3;
-  
-  // Policz ile kolumn potrzeba:
   const COLS = Math.ceil(window.tasks.length / ROWS);
-
-  // Ustal szerokość i wysokość SVG:
   const WIDTH = 100 + COLS * SPACING_X;
   const HEIGHT = 100 + Math.min(window.tasks.length, ROWS) * SPACING_Y + 20;
-
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("width", WIDTH);
   svg.setAttribute("height", HEIGHT);
@@ -115,75 +109,93 @@ function drawKpiHexDashboard(progresses) {
     const x = 70 + col * SPACING_X;
     const y = 70 + row * SPACING_Y;
     const clr = TASKS_KPI[i].color;
+    const unlocked = window.tasks[i]?.unlocked;
 
-    // Rysuj tylko odblokowane taski!
-    const unlocked = typeof window !== "undefined" && window.tasks
-      ? window.tasks[i] && window.tasks[i].unlocked
-      : (progresses[i] > 0 || progresses[i] > 0.01);
-
-    if (!unlocked) continue;
-
-    // HEX border
+    // HEX border/background
     const hex = document.createElementNS(svgNS, "polygon");
     hex.setAttribute("points", hexPoints(x, y, HEX_R));
-    hex.setAttribute("fill", "#f9fbfd");
-    hex.setAttribute("stroke", "#1370b8");
+    hex.setAttribute("fill", unlocked ? "#f9fbfd" : "#ededed");
+    hex.setAttribute("stroke", unlocked ? "#1370b8" : "#bfc8d1");
     hex.setAttribute("stroke-width", "3");
+    hex.setAttribute("opacity", unlocked ? "1" : "0.33");
     svg.appendChild(hex);
 
-    // --- Progress hex (kolor wypełnienia) ---
-    const gainIdle = getTaskIdle(i);
-    let progress = Math.max(0, Math.min(1, progresses[i]));
-    let overlayColor = clr;
-    let overlayOpacity = "0.65";
-    let drawAsFull = false;
+    if (unlocked) {
+      // Progress bar
+      const gainIdle = getTaskIdle(i);
+      let progress = Math.max(0, Math.min(1, progresses[i]));
+      let overlayColor = clr;
+      let overlayOpacity = "0.65";
+      let drawAsFull = false;
+      if (gainIdle >= 5) {
+        progress = 1.0;
+        overlayColor = "#7dbbcf";
+        overlayOpacity = "0.88";
+        drawAsFull = true;
+      }
+      if (progress > 0.005) {
+        const fill = document.createElementNS(svgNS, "polygon");
+        fill.setAttribute("points", hexPointsFill(x, y, HEX_R, progress));
+        fill.setAttribute("fill", overlayColor);
+        fill.setAttribute("opacity", overlayOpacity);
+        svg.appendChild(fill);
+      }
+      // Ikona
+      const ico = document.createElementNS(svgNS, "text");
+      ico.setAttribute("x", x);
+      ico.setAttribute("y", y - 6);
+      ico.setAttribute("text-anchor", "middle");
+      ico.setAttribute("font-size", "2.0em");
+      ico.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
+      ico.textContent = TASKS_KPI[i].icon;
+      svg.appendChild(ico);
 
-    if (gainIdle >= 5) {
-      progress = 1.0;
-      overlayColor = "#7dbbcf";
-      overlayOpacity = "0.88";
-      drawAsFull = true;
-    }
+      // Label
+      const label = document.createElementNS(svgNS, "text");
+      label.setAttribute("x", x);
+      label.setAttribute("y", y + 22);
+      label.setAttribute("text-anchor", "middle");
+      label.setAttribute("font-size", "0.95em");
+      label.setAttribute("fill", "#205288");
+      label.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
+      label.textContent = TASKS_KPI[i].name;
+      svg.appendChild(label);
 
-    if (progress > 0.005) {
-      const fill = document.createElementNS(svgNS, "polygon");
-      fill.setAttribute("points", hexPointsFill(x, y, HEX_R, progress));
-      fill.setAttribute("fill", overlayColor);
-      fill.setAttribute("opacity", overlayOpacity);
-      svg.appendChild(fill);
-    }
+      if (!drawAsFull && progress > 0.08) {
+        const txt = document.createElementNS(svgNS, "text");
+        txt.setAttribute("x", x);
+        txt.setAttribute("y", y + 42);
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("font-size", "0.82em");
+        txt.setAttribute("fill", "#444");
+        txt.textContent = Math.round(progress * 100) + '%';
+        svg.appendChild(txt);
+      }
+    } else {
+      // ZABLOKOWANY: KŁÓDKA I PRZYCIEMNIONY LABEL
+      // Kłódka:
+      const lock = document.createElementNS(svgNS, "text");
+      lock.setAttribute("x", x);
+      lock.setAttribute("y", y - 6);
+      lock.setAttribute("text-anchor", "middle");
+      lock.setAttribute("font-size", "2.0em");
+      lock.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
+      lock.setAttribute("fill", "#bbb");
+      lock.setAttribute("opacity", "0.67");
+      lock.textContent = "🔒";
+      svg.appendChild(lock);
 
-    // Ikona
-    const ico = document.createElementNS(svgNS, "text");
-    ico.setAttribute("x", x);
-    ico.setAttribute("y", y - 6);
-    ico.setAttribute("text-anchor", "middle");
-    ico.setAttribute("font-size", "2.0em");
-    ico.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
-    ico.textContent = TASKS_KPI[i].icon;
-    svg.appendChild(ico);
-
-    // Nazwa
-    const label = document.createElementNS(svgNS, "text");
-    label.setAttribute("x", x);
-    label.setAttribute("y", y + 22);
-    label.setAttribute("text-anchor", "middle");
-    label.setAttribute("font-size", "0.95em");
-    label.setAttribute("fill", "#205288");
-    label.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
-    label.textContent = TASKS_KPI[i].name;
-    svg.appendChild(label);
-
-    // Progress % (jeśli nie full)
-    if (!drawAsFull && progress > 0.08) {
-      const txt = document.createElementNS(svgNS, "text");
-      txt.setAttribute("x", x);
-      txt.setAttribute("y", y + 42);
-      txt.setAttribute("text-anchor", "middle");
-      txt.setAttribute("font-size", "0.82em");
-      txt.setAttribute("fill", "#444");
-      txt.textContent = Math.round(progress * 100) + '%';
-      svg.appendChild(txt);
+      // Label zadania
+      const label = document.createElementNS(svgNS, "text");
+      label.setAttribute("x", x);
+      label.setAttribute("y", y + 22);
+      label.setAttribute("text-anchor", "middle");
+      label.setAttribute("font-size", "0.95em");
+      label.setAttribute("fill", "#bbb");
+      label.setAttribute("font-family", "Segoe UI,Arial,sans-serif");
+      label.setAttribute("opacity", "0.44");
+      label.textContent = TASKS_KPI[i].name;
+      svg.appendChild(label);
     }
   }
 }
