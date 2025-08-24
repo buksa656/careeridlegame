@@ -21,7 +21,7 @@ const TASKS = [
   ];
   // 1. Progresywny koszt unlocku kafelków
   for (let i = 1; i < TASKS.length; ++i) {
-    TASKS[i].unlockCost = Math.floor(55 * Math.pow(3.25, i));
+    TASKS[i].unlockCost = Math.floor(35 * Math.pow(2.6, i));
   }
 
   // 2. Dynamiczne koszty ulepszeń (optymalizacji)
