@@ -407,12 +407,14 @@ function startIdle(idx) {
   tasks[idx].active = true;
   tasks[idx].progress = 0;
   let prev = Date.now();
+
   timers[idx] = setInterval(() => {
     const task = tasks[idx];
     const barMs = getBarCycleMs(task);
     const now = Date.now();
     task.progress += (now - prev) / barMs;
     prev = now;
+
     if (task.progress >= 1) {
       task.progress = 0;
 
@@ -422,29 +424,42 @@ function startIdle(idx) {
       const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
         * (typeof task.multiplier === 'number' ? task.multiplier : 1)
         * (stage.rewardMult || 1);
+
       totalPoints += reward;
-window.totalPoints = totalPoints;
-window.IdleUI.updateTotalPoints(totalPoints);
-      // TYLKO sprawdź unlock następnego taska i osiągnięcia
+      window.totalPoints = totalPoints;   // <-- zawsze sync z window
+      window.tasks = tasks;               // <-- zapewnij, że wszędzie ten sam obiekt
+
+      window.IdleUI.updateTotalPoints(totalPoints);
+
+      // Spróbuj unlockować następny task
       tryUnlockTask(idx + 1);
       checkAchievements();
       saveGame();
 
+      window.tasks = tasks; // sync again po ewentualnych zmianach (np. unlock)
       ui.updateSingleTile(idx, task, totalPoints);
-      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+
+      if (typeof renderGridProgress === "function")
+        renderGridProgress(tasks, totalPoints);
+
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
       floatingScore(reward, idx, "#87c686");
       flashPoints();
       window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
-      if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+
+      if (typeof refreshHexKpiDashboard === "function")
+        refreshHexKpiDashboard();
       return;
     }
+
     ui.renderProgress(idx, task.progress, task.multiplier);
-    if (typeof refreshHexKpiDashboard === "function") refreshHexKpiDashboard();
+    if (typeof refreshHexKpiDashboard === "function")
+      refreshHexKpiDashboard();
   }, 1000 / 30);
 }
+
 
 
 function clickTask(idx) {
