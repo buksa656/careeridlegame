@@ -28,9 +28,9 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const ascendStage = ASCEND_STAGES[ascendLevel];
 
   // Dla zablokowanego — WYŁĄCZNIE overlay/info!
-if (locked) {
-  const canUnlock = (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
-  return `
+  if (locked) {
+    const canUnlock = (typeof task.unlockCost === 'number') && (totalPoints >= task.unlockCost);
+    return `
 <div class="kafelek locked${canUnlock ? ' can-unlock' : ''}" data-taskidx="${idx}" tabindex="0" style="position:relative;">
   <div class="kafelek-info">
     <div class="kafelek-locked-overlay">
@@ -42,11 +42,11 @@ if (locked) {
     </div>
   </div>
 </div>
-  `;
-}
+    `;
+  }
 
-  // Dla unlocked — PEŁNA wersja kafelka (tu możesz mieć dotychczasowy kod)
-const upgCost = typeof task.getUpgradeCost === "function"
+  // Dla unlocked — PEŁNA wersja kafelka
+  const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost()
     : Math.floor(7 * Math.pow(1.58, task.level));
   const canUpgrade = totalPoints >= upgCost;
@@ -55,12 +55,12 @@ const upgCost = typeof task.getUpgradeCost === "function"
     * ascendStage.idleMult;
   const barMs = getBarCycleMs(task);
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
-  const next = ascendLevel + 1;
-  const nextStage = ASCEND_STAGES[next];
-let ascendCost = null;
-if (nextStage) {
-  ascendCost = Math.floor(600 * Math.pow(2.45, next));
-}
+  
+  const nextStage = ASCEND_STAGES[ascendLevel + 1];
+  let ascendCost = null;
+  if (nextStage && ASCEND_COSTS[idx] && ASCEND_COSTS[idx][ascendLevel] != null) {
+    ascendCost = ASCEND_COSTS[idx][ascendLevel];
+  }
 
   return `
 <div class="kafelek" data-taskidx="${idx}" tabindex="0" style="position:relative;">
@@ -81,9 +81,9 @@ if (nextStage) {
       Opt.<br>(${fmt(upgCost)})
     </button>
     ${
-      nextStage
+      nextStage && ascendCost
         ? `<button class="ascend-btn" data-task="${idx}">
-            Awans<br>(${ascendCost})
+            Awans<br>(${fmt(ascendCost)})
           </button>`
         : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
     }
@@ -91,6 +91,7 @@ if (nextStage) {
 </div>
   `;
 }
+
 function renderSingleTile(idx, task, totalPoints) {
   const kafelHtml = taskTile(task, idx, totalPoints, !task.unlocked);
   const outers = document.querySelectorAll('.kafelek-outer');
