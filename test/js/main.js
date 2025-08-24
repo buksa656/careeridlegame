@@ -318,59 +318,65 @@ function saveGame() {
   window.saveGame = saveGame;
   
 function loadGame() {
-    const saveString = localStorage.getItem("korposzczur_save");
-    if (saveString) {
-      try {
-        const s = JSON.parse(saveString);
-        if (Array.isArray(s.tasks)) tasks = s.tasks;
-        if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
-        if (typeof s.softSkills === "number") softSkills = s.softSkills;
-        window.softSkills = softSkills;
-        if (typeof s.burnout === "number") burnout = s.burnout;
-        pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
-        if (Array.isArray(s.achievements)) {
-          s.achievements.forEach(saved => {
-            const orig = ACHIEVEMENTS.find(a => a.id === saved.id);
-            if (orig) orig.unlocked = saved.unlocked;
-          });
-        }
-        deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
-        tasks.forEach((t, i) => {
-          t.getUpgradeCost = function() {
-            return Math.floor(60 * Math.pow(1.65 + i * 0.13, this.level));
-          };
+  const saveString = localStorage.getItem("korposzczur_save");
+  if (saveString) {
+    try {
+      const s = JSON.parse(saveString);
+      if (Array.isArray(s.tasks)) tasks = s.tasks;
+      if (typeof s.totalPoints === "number") totalPoints = s.totalPoints;
+      if (typeof s.softSkills === "number") softSkills = s.softSkills;
+      window.softSkills = softSkills;
+      if (typeof s.burnout === "number") burnout = s.burnout;
+      pointsHistory = Array.isArray(s.pointsHistory) ? s.pointsHistory : [];
+      if (Array.isArray(s.achievements)) {
+        s.achievements.forEach(saved => {
+          const orig = ACHIEVEMENTS.find(a => a.id === saved.id);
+          if (orig) orig.unlocked = saved.unlocked;
         });
-        window.tasks = tasks;
-      } catch (e) {
-        tasks = JSON.parse(JSON.stringify(TASKS));
-        pointsHistory = [];
-        ACHIEVEMENTS.forEach(a => a.unlocked = false);
-        deskModsOwned = [];
-        applyDeskModsEffects();
-tasks.forEach((t, i) => {
-  const a = 1;
-  const b = 1.33;
-  t.getUpgradeCost = function() {
-    return Math.floor(a * Math.pow(b, this.level));
-  };
-});
-        window.tasks = tasks;
       }
-    } else {
+      deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
+      // NOWA FORMUŁA
+      tasks.forEach((t, i) => {
+        const a = 1;
+        const b = 1.33;
+        t.getUpgradeCost = function() {
+          return Math.ceil(a * Math.pow(b, this.level));
+        };
+      });
+      window.tasks = tasks;
+    } catch (e) {
       tasks = JSON.parse(JSON.stringify(TASKS));
       pointsHistory = [];
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
+      applyDeskModsEffects();
       tasks.forEach((t, i) => {
+        const a = 1;
+        const b = 1.33;
         t.getUpgradeCost = function() {
-          return Math.floor(12 * Math.pow(1.41, this.level)); // ŁAGODNA progresja
+          return Math.ceil(a * Math.pow(b, this.level));
         };
       });
       window.tasks = tasks;
     }
-    tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
-    ui.renderAchievements(window.ACHIEVEMENTS);
+  } else {
+    tasks = JSON.parse(JSON.stringify(TASKS));
+    pointsHistory = [];
+    ACHIEVEMENTS.forEach(a => a.unlocked = false);
+    deskModsOwned = [];
+    // NOWA FORMUŁA
+    tasks.forEach((t, i) => {
+      const a = 1;
+      const b = 1.33;
+      t.getUpgradeCost = function() {
+        return Math.ceil(a * Math.pow(b, this.level));
+      };
+    });
+    window.tasks = tasks;
   }
+  tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
+  ui.renderAchievements(window.ACHIEVEMENTS);
+}
 
  function clearSave() {
     timers.forEach(t => clearInterval(t));
