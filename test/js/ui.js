@@ -46,9 +46,9 @@ if (locked) {
 }
 
   // Dla unlocked — PEŁNA wersja kafelka (tu możesz mieć dotychczasowy kod)
-  const upgCost = typeof task.getUpgradeCost === "function"
+const upgCost = typeof task.getUpgradeCost === "function"
     ? task.getUpgradeCost()
-    : Math.floor(20 * Math.pow(2.25, task.level));
+    : Math.floor(7 * Math.pow(1.58, task.level));
   const canUpgrade = totalPoints >= upgCost;
   const gainIdle = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
     * (typeof task.multiplier === 'number' ? task.multiplier : 1)
@@ -57,10 +57,10 @@ if (locked) {
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
   const next = ascendLevel + 1;
   const nextStage = ASCEND_STAGES[next];
-  let ascendCost = null;
-  if (nextStage) {
-    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
-  }
+let ascendCost = null;
+if (nextStage) {
+  ascendCost = Math.floor(600 * Math.pow(2.45, next));
+}
 
   return `
 <div class="kafelek" data-taskidx="${idx}" tabindex="0" style="position:relative;">
