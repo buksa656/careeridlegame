@@ -204,6 +204,7 @@ function renderGridProgress(tasks, totalPoints) {
   }
 }
 window.renderGridProgress = renderGridProgress;
+
 function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   let maxUnlockedIdx = -1;
   for (let i = 0; i < tasks.length; ++i) if (tasks[i].unlocked) maxUnlockedIdx = i;
