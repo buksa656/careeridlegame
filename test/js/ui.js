@@ -113,11 +113,10 @@ function updateSingleTile(idx, task, totalPoints) {
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
 
-  const next = ascendLevel + 1;
-  const nextStage = ASCEND_STAGES[next] || null;
+  const nextStage = ASCEND_STAGES[ascendLevel + 1];
   let ascendCost = null;
-  if (nextStage) {
-    ascendCost = Math.floor(4500 * Math.pow(2 + idx * 0.15, next));
+  if (nextStage && ASCEND_COSTS[idx] && ASCEND_COSTS[idx][ascendLevel] != null) {
+    ascendCost = ASCEND_COSTS[idx][ascendLevel];
   }
 
   if (kafelek.querySelector('.tile-stage')) kafelek.querySelector('.tile-stage').innerText = ascendStage.name;
@@ -135,11 +134,11 @@ function updateSingleTile(idx, task, totalPoints) {
   if (btnUpg) btnUpg.innerHTML = `Opt.<br>(${fmt(upgCost)})`;
   if (btnUpg) btnUpg.disabled = (!task.unlocked || totalPoints < upgCost);
 
-  const btnAsc = kafelek.querySelector('.ascend-btn');
-  if (btnAsc && nextStage)
-    btnAsc.innerHTML = `Awans<br>(${ascendCost})`;
-  if (btnAsc && !nextStage)
-    btnAsc.outerHTML = `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
+onst btnAsc = kafelek.querySelector('.ascend-btn');
+if (btnAsc && nextStage && ascendCost)
+  btnAsc.innerHTML = `Awans<br>(${fmt(ascendCost)})`;
+if (btnAsc && !nextStage)
+  btnAsc.outerHTML = `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
 }
 function panelNav() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
