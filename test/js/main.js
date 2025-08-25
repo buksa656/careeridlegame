@@ -23,8 +23,6 @@ const TASKS = [
   for (let i = 1; i < TASKS.length; ++i) {
     TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.4, i));
   }
-
-// Po zainicjalizowaniu TASKS:
 TASKS.forEach((t, i) => {
   const a = 1;
   const b = 1.33;
@@ -53,27 +51,6 @@ t.getAscendCost = function() {
     { name: "Legenda Open Space",idleMult: 6.3, rewardMult: 5.3 }
   ];
 window.ASCEND_STAGES = ASCEND_STAGES;
-  
-  // Dla każdego zadania: [koszt z Junior na Mid, z Mid na Senior, z Senior na Manager, ...]
-//const ASCEND_COSTS = [
-//  [500,      2000,      8000,     25000,   100000,   250000],   // Robienie kawy Szefowi
-//  [1600,     4300,      18500,    45000,   110000,   260000],   // Obsługa kserokopiarki
-//  [4700,     11000,     30000,    80000,   190000,   390000],   // Przerzucanie maili do folderu
-//  [9500,     18000,     40000,    100000,  250000,   520000],   // Small talk w kuchni
-//  [18500,    35000,     80000,    190000,  410000,   900000],   // Raportowanie błędów do HelpDesku
-//  [36000,    72000,     140000,   350000,  900000,   1800000],  // Wklejka do Excela
-//  [72000,    140000,    320000,   720000,  1800000,  4100000],  // Tworzenie Prezentacji do Statusu
-//  [125000,   250000,    450000,   950000,  2500000,  6000000],  // Szkolenie z Microsoft Teams
-//  [210000,   380000,    800000,   1900000, 3500000,  7500000],  // Przeklejka z Google Docs
-//  [390000,   900000,    1850000,  3900000, 8000000,  16000000], // Zebranie
-//  [800000,   1600000,   3000000,  7000000, 14000000, 29000000], // Showtime dla Zarządu
-//  [1300000,  3000000,   6000000,  14000000,29000000, 49000000], // Rytuał pon calla
-//  [2600000,  4100000,   9000000,  18000000,36000000, 60000000], // Lunch break
-//  [4100000,  8000000,   18000000, 35000000,70000000, 135000000],// Wysyłanie GIF-ów
-//  [8200000,  17500000,  36000000, 80000000,155000000,310000000],// Networking na LinkedInie
-//  [15000000, 32000000,  72000000, 150000000,290000000,580000000]// Król Open Space
-//];
- // window.ASCEND_COSTS = ASCEND_COSTS;
   // --- MODYFIKACJE BIURKA --- //
 
   const DESK_MODS = [
