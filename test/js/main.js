@@ -21,7 +21,7 @@ const TASKS = [
   ];
 
   for (let i = 1; i < TASKS.length; ++i) {
-    TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.4, i));
+    TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.2, i));
   }
 
   const ASCEND_STAGES = [
@@ -44,7 +44,7 @@ function applyTaskMethods(tasksArray) {
     t.getUpgradeCost = function() {
       return Math.ceil(a * Math.pow(b, this.level));
     };
-    const ascendBase = t.unlockCost || 50, ascendGrowth = 2.5;
+    const ascendBase = t.unlockCost || 50, ascendGrowth = 2.3;
     t.getAscendCost = function() {
       const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
       if (currentLevel >= (ASCEND_STAGES.length - 1)) return null;
