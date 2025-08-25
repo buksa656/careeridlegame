@@ -143,7 +143,7 @@ main#app {
   box-shadow: 0 1.5px 9px #bcd7fc11;
   border: 1px solid #ccd7eb;
   padding: 7px 7px 5px 7px;
-  min-height: 70px;
+  min-height: 150px;
   display: flex;
   flex-direction: column;
   gap: 1.5px;
