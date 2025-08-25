@@ -38,21 +38,20 @@ const TASKS = [
   ];
 window.ASCEND_STAGES = ASCEND_STAGES;
   
-  TASKS.forEach((t, i) => {
-  const a = 1;
-  const b = 1.33;
-  t.getUpgradeCost = function() {
-    return Math.ceil(a * Math.pow(b, this.level));
-  };
-
-  const ascendBase = t.unlockCost || 50; // baza to unlockCost danego taska
-  const ascendGrowth = 2.5;
-t.getAscendCost = function() {
-  const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
-  if (currentLevel >= ASCEND_STAGES.length - 1) return null;
-  return Math.floor(ascendBase * Math.pow(ascendGrowth, currentLevel + 1));
-};
-});
+function applyTaskMethods(tasksArray) {
+  tasksArray.forEach((t, i) => {
+    const a = 1, b = 1.33;
+    t.getUpgradeCost = function() {
+      return Math.ceil(a * Math.pow(b, this.level));
+    };
+    const ascendBase = t.unlockCost || 50, ascendGrowth = 2.5;
+    t.getAscendCost = function() {
+      const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
+      if (currentLevel >= (ASCEND_STAGES.length - 1)) return null;
+      return Math.floor(ascendBase * Math.pow(ascendGrowth, currentLevel + 1));
+    };
+  });
+}
   // --- MODYFIKACJE BIURKA --- //
 
   const DESK_MODS = [
@@ -333,6 +332,7 @@ function loadGame() {
       window.tasks = tasks;
     } catch (e) {
       tasks = JSON.parse(JSON.stringify(TASKS));
+      applyTaskMethods(tasks);
       pointsHistory = [];
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
@@ -348,6 +348,7 @@ function loadGame() {
     }
   } else {
     tasks = JSON.parse(JSON.stringify(TASKS));
+    applyTaskMethods(tasks);
     pointsHistory = [];
     ACHIEVEMENTS.forEach(a => a.unlocked = false);
     deskModsOwned = [];
@@ -522,6 +523,7 @@ function ascendTask(idx) {
     window.softSkills = softSkills;
     burnout += 1;
     tasks = JSON.parse(JSON.stringify(TASKS));
+    applyTaskMethods(tasks);
 tasks.forEach((t, i) => {
   const a = 1;
   const b = 1.33;
