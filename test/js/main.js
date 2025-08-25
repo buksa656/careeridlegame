@@ -508,6 +508,8 @@ function upgradeTask(idx) {
       task.level += 1;
       totalPoints -= cost;
       upgradeCount += 1;
+      const REWARD_UPG = 0.025; // lub 0.03 albo wyższe!
+      task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
       ui.renderUpgradeAffordances(tasks, totalPoints);
@@ -538,8 +540,7 @@ function ascendTask(idx) {
   if (totalPoints >= cost) {
     totalPoints -= cost;
     task.ascendLevel = current + 1;
-    // (opcjonalnie) Możesz tutaj zresetować baseIdle, jeśli chcesz:
-    // task.baseIdle = TASKS[idx].baseIdle;
+    task.baseIdle = TASKS[idx].baseIdle;
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     renderMultipliersBar();
