@@ -323,7 +323,7 @@ function loadGame() {
       deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
       // NOWA FORMUŁA
       tasks.forEach((t, i) => {
-        const a = 1;
+        const a = 0.4;
         const b = 1.33;
         t.getUpgradeCost = function() {
           return Math.ceil(a * Math.pow(b, this.level));
@@ -338,7 +338,7 @@ function loadGame() {
       deskModsOwned = [];
       applyDeskModsEffects();
       tasks.forEach((t, i) => {
-        const a = 1;
+        const a = 0.4;
         const b = 1.33;
         t.getUpgradeCost = function() {
           return Math.ceil(a * Math.pow(b, this.level));
@@ -354,7 +354,7 @@ function loadGame() {
     deskModsOwned = [];
     // NOWA FORMUŁA
     tasks.forEach((t, i) => {
-      const a = 1;
+      const a = 0.4;
       const b = 1.33;
       t.getUpgradeCost = function() {
         return Math.ceil(a * Math.pow(b, this.level));
