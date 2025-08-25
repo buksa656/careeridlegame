@@ -74,7 +74,7 @@ class UIManager {
     renderTasks() {
         const tasksGrid = document.getElementById('tasks-grid');
         if (!tasksGrid) return;
-
+console.log('WYWOŁANO renderTasks, GameData.tasks:', GameData.tasks);
         // Clear existing content
         tasksGrid.innerHTML = '';
 
