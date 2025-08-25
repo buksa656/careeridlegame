@@ -508,7 +508,7 @@ function upgradeTask(idx) {
       task.level += 1;
       totalPoints -= cost;
       upgradeCount += 1;
-      const REWARD_UPG = 0.05; // lub 0.03 albo wyższe!
+      const REWARD_UPG = 0.066 + 0.01 * Math.floor(task.level/5);
       task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
