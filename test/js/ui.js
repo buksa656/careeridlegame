@@ -227,19 +227,26 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 
   renderMultipliersBar(tasks);
 
-  let softSkillBtn = '';
-  const SOFTSKILL_COST = 10000;
-  if (totalPoints >= SOFTSKILL_COST) {
-    softSkillBtn = `
-      <button id="get-softskill-btn" class="get-softskill-btn">
-        <span class="ss-badge">🎓</span>
-        <span class="ss-label">
-          <b>Awans!</b>
-          <div class="ss-desc">Zbierz <b>1 Soft Skill</b><br><small>(koszt: ${SOFTSKILL_COST})</small></div>
-        </span>
-      </button>
-    `;
-  }
+let softSkillBtn = '';
+const SOFTSKILL_COST = 10000;
+let maxSkills = 1;
+if (typeof softSkillOverflowEnabled !== 'undefined' && softSkillOverflowEnabled) {
+  maxSkills = Math.floor(totalPoints / SOFTSKILL_COST);
+}
+if (totalPoints >= SOFTSKILL_COST) {
+  softSkillBtn = `
+    <button id="get-softskill-btn" class="get-softskill-btn">
+      <span class="ss-badge">🎓</span>
+      <span class="ss-label">
+        <b>Awans!</b>
+        <div class="ss-desc">
+          Zbierz <b>${(typeof softSkillOverflowEnabled !== 'undefined' && softSkillOverflowEnabled) ? maxSkills + ' Soft Skills' : '1 Soft Skill'}</b><br>
+          <small>(koszt: ${(typeof softSkillOverflowEnabled !== 'undefined' && softSkillOverflowEnabled) ? maxSkills * SOFTSKILL_COST : SOFTSKILL_COST})</small>
+        </div>
+      </span>
+    </button>
+  `;
+}
 
   e("#panel-kariera").innerHTML = `
     <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
@@ -260,15 +267,35 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
     </div>`;
   }
 
-  if (totalPoints >= SOFTSKILL_COST) {
-    const btn = document.getElementById('get-softskill-btn');
+if (totalPoints >= SOFTSKILL_COST) {
+  const btn = document.getElementById('get-softskill-btn');
+  if (btn) {
     btn.onclick = () => {
-      if (totalPoints >= SOFTSKILL_COST) {
-        console.log("BUTTON CLICKED, calling prestige");
-        eventHandlers.onPrestige(true);
+      if (typeof softSkillOverflowEnabled !== 'undefined' && softSkillOverflowEnabled) {
+        const ile = Math.floor(totalPoints / SOFTSKILL_COST);
+        if (ile >= 1) {
+          softSkills += ile;
+          totalPoints -= ile * SOFTSKILL_COST;
+          saveGame();
+          ui.renderAll(tasks, totalPoints, softSkills, burnout);
+          ui.renderUpgradeAffordances(tasks, totalPoints);
+          renderMultipliersBar(tasks);
+          if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+        }
+      } else {
+        if (totalPoints >= SOFTSKILL_COST) {
+          softSkills += 1;
+          totalPoints -= SOFTSKILL_COST;
+          saveGame();
+          ui.renderAll(tasks, totalPoints, softSkills, burnout);
+          ui.renderUpgradeAffordances(tasks, totalPoints);
+          renderMultipliersBar(tasks);
+          if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+        }
       }
-    };
+    }
   }
+}
 
   addEvents(tasks.length);
 }
