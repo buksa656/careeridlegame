@@ -174,6 +174,7 @@ createTaskCard(gameTask, task) {
     const button = card.querySelector('.task-btn');
 if (button && !button.disabled) {
     button.addEventListener('click', (e) => {
+        console.log('Kliknięty przycisk BUTTON dla:', gameTask.id);
         e.preventDefault();
         e.stopPropagation();
         GameLogic.clickTask(gameTask.id); // <-- obsługuje unlock, upgrade, manual click!
@@ -184,6 +185,7 @@ if (button && !button.disabled) {
     // --- POPRAWIONE: klik w kartę: manualne kliknięcie na zadaniu
 if (task.unlocked && task.level > 0) {
     card.addEventListener('click', (e) => {
+        console.log('Kliknięty przycisk BUTTON dla:', gameTask.id);
         if (e.target === button || e.target.closest('.task-btn')) return;
         GameLogic.clickTask(gameTask.id); // też może być true, ale u Ciebie parametr manual jest ignorowany!
         GameLogic.addClickAnimation(gameTask.id);
