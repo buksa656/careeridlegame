@@ -78,7 +78,7 @@ if (nextStage && typeof task.getAscendCost === "function") {
       Opt.<br>(${fmt(upgCost)})
     </button>
 ${
-  nextStage
+  nextStage && typeof ascendCost === 'number'
     ? `<button class="ascend-btn" data-task="${idx}">
         Awans<br>(${fmt(ascendCost)})
       </button>`
