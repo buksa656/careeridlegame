@@ -172,31 +172,24 @@ createTaskCard(gameTask, task) {
 
     // --- POPRAWIONE: przycisk: odblokowanie/ulepszenie
     const button = card.querySelector('.task-btn');
-    if (button && !button.disabled) {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!task.unlocked) {
-                // Odblokuj zadanie
-                GameState.unlockTask(gameTask.id);
-            } else if (task.unlocked && task.level < gameTask.maxLevel) {
-                // Ulepsz zadanie
-                GameLogic.upgradeTask(gameTask.id);
-            }
-            this.renderTasks(); // Odśwież widok po akcji
-        });
-    }
+if (button && !button.disabled) {
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        GameLogic.clickTask(gameTask.id); // <-- obsługuje unlock, upgrade, manual click!
+        this.renderTasks(); // odśwież
+    });
+}
 
     // --- POPRAWIONE: klik w kartę: manualne kliknięcie na zadaniu
-    if (task.unlocked && task.level > 0) {
-        card.addEventListener('click', (e) => {
-            if (e.target === button || e.target.closest('.task-btn')) return;
-            GameLogic.clickTask(gameTask.id, true); // manual click
-            // Efekt wizualny
-            GameLogic.addClickAnimation(gameTask.id);
-        });
-        card.style.cursor = 'pointer';
-    }
+if (task.unlocked && task.level > 0) {
+    card.addEventListener('click', (e) => {
+        if (e.target === button || e.target.closest('.task-btn')) return;
+        GameLogic.clickTask(gameTask.id); // też może być true, ale u Ciebie parametr manual jest ignorowany!
+        GameLogic.addClickAnimation(gameTask.id);
+    });
+    card.style.cursor = 'pointer';
+}
 
     return card;
 }
