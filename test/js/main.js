@@ -504,13 +504,14 @@ function clickTask(idx) {
     startIdle(idx);
   }
 }
-
+let upgradeCount = 0;
 function upgradeTask(idx) {
     const task = tasks[idx];
     const cost = task.getUpgradeCost();
     if (totalPoints >= cost) {
       task.level += 1;
       totalPoints -= cost;
+      upgradeCount += 1;
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
       ui.renderUpgradeAffordances(tasks, totalPoints);
@@ -629,6 +630,7 @@ function checkAchievements() {
     burnout,
     tasks,
     deskModsOwned,
+    upgradeCount,  
   };
   ACHIEVEMENTS.forEach(a => {
     if (!a.unlocked && (!a.condition || a.condition(state))) {
