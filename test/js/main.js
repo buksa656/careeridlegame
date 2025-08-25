@@ -26,15 +26,15 @@ const TASKS = [
 
   const ASCEND_STAGES = [
     { name: "Junior",    idleMult: 1.0, rewardMult: 1.0 },
-    { name: "Mid",       idleMult: 1.25, rewardMult: 1.15 },
-    { name: "Senior",    idleMult: 1.5, rewardMult: 1.30 },
-    { name: "Manager",   idleMult: 1.8, rewardMult: 1.50 },
-    { name: "Principal", idleMult: 2.15, rewardMult: 1.85 },
-    { name: "Director",  idleMult: 2.6, rewardMult: 2.2 },
-    { name: "Expert",    idleMult: 3.2, rewardMult: 2.6 },
-    { name: "C-Level",   idleMult: 4.0, rewardMult: 3.3 },
-    { name: "Korpo Yoda",idleMult: 5.0, rewardMult: 4.2 },
-    { name: "Legenda Open Space",idleMult: 6.3, rewardMult: 5.3 }
+    { name: "Mid",       idleMult: 1.5, rewardMult: 1.35 },
+    { name: "Senior",    idleMult: 2.0, rewardMult: 1.60 },
+    { name: "Manager",   idleMult: 2.5, rewardMult: 1.9 },
+    { name: "Principal", idleMult: 3.0, rewardMult: 2.4 },
+    { name: "Director",  idleMult: 3.5, rewardMult: 2.8 },
+    { name: "Expert",    idleMult: 4.5, rewardMult: 3.6 },
+    { name: "C-Level",   idleMult: 6.0, rewardMult: 5.0 },
+    { name: "Korpo Yoda",idleMult: 8.0, rewardMult: 7.0 },
+    { name: "Legenda Open Space",idleMult: 10.0, rewardMult: 9.5 }
   ];
 window.ASCEND_STAGES = ASCEND_STAGES;
   
@@ -44,7 +44,7 @@ function applyTaskMethods(tasksArray) {
     t.getUpgradeCost = function() {
       return Math.ceil(a * Math.pow(b, this.level));
     };
-    const ascendBase = t.unlockCost || 50, ascendGrowth = 2.3;
+    const ascendBase = t.unlockCost || 50, ascendGrowth = 1.8;
     t.getAscendCost = function() {
       const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
       if (currentLevel >= (ASCEND_STAGES.length - 1)) return null;
