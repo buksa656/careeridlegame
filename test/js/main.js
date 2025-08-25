@@ -24,18 +24,19 @@ const TASKS = [
     TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.4, i));
   }
 
+// Po zainicjalizowaniu TASKS:
 TASKS.forEach((t, i) => {
   const a = 1;
   const b = 1.33;
   t.getUpgradeCost = function() {
     return Math.ceil(a * Math.pow(b, this.level));
   };
-  
-  const ascendBase = t.unlockCost || 50; // sugerowana baza
-  const ascendGrowth = 2.5;              // tempo wzrostu (2.3–2.7 jest typowe dla idle)
+
+  const ascendBase = t.unlockCost || 50; // baza to unlockCost danego taska
+  const ascendGrowth = 2.5;
   t.getAscendCost = function() {
-    // nie pozwalamy awansować powyżej ostatniego etapu:
-    if (this.ascendLevel >= (ASCEND_STAGES.length - 1)) return null;
+    if (typeof this.ascendLevel !== "number") return Math.floor(ascendBase * Math.pow(ascendGrowth, 1)); // domyślnie liczymy koszt pierwszego awansu
+    if (this.ascendLevel >= ASCEND_STAGES.length - 1) return null;
     return Math.floor(ascendBase * Math.pow(ascendGrowth, this.ascendLevel + 1));
   };
 });
