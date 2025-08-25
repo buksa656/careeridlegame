@@ -2,7 +2,6 @@
 
 class UIManager {
     constructor() {
-        console.log('UIManager constructor');
         this.currentTab = 'tasks';
         this.updateInterval = null;
         this.quotesArray = [];
@@ -13,7 +12,6 @@ class UIManager {
     }
 
     init() {
-        console.log('UIManager.init');
         this.initializeTabs();
         this.initializeQuoteSystem();
         this.startUIUpdateLoop();
@@ -74,7 +72,6 @@ class UIManager {
     renderTasks() {
         const tasksGrid = document.getElementById('tasks-grid');
         if (!tasksGrid) return;
-console.log('WYWOŁANO renderTasks, GameData.tasks:', GameData.tasks);
         // Clear existing content
         tasksGrid.innerHTML = '';
 
@@ -176,7 +173,6 @@ createTaskCard(gameTask, task) {
     const button = card.querySelector('.task-btn');
 if (button && !button.disabled) {
     button.addEventListener('click', (e) => {
-        console.log('Kliknięty przycisk BUTTON dla:', gameTask.id);
         e.preventDefault();
         e.stopPropagation();
         GameLogic.clickTask(gameTask.id); // <-- obsługuje unlock, upgrade, manual click!
