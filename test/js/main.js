@@ -32,8 +32,6 @@ TASKS.forEach((t, i) => {
     return Math.ceil(a * Math.pow(b, this.level));
   };
   
-  // ---- Nowa funkcja dynamicznego kosztu ASCEND ----
-  // Możesz dobrać parametry bazowe:
   const ascendBase = t.unlockCost || 50; // sugerowana baza
   const ascendGrowth = 2.5;              // tempo wzrostu (2.3–2.7 jest typowe dla idle)
   t.getAscendCost = function() {
