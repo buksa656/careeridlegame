@@ -203,6 +203,34 @@ function hideDeskTooltip() {
 window.renderDeskSVG = renderDeskSVG; 
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
 const ACHIEVEMENTS = [
+    {
+    id: "pierwszy-upg",
+    name: "Pierwsza Optymalizacja",
+    desc: "Wykonaj pierwszą optymalizację dowolnego zadania.",
+    condition: gs => gs.upgradeCount && gs.upgradeCount >= 1,
+    reward: { type: "multiplierInc", multiplierInc: 0.1 }
+  },
+  {
+    id: "drugi-task",
+    name: "Pierwszy Kolega z pracy",
+    desc: "Odblokuj drugi kafelek (nowy task).",
+    condition: gs => gs.tasks && gs.tasks.filter(t=>t.unlocked).length >= 2,
+    reward: { type: "multiplierInc", multiplierInc: 0.07 }
+  },
+  {
+    id: "quick-earn",
+    name: "100 BP na start!",
+    desc: "Zdobądź 100 biuro-punktów.",
+    condition: gs => gs.totalPoints >= 100,
+    reward: { type: "multiplierInc", multiplierInc: 0.08 }
+  },
+  {
+    id: "early-ascend",
+    name: "Pierwszy Awans",
+    desc: "Wykonaj pierwszy awans w dowolnym zadaniu.",
+    condition: gs => (gs.tasks && gs.tasks.some(t => t.ascendLevel && t.ascendLevel >= 1)),
+    reward: { type: "multiplierInc", multiplierInc: 0.09 }
+  },
   {
     id: "pracownik-roku",
     name: "Pracownik Roku",
