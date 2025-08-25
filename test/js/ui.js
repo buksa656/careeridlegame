@@ -337,17 +337,25 @@ function addEvents(tasksLen) {
   document.querySelectorAll(".kafelek-info").forEach((el) => {
     el.onclick = (e) => {
       e.stopPropagation();
-      // NIE sprawdzaj tutaj, czy .locked – każdy kafelek powinien być klikalny!
       const idx = Number(el.closest(".kafelek").dataset.taskidx);
-      eventHandlers.onClickTask(idx);
+      // Jeśli kafelek zablokowany:
+      if (el.closest('.kafelek').classList.contains('locked')) {
+        eventHandlers.onUnlockTask(idx);  // UWAGA! Dodaj ten handler!
+      } else {
+        eventHandlers.onClickTask(idx);
+      }
     };
     el.onkeydown = (e) => {
       if ((e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
         const idx = Number(el.closest(".kafelek").dataset.taskidx);
-        eventHandlers.onClickTask(idx);
+        if (el.closest('.kafelek').classList.contains('locked')) {
+          eventHandlers.onUnlockTask(idx);
+        } else {
+          eventHandlers.onClickTask(idx);
+        }
       }
-    }
+    };
   });
   document.querySelectorAll('.ascend-btn').forEach(btn => {
     btn.onclick = (e) => {
