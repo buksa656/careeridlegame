@@ -89,7 +89,7 @@ class GameStateManager {
     initializeTaskStates() {
         GameData.tasks.forEach(task => {
             this.state.tasks[task.id] = {
-                unlocked: task.unlockCost === 0,
+                unlocked: false,
                 level: 0,
                 progress: 0,
                 isActive: false,
