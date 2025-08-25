@@ -2,6 +2,7 @@
 
 class UIManager {
     constructor() {
+        console.log('UIManager constructor');
         this.currentTab = 'tasks';
         this.updateInterval = null;
         this.quotesArray = [];
@@ -12,6 +13,7 @@ class UIManager {
     }
 
     init() {
+        console.log('UIManager.init');
         this.initializeTabs();
         this.initializeQuoteSystem();
         this.startUIUpdateLoop();
@@ -612,6 +614,7 @@ if (task.unlocked && task.level > 0) {
 
     renderInitialUI() {
         // Render all tabs initially
+        console.log('UIManager.renderInitialUI');
         this.renderTasks();
         this.renderDeskUpgrades();
         this.renderChallenges();
