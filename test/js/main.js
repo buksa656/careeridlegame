@@ -23,7 +23,22 @@ const TASKS = [
   for (let i = 1; i < TASKS.length; ++i) {
     TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.4, i));
   }
-TASKS.forEach((t, i) => {
+
+  const ASCEND_STAGES = [
+    { name: "Junior",    idleMult: 1.0, rewardMult: 1.0 },
+    { name: "Mid",       idleMult: 1.25, rewardMult: 1.15 },
+    { name: "Senior",    idleMult: 1.5, rewardMult: 1.30 },
+    { name: "Manager",   idleMult: 1.8, rewardMult: 1.50 },
+    { name: "Principal", idleMult: 2.15, rewardMult: 1.85 },
+    { name: "Director",  idleMult: 2.6, rewardMult: 2.2 },
+    { name: "Expert",    idleMult: 3.2, rewardMult: 2.6 },
+    { name: "C-Level",   idleMult: 4.0, rewardMult: 3.3 },
+    { name: "Korpo Yoda",idleMult: 5.0, rewardMult: 4.2 },
+    { name: "Legenda Open Space",idleMult: 6.3, rewardMult: 5.3 }
+  ];
+window.ASCEND_STAGES = ASCEND_STAGES;
+  
+  TASKS.forEach((t, i) => {
   const a = 1;
   const b = 1.33;
   t.getUpgradeCost = function() {
@@ -38,19 +53,6 @@ t.getAscendCost = function() {
   return Math.floor(ascendBase * Math.pow(ascendGrowth, currentLevel + 1));
 };
 });
-  const ASCEND_STAGES = [
-    { name: "Junior",    idleMult: 1.0, rewardMult: 1.0 },
-    { name: "Mid",       idleMult: 1.25, rewardMult: 1.15 },
-    { name: "Senior",    idleMult: 1.5, rewardMult: 1.30 },
-    { name: "Manager",   idleMult: 1.8, rewardMult: 1.50 },
-    { name: "Principal", idleMult: 2.15, rewardMult: 1.85 },
-    { name: "Director",  idleMult: 2.6, rewardMult: 2.2 },
-    { name: "Expert",    idleMult: 3.2, rewardMult: 2.6 },
-    { name: "C-Level",   idleMult: 4.0, rewardMult: 3.3 },
-    { name: "Korpo Yoda",idleMult: 5.0, rewardMult: 4.2 },
-    { name: "Legenda Open Space",idleMult: 6.3, rewardMult: 5.3 }
-  ];
-window.ASCEND_STAGES = ASCEND_STAGES;
   // --- MODYFIKACJE BIURKA --- //
 
   const DESK_MODS = [
