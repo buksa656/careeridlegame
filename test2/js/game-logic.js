@@ -1,43 +1,68 @@
-// Game Logic and Mechanics
-class GameLogic {
+// Enhanced Game Logic for Corporate Rat Idle
+
+class GameLogicManager {
     constructor() {
         this.gameLoop = null;
-        this.tickInterval = 100; // 10 FPS
+        this.tickInterval = GameData.config.gameTickRate;
         this.lastTick = Date.now();
-        this.activeTimers = new Map();
+        this.autoTimers = {
+            autoClick: 0,
+            autoUpgrade: 0,
+            autoInfinity: 0
+        };
         
         this.init();
     }
-    
+
     init() {
         this.startGameLoop();
-        this.initializeAutomation();
-        this.bindEvents();
+        this.bindInfinityButton();
     }
-    
+
     startGameLoop() {
+        if (this.gameLoop) {
+            clearInterval(this.gameLoop);
+        }
+        
         this.gameLoop = setInterval(() => {
             this.tick();
         }, this.tickInterval);
     }
-    
+
+    stopGameLoop() {
+        if (this.gameLoop) {
+            clearInterval(this.gameLoop);
+            this.gameLoop = null;
+        }
+    }
+
     tick() {
         const now = Date.now();
         const deltaTime = now - this.lastTick;
         this.lastTick = now;
-        
+
+        // Update task progress
         this.updateTaskProgress(deltaTime);
-        this.updateAutomation(deltaTime);
-        this.checkTaskUnlocks();
-        this.updateDisplay();
+        
+        // Handle automation
+        if (GameState.automation.enabled) {
+            this.updateAutomation(deltaTime);
+        }
+        
+        // Update UI elements that need frequent updates
+        this.updateMainDisplay();
+        
+        // Check for unlocks
+        GameState.checkTaskUnlocks();
+        GameState.checkInfinityAvailability();
     }
-    
+
     updateTaskProgress(deltaTime) {
         Object.keys(GameState.tasks).forEach(taskId => {
             const task = GameState.tasks[taskId];
             const gameTask = GameData.getTaskById(taskId);
             
-            if (task.unlocked && task.isActive && gameTask) {
+            if (task.unlocked && (task.isActive || task.automated) && task.level > 0 && gameTask) {
                 // Update progress
                 const progressPerMs = 1000 / gameTask.cycleTime;
                 task.progress += (deltaTime * progressPerMs) / 1000;
@@ -50,13 +75,12 @@ class GameLogic {
             }
         });
     }
-    
+
     completeTaskCycle(taskId) {
         const task = GameState.tasks[taskId];
         const gameTask = GameData.getTaskById(taskId);
-        
         if (!task || !gameTask) return;
-        
+
         // Calculate production
         const multipliers = GameState.getMultipliers();
         const production = GameData.calculateTaskProduction(taskId, task.level, multipliers);
@@ -66,152 +90,165 @@ class GameLogic {
         GameState.completeTask(taskId);
         
         // Visual feedback
-        this.showFloatingNumber(production, taskId);
+        if (GameState.state.settings.showFloatingNumbers) {
+            this.showFloatingNumber(production, taskId, false);
+        }
     }
-    
+
     updateAutomation(deltaTime) {
-        if (GameState.state.automation.enabled) {
-            GameState.state.stats.automationTime += deltaTime;
-            
-            // Auto-clicker
-            if (GameState.state.automation.autoClicker) {
-                this.handleAutoClicker(deltaTime);
-            }
-            
-            // Auto-upgrade
-            if (GameState.state.automation.autoUpgrade) {
-                this.handleAutoUpgrade(deltaTime);
-            }
-            
-            // Auto-infinity
-            if (GameState.state.automation.autoInfinity) {
-                this.handleAutoInfinity(deltaTime);
+        GameState.state.stats.automationTime += deltaTime;
+        
+        // Auto-clicker
+        if (GameState.automation.autoClicker) {
+            this.autoTimers.autoClick += deltaTime;
+            if (this.autoTimers.autoClick >= GameState.automation.autoClickInterval) {
+                this.handleAutoClick();
+                this.autoTimers.autoClick = 0;
             }
         }
-    }
-    
-    handleAutoClicker(deltaTime) {
-        // Auto-click available tasks every second
-        const clickInterval = 1000;
-        const timeSinceLastClick = this.autoClickTimer || 0;
         
-        if (timeSinceLastClick >= clickInterval) {
-            Object.keys(GameState.tasks).forEach(taskId => {
-                const task = GameState.tasks[taskId];
-                if (task.unlocked && !task.isActive) {
-                    this.clickTask(taskId, false); // Don't show manual click effects
-                }
-            });
-            this.autoClickTimer = 0;
-        } else {
-            this.autoClickTimer = timeSinceLastClick + deltaTime;
+        // Auto-upgrade
+        if (GameState.automation.autoUpgrade) {
+            this.autoTimers.autoUpgrade += deltaTime;
+            if (this.autoTimers.autoUpgrade >= GameState.automation.autoUpgradeInterval) {
+                this.handleAutoUpgrade();
+                this.autoTimers.autoUpgrade = 0;
+            }
         }
-    }
-    
-    handleAutoUpgrade(deltaTime) {
-        // Auto-upgrade tasks when beneficial
-        const upgradeInterval = 5000; // Check every 5 seconds
-        const timeSinceLastUpgrade = this.autoUpgradeTimer || 0;
         
-        if (timeSinceLastUpgrade >= upgradeInterval) {
-            Object.keys(GameState.tasks).forEach(taskId => {
-                const task = GameState.tasks[taskId];
-                if (task.unlocked && this.shouldAutoUpgrade(taskId)) {
-                    this.upgradeTask(taskId);
-                }
-            });
-            this.autoUpgradeTimer = 0;
-        } else {
-            this.autoUpgradeTimer = timeSinceLastUpgrade + deltaTime;
-        }
-    }
-    
-    shouldAutoUpgrade(taskId) {
-        const task = GameState.tasks[taskId];
-        const gameTask = GameData.getTaskById(taskId);
-        
-        if (!task || !gameTask || task.level >= gameTask.maxLevel) return false;
-        
-        const upgradeCost = GameData.calculateTaskCost(taskId, task.level);
-        const currentProduction = GameData.calculateTaskProduction(taskId, task.level, GameState.getMultipliers());
-        const upgradeProduction = GameData.calculateTaskProduction(taskId, task.level + 1, GameState.getMultipliers());
-        
-        // Only upgrade if we have enough points and the upgrade is cost-effective
-        const costEfficiency = (upgradeProduction - currentProduction) / upgradeCost;
-        const pointsRatio = GameState.officePoints / upgradeCost;
-        
-        return pointsRatio >= 2 && costEfficiency > 0.1;
-    }
-    
-    handleAutoInfinity(deltaTime) {
-        if (GameState.canPerformInfinity()) {
-            const currentGain = GameData.calculateInfinityPoints(GameState.officePoints);
-            const futureGain = GameData.calculateInfinityPoints(GameState.officePoints * 2);
-            
-            // Perform infinity if the gain is reasonable
-            if (currentGain > 0 && (futureGain - currentGain) / currentGain < 0.1) {
-                this.performInfinity();
+        // Auto-infinity
+        if (GameState.automation.autoInfinity) {
+            this.autoTimers.autoInfinity += deltaTime;
+            if (this.autoTimers.autoInfinity >= GameState.automation.autoInfinityMinTime) {
+                this.handleAutoInfinity();
+                this.autoTimers.autoInfinity = 0;
             }
         }
     }
-    
-    checkTaskUnlocks() {
-        GameData.tasks.forEach(gameTask => {
-            const task = GameState.tasks[gameTask.id];
-            if (!task.unlocked && GameData.isTaskUnlocked(gameTask.id, GameState.state)) {
-                GameState.unlockTask(gameTask.id);
+
+    handleAutoClick() {
+        // Automatically activate available tasks
+        Object.keys(GameState.tasks).forEach(taskId => {
+            const task = GameState.tasks[taskId];
+            if (task.unlocked && task.level > 0 && !task.automated) {
+                task.isActive = true;
+                task.automated = true;
             }
         });
     }
-    
-    // User actions
-    clickTask(taskId, manual = true) {
+
+    handleAutoUpgrade() {
+        // Find the most efficient upgrade to purchase
+        let bestUpgrade = null;
+        let bestEfficiency = 0;
+        
+        Object.keys(GameState.tasks).forEach(taskId => {
+            const task = GameState.tasks[taskId];
+            const gameTask = GameData.getTaskById(taskId);
+            
+            if (task.unlocked && task.level < gameTask.maxLevel) {
+                if (GameData.shouldAutoUpgrade(taskId, GameState.officePoints)) {
+                    const cost = GameData.calculateTaskCost(taskId, task.level);
+                    const currentProduction = GameData.calculateTaskProduction(taskId, task.level, GameState.getMultipliers());
+                    const upgradeProduction = GameData.calculateTaskProduction(taskId, task.level + 1, GameState.getMultipliers());
+                    const efficiency = (upgradeProduction - currentProduction) / cost;
+                    
+                    if (efficiency > bestEfficiency && GameState.officePoints >= cost) {
+                        bestEfficiency = efficiency;
+                        bestUpgrade = taskId;
+                    }
+                }
+            }
+        });
+        
+        if (bestUpgrade) {
+            GameState.upgradeTask(bestUpgrade);
+        }
+    }
+
+    handleAutoInfinity() {
+        if (GameState.canPerformInfinity()) {
+            const timeSinceInfinityStart = Date.now() - GameState.state.currentInfinityStartTime;
+            
+            // Only perform infinity if it's been at least the minimum time and it's beneficial
+            if (timeSinceInfinityStart >= GameState.automation.autoInfinityMinTime) {
+                const currentIP = GameData.calculateInfinityPoints(GameState.officePoints);
+                const currentRate = GameData.calculateTotalProduction(GameState.getMultipliers());
+                
+                // Simple heuristic: perform infinity if IP gain is decent relative to current progress
+                if (currentIP > 0 && (currentIP >= 1 || currentRate < GameState.officePoints / 60)) {
+                    GameState.performInfinity();
+                }
+            }
+        }
+    }
+
+    // User action handlers
+    clickTask(taskId) {
         const task = GameState.tasks[taskId];
         const gameTask = GameData.getTaskById(taskId);
         
-        if (!task || !gameTask) return;
-        
+        if (!task || !gameTask) return false;
+
+        // Unlock task if possible
         if (!task.unlocked) {
-            // Try to unlock the task
-            if (GameData.isTaskUnlocked(taskId, GameState.state)) {
-                GameState.unlockTask(taskId);
-                this.showNotification('success', `${Lang.get(taskId)} unlocked!`);
+            if (GameState.officePoints >= gameTask.unlockCost) {
+                if (GameState.spendOfficePoints(gameTask.unlockCost)) {
+                    GameState.unlockTask(taskId);
+                    return true;
+                }
             }
-            return;
+            return false;
         }
-        
-        if (manual) {
+
+        // Upgrade task if it has levels
+        if (task.level < gameTask.maxLevel) {
+            const cost = GameData.calculateTaskCost(taskId, task.level);
+            if (GameState.officePoints >= cost) {
+                if (GameState.upgradeTask(taskId)) {
+                    // Activate task automation if we have it unlocked
+                    if (GameState.automation.enabled) {
+                        task.automated = true;
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Manual click reward for max level tasks
+        if (task.level > 0) {
             GameState.state.stats.clicksMade++;
             
-            // Manual click gives immediate reward
             const multipliers = GameState.getMultipliers();
             const production = GameData.calculateTaskProduction(taskId, task.level, multipliers);
             const clickMultiplier = this.getClickMultiplier();
             const clickReward = production * clickMultiplier;
             
             GameState.addOfficePoints(clickReward);
-            this.showFloatingNumber(clickReward, taskId, true);
+            
+            if (GameState.state.settings.showFloatingNumbers) {
+                this.showFloatingNumber(clickReward, taskId, true);
+            }
+            
             this.addClickAnimation(taskId);
+            
+            // Activate the task
+            if (!task.isActive) {
+                task.isActive = true;
+                
+                // Auto-activate if automation is enabled
+                if (GameState.automation.enabled) {
+                    task.automated = true;
+                }
+            }
+            
+            return true;
         }
-        
-        // Start automation if not already active
-        if (!task.isActive) {
-            task.isActive = true;
-        }
+
+        return false;
     }
-    
-    upgradeTask(taskId) {
-        return GameState.upgradeTask(taskId);
-    }
-    
-    purchaseDeskUpgrade(upgradeId) {
-        return GameState.purchaseDeskUpgrade(upgradeId);
-    }
-    
-    performInfinity() {
-        return GameState.performInfinity();
-    }
-    
+
     getClickMultiplier() {
         let multiplier = 1;
         
@@ -227,12 +264,20 @@ class GameLogic {
         
         return multiplier;
     }
-    
-    // UI Feedback
+
+    purchaseDeskUpgrade(upgradeId) {
+        return GameState.purchaseDeskUpgrade(upgradeId);
+    }
+
+    performInfinity() {
+        return GameState.performInfinity();
+    }
+
+    // Visual feedback methods
     showFloatingNumber(amount, taskId, isClick = false) {
         const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
         if (!taskElement) return;
-        
+
         const floatingElement = document.createElement('div');
         floatingElement.className = `floating-number ${isClick ? 'click' : 'auto'}`;
         floatingElement.textContent = `+${Lang.formatNumber(amount)}`;
@@ -246,18 +291,22 @@ class GameLogic {
         floatingElement.style.color = isClick ? '#27ae60' : '#3498db';
         floatingElement.style.fontWeight = 'bold';
         floatingElement.style.fontSize = '0.9em';
+        floatingElement.style.textShadow = '0 1px 2px rgba(0,0,0,0.5)';
         
         document.body.appendChild(floatingElement);
-        
+
         // Animate
         let opacity = 1;
         let y = 0;
+        let scale = 1;
+        
         const animate = () => {
-            opacity -= 0.02;
-            y -= 2;
+            opacity -= 0.015;
+            y -= 1.5;
+            scale += 0.005;
             
             floatingElement.style.opacity = opacity;
-            floatingElement.style.transform = `translateY(${y}px)`;
+            floatingElement.style.transform = `translateY(${y}px) scale(${scale})`;
             
             if (opacity > 0) {
                 requestAnimationFrame(animate);
@@ -268,235 +317,199 @@ class GameLogic {
         
         requestAnimationFrame(animate);
     }
-    
+
     addClickAnimation(taskId) {
         const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
         if (!taskElement) return;
-        
+
         taskElement.classList.add('clicked');
         setTimeout(() => {
             taskElement.classList.remove('clicked');
         }, 200);
     }
-    
-    showNotification(type, message) {
-        GameState.showNotification(type, message);
-    }
-    
-    updateDisplay() {
-        // Update main currencies
+
+    updateMainDisplay() {
+        // Update main currency displays
         this.updateElement('office-points', Lang.formatNumber(GameState.officePoints));
         this.updateElement('infinity-points', Lang.formatNumber(GameState.infinityPoints));
-        this.updateElement('soft-skills', Lang.formatNumber(GameState.softSkills));
-        
-        // Update infinity button
-        GameState.checkInfinityAvailability();
+        this.updateElement('desk-level', this.calculateDeskLevel());
     }
-    
+
+    calculateDeskLevel() {
+        let level = 0;
+        Object.values(GameState.deskUpgrades).forEach(upgrade => {
+            if (upgrade.owned) level++;
+        });
+        return level;
+    }
+
     updateElement(id, value) {
         const element = document.getElementById(id);
         if (element && element.textContent !== value) {
             element.textContent = value;
         }
     }
-    
-    // Automation controls
-    initializeAutomation() {
-        // Enable basic automation when threshold is reached
-        if (GameState.officePoints >= GameData.config.firstAutomationAt && !GameState.state.automation.enabled) {
-            GameState.state.automation.enabled = true;
-            this.showNotification('success', 'Automation unlocked! Tasks will now progress automatically.');
-        }
-    }
-    
-    toggleAutomation(type) {
-        if (GameState.state.automation[type] !== undefined) {
-            GameState.state.automation[type] = !GameState.state.automation[type];
-            this.showNotification('info', `${type} automation ${GameState.state.automation[type] ? 'enabled' : 'disabled'}`);
-        }
-    }
-    
-    // Challenge system
-    startChallenge(challengeId) {
-        const challenge = GameData.getChallengeById(challengeId);
-        if (!challenge) return false;
-        
-        // Check unlock requirements
-        if (!this.isChallengeUnlocked(challengeId)) return false;
-        
-        // Save current state
-        GameState.state.preChallengeState = JSON.parse(JSON.stringify(GameState.state));
-        
-        // Reset progress for challenge
-        GameState.state.officePoints = 0;
-        Object.keys(GameState.tasks).forEach(taskId => {
-            const task = GameState.tasks[taskId];
-            task.level = 0;
-            task.progress = 0;
-            task.isActive = false;
-            task.unlocked = GameData.getTaskById(taskId).unlockCost === 0;
-        });
-        
-        // Set challenge state
-        GameState.state.currentChallenge = challengeId;
-        GameState.state.inChallenge = true;
-        GameState.state.challengeStartTime = Date.now();
-        
-        this.showNotification('info', `Challenge "${Lang.get(challengeId)}" started!`);
-        return true;
-    }
-    
-    exitChallenge() {
-        if (!GameState.state.inChallenge) return;
-        
-        // Restore pre-challenge state
-        if (GameState.state.preChallengeState) {
-            const challengeId = GameState.state.currentChallenge;
-            const challengeStartTime = GameState.state.challengeStartTime;
-            
-            GameState.state = { ...GameState.state.preChallengeState };
-            GameState.state.currentChallenge = null;
-            GameState.state.inChallenge = false;
-            
-            delete GameState.state.preChallengeState;
-            delete GameState.state.challengeStartTime;
-        }
-        
-        this.showNotification('info', 'Challenge exited. Progress restored.');
-    }
-    
-    checkChallengeCompletion() {
-        if (!GameState.state.inChallenge) return;
-        
-        const challengeId = GameState.state.currentChallenge;
-        const challenge = GameData.getChallengeById(challengeId);
-        
-        if (!challenge) return;
-        
-        if (this.isChallengeGoalMet(challenge)) {
-            this.completeChallenenge(challengeId);
-        }
-    }
-    
-    isChallengeGoalMet(challenge) {
-        const goal = challenge.goal;
-        
-        switch (goal.type) {
-            case 'officePoints':
-                return GameState.officePoints >= goal.value;
-            case 'taskCompletions':
-                if (goal.target === 'all') {
-                    return Object.values(GameState.state.taskCompletions).reduce((sum, count) => sum + count, 0) >= goal.value;
-                } else {
-                    return GameState.state.taskCompletions[goal.target] >= goal.value;
-                }
-            case 'simultaneousTasks':
-                return Object.values(GameState.tasks).filter(task => task.isActive).length >= goal.value;
-            default:
-                return false;
-        }
-    }
-    
-    completeChallenenge(challengeId) {
-        const challenge = GameData.getChallengeById(challengeId);
-        const completionTime = Date.now() - GameState.state.challengeStartTime;
-        
-        // Mark as completed
-        GameState.state.challengeProgress[challengeId].completed = true;
-        GameState.state.challengeProgress[challengeId].bestTime = completionTime;
-        GameState.state.stats.challengesCompleted++;
-        
-        // Apply reward
-        this.applyChallengeReward(challenge.reward);
-        
-        // Exit challenge
-        this.exitChallenge();
-        
-        this.showNotification('success', `${Lang.get('challenge-completed')} ${Lang.get(challengeId)}!`);
-    }
-    
-    applyChallengeReward(reward) {
-        // Challenge rewards are applied permanently
-        // This would need to be tracked in a separate permanent bonuses system
-        console.log('Challenge reward applied:', reward);
-    }
-    
-    isChallengeUnlocked(challengeId) {
-        const challenge = GameData.getChallengeById(challengeId);
-        if (!challenge) return false;
-        
-        const req = challenge.unlockRequirement;
-        switch (req.type) {
-            case 'infinities':
-                return GameState.infinities >= req.value;
-            default:
-                return true;
-        }
-    }
-    
-    bindEvents() {
-        // Infinity button
+
+    bindInfinityButton() {
         const infinityBtn = document.getElementById('infinity-btn');
         if (infinityBtn) {
             infinityBtn.addEventListener('click', () => {
                 this.performInfinity();
             });
         }
-        
-        // Settings buttons
-        const exportBtn = document.getElementById('export-save');
-        if (exportBtn) {
-            exportBtn.addEventListener('click', () => {
-                GameState.exportSave();
-            });
+    }
+
+    // Challenge system methods
+    startChallenge(challengeId) {
+        const challenge = GameData.getChallengeById(challengeId);
+        if (!challenge || !this.isChallengeUnlocked(challengeId)) {
+            return false;
         }
+
+        // Save current state
+        GameState.state.preChallengeState = JSON.parse(JSON.stringify(GameState.state));
+
+        // Reset for challenge
+        GameState.resetForInfinity();
         
-        const importBtn = document.getElementById('import-save');
-        if (importBtn) {
-            importBtn.addEventListener('click', () => {
-                document.getElementById('import-modal').classList.remove('hidden');
-            });
+        // Set challenge state
+        GameState.state.currentChallenge = challengeId;
+        GameState.state.inChallenge = true;
+        GameState.state.challengeStartTime = Date.now();
+        
+        // Apply challenge restrictions
+        this.applyChallengeRestrictions(challenge);
+        
+        GameState.showNotification('info', `Challenge "${Lang.get(challengeId)}" started!`);
+        return true;
+    }
+
+    exitChallenge() {
+        if (!GameState.state.inChallenge) return;
+
+        // Restore pre-challenge state
+        if (GameState.state.preChallengeState) {
+            const challengeId = GameState.state.currentChallenge;
+            GameState.state = { ...GameState.state.preChallengeState };
+            GameState.state.currentChallenge = null;
+            GameState.state.inChallenge = false;
+            delete GameState.state.preChallengeState;
+            delete GameState.state.challengeStartTime;
         }
+
+        GameState.showNotification('info', 'Challenge exited. Progress restored.');
+    }
+
+    applyChallengeRestrictions(challenge) {
+        // Apply challenge restrictions based on type
+        if (challenge.restriction) {
+            switch (challenge.restriction.type) {
+                case 'disableTask':
+                    const task = GameState.tasks[challenge.restriction.target];
+                    if (task) {
+                        task.unlocked = false;
+                        task.isActive = false;
+                        task.automated = false;
+                    }
+                    break;
+                
+                case 'maxTaskTypes':
+                    // This would be enforced in the upgrade logic
+                    break;
+                
+                case 'noManualClicks':
+                    // This would be enforced in the click handlers
+                    break;
+            }
+        }
+    }
+
+    checkChallengeCompletion() {
+        if (!GameState.state.inChallenge) return;
+
+        const challengeId = GameState.state.currentChallenge;
+        const challenge = GameData.getChallengeById(challengeId);
+        if (!challenge) return;
+
+        if (this.isChallengeGoalMet(challenge)) {
+            this.completeChallenge(challengeId);
+        }
+    }
+
+    isChallengeGoalMet(challenge) {
+        const goal = challenge.goal;
         
-        const confirmImport = document.getElementById('confirm-import');
-        if (confirmImport) {
-            confirmImport.addEventListener('click', () => {
-                const textarea = document.getElementById('import-textarea');
-                if (textarea.value.trim()) {
-                    GameState.importSave(textarea.value.trim());
-                    document.getElementById('import-modal').classList.add('hidden');
-                    textarea.value = '';
+        switch (goal.type) {
+            case 'officePoints':
+                return GameState.officePoints >= goal.value;
+            
+            case 'taskCompletions':
+                if (goal.target === 'all') {
+                    return Object.values(GameState.state.taskCompletions).reduce((sum, count) => sum + count, 0) >= goal.value;
+                } else {
+                    return (GameState.state.taskCompletions[goal.target] || 0) >= goal.value;
                 }
-            });
+            
+            case 'simultaneousTasks':
+                return Object.values(GameState.tasks).filter(task => task.isActive || task.automated).length >= goal.value;
+            
+            case 'infinity':
+                return GameState.canPerformInfinity();
+            
+            default:
+                return false;
+        }
+    }
+
+    completeChallenge(challengeId) {
+        const challenge = GameData.getChallengeById(challengeId);
+        const completionTime = Date.now() - GameState.state.challengeStartTime;
+
+        // Mark as completed
+        GameState.state.challengeProgress[challengeId].completed = true;
+        GameState.state.challengeProgress[challengeId].bestTime = completionTime;
+        GameState.state.stats.challengesCompleted++;
+
+        // Apply reward (this would need to be implemented based on reward type)
+        this.applyChallengeReward(challenge.reward);
+
+        // Exit challenge
+        this.exitChallenge();
+
+        GameState.showNotification('success', `${Lang.get('challenge-completed')} ${Lang.get(challengeId)}!`);
+    }
+
+    applyChallengeReward(reward) {
+        // Challenge rewards would be applied as permanent bonuses
+        console.log('Challenge reward applied:', reward);
+        // This would need to be implemented based on the specific reward system
+    }
+
+    isChallengeUnlocked(challengeId) {
+        const challenge = GameData.getChallengeById(challengeId);
+        if (!challenge) return false;
+
+        const req = challenge.unlockRequirement;
+        if (req.infinities) {
+            return GameState.infinities >= req.infinities;
         }
         
-        const resetBtn = document.getElementById('reset-game');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                GameState.resetGame();
-            });
+        return true;
+    }
+
+    // Automation control methods
+    toggleAutomation(type) {
+        if (GameState.automation.hasOwnProperty(type)) {
+            GameState.automation[type] = !GameState.automation[type];
+            GameState.showNotification('info', `${type} automation ${GameState.automation[type] ? 'enabled' : 'disabled'}`);
         }
-        
-        // Modal close buttons
-        document.querySelectorAll('.modal .close').forEach(closeBtn => {
-            closeBtn.addEventListener('click', (e) => {
-                const modal = e.target.closest('.modal');
-                if (modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        });
-        
-        // Close modal on backdrop click
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        });
+    }
+
+    // Utility methods
+    formatNumber(num) {
+        return Lang.formatNumber(num);
     }
 }
 
 // Initialize global game logic
-window.GameLogic = new GameLogic();
+window.GameLogic = new GameLogicManager();
