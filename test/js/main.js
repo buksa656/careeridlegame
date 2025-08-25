@@ -520,7 +520,7 @@ function ascendTask(idx) {
   const task = tasks[idx];
   const current = typeof task.ascendLevel === "number" ? task.ascendLevel : 0; // Bieżący poziom kariery
   const nextStage = ASCEND_STAGES[current + 1];
-  const cost = ASCEND_COSTS[idx][current]; // Koszt awansu z current na kolejny poziom
+  const cost = task.getAscendCost(); // Koszt awansu z current na kolejny poziom
 
   if (!nextStage) return;      // Brak kolejnego poziomu - max awans!
   if (!cost) return;           // Brak kosztu (możliwe przy błędnej tablicy)
