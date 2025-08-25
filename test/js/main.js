@@ -460,39 +460,28 @@ const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
   totalPoints += reward;
       window.totalPoints = totalPoints;   // <-- zawsze sync z window
       window.tasks = tasks;               // <-- zapewnij, że wszędzie ten sam obiekt
-
       window.IdleUI.updateTotalPoints(totalPoints);
-
-      // Spróbuj unlockować następny task
-      tryUnlockTask(idx + 1);
       checkAchievements();
       saveGame();
-
       window.tasks = tasks; // sync again po ewentualnych zmianach (np. unlock)
       ui.updateSingleTile(idx, task, totalPoints);
-
       if (typeof renderGridProgress === "function")
         renderGridProgress(tasks, totalPoints);
-
       ui.renderProgress(idx, task.progress, task.multiplier);
       renderMultipliersBar();
       floatingScore(reward, idx, "#87c686");
       flashPoints();
       window.IdleUI.updateTotalPoints(totalPoints);
       ui.renderAchievements(window.ACHIEVEMENTS);
-
       if (typeof refreshHexKpiDashboard === "function")
         refreshHexKpiDashboard();
       return;
     }
-
     ui.renderProgress(idx, task.progress, task.multiplier);
     if (typeof refreshHexKpiDashboard === "function")
       refreshHexKpiDashboard();
   }, 1000 / 30);
 }
-
-
 
 function clickTask(idx) {
   const task = tasks[idx];
