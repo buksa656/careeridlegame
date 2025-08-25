@@ -454,7 +454,7 @@ function startIdle(idx) {
     if (task.progress >= 1) {
       task.progress = 0;
   // Dodawanie do mnożnika:
-  const REWARD_MULT_INC = 0.0022;
+  const REWARD_MULT_INC = 0.0012;
   task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_MULT_INC;
 
   // Reszta dotychczasowego kodu:
@@ -508,7 +508,7 @@ function upgradeTask(idx) {
       task.level += 1;
       totalPoints -= cost;
       upgradeCount += 1;
-      const REWARD_UPG = 0.025; // lub 0.03 albo wyższe!
+      const REWARD_UPG = 0.03; // lub 0.03 albo wyższe!
       task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
