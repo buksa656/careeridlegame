@@ -414,15 +414,18 @@ function startIdle(idx) {
 
     if (task.progress >= 1) {
       task.progress = 0;
+  // Dodawanie do mnożnika:
+  const MULT_INC = 0.01; // Zmień na inną wartość jeśli chcesz
+  task.multiplier += MULT_INC;
 
-      // Nagroda za cykl idle
-      const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
-      const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
-      const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
-        * (typeof task.multiplier === 'number' ? task.multiplier : 1)
-        * (stage.rewardMult || 1);
+  // Reszta dotychczasowego kodu:
+  const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
+  const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
+  const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+    * (typeof task.multiplier === 'number' ? task.multiplier : 1)
+    * (stage.rewardMult || 1);
 
-      totalPoints += reward;
+  totalPoints += reward;
       window.totalPoints = totalPoints;   // <-- zawsze sync z window
       window.tasks = tasks;               // <-- zapewnij, że wszędzie ten sam obiekt
 
