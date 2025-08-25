@@ -19,12 +19,11 @@ const TASKS = [
     { name: "Networking na LinkedInie", unlocked: false, level: 0, baseIdle: 8.22, cycleTime: 26000, multiplier: 1, progress: 0, active: false, unlockCost: 350000, ascendLevel: 0 },
     { name: "Król Open Space", unlocked: false, level: 0, baseIdle: 11, cycleTime: 43000, multiplier: 1, progress: 0, active: false, unlockCost: 650000, ascendLevel: 0 }
   ];
-  // 1. Progresywny koszt unlocku kafelków
+
   for (let i = 1; i < TASKS.length; ++i) {
     TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.4, i));
   }
 
-  // 2. Dynamiczne koszty ulepszeń (optymalizacji)
 TASKS.forEach((t, i) => {
   const a = 1;
   const b = 1.33;
