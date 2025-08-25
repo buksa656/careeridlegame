@@ -185,6 +185,7 @@ class GameLogicManager {
 
     // User action handlers
     clickTask(taskId) {
+        console.log('WYWOŁANO clickTask!', taskId, GameState.tasks[taskId]);
         const task = GameState.tasks[taskId];
         const gameTask = GameData.getTaskById(taskId);
         
