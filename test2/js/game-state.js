@@ -5,6 +5,25 @@ class GameState {
         this.loadGame();
         this.setupAutoSave();
     }
+        backfillMissingTasks() {
+    // Ensure every GameData.tasks id exists in state.tasks
+    GameData.tasks.forEach(task => {
+        if (!this.state.tasks[task.id]) {
+            this.state.tasks[task.id] = {
+                unlocked: task.unlockCost === 0,
+                level: 0,
+                progress: 0,
+                isActive: false,
+                totalCompletions: 0,
+                timers: null
+            };
+        }
+        if (typeof this.state.taskCompletions[task.id] !== "number") {
+            this.state.taskCompletions[task.id] = 0;
+        }
+    });
+}
+    }
     
     initializeState() {
         this.state = {
@@ -133,6 +152,7 @@ class GameState {
             
             // Merge loaded state with default state to handle new features
             this.state = this.deepMerge(this.state, parsed.state);
+            this.backfillMissingTasks();
             
             // Handle offline progression
             this.handleOfflineProgression(parsed.timestamp);
