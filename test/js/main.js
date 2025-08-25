@@ -753,7 +753,8 @@ window.refreshHexKpiDashboard = function() {
       onUpgradeTask: upgradeTask,
       onPrestige: prestige,
       onClearSave: clearSave,
-      onAscendTask: ascendTask
+      onAscendTask: ascendTask,
+      onUnlockTask: tryUnlockTask
     });
 tasks.forEach((task, idx) => {
   // Startuj idle TYLKO dla odblokowanych, ALE NIE pierwotnie/tylko po kliknięciu!
