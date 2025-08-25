@@ -619,6 +619,7 @@ function renderMultipliersBar() {
       .filter(Boolean)
       .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
 }
+let softSkillOverflowEnabled = false;
 function checkAchievements() {
     const state = {
     totalPoints,
@@ -631,9 +632,11 @@ function checkAchievements() {
   ACHIEVEMENTS.forEach(a => {
     if (!a.unlocked && (!a.condition || a.condition(state))) {
       a.unlocked = true;
-
+      if (a.reward && a.reward.type === "softSkillOverflow" && a.reward.enabled) {
+        softSkillOverflowEnabled = true;
+      }
       // Ulepszenie baseClick dla wszystkich zadań
-      if (a.reward && a.reward.type === "baseClick") {
+      else if (a.reward && a.reward.type === "baseClick") {
         tasks.forEach(t => {
           t.baseClick = (t.baseClick || 1) + a.reward.value;
         });
