@@ -2,7 +2,7 @@
   'use strict';
 
 const TASKS = [
-    { name: "Robienie kawy Szefowi", unlocked: false,  level: 0, baseIdle: 0.21, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
+    { name: "Robienie kawy Szefowi", unlocked: false,  level: 0, baseIdle: 0.22, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
     { name: "Obsługa kserokopiarki", unlocked: false, level: 0, baseIdle: 0.34, cycleTime: 1450, multiplier: 1, progress: 0, active: false, unlockCost: 60, ascendLevel: 0 },
     { name: "Przerzucanie maili do folderu", unlocked: false, level: 0, baseIdle: 0.51, cycleTime: 1600, multiplier: 1, progress: 0, active: false, unlockCost: 180, ascendLevel: 0 },
     { name: "Small talk w kuchni", unlocked: false, level: 0, baseIdle: 0.67, cycleTime: 1850, multiplier: 1, progress: 0, active: false, unlockCost: 410, ascendLevel: 0 },
@@ -21,7 +21,7 @@ const TASKS = [
   ];
 
   for (let i = 1; i < TASKS.length; ++i) {
-    TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.2, i));
+    TASKS[i].unlockCost = Math.floor(40 * Math.pow(2.0, i));
   }
 
   const ASCEND_STAGES = [
@@ -44,7 +44,7 @@ function applyTaskMethods(tasksArray) {
     t.getUpgradeCost = function() {
       return Math.ceil(a * Math.pow(b, this.level));
     };
-    const ascendBase = t.unlockCost || 50, ascendGrowth = 1.8;
+    const ascendBase = t.unlockCost || 50, ascendGrowth = 1.6;
     t.getAscendCost = function() {
       const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
       if (currentLevel >= (ASCEND_STAGES.length - 1)) return null;
@@ -454,13 +454,13 @@ function startIdle(idx) {
     if (task.progress >= 1) {
       task.progress = 0;
   // Dodawanie do mnożnika:
-  const REWARD_MULT_INC = 0.0012;
+  const REWARD_MULT_INC = 0.00125;
   task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_MULT_INC;
 
   // Reszta dotychczasowego kodu:
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
-const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.01)
+const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.02)
   * (stage.rewardMult || 1)
   * (typeof task.rewardMultiplier === 'number' ? task.rewardMultiplier : 1);
 
@@ -508,7 +508,7 @@ function upgradeTask(idx) {
       task.level += 1;
       totalPoints -= cost;
       upgradeCount += 1;
-      const REWARD_UPG = 0.03; // lub 0.03 albo wyższe!
+      const REWARD_UPG = 0.05; // lub 0.03 albo wyższe!
       task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
       saveGame();
       ui.renderAll(tasks, totalPoints, softSkills, burnout);
