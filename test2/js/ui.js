@@ -86,117 +86,120 @@ class UIManager {
         });
     }
 
-    createTaskCard(gameTask, task) {
-        const card = document.createElement('div');
-        card.className = `task-card ${!task.unlocked ? 'locked' : ''}`;
-        card.setAttribute('data-task-id', gameTask.id);
+createTaskCard(gameTask, task) {
+    const card = document.createElement('div');
+    card.className = `task-card ${!task.unlocked ? 'locked' : ''}`;
+    card.setAttribute('data-task-id', gameTask.id);
 
-        // Determine if task is affordable
-        let isAffordable = false;
-        let actionCost = 0;
-        let actionText = '';
+    // Determine if task is affordable
+    let isAffordable = false;
+    let actionCost = 0;
+    let actionText = '';
 
-        if (!task.unlocked) {
-            isAffordable = GameState.officePoints >= gameTask.unlockCost;
-            actionCost = gameTask.unlockCost;
-            actionText = Lang.get('unlock-cost');
-        } else if (task.level < gameTask.maxLevel) {
-            actionCost = GameData.calculateTaskCost(gameTask.id, task.level);
-            isAffordable = GameState.officePoints >= actionCost;
-            actionText = Lang.get('upgrade');
-        } else {
-            actionText = Lang.get('max-level');
-        }
+    if (!task.unlocked) {
+        isAffordable = GameState.officePoints >= gameTask.unlockCost;
+        actionCost = gameTask.unlockCost;
+        actionText = Lang.get('unlock-cost');
+    } else if (task.level < gameTask.maxLevel) {
+        actionCost = GameData.calculateTaskCost(gameTask.id, task.level);
+        isAffordable = GameState.officePoints >= actionCost;
+        actionText = Lang.get('upgrade');
+    } else {
+        actionText = Lang.get('max-level');
+    }
 
-        if (isAffordable && !task.unlocked) {
-            card.classList.add('can-unlock');
-        }
+    if (isAffordable && !task.unlocked) {
+        card.classList.add('can-unlock');
+    }
 
-        // Calculate current production
-        const multipliers = GameState.getMultipliers();
-        const production = task.level > 0 ? GameData.calculateTaskProduction(gameTask.id, task.level, multipliers) : 0;
-        const productionPerSecond = production > 0 ? production / (gameTask.cycleTime / 1000) : 0;
+    // Calculate current production
+    const multipliers = GameState.getMultipliers();
+    const production = task.level > 0 ? GameData.calculateTaskProduction(gameTask.id, task.level, multipliers) : 0;
+    const productionPerSecond = production > 0 ? production / (gameTask.cycleTime / 1000) : 0;
 
-        // Progress bar width
-        const progressWidth = (task.isActive || task.automated) ? (task.progress * 100) : 0;
+    // Progress bar width
+    const progressWidth = (task.isActive || task.automated) ? (task.progress * 100) : 0;
 
-        card.innerHTML = `
-            <div class="task-header">
-                <div class="task-icon">${gameTask.icon}</div>
-                <div class="task-info">
-                    <div class="task-title" data-i18n="${gameTask.id}">${Lang.get(gameTask.id)}</div>
-                    <div class="task-level">${Lang.get('level')} ${task.level}</div>
-                </div>
-                <div class="task-status">
-                    ${task.automated ? `<span class="status status--success">${Lang.get('auto')}</span>` : 
-                      task.isActive ? `<span class="status status--info">${Lang.get('manual')}</span>` : 
-                      task.unlocked ? '' : `<span class="status status--error">${Lang.get('locked')}</span>`}
-                </div>
+    card.innerHTML = `
+        <div class="task-header">
+            <div class="task-icon">${gameTask.icon}</div>
+            <div class="task-info">
+                <div class="task-title" data-i18n="${gameTask.id}">${Lang.get(gameTask.id)}</div>
+                <div class="task-level">${Lang.get('level')} ${task.level}</div>
             </div>
+            <div class="task-status">
+                ${task.automated ? `<span class="status status--success">${Lang.get('auto')}</span>` : 
+                  task.isActive ? `<span class="status status--info">${Lang.get('manual')}</span>` : 
+                  task.unlocked ? '' : `<span class="status status--error">${Lang.get('locked')}</span>`}
+            </div>
+        </div>
 
-            <div class="task-description" data-i18n="${gameTask.id}-desc">${Lang.get(gameTask.id + '-desc')}</div>
+        <div class="task-description" data-i18n="${gameTask.id}-desc">${Lang.get(gameTask.id + '-desc')}</div>
 
-            <div class="task-stats">
-                ${production > 0 ? `
-                    <div class="task-stat">
-                        <span class="task-stat-label" data-i18n="production">${Lang.get('production')}</span>
-                        <span class="task-stat-value">${Lang.formatNumber(productionPerSecond)}${Lang.get('per-second')}</span>
-                    </div>
-                ` : ''}
-                
+        <div class="task-stats">
+            ${production > 0 ? `
                 <div class="task-stat">
-                    <span class="task-stat-label" data-i18n="completions">Completions</span>
-                    <span class="task-stat-value">${Lang.formatNumber(task.totalCompletions)}</span>
-                </div>
-            </div>
-
-            ${task.unlocked && (task.isActive || task.automated) ? `
-                <div class="task-progress">
-                    <div class="task-progress-fill" style="width: ${progressWidth}%"></div>
+                    <span class="task-stat-label" data-i18n="production">${Lang.get('production')}</span>
+                    <span class="task-stat-value">${Lang.formatNumber(productionPerSecond)}${Lang.get('per-second')}</span>
                 </div>
             ` : ''}
-
-            <div class="task-buttons">
-                ${!task.unlocked || task.level < gameTask.maxLevel ? `
-                    <button class="task-btn ${isAffordable ? 'primary' : 'secondary'}" 
-                            ${!isAffordable ? 'disabled' : ''}>
-                        ${actionText}: ${Lang.formatNumber(actionCost)}
-                    </button>
-                ` : `
-                    <button class="task-btn secondary" disabled>
-                        ${Lang.get('max-level')}
-                    </button>
-                `}
-            </div>
-        `;
-
-        // Add click handler
-        const button = card.querySelector('.task-btn');
-        if (button && !button.disabled) {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                GameLogic.clickTask(gameTask.id);
-                this.renderTasks(); // Refresh after action
-            });
-        }
-
-        // Add card click handler for manual activation/clicking
-        if (task.unlocked && task.level > 0) {
-            card.addEventListener('click', (e) => {
-                if (e.target === button || e.target.closest('.task-btn')) return;
-                
-                GameLogic.clickTask(gameTask.id);
-                
-                // Small visual feedback
-                GameLogic.addClickAnimation(gameTask.id);
-            });
             
-            card.style.cursor = 'pointer';
-        }
+            <div class="task-stat">
+                <span class="task-stat-label" data-i18n="completions">Completions</span>
+                <span class="task-stat-value">${Lang.formatNumber(task.totalCompletions)}</span>
+            </div>
+        </div>
 
-        return card;
+        ${task.unlocked && (task.isActive || task.automated) ? `
+            <div class="task-progress">
+                <div class="task-progress-fill" style="width: ${progressWidth}%"></div>
+            </div>
+        ` : ''}
+
+        <div class="task-buttons">
+            ${!task.unlocked || task.level < gameTask.maxLevel ? `
+                <button class="task-btn ${isAffordable ? 'primary' : 'secondary'}" 
+                        ${!isAffordable ? 'disabled' : ''}>
+                    ${actionText}: ${Lang.formatNumber(actionCost)}
+                </button>
+            ` : `
+                <button class="task-btn secondary" disabled>
+                    ${Lang.get('max-level')}
+                </button>
+            `}
+        </div>
+    `;
+
+    // --- POPRAWIONE: przycisk: odblokowanie/ulepszenie
+    const button = card.querySelector('.task-btn');
+    if (button && !button.disabled) {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!task.unlocked) {
+                // Odblokuj zadanie
+                GameState.unlockTask(gameTask.id);
+            } else if (task.unlocked && task.level < gameTask.maxLevel) {
+                // Ulepsz zadanie
+                GameLogic.upgradeTask(gameTask.id);
+            }
+            this.renderTasks(); // Odśwież widok po akcji
+        });
     }
+
+    // --- POPRAWIONE: klik w kartę: manualne kliknięcie na zadaniu
+    if (task.unlocked && task.level > 0) {
+        card.addEventListener('click', (e) => {
+            if (e.target === button || e.target.closest('.task-btn')) return;
+            GameLogic.clickTask(gameTask.id, true); // manual click
+            // Efekt wizualny
+            GameLogic.addClickAnimation(gameTask.id);
+        });
+        card.style.cursor = 'pointer';
+    }
+
+    return card;
+}
 
     renderDeskUpgrades() {
         const deskGrid = document.getElementById('desk-grid');
