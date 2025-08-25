@@ -577,21 +577,19 @@ function applyDeskModsEffects() {
   });
 }
 
-
-  function renderMultipliersBar() {
-    const bar = document.getElementById('multipliersBar');
-    bar.innerHTML =
-      'Akt. mnożnik idle: ' +
-      tasks
-        .map(t =>
-          t.unlocked
-            ? `<strong>${t.name}</strong>: x${(typeof t.multiplier === 'number' ? t.multiplier : 1).toFixed(3)}`
-            : null
-        )
-        .filter(Boolean)
-        .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
-  }
-
+function renderMultipliersBar() {
+  const bar = document.getElementById('multipliersBar');
+  bar.innerHTML =
+    'Akt. mnożnik punktów: ' +
+    tasks
+      .map(t =>
+        t.unlocked
+          ? `<strong>${t.name}</strong>: x${(typeof t.rewardMultiplier === 'number' ? t.rewardMultiplier : 1).toFixed(3)}`
+          : null
+      )
+      .filter(Boolean)
+      .join(' &nbsp;&nbsp; | &nbsp;&nbsp; ');
+}
 function checkAchievements() {
     const state = {
     totalPoints,
