@@ -406,8 +406,12 @@ function tryUnlockTask(idx) {
     !tasks[idx].unlocked &&
     (totalPoints >= tasks[idx].unlockCost || tasks[idx].unlockCost === 0)
   ) {
+    // Odejmij punkty tylko jeśli koszt > 0
+    if (tasks[idx].unlockCost > 0) {
+      totalPoints -= tasks[idx].unlockCost;
+      if (totalPoints < 0) totalPoints = 0; // bezpieczeństwo
+    }
     tasks[idx].unlocked = true;
-    // startIdle(idx); <-- starter idle dopiero po odblokowaniu!
     startIdle(idx);
     window.tasks = tasks;
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
