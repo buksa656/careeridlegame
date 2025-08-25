@@ -34,11 +34,11 @@ TASKS.forEach((t, i) => {
 
   const ascendBase = t.unlockCost || 50; // baza to unlockCost danego taska
   const ascendGrowth = 2.5;
-  t.getAscendCost = function() {
-    if (typeof this.ascendLevel !== "number") return Math.floor(ascendBase * Math.pow(ascendGrowth, 1)); // domyślnie liczymy koszt pierwszego awansu
-    if (this.ascendLevel >= ASCEND_STAGES.length - 1) return null;
-    return Math.floor(ascendBase * Math.pow(ascendGrowth, this.ascendLevel + 1));
-  };
+t.getAscendCost = function() {
+  const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
+  if (currentLevel >= ASCEND_STAGES.length - 1) return null;
+  return Math.floor(ascendBase * Math.pow(ascendGrowth, currentLevel + 1));
+};
 });
   const ASCEND_STAGES = [
     { name: "Junior",    idleMult: 1.0, rewardMult: 1.0 },
