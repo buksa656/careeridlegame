@@ -57,10 +57,10 @@ function taskTile(task, idx, totalPoints, locked = false) {
   const perSec = isFinite(gainIdle * 1000 / barMs) ? (gainIdle * 1000 / barMs).toFixed(3) : "0.000";
   
   const nextStage = ASCEND_STAGES[ascendLevel + 1];
-  let ascendCost = null;
-  if (nextStage && ASCEND_COSTS[idx] && ASCEND_COSTS[idx][ascendLevel] != null) {
-    ascendCost = ASCEND_COSTS[idx][ascendLevel];
-  }
+let ascendCost = null;
+if (nextStage && typeof task.getAscendCost === "function") {
+  ascendCost = task.getAscendCost();
+}
 
   return `
 <div class="kafelek" data-taskidx="${idx}" tabindex="0" style="position:relative;">
@@ -81,11 +81,11 @@ function taskTile(task, idx, totalPoints, locked = false) {
       Opt.<br>(${fmt(upgCost)})
     </button>
     ${
-      nextStage && ascendCost
-        ? `<button class="ascend-btn" data-task="${idx}">
-            Awans<br>(${fmt(ascendCost)})
-          </button>`
-        : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
+nextStage && ascendCost
+  ? `<button class="ascend-btn" data-task="${idx}">
+      Awans<br>(${fmt(ascendCost)})
+    </button>`
+  : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
     }
   </div>
 </div>
@@ -114,10 +114,10 @@ function updateSingleTile(idx, task, totalPoints) {
   const multiplierLabel = (typeof task.multiplier === 'number' ? task.multiplier : 1).toFixed(3);
 
   const nextStage = ASCEND_STAGES[ascendLevel + 1];
-  let ascendCost = null;
-  if (nextStage && ASCEND_COSTS[idx] && ASCEND_COSTS[idx][ascendLevel] != null) {
-    ascendCost = ASCEND_COSTS[idx][ascendLevel];
-  }
+let ascendCost = null;
+if (nextStage && typeof task.getAscendCost === "function") {
+  ascendCost = task.getAscendCost();
+}
 
   if (kafelek.querySelector('.tile-stage')) kafelek.querySelector('.tile-stage').innerText = ascendStage.name;
   if (kafelek.querySelector('.tile-asc-perc')) kafelek.querySelector('.tile-asc-perc').innerText = `+${Math.round((ascendStage.idleMult - 1) * 100)}% idle`;
