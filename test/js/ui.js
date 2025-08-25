@@ -80,13 +80,11 @@ if (nextStage && typeof task.getAscendCost === "function") {
         ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
       Opt.<br>(${fmt(upgCost)})
     </button>
-    ${
-nextStage && ascendCost
-  ? `<button class="ascend-btn" data-task="${idx}">
-      Awans<br>(${fmt(ascendCost)})
-    </button>`
-  : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`
-    }
+${ nextStage && ascendCost
+    ? `<button class="ascend-btn" data-task="${idx}">
+        Awans<br>(${fmt(ascendCost)})
+      </button>`
+    : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>` }
   </div>
 </div>
   `;
