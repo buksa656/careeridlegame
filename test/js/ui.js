@@ -274,7 +274,7 @@ if (totalPoints >= SOFTSKILL_COST) {
       if (typeof softSkillOverflowEnabled !== 'undefined' && softSkillOverflowEnabled) {
         const ile = Math.floor(totalPoints / SOFTSKILL_COST);
         if (ile >= 1) {
-          softSkills += ile;
+          window.softSkills += ile;
           totalPoints -= ile * SOFTSKILL_COST;
           saveGame();
           ui.renderAll(tasks, totalPoints, softSkills, burnout);
