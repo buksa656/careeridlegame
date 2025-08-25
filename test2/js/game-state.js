@@ -314,17 +314,20 @@ class GameStateManager {
         return false;
     }
 
-    unlockTask(taskId) {
-        const task = this.state.tasks[taskId];
-        if (task && !task.unlocked) {
+unlockTask(taskId) {
+    const task = this.state.tasks[taskId];
+    const gameTask = GameData.getTaskById(taskId);
+    if (task && !task.unlocked && gameTask) {
+        if (this.spendOfficePoints(gameTask.unlockCost)) { // >>> KLUCZOWE !!!
             task.unlocked = true;
             this.state.stats.tasksUnlocked++;
             this.showNotification('success', `${Lang.get(taskId)} ${Lang.get('task-unlocked')}`);
             this.checkAchievements();
             return true;
         }
-        return false;
     }
+    return false;
+}
 
     upgradeTask(taskId) {
         const task = this.state.tasks[taskId];
