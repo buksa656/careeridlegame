@@ -295,6 +295,13 @@ const ACHIEVEMENTS = [
     reward: { type: "multiplierInc", multiplierInc: 0.12 }
   },
   {
+  id: "softskill-overdrive",
+  name: "Pęknięty limit!",
+  desc: "Zdobądź 10 Soft Skilli w sumie, aby odblokować przełamywanie limitu.",
+  condition: gs => gs.softSkills >= 10,
+  reward: { type: "softSkillOverflow", enabled: true }
+  },
+  {
     id: "król-softskill",
     name: "Król Soft Skill",
     desc: "Kup najdroższy przedmiot z biurka.",
@@ -311,8 +318,8 @@ const ACHIEVEMENTS = [
   {
     id: "mistrz-softskilli",
     name: "Mistrz Soft Skilli",
-    desc: "Uzbieraj co najmniej 20 Soft Skills.",
-    condition: gs => gs.softSkills >= 20,
+    desc: "Uzbieraj co najmniej 100 Soft Skills.",
+    condition: gs => gs.softSkills >= 100,
     reward: { type: "multiplierInc", multiplierInc: 0.15 }
   }
 ];
