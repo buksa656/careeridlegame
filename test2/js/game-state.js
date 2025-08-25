@@ -1,5 +1,3 @@
-// Enhanced Game State Management for Corporate Rat Idle
-
 class GameStateManager {
     constructor() {
         this.initializeState();
