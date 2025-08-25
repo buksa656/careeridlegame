@@ -454,7 +454,7 @@ function startIdle(idx) {
     if (task.progress >= 1) {
       task.progress = 0;
   // Dodawanie do mnożnika:
-  const REWARD_MULT_INC = 0.001;
+  const REWARD_MULT_INC = 0.0022;
   task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_MULT_INC;
 
   // Reszta dotychczasowego kodu:
