@@ -275,22 +275,22 @@ if (totalPoints >= SOFTSKILL_COST) {
         const ile = Math.floor(totalPoints / SOFTSKILL_COST);
         if (ile >= 1) {
           window.softSkills += ile;
-          totalPoints -= ile * SOFTSKILL_COST;
-          saveGame();
-          ui.renderAll(tasks, totalPoints, softSkills, burnout);
-          ui.renderUpgradeAffordances(tasks, totalPoints);
-          renderMultipliersBar(tasks);
-          if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+          window.totalPoints -= ile * SOFTSKILL_COST;
+          window.saveGame();
+          window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+          window.IdleUI.renderUpgradeAffordances(window.tasks, window.totalPoints);
+          renderMultipliersBar(window.tasks);
+          if (typeof renderGridProgress === "function") renderGridProgress(window.tasks, window.totalPoints);
         }
       } else {
         if (totalPoints >= SOFTSKILL_COST) {
-          softSkills += 1;
-          totalPoints -= SOFTSKILL_COST;
-          saveGame();
-          ui.renderAll(tasks, totalPoints, softSkills, burnout);
-          ui.renderUpgradeAffordances(tasks, totalPoints);
-          renderMultipliersBar(tasks);
-          if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+          window.softSkills += 1;
+          window.totalPoints -= SOFTSKILL_COST;
+          window.saveGame();
+          window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+          window.IdleUI.renderUpgradeAffordances(window.tasks, window.totalPoints);
+          renderMultipliersBar(window.tasks);
+          if (typeof renderGridProgress === "function") renderGridProgress(window.tasks, window.totalPoints);
         }
       }
     }
