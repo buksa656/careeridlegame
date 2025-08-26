@@ -4,7 +4,7 @@
   // ===== KONFIGURACJA =====
   const SOFTSKILL_COST = 10000;
   
-  // ===== ZMIENNE MODU艁U =====
+  // ===== ZMIENNE MODUŁU =====
   let eventHandlers = {};
 
   // ===== UTILITKI =====
@@ -104,7 +104,7 @@
 
     return `
       <button id="get-softskill-btn" class="get-softskill-btn">
-        <span class="ss-badge">馃帗</span>
+        <span class="ss-badge">🎓</span>
         <span class="ss-label">
           <b>Awans!</b>
           <div class="ss-desc">
@@ -455,7 +455,7 @@
 
       return `
         <div class="ach-item${a.unlocked ? ' completed' : ''}">
-          <div class="emoji">${a.unlocked ? '馃弳' : '馃敀'}</div>
+          <div class="emoji">${a.unlocked ? '🏆' : '🔒'}</div>
           <div>
             <div class="ach-name">${a.name}</div>
             <div class="ach-desc">${a.desc}</div>
