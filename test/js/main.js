@@ -364,15 +364,26 @@
 
   // ===== GAMEPLAY =====
   function tryUnlockTask(idx) {
-    if (idx >= tasks.length || tasks[idx].unlocked) return;
-    if (totalPoints >= tasks[idx].unlockCost || tasks[idx].unlockCost === 0) {
+    if (
+      idx < tasks.length &&
+      !tasks[idx].unlocked &&
+      (totalPoints >= tasks[idx].unlockCost || tasks[idx].unlockCost === 0)
+    ) {
+      // Odejmij punkty tylko jeśli koszt > 0
       if (tasks[idx].unlockCost > 0) {
         totalPoints -= tasks[idx].unlockCost;
-        window.totalPoints = totalPoints;
+        if (totalPoints < 0) totalPoints = 0;
       }
       tasks[idx].unlocked = true;
       startIdle(idx);
-      updateGameState();
+      window.tasks = tasks;
+      // KLUCZOWE: aktualizujemy cały UI
+      window.IdleUI.renderAll(tasks, totalPoints, softSkills, burnout);
+      // oraz (opcjonalnie) pozostałe drobiazgi:
+      window.IdleUI.renderUpgradeAffordances(tasks, totalPoints);
+      renderMultipliersBar();
+      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+      window.IdleUI.renderAchievements(window.ACHIEVEMENTS);
     }
   }
 
