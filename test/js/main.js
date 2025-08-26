@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  // ===== CONFIGURACIÓN =====
+  // ===== Konfiguracja tasków =====
   const TASKS = [
     { name: "Robienie kawy Szefowi", unlocked: false, level: 0, baseIdle: 0.22, cycleTime: 1200, multiplier: 1, progress: 0, active: false, unlockCost: 0, ascendLevel: 0 },
     { name: "Obsługa kserokopiarki", unlocked: false, level: 0, baseIdle: 0.34, cycleTime: 1450, multiplier: 1, progress: 0, active: false, unlockCost: 60, ascendLevel: 0 },
