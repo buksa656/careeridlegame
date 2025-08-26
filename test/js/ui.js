@@ -267,7 +267,7 @@ function createUnlockedTile(task, idx, totalPoints) {
     
     if (nextTask && nextTask.unlockCost && progressDiv) {
       const progress = Math.min(Number(totalPoints) / Number(nextTask.unlockCost), 1);
-      progressDiv.innerHTML = createProgressBar(progress, "do odblokowania nowej pracy");
+      progressDiv.innerHTML = createProgressBar(progress, "do odblokowania nowego zadania");
     } else if (progressDiv) {
       progressDiv.innerHTML = "";
     }
@@ -320,7 +320,7 @@ function createUnlockedTile(task, idx, totalPoints) {
       .map(t => `<strong>${t.name}</strong>: x${safeValue(t.multiplier, 1).toFixed(3)}`)
       .join(' | ');
     
-    bar.innerHTML = multipliers ? `Akt. mno偶nik idle: ${multipliers}` : '';
+    bar.innerHTML = multipliers ? `Akt. mnożnik idle: ${multipliers}` : '';
   }
 
   function renderProgress(idx, progress) {
@@ -469,9 +469,9 @@ function addEvents() {
     container.innerHTML = achievements.map(a => {
       let rewardText = '';
       if (a.reward?.taskIdx !== undefined && a.reward?.multiplierInc) {
-        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mno偶nika do zadania`;
+        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika do zadania`;
       } else if (a.reward?.multiplierInc) {
-        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mno偶nika globalnego`;
+        rewardText = `Nagroda: +${Math.round(a.reward.multiplierInc * 100)}% mnożnika globalnego`;
       }
 
       return `
@@ -496,7 +496,7 @@ function addEvents() {
     }
 
     toast.innerHTML = `
-      <span class="emoji">馃弳</span>
+      <span class="emoji">🏆</span>
       <div>
         <div style="font-weight:bold;font-size:1.1em;letter-spacing:0.2px">${achievement.name}</div>
         <div class="desc">${achievement.desc}</div>
