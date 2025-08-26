@@ -130,10 +130,11 @@
       reward: { type: "multiplierInc", multiplierInc: 0.09 }
     },
     {
-      id: "pracownik-roku", name: "Pracownik Roku",
+      id: "pracownik-roku",
+      name: "Pracownik Roku",
       desc: "Zdobądź pierwszy 1.000 biuro-punktów.",
       condition: gs => gs.totalPoints >= 1000,
-      reward: { type: "multiplierInc", multiplierInc: 0.07 }
+      reward: { type: "enableMultiBuy", enabled: true }
     },
     {
       id: "excel-heros", name: "Excel Heros",
@@ -455,25 +456,44 @@
     }
   }
 
-  function upgradeTask(idx) {
-    const task = tasks[idx];
+function upgradeTask(idx) {
+  const task = tasks[idx];
+  let buyN = window.multiBuyEnabled ? window.multiBuyAmount : 1;
+  if (buyN === "max") {
+    // Policz, ile maksymalnie możesz kupić, zanim zabraknie ci punktów
+    let n = 0, pts = totalPoints;
+    while (pts >= task.getUpgradeCost()) {
+      pts -= task.getUpgradeCost();
+      n++; task.level++;
+    }
+    buyN = n;
+  }
+  if (typeof buyN !== "number" || buyN < 1) buyN = 1;
+  let bought = 0;
+  for(let i=0; i<buyN; ++i) {
     const cost = task.getUpgradeCost();
     if (totalPoints >= cost) {
       task.level += 1;
       totalPoints -= cost;
       upgradeCount += 1;
-      
-      // Boost do punktów
+      // Zaktualizuj rewardMultiplier itd.
       const REWARD_UPG = 0.08;
       task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
-      
-      // Boost do prędkości
       const SPEED_UPG = 0.90;
       task.cycleTime = (task.baseCycleTime || TASKS[idx].cycleTime * 2) * Math.pow(SPEED_UPG, task.level);
-      
-      updateGameState();
+      bought++;
     }
   }
+  if (bought) {
+    saveGame();
+    window.IdleUI.renderAll(tasks, totalPoints, softSkills, burnout);
+    window.IdleUI.renderUpgradeAffordances(tasks, totalPoints);
+    renderMultipliersBar();
+    checkAchievements();
+    window.IdleUI.renderAchievements(window.ACHIEVEMENTS);
+    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+  }
+}
 
   function ascendTask(idx) {
     const task = tasks[idx];
@@ -515,41 +535,47 @@
   }
 
   // ===== ACHIEVEMENTS =====
-  function checkAchievements() {
-    const state = {
-      totalPoints, softSkills, burnout, tasks, deskModsOwned, upgradeCount
-    };
-    
-    ACHIEVEMENTS.forEach(a => {
-      if (!a.unlocked && a.condition(state)) {
-        a.unlocked = true;
-        
-        if (a.reward?.type === "softSkillOverflow" && a.reward.enabled) {
-          softSkillOverflowEnabled = true;
-        } else if (a.reward?.type === "baseClick") {
-          tasks.forEach(t => {
-            t.baseClick = (t.baseClick || 1) + a.reward.value;
-          });
-        } else if (typeof a.reward?.taskIdx === "number") {
-          tasks[a.reward.taskIdx].multiplier += a.reward.multiplierInc;
-        } else if (typeof a.reward?.multiplierInc === "number") {
-          tasks.forEach(t => { 
-            if (t.unlocked) t.multiplier += a.reward.multiplierInc; 
-          });
-        }
-        
-        // Pokaż achievement
-        const ui = window.IdleUI;
-        if (ui?.showAchievement) {
-          ui.showAchievement(a);
-        } else {
-          alert(`Osiągnięcie odblokowane: ${a.name}!`);
-        }
-        
-        updateGameState();
+function checkAchievements() {
+  const state = {
+    totalPoints, softSkills, burnout, tasks, deskModsOwned, upgradeCount
+  };
+
+  ACHIEVEMENTS.forEach(a => {
+    if (!a.unlocked && a.condition(state)) {
+      a.unlocked = true;
+
+      // --- Dodane: Odblokowanie multi-buy ---
+      if (a.reward?.type === "enableMultiBuy" && a.reward.enabled) {
+        window.multiBuyEnabled = true;
+        window.multiBuyAmount = 1; // domyślnie
       }
-    });
-  }
+      // Pozostałe nagrody
+      else if (a.reward?.type === "softSkillOverflow" && a.reward.enabled) {
+        softSkillOverflowEnabled = true;
+      } else if (a.reward?.type === "baseClick") {
+        tasks.forEach(t => {
+          t.baseClick = (t.baseClick || 1) + a.reward.value;
+        });
+      } else if (typeof a.reward?.taskIdx === "number") {
+        tasks[a.reward.taskIdx].multiplier += a.reward.multiplierInc;
+      } else if (typeof a.reward?.multiplierInc === "number") {
+        tasks.forEach(t => { 
+          if (t.unlocked) t.multiplier += a.reward.multiplierInc; 
+        });
+      }
+
+      // Pokaż achievement
+      const ui = window.IdleUI;
+      if (ui?.showAchievement) {
+        ui.showAchievement(a);
+      } else {
+        alert(`Osiągnięcie odblokowane: ${a.name}!`);
+      }
+
+      updateGameState();
+    }
+  });
+}
 
   // ===== DESK MODS =====
   function renderDeskSVG() {
