@@ -40,10 +40,10 @@ window.ASCEND_STAGES = ASCEND_STAGES;
   
 function applyTaskMethods(tasksArray) {
   tasksArray.forEach((t, i) => {
-    const a = 0.88, b = 1.33;
-    t.getUpgradeCost = function() {
-      return Math.ceil(a * Math.pow(b, this.level));
-    };
+const a = 0.45, b = 1.33;
+t.getUpgradeCost = function() {
+  return +(a * Math.pow(b, this.level)).toFixed(2);
+};
     const ascendBase = t.unlockCost || 50, ascendGrowth = 1.6;
     t.getAscendCost = function() {
       const currentLevel = typeof this.ascendLevel === "number" ? this.ascendLevel : 0;
@@ -357,12 +357,11 @@ function loadGame() {
       }
       deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
       // NOWA FORMUŁA
-      tasks.forEach((t, i) => {
-        const a = 0.88;
-        const b = 1.33;
-        t.getUpgradeCost = function() {
-          return Math.ceil(a * Math.pow(b, this.level));
-        };
+  tasksArray.forEach((t, i) => {
+const a = 0.45, b = 1.33;
+t.getUpgradeCost = function() {
+  return +(a * Math.pow(b, this.level)).toFixed(2);
+};
       });
       window.tasks = tasks;
     } catch (e) {
@@ -372,12 +371,11 @@ function loadGame() {
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
       applyDeskModsEffects();
-      tasks.forEach((t, i) => {
-        const a = 0.88;
-        const b = 1.33;
-        t.getUpgradeCost = function() {
-          return Math.ceil(a * Math.pow(b, this.level));
-        };
+  tasksArray.forEach((t, i) => {
+const a = 0.45, b = 1.33;
+t.getUpgradeCost = function() {
+  return +(a * Math.pow(b, this.level)).toFixed(2);
+};
       });
       window.tasks = tasks;
     }
@@ -388,12 +386,11 @@ function loadGame() {
     ACHIEVEMENTS.forEach(a => a.unlocked = false);
     deskModsOwned = [];
     // NOWA FORMUŁA
-    tasks.forEach((t, i) => {
-      const a = 0.88;
-      const b = 1.33;
-      t.getUpgradeCost = function() {
-        return Math.ceil(a * Math.pow(b, this.level));
-      };
+  tasksArray.forEach((t, i) => {
+const a = 0.45, b = 1.33;
+t.getUpgradeCost = function() {
+  return +(a * Math.pow(b, this.level)).toFixed(2);
+};
     });
     window.tasks = tasks;
   }
