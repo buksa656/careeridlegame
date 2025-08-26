@@ -356,13 +356,8 @@ function loadGame() {
         });
       }
       deskModsOwned = Array.isArray(s.deskModsOwned) ? s.deskModsOwned : [];
-      // NOWA FORMUŁA
-  tasksArray.forEach((t, i) => {
-const a = 0.45, b = 1.33;
-t.getUpgradeCost = function() {
-  return +(a * Math.pow(b, this.level)).toFixed(2);
-};
-      });
+      // NOWA FORMUŁA — po prostu:
+      applyTaskMethods(tasks);
       window.tasks = tasks;
     } catch (e) {
       tasks = JSON.parse(JSON.stringify(TASKS));
@@ -371,12 +366,6 @@ t.getUpgradeCost = function() {
       ACHIEVEMENTS.forEach(a => a.unlocked = false);
       deskModsOwned = [];
       applyDeskModsEffects();
-  tasksArray.forEach((t, i) => {
-const a = 0.45, b = 1.33;
-t.getUpgradeCost = function() {
-  return +(a * Math.pow(b, this.level)).toFixed(2);
-};
-      });
       window.tasks = tasks;
     }
   } else {
@@ -385,13 +374,6 @@ t.getUpgradeCost = function() {
     pointsHistory = [];
     ACHIEVEMENTS.forEach(a => a.unlocked = false);
     deskModsOwned = [];
-    // NOWA FORMUŁA
-  tasksArray.forEach((t, i) => {
-const a = 0.45, b = 1.33;
-t.getUpgradeCost = function() {
-  return +(a * Math.pow(b, this.level)).toFixed(2);
-};
-    });
     window.tasks = tasks;
   }
   tasks.forEach((t, i) => { if (t.unlocked && !t.active) startIdle(i); });
