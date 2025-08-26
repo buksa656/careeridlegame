@@ -60,41 +60,46 @@
       </div>`;
   }
 
-  function createUnlockedTile(task, idx, totalPoints) {
-    const { ascendLevel, ascendStage, perSec } = calculateTaskMetrics(task);
-    const upgCost = (typeof task.getUpgradeCost === "function") 
-      ? task.getUpgradeCost() 
-      : Math.floor(7 * Math.pow(1.58, task.level));
-    const canUpgrade = totalPoints >= upgCost;
-    const nextStage = window.ASCEND_STAGES?.[ascendLevel + 1];
-    const ascendCost = (nextStage && typeof task.getAscendCost === "function") 
-      ? task.getAscendCost() 
-      : null;
-
-    const ascendButton = (nextStage && typeof ascendCost === 'number')
-      ? `<button class="ascend-btn" data-task="${idx}">Awans<br>(${fmt(ascendCost)})</button>`
-      : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
-
-    return `
-      <div class="kafelek" data-taskidx="${idx}" tabindex="0">
-        <div class="kafelek-info">
-          <div class="title">${task.name}</div>
-          <div class="kafelek-row asc-badge">
-            <span class="tile-stage">${ascendStage.name}</span>
-          </div>
-          <div class="kafelek-row">
-            Idle: <b class="tile-idle">${perSec}</b> pkt/s
-          </div>
+function createUnlockedTile(task, idx, totalPoints) {
+  const { ascendLevel, ascendStage, perSec } = calculateTaskMetrics(task);
+  const upgCost = (typeof task.getUpgradeCost === "function") 
+    ? task.getUpgradeCost() 
+    : Math.floor(7 * Math.pow(1.58, task.level));
+  const canUpgrade = totalPoints >= upgCost;
+  const nextStage = window.ASCEND_STAGES?.[ascendLevel + 1];
+  const ascendCost = (nextStage && typeof task.getAscendCost === "function") 
+    ? task.getAscendCost() 
+    : null;
+  const ascendButton = (nextStage && typeof ascendCost === 'number')
+    ? `<button class="ascend-btn" data-task="${idx}">Awans<br>(${fmt(ascendCost)})</button>`
+    : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
+  
+  // MULTIBUY panel jeśli jest włączony
+  const multiBuyPart = window.multiBuyEnabled 
+    ? createMultiBuyButtons(window.multiBuyAmount || 1) 
+    : '';
+  
+  return `
+    <div class="kafelek" data-taskidx="${idx}" tabindex="0">
+      <div class="kafelek-info">
+        <div class="title">${task.name}</div>
+        <div class="kafelek-row asc-badge">
+          <span class="tile-stage">${ascendStage.name}</span>
         </div>
-        <div class="kafelek-bottom-row">
-          <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" 
-                  ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
-            Opt.<br>(${fmt(upgCost)})
-          </button>
-          ${ascendButton}
+        <div class="kafelek-row">
+          Idle: <b class="tile-idle">${perSec}</b> pkt/s
         </div>
-      </div>`;
-  }
+      </div>
+      <div class="kafelek-bottom-row">
+        ${multiBuyPart}
+        <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" 
+                ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
+          Opt.<br>(${fmt(upgCost)})
+        </button>
+        ${ascendButton}
+      </div>
+    </div>`;
+}
 
   function createSoftSkillButton(totalPoints) {
     const isOverflowEnabled = (typeof window.softSkillOverflowEnabled !== 'undefined') && window.softSkillOverflowEnabled;
@@ -114,7 +119,20 @@
         </span>
       </button>`;
   }
-
+  
+  function createMultiBuyButtons(selected = 1) {
+    const values = [1, 5, 10, 20, 100, "max"];
+    return `
+      <div class="multi-buy-panel" style="display:flex;gap:4px;margin-bottom:5px;">
+        ${values.map(v => `
+          <button type="button" class="multi-buy-btn${selected==v?' selected':''}" data-val="${v}">
+            ${v}x
+          </button>
+        `).join('')}
+      </div>
+    `;
+  }
+  
   function createProgressBar(progress, label) {
     return `
       <div class="unlock-progress">
@@ -321,65 +339,68 @@
   }
 
   // ===== SYSTEM EVENT脫W =====
-  function addEvents() {
-    // Eventy kafelk贸w
-    document.querySelectorAll(".kafelek-info").forEach(el => {
-      const kafelek = el.closest(".kafelek");
-      if (!kafelek) return;
-      
-      const idx = Number(kafelek.dataset.taskidx);
-      const isLocked = kafelek.classList.contains('locked');
-      
-      const handleClick = () => {
-        if (isLocked) {
-          eventHandlers.onUnlockTask?.(idx);
-        } else {
-          eventHandlers.onClickTask?.(idx);
-        }
-      };
-
-      el.onclick = (e) => {
-        e.stopPropagation();
+function addEvents() {
+  // Eventy kafelków
+  document.querySelectorAll(".kafelek-info").forEach(el => {
+    const kafelek = el.closest(".kafelek");
+    if (!kafelek) return;
+    const idx = Number(kafelek.dataset.taskidx);
+    const isLocked = kafelek.classList.contains('locked');
+    const handleClick = () => {
+      if (isLocked) {
+        eventHandlers.onUnlockTask?.(idx);
+      } else {
+        eventHandlers.onClickTask?.(idx);
+      }
+    };
+    el.onclick = (e) => {
+      e.stopPropagation();
+      handleClick();
+    };
+    el.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
         handleClick();
-      };
+      }
+    };
+  });
 
-      el.onkeydown = (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          handleClick();
-        }
-      };
-    });
+  // Eventy przycisków awansu
+  document.querySelectorAll('.ascend-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const idx = Number(btn.dataset.task);
+      eventHandlers.onAscendTask?.(idx);
+    };
+  });
 
-    // Eventy przycisk贸w awansu
-    document.querySelectorAll('.ascend-btn').forEach(btn => {
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        const idx = Number(btn.dataset.task);
-        eventHandlers.onAscendTask?.(idx);
-      };
-    });
+  // Eventy przycisków optymalizacji
+  document.querySelectorAll('[data-do="upg"]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const idx = Number(btn.dataset.idx);
+      eventHandlers.onUpgradeTask?.(idx);
+    };
+  });
 
-    // Eventy przycisk贸w optymalizacji
-    document.querySelectorAll('[data-do="upg"]').forEach(btn => {
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        const idx = Number(btn.dataset.idx);
-        eventHandlers.onUpgradeTask?.(idx);
-      };
-    });
-
-    // Eventy globalnych przycisk贸w
-    const prestigeBtn = $("#prestige-btn");
-    if (prestigeBtn) {
-      prestigeBtn.onclick = () => eventHandlers.onPrestige?.();
-    }
-
-    const resetBtn = $("#reset-btn");
-    if (resetBtn) {
-      resetBtn.onclick = () => eventHandlers.onClearSave?.();
-    }
+  // Eventy globalnych przycisków
+  const prestigeBtn = $("#prestige-btn");
+  if (prestigeBtn) {
+    prestigeBtn.onclick = () => eventHandlers.onPrestige?.();
   }
+  const resetBtn = $("#reset-btn");
+  if (resetBtn) {
+    resetBtn.onclick = () => eventHandlers.onClearSave?.();
+  }
+
+  // Eventy multi-buy
+  document.querySelectorAll('.multi-buy-btn').forEach(btn => {
+    btn.onclick = () => {
+      window.multiBuyAmount = (btn.dataset.val === "max") ? "max" : Number(btn.dataset.val);
+      window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+    };
+  });
+}
 
   // ===== NAWIGACJA PANELI =====
   function panelNav() {
