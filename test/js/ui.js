@@ -74,12 +74,9 @@ function createUnlockedTile(task, idx, totalPoints) {
   const ascendButton = (nextStage && typeof ascendCost === 'number')
     ? `<button class="ascend-btn" data-task="${idx}">Awans<br>(${fmt(ascendCost)})</button>`
     : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
-  
-  // MULTIBUY panel jeśli jest włączony
-  const multiBuyPart = window.multiBuyEnabled
-    ? createMultiBuyButton(window.multiBuyAmount || 1)
-    : '';
-  
+
+  // Usunięto multiBuyPart - globalny multi-buy pojawia się tylko raz nad kafelkami!
+
   return `
     <div class="kafelek" data-taskidx="${idx}" tabindex="0">
       <div class="kafelek-info">
@@ -92,7 +89,6 @@ function createUnlockedTile(task, idx, totalPoints) {
         </div>
       </div>
       <div class="kafelek-bottom-row">
-        ${multiBuyPart}
         <button class="kafelek-ulepsz-btn" data-do="upg" data-idx="${idx}" 
                 ${(!task.unlocked || !canUpgrade) ? "disabled" : ""}>
           Opt.<br>(${fmt(upgCost)})
@@ -230,37 +226,35 @@ function createUnlockedTile(task, idx, totalPoints) {
     return visibleTasks;
   }
 
-  function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
-    // Aktualizuj g贸rny pasek
-    updateTopBar(totalPoints, softSkills);
-    renderMultipliersBar(tasks);
+function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
+  updateTopBar(totalPoints, softSkills);
+  renderMultipliersBar(tasks);
+  const visibleTasks = renderVisibleTasks(tasks, totalPoints);
+  const softSkillBtn = (totalPoints >= SOFTSKILL_COST) ? createSoftSkillButton(totalPoints) : '';
 
-    // Renderuj kafelki
-    const visibleTasks = renderVisibleTasks(tasks, totalPoints);
-    const softSkillBtn = (totalPoints >= SOFTSKILL_COST) ? createSoftSkillButton(totalPoints) : '';
+  const multiBuyHTML = window.multiBuyEnabled
+    ? `<div id="multi-buy-row" style="display:flex;justify-content:center;margin:4px 0 12px 0;">
+          ${createMultiBuyButton(window.multiBuyAmount || 1)}
+       </div>`
+    : '';
 
-    // Wstaw HTML
-    const karrieraPanel = $("#panel-kariera");
-    if (karrieraPanel) {
-      karrieraPanel.innerHTML = `
-        <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
-        <div id="grid-progress"></div>
-        ${softSkillBtn}
-        <div class="career-list">${visibleTasks.join('')}</div>`;
-    }
-
-    // Renderuj progress do kolejnego zadania
-    renderUnlockProgress(tasks, totalPoints);
-    
-    // Pod艂膮cz eventy
-    setupSoftSkillButton();
-    addEvents();
-    
-    // Od艣wie偶 dashboard
-    if (typeof window.refreshHexKpiDashboard === "function") {
-      window.refreshHexKpiDashboard();
-    }
+  const karrieraPanel = $("#panel-kariera");
+  if (karrieraPanel) {
+    karrieraPanel.innerHTML = `
+      <div id="kpi-dashboard" style="display:flex; justify-content:center; margin-top:10px;"></div>
+      <div id="grid-progress"></div>
+      ${multiBuyHTML}
+      ${softSkillBtn}
+      <div class="career-list">${visibleTasks.join('')}</div>`;
   }
+  renderUnlockProgress(tasks, totalPoints);
+  setupSoftSkillButton();
+  addEvents();
+
+  if (typeof window.refreshHexKpiDashboard === "function") {
+    window.refreshHexKpiDashboard();
+  }
+}
 
   function renderUnlockProgress(tasks, totalPoints) {
     const nextTask = tasks.find(t => !t.unlocked);
@@ -408,13 +402,14 @@ function addEvents() {
   }
 
   // Event single multi-buy switch
-  document.querySelectorAll('.single-multibuy-btn').forEach(btn => {
-    btn.onclick = () => {
-      let nextVal = btn.dataset.next;
-      window.multiBuyAmount = (nextVal === "max") ? "max" : Number(nextVal);
-      window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-    };
-  });
+const multiBuyGlobalBtn = document.querySelector('#multi-buy-row .single-multibuy-btn');
+if (multiBuyGlobalBtn) {
+  multiBuyGlobalBtn.onclick = () => {
+    const nextVal = multiBuyGlobalBtn.dataset.next;
+    window.multiBuyAmount = (nextVal === "max") ? "max" : Number(nextVal);
+    window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+  };
+}
 }
 
   // ===== NAWIGACJA PANELI =====
