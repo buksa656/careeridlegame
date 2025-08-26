@@ -189,6 +189,7 @@ main#app {
 }
 .kafelek.locked:hover {
   box-shadow: 0 2px 18px #ffe77a77;
+  transform: translateY(-4px);
 }
 .kafelek-locked-overlay {
   position: absolute;
@@ -213,6 +214,7 @@ main#app {
   box-shadow: 0 7px 24px #176ec22c, 0 2.8px 13px #22344713;
   border-color: #8cc9fd;
   z-index: 2;
+  transform: translateY(-4px);
 }
 .kafelek.locked.can-unlock {
   border: 2.5px solid #47b857 !important;
