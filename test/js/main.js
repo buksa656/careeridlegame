@@ -263,6 +263,13 @@
   window.refreshHexKpiDashboard = refreshHexKpiDashboard;
 
   // ===== FUNKCJE PODSTAWOWE =====
+  window.devGivePoints = function(n) {
+  window.totalPoints = n;
+  if (typeof totalPoints !== 'undefined') totalPoints = n;
+  if(window.saveGame) saveGame();
+  if (window.IdleUI && typeof window.IdleUI.renderAll === 'function')
+    window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+};
   function applyTaskMethods(tasksArray) {
     tasksArray.forEach(t => {
       const a = 0.15, b = 1.33;
