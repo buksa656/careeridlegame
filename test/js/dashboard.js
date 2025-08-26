@@ -16,7 +16,7 @@ const TASKS_KPI = [
   {name:"LinkedIn", icon:"🔗",color:"#085777"},
   {name:"Król Biura",icon:"👑",color:"#f8a33a"}
 ];
-
+const lastHexProgress = {};
 const centerX = 235, centerY = 210, HEX_R = 50;
 const layout = [
   {q:0, r:0}, {q:1,r:0}, {q:0,r:1}, {q:-1,r:1}, {q:-1,r:0}, {q:0,r:-1}, {q:1,r:-1}, {q:2,r:0},
@@ -135,6 +135,16 @@ function drawKpiHexDashboard(progresses) {
         }
         if (progress > 0.005) {
           const fill = document.createElementNS(svgNS, "polygon");
+          const prev = lastHexProgress[idx] ?? 0;
+          const delta = Math.abs(progress - prev);
+          const ANIMATION_CUTOFF = 0.25;
+          if (delta > ANIMATION_CUTOFF) {
+            // natychmiastowy fill, bez żadnych przejść
+            fill.style.transition = "none";
+          } else {
+            // opcjonalnie: nie ustawiaj transition (native SVG jest natychmiastowy), chyba że robisz custom fade/effect
+            fill.style.transition = "";
+          }
           fill.setAttribute("points", hexPointsFill(x, y, HEX_R, progress));
           fill.setAttribute("fill", overlayColor);
           fill.setAttribute("opacity", overlayOpacity);
