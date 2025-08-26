@@ -515,24 +515,28 @@ function upgradeTask(idx) {
     updateGameState();
   }
 
-  function prestige(ignorePointsRequirement = false) {
-    timers.forEach(t => clearInterval(t));
-    if (!ignorePointsRequirement && totalPoints < 10000) return;
-    
-    softSkills = Number(softSkills) + 1;
-    burnout = Number(burnout) + 1;
-    totalPoints = 0;
-    upgradeCount = 0;
-    
-    tasks = JSON.parse(JSON.stringify(TASKS));
-    applyTaskMethods(tasks);
-    tasks.forEach(t => t.ascendLevel = 0);
-    
-    applyDeskModsEffects();
-    updateGameState(true);
-    
-    if (softSkills === 1) showSoftSkillModal();
-  }
+ function prestige(ignorePointsRequirement = false) {
+  // Zawsze operuj na globalnych window.*!
+  timers.forEach(t => clearInterval(t));
+  // Bezpieczny warunek
+  if (!ignorePointsRequirement && window.totalPoints < 10000) return;
+  
+  window.softSkills = Number(window.softSkills) + 1;
+  window.burnout = Number(window.burnout) + 1;
+  window.totalPoints = 0;
+  window.upgradeCount = 0;
+  
+  // Resetuj zadania
+  window.tasks = JSON.parse(JSON.stringify(TASKS));
+  applyTaskMethods(window.tasks);
+  window.tasks.forEach(t => t.ascendLevel = 0);
+
+  applyDeskModsEffects();
+  // Pełne odświeżenie i synchronizacja stanu gry + UI
+  updateGameState(true);
+
+  if (window.softSkills === 1) showSoftSkillModal();
+}
 
   // ===== ACHIEVEMENTS =====
 function checkAchievements() {
