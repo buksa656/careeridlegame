@@ -53,7 +53,6 @@ t.getUpgradeCost = function() {
   });
 }
   // --- MODYFIKACJE BIURKA --- //
-
   const DESK_MODS = [
   {
     id: "cup", name: "Kubek", emoji: "☕",
@@ -162,7 +161,6 @@ function renderDeskSVG() {
         }
       }
     };
-
     if (deskModsOwned.includes(idx)) {
       group.classList.add("desk-hotspot-bought");
       if (gElement) gElement.innerHTML = DESK_MODS[idx].svg;
@@ -196,7 +194,6 @@ function hideDeskTooltip() {
   tooltip.style.opacity = 0;
   tooltip.style.display = "none";
 }
-
 window.renderDeskSVG = renderDeskSVG; 
   // ---- TU MUSI BYĆ DEFINICJA ACHIEVEMENTS JAKO PIERWSZA! ----
 const ACHIEVEMENTS = [
