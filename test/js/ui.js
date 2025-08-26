@@ -270,6 +270,15 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
 
   // ===== SOFT SKILL BUTTON =====
   function setupSoftSkillButton() {
+    function setupSoftSkillButton() {
+  const btn = document.getElementById('get-softskill-btn');
+  if (!btn) return;
+  btn.onclick = () => {
+    alert('CLICK');                            // test - czy się odpala!
+    window.prestige && window.prestige(true);  // faktyczne wywołanie
+    alert('AFTER PRESTIGE: softSkills=' + window.softSkills); // sprawdź stan!
+  };
+}
     const btn = $('#get-softskill-btn');
     if (!btn) return;
     btn.onclick = () => {
