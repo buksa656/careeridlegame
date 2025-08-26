@@ -272,25 +272,15 @@ if (totalPoints >= SOFTSKILL_COST) {
   if (btn) {
     btn.onclick = () => {
       if (typeof softSkillOverflowEnabled !== 'undefined' && softSkillOverflowEnabled) {
-        const ile = Math.floor(totalPoints / SOFTSKILL_COST);
+        const ile = Math.floor(window.totalPoints / SOFTSKILL_COST);
         if (ile >= 1) {
-          window.softSkills += ile;
-          window.totalPoints -= ile * SOFTSKILL_COST;
-          window.saveGame();
-          window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-          window.IdleUI.renderUpgradeAffordances(window.tasks, window.totalPoints);
-          renderMultipliersBar(window.tasks);
-          if (typeof renderGridProgress === "function") renderGridProgress(window.tasks, window.totalPoints);
+          for (let i = 0; i < ile; ++i) {
+            window.prestige(true);
+          }
         }
       } else {
-        if (totalPoints >= SOFTSKILL_COST) {
-          window.softSkills += 1;
-          window.totalPoints -= SOFTSKILL_COST;
-          window.saveGame();
-          window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
-          window.IdleUI.renderUpgradeAffordances(window.tasks, window.totalPoints);
-          renderMultipliersBar(window.tasks);
-          if (typeof renderGridProgress === "function") renderGridProgress(window.tasks, window.totalPoints);
+        if (window.totalPoints >= SOFTSKILL_COST) {
+          window.prestige(true);
         }
       }
     }
