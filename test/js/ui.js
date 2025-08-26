@@ -272,22 +272,24 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   function setupSoftSkillButton() {
     const btn = $('#get-softskill-btn');
     if (!btn) return;
-
     btn.onclick = () => {
-      if (window.totalPoints < SOFTSKILL_COST) return;
-
-      const isOverflowEnabled = (typeof window.softSkillOverflowEnabled !== 'undefined') && window.softSkillOverflowEnabled;
-      
-      if (isOverflowEnabled) {
-        const skillCount = Math.floor(window.totalPoints / SOFTSKILL_COST);
-        for (let i = 0; i < skillCount; i++) {
+      // Zabezpieczenie przed wielokrotnymi kliknięciami jednocześnie
+      btn.disabled = true;
+      setTimeout(() => { btn.disabled = false; }, 1000);
+  
+      if (window.softSkillOverflowEnabled) {
+        // Overdrive: MOŻESZ kupić kilka soft skills przy jednym kliknięciu (multi prestige)
+        const maxAmount = Math.floor(window.totalPoints / SOFTSKILL_COST);
+        if (!maxAmount || maxAmount < 1) return;
+        for (let i = 0; i < maxAmount; i++) {
           if (typeof window.prestige === 'function') {
-            window.prestige(true);
+            window.prestige(true); // prestige(true) żeby wymusić zresetowanie bez sprawdzania punktów
           }
         }
       } else {
-        if (typeof window.prestige === 'function') {
-          window.prestige(true);
+        // Standardowy tryb: pojedynczy prestige jeśli masz wystarczająco punktów
+        if (window.totalPoints >= SOFTSKILL_COST && typeof window.prestige === 'function') {
+          window.prestige(true); // true: ignoruje wymaganie SOFTSKILL_COST jeśli już sprawdzone, lub przekazuje flagę na reset
         }
       }
     };
