@@ -40,7 +40,7 @@ window.ASCEND_STAGES = ASCEND_STAGES;
   
 function applyTaskMethods(tasksArray) {
   tasksArray.forEach((t, i) => {
-const a = 0.45, b = 1.33;
+const a = 0.15, b = 1.33;
 t.getUpgradeCost = function() {
   return +(a * Math.pow(b, this.level)).toFixed(2);
 };
