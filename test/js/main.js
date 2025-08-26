@@ -216,7 +216,7 @@
     "Biuro nigdy nie śpi... ale Ty musisz",
     "Najlepsze pomysły wpadają przy kawie – rzadko na spotkaniach",
     "Ctrl+F to najważniejsza umiejętność korposzczura",
-    "Mówienie: „Zaraz to wrzucę na SharePoint" – czasem wystarcza za wykonanie zadania",
+    "Mówienie: 'Zaraz to wrzucę na SharePoint' – czasem wystarcza za wykonanie zadania",
     "Najczęstszy powód spotkań: 'musimy się zsynchronizować'",
     "Szansa na wpadnięcie na Prezesa: rośnie w windzie, spada przy windzie",
     "Odpowiedź 'dziękuję, odnotowane' zazwyczaj kończy wątek mailowy",
