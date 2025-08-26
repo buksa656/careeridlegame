@@ -134,12 +134,9 @@ function renderDeskSVG() {
   for (const id in hotspotMap) {
     let idx = hotspotMap[id];
     const group = document.getElementById(id);
-
-    // WAŻNE: jeśli nie masz elementu SVG o tym id, pomiń!
     if (!group) continue;
 
     group.classList.remove("desk-hotspot-hover", "desk-hotspot-bought", "desk-hotspot-locked");
-    // Sprawdzenie czy g istnieje (np. dla czystych hotspotów!):
     let gElement = group.querySelector("g");
     if (gElement) gElement.innerHTML = "";
 
