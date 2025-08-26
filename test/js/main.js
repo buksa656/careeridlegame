@@ -462,7 +462,8 @@ function startIdle(idx) {
   const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
 const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.02)
   * (stage.rewardMult || 1)
-  * (typeof task.rewardMultiplier === 'number' ? task.rewardMultiplier : 1);
+  * (task.rewardMultiplier || 1)
+  * (task.ascendBonus || 1);
 
   totalPoints += reward;
       window.totalPoints = totalPoints;   // <-- zawsze sync z window
@@ -501,24 +502,29 @@ function clickTask(idx) {
   }
 }
 let upgradeCount = 0;
+
 function upgradeTask(idx) {
-    const task = tasks[idx];
-    const cost = task.getUpgradeCost();
-    if (totalPoints >= cost) {
-      task.level += 1;
-      totalPoints -= cost;
-      upgradeCount += 1;
-      const REWARD_UPG = 0.066 + 0.01 * Math.floor(task.level/5);
-      task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
-      saveGame();
-      ui.renderAll(tasks, totalPoints, softSkills, burnout);
-      ui.renderUpgradeAffordances(tasks, totalPoints);
-      renderMultipliersBar();
-      checkAchievements();
-      ui.renderAchievements(window.ACHIEVEMENTS);
-      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-    }
+  const task = tasks[idx];
+  const cost = task.getUpgradeCost();
+  if (totalPoints >= cost) {
+    task.level += 1;
+    totalPoints -= cost;
+    upgradeCount += 1;
+    // Boost pkt jak dotąd
+    const REWARD_UPG = 0.08; // np. +8% za upgrade
+    task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_UPG;
+    // Dodatkowo, prędkość rośnie:
+    const SPEED_UPG = 0.90; // Skraca czas o 10%
+    task.cycleTime = (task.baseCycleTime || TASKS[idx].cycleTime * 2) * Math.pow(SPEED_UPG, task.level);
+    saveGame();
+    ui.renderAll(tasks, totalPoints, softSkills, burnout);
+    ui.renderUpgradeAffordances(tasks, totalPoints);
+    renderMultipliersBar();
+    checkAchievements();
+    ui.renderAchievements(window.ACHIEVEMENTS);
+    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
   }
+}
   function refreshHexKpiDashboard() {
   if (typeof drawKpiHexDashboard === "function") {
     drawKpiHexDashboard(getAllTaskProgresses());
@@ -530,24 +536,29 @@ function upgradeTask(idx) {
 
 function ascendTask(idx) {
   const task = tasks[idx];
-  const current = typeof task.ascendLevel === "number" ? task.ascendLevel : 0; // Bieżący poziom kariery
+  const current = typeof task.ascendLevel === "number" ? task.ascendLevel : 0; 
   const nextStage = ASCEND_STAGES[current + 1];
-  const cost = task.getAscendCost(); // Koszt awansu z current na kolejny poziom
+  const cost = task.getAscendCost();
 
-  if (!nextStage) return;      // Brak kolejnego poziomu - max awans!
-  if (!cost) return;           // Brak kosztu (możliwe przy błędnej tablicy)
-
+  if (!nextStage || !cost) return;
   if (totalPoints >= cost) {
     totalPoints -= cost;
     task.ascendLevel = current + 1;
+    task.level = 0;
+    task.rewardMultiplier = 1;
     task.baseIdle = TASKS[idx].baseIdle;
+    // Boost do punktów za cykl (stackowalny)
+    task.ascendBonus = (task.ascendBonus || 1) * 2.0;
+    // Reset prędkości cyklu i softcap!
+    task.baseCycleTime = TASKS[idx].cycleTime * 2;
+    task.cycleTime = task.baseCycleTime;
     saveGame();
     ui.renderAll(tasks, totalPoints, softSkills, burnout);
     renderMultipliersBar();
-    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);  
   }
 }
-  
+ 
   function prestige(ignorePointsRequirement = false) {
     console.log("PRESTIGE TRIGGERED!");
     timers.forEach(t => clearInterval(t));
