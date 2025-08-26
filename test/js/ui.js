@@ -6,6 +6,7 @@
   
   // ===== ZMIENNE MODUŁU =====
   let eventHandlers = {};
+  const lastProgress = {};
 
   // ===== UTILITKI =====
   function $(selector) { 
@@ -325,9 +326,22 @@ function createUnlockedTile(task, idx, totalPoints) {
 
   function renderProgress(idx, progress) {
     const bar = $(`.kafelek[data-taskidx="${idx}"] .kafelek-progbar-inner`);
-    if (bar) {
+    if (!bar) return;
+    const prev = lastProgress[idx] !== undefined ? lastProgress[idx] : 0;
+    const delta = Math.abs(progress - prev);
+    const ANIMATION_CUTOFF = 0.25; // próg wyłączenia animacji przy szybkim wzroście (dostosuj wg potrzeby)
+  
+    // Jeśli duży skok – wyłącz transition CSS na szerokość (czyli NATYCHMIAST bez animacji)
+    if (delta > ANIMATION_CUTOFF) {
+      bar.style.transition = 'none';
+      bar.style.width = `${Math.round(progress * 100)}%`;
+      // Po krótkiej chwili przywróć transition do domyślnego (żeby potem animować normalne rośnięcie)
+      setTimeout(() => { bar.style.transition = ''; }, 80);
+    } else {
+      bar.style.transition = '';
       bar.style.width = `${Math.round(progress * 100)}%`;
     }
+    lastProgress[idx] = progress;
   }
 
   function renderUpgradeAffordances(tasks, totalPoints) {
