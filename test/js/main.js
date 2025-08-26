@@ -404,7 +404,6 @@ function tryUnlockTask(idx) {
     ui.renderAchievements(window.ACHIEVEMENTS);
   }
 }
-
   function getBarCycleMs(task) {
     const speedGrowth = 0.94;
     const lvl = Math.min(task.level, 15 + (gameState.softcapShift || 0));
@@ -413,7 +412,6 @@ function tryUnlockTask(idx) {
       : 1;
     return task.cycleTime * Math.pow(speedGrowth, lvl) * softcap / Math.max(0.001, (typeof task.multiplier === 'number' ? task.multiplier : 1));
   }
-  
 function startIdle(idx) {
   if (tasks[idx].active) return;
   tasks[idx].active = true;
@@ -429,11 +427,8 @@ function startIdle(idx) {
 
     if (task.progress >= 1) {
       task.progress = 0;
-  // Dodawanie do mnożnika:
   const REWARD_MULT_INC = 0.00125;
   task.rewardMultiplier = (task.rewardMultiplier || 1) + REWARD_MULT_INC;
-
-  // Reszta dotychczasowego kodu:
   const ascendLevel = typeof task.ascendLevel === "number" ? task.ascendLevel : 0;
   const stage = ASCEND_STAGES[ascendLevel] || ASCEND_STAGES[0];
 const reward = (typeof task.baseIdle === 'number' ? task.baseIdle : 0.02)
