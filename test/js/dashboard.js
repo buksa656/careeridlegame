@@ -137,7 +137,7 @@ function drawKpiHexDashboard(progresses) {
           const fill = document.createElementNS(svgNS, "polygon");
           const prev = lastHexProgress[idx] ?? 0;
           const delta = Math.abs(progress - prev);
-          const ANIMATION_CUTOFF = 0.25;
+          const ANIMATION_CUTOFF = 0.1;
           if (delta > ANIMATION_CUTOFF) {
             // natychmiastowy fill, bez żadnych przejść
             fill.style.transition = "none";
