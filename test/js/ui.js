@@ -76,8 +76,8 @@ function createUnlockedTile(task, idx, totalPoints) {
     : `<span style="flex:1; color:#c89;font-size:.97em;display:inline-block;text-align:center;">Max awans!</span>`;
   
   // MULTIBUY panel jeśli jest włączony
-  const multiBuyPart = window.multiBuyEnabled 
-    ? createMultiBuyButtons(window.multiBuyAmount || 1) 
+  const multiBuyPart = window.multiBuyEnabled
+    ? createMultiBuyButton(window.multiBuyAmount || 1)
     : '';
   
   return `
@@ -121,16 +121,16 @@ function createUnlockedTile(task, idx, totalPoints) {
       </button>`;
   }
   
-  function createMultiBuyButtons(selected = 1) {
+  function createMultiBuyButton(selected = 1) {
     const values = [1, 5, 10, 20, 100, "max"];
+    const idx = values.findIndex(v => v === selected);
+    const next = values[(idx + 1) % values.length];
+    // Pokazujemy obecny wybór, klik zmienia na next
+    const label = typeof selected === "number" ? `${selected}x` : "max";
     return `
-      <div class="multi-buy-panel" style="display:flex;gap:4px;margin-bottom:5px;">
-        ${values.map(v => `
-          <button type="button" class="multi-buy-btn${selected==v?' selected':''}" data-val="${v}">
-            ${v}x
-          </button>
-        `).join('')}
-      </div>
+      <button type="button" class="single-multibuy-btn" data-next="${next}">
+        ${label}
+      </button>
     `;
   }
   
@@ -407,10 +407,11 @@ function addEvents() {
     resetBtn.onclick = () => eventHandlers.onClearSave?.();
   }
 
-  // Eventy multi-buy
-  document.querySelectorAll('.multi-buy-btn').forEach(btn => {
+  // Event single multi-buy switch
+  document.querySelectorAll('.single-multibuy-btn').forEach(btn => {
     btn.onclick = () => {
-      window.multiBuyAmount = (btn.dataset.val === "max") ? "max" : Number(btn.dataset.val);
+      let nextVal = btn.dataset.next;
+      window.multiBuyAmount = (nextVal === "max") ? "max" : Number(nextVal);
       window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
     };
   });
