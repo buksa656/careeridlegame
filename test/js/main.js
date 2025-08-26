@@ -538,34 +538,24 @@ function ascendTask(idx) {
   }
 }
  
-  function prestige(ignorePointsRequirement = false) {
-    console.log("PRESTIGE TRIGGERED!");
-    timers.forEach(t => clearInterval(t));
-    if (!ignorePointsRequirement && totalPoints < 10000) return;
-    softSkills += 1;
-    window.softSkills = softSkills;
-    burnout += 1;
-    tasks = JSON.parse(JSON.stringify(TASKS));
-    applyTaskMethods(tasks);
-tasks.forEach((t, i) => {
-  const a = 1;
-  const b = 1.33;
-  t.getUpgradeCost = function() {
-    return Math.floor(a * Math.pow(b, this.level));
-  };
-});
-    totalPoints = 0;
-    tasks.forEach(t => t.ascendLevel = 0);
-    applyDeskModsEffects();
-    saveGame();
-    window.tasks = tasks;
-    ui.renderAll(tasks, totalPoints, softSkills, burnout);
-    ui.renderUpgradeAffordances(tasks, totalPoints);
-    renderMultipliersBar();
-    if (typeof renderDeskSVG === "function") renderDeskSVG();
-    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-    if (softSkills === 1) showSoftSkillModal();
-  }
+function prestige(ignorePointsRequirement = false) {
+  timers.forEach(t => clearInterval(t));
+  if (!ignorePointsRequirement && window.totalPoints < 10000) return;
+  window.softSkills = Number(window.softSkills) + 1;
+  window.burnout = Number(window.burnout) + 1;
+  window.tasks = JSON.parse(JSON.stringify(TASKS));
+  applyTaskMethods(window.tasks);
+  window.totalPoints = 0;
+  window.tasks.forEach(t => t.ascendLevel = 0);
+  applyDeskModsEffects();
+  window.saveGame();
+  window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+  window.IdleUI.renderUpgradeAffordances(window.tasks, window.totalPoints);
+  renderMultipliersBar();
+  if (typeof renderDeskSVG === "function") renderDeskSVG();
+  if (typeof renderGridProgress === "function") renderGridProgress(window.tasks, window.totalPoints);
+  if (window.softSkills === 1) showSoftSkillModal();
+}
   // ---- MODAL Z GRATULACJAMI ----
   function showSoftSkillModal() {
     document.getElementById('softskill-modal').style.display = 'flex';
