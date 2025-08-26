@@ -137,6 +137,9 @@ main#app {
   margin-bottom: 0;
   padding: 0;
 }
+.kafelek-progbar-inner {
+  transition: width 0.35s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
 .kafelek {
   background: #fff;
   border-radius: 10px;
