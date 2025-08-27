@@ -801,7 +801,12 @@ select.form-control {
   font-family: var(--font-family-mono);
 }
 
-.settings-btn {
+.header-buttons {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.help-btn, .settings-btn {
   padding: var(--space-8);
   border-radius: var(--radius-full);
   font-size: var(--font-size-lg);
@@ -830,53 +835,160 @@ select.form-control {
   100% { transform: translate3d(-100%, 0, 0); }
 }
 
+/* Tab Navigation */
+.tab-navigation {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-card-border);
+  padding: 0 var(--space-24);
+}
+
+.tab-container {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: var(--space-16) var(--space-24);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.tab-btn:hover:not(.disabled) {
+  color: var(--color-text);
+  background: var(--color-bg-1);
+}
+
+.tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.tab-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Main Content Layout */
 .main-content {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 400px 300px;
-  gap: var(--space-24);
-  padding: var(--space-24);
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  padding: var(--space-24);
 }
 
-@media (max-width: 1200px) {
-  .main-content {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: 
-      "tasks desk"
-      "info info";
-  }
-  
-  .tasks-panel { grid-area: tasks; }
-  .desk-panel { grid-area: desk; }
-  .info-panel { grid-area: info; }
+.tab-content {
+  display: none;
 }
 
-@media (max-width: 768px) {
-  .main-content {
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      "tasks"
-      "desk" 
-      "info";
-  }
-  
-  .header-content {
-    flex-direction: column;
-    gap: var(--space-16);
-  }
-  
-  .currency-display {
-    flex-direction: row;
-    gap: var(--space-16);
-  }
+.tab-content.active {
+  display: block;
 }
 
-/* Tasks Panel */
-.tasks-panel h2 {
+/* Career Tab Layout */
+.career-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+/* Multi-buy Controls */
+.multibuy-controls {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.multibuy-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.multibuy-buttons {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.multibuy-btn {
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.multibuy-btn.active {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+/* Auto-buyer Controls */
+.autobuyer-controls {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
+}
+
+.autobuyer-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.toggle-switch {
+  appearance: none;
+  width: 48px;
+  height: 24px;
+  background: var(--color-secondary);
+  border-radius: var(--radius-full);
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  top: 2px;
+  left: 2px;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.toggle-switch:checked {
+  background: var(--color-primary);
+}
+
+.toggle-switch:checked::before {
+  transform: translateX(24px);
+}
+
+/* Tasks Section */
+.tasks-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
+}
+
+.tasks-section h2 {
   margin-bottom: var(--space-16);
   color: var(--color-text);
 }
@@ -1026,10 +1138,35 @@ select.form-control {
   padding: var(--space-6) var(--space-12);
 }
 
-/* Desk Panel */
-.desk-panel {
-  display: flex;
-  flex-direction: column;
+/* Unlock Task Button */
+.unlock-task-btn {
+  width: 100%;
+  padding: var(--space-16);
+  background: var(--color-bg-5);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.unlock-task-btn:hover:not(.disabled) {
+  background: var(--color-bg-3);
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.unlock-task-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Desk Tab Layout */
+.desk-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-24);
 }
 
@@ -1114,13 +1251,74 @@ select.form-control {
   background: var(--color-bg-3);
 }
 
-/* Info Panel */
-.info-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
+/* Achievements Tab Layout */
+.achievements-layout {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
 }
 
+.achievements-layout h2 {
+  margin-bottom: var(--space-24);
+  color: var(--color-text);
+}
+
+.achievements-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-16);
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-bg-6);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.achievement.unlocked {
+  background: var(--color-bg-3);
+  border-color: var(--color-success);
+  box-shadow: var(--shadow-sm);
+}
+
+.achievement-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  border-radius: var(--radius-full);
+  background: var(--color-secondary);
+}
+
+.achievement.unlocked .achievement-icon {
+  background: var(--color-success);
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.achievement-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Prestige Section */
 .prestige-section {
   background: var(--color-surface);
   border: 1px solid var(--color-card-border);
@@ -1134,89 +1332,6 @@ select.form-control {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   text-align: center;
-}
-
-.achievements-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-16);
-  box-shadow: var(--shadow-sm);
-}
-
-.achievements-toggle {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  cursor: pointer;
-  margin-bottom: var(--space-16);
-}
-
-.toggle-icon {
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-.achievements-toggle.collapsed .toggle-icon {
-  transform: rotate(-90deg);
-}
-
-.achievements-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-  transition: max-height var(--duration-normal) var(--ease-standard);
-}
-
-.achievements-list.collapsed {
-  max-height: 0;
-  overflow: hidden;
-  margin: 0;
-}
-
-.achievement {
-  display: flex;
-  align-items: center;
-  gap: var(--space-12);
-  padding: var(--space-12);
-  background: var(--color-bg-6);
-  border-radius: var(--radius-base);
-  border: 1px solid var(--color-border);
-}
-
-.achievement.unlocked {
-  background: var(--color-bg-3);
-  border-color: var(--color-success);
-}
-
-.achievement-icon {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-lg);
-}
-
-.achievement-info {
-  flex: 1;
-}
-
-.achievement-name {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
-}
-
-.achievement-desc {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
 }
 
 /* Modal Styles */
@@ -1253,7 +1368,7 @@ select.form-control {
   border-radius: var(--radius-lg);
   padding: var(--space-24);
   box-shadow: var(--shadow-lg);
-  max-width: 400px;
+  max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
@@ -1283,10 +1398,68 @@ select.form-control {
   justify-content: flex-end;
 }
 
+.help-content {
+  margin-bottom: var(--space-24);
+}
+
+.help-content p {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  white-space: pre-line;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .desk-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  
+  .currency-display {
+    flex-direction: row;
+    gap: var(--space-16);
+  }
+
+  .tab-container {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    text-align: center;
+    border-bottom: none;
+    border-right: 3px solid transparent;
+  }
+
+  .tab-btn.active {
+    border-right-color: var(--color-primary);
+    border-bottom-color: transparent;
+  }
+
+  .multibuy-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .achievements-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Utility classes for game */
 .disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .pulse {
@@ -1358,7 +1531,8 @@ select.form-control {
 @media print {
   .quote-marquee,
   .modal,
-  .settings-btn {
+  .header-buttons,
+  .tab-navigation {
     display: none;
   }
 }
