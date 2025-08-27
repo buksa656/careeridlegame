@@ -371,29 +371,23 @@
   }
 
   // ===== GAMEPLAY =====
-  function tryUnlockTask(idx) {
-    if (
-      idx < tasks.length &&
-      !tasks[idx].unlocked &&
-      (totalPoints >= tasks[idx].unlockCost || tasks[idx].unlockCost === 0)
-    ) {
-      // Odejmij punkty tylko jeśli koszt > 0
-      if (tasks[idx].unlockCost > 0) {
-        totalPoints -= tasks[idx].unlockCost;
-        if (totalPoints < 0) totalPoints = 0;
-      }
-      tasks[idx].unlocked = true;
-      startIdle(idx);
-      window.tasks = tasks;
-      // KLUCZOWE: aktualizujemy cały UI
-      window.IdleUI.renderAll(tasks, totalPoints, softSkills, burnout);
-      // oraz (opcjonalnie) pozostałe drobiazgi:
-      window.IdleUI.renderUpgradeAffordances(tasks, totalPoints);
-      renderMultipliersBar();
-      if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
-      window.IdleUI.renderAchievements(window.ACHIEVEMENTS);
+function tryUnlockTask(idx) {
+  if (
+    idx < tasks.length &&
+    !tasks[idx].unlocked &&
+    (totalPoints >= tasks[idx].unlockCost || tasks[idx].unlockCost === 0)
+  ) {
+    // Odejmij punkty tylko jeśli koszt > 0
+    if (tasks[idx].unlockCost > 0) {
+      totalPoints -= tasks[idx].unlockCost;
+      if (totalPoints < 0) totalPoints = 0;
     }
+    tasks[idx].unlocked = true;
+    startIdle(idx);
+    window.tasks = tasks;
+    updateGameState(true); // PEŁNY odświeżacz UI!
   }
+}
 
   function startIdle(idx) {
     if (tasks[idx].active) return;
@@ -467,7 +461,7 @@ function upgradeTask(idx) {
   const task = tasks[idx];
   let buyN = window.multiBuyEnabled ? window.multiBuyAmount : 1;
   if (buyN === "max") {
-    // Policz, ile maksymalnie możesz kupić, zanim zabraknie ci punktów
+    // Ile maksymalnie możesz kupić
     let n = 0, pts = totalPoints;
     while (pts >= task.getUpgradeCost()) {
       pts -= task.getUpgradeCost();
@@ -492,76 +486,57 @@ function upgradeTask(idx) {
     }
   }
   if (bought) {
-    saveGame();
-    window.IdleUI.renderAll(tasks, totalPoints, softSkills, burnout);
-    window.IdleUI.renderUpgradeAffordances(tasks, totalPoints);
-    renderMultipliersBar();
-    checkAchievements();
-    window.IdleUI.renderAchievements(window.ACHIEVEMENTS);
-    if (typeof renderGridProgress === "function") renderGridProgress(tasks, totalPoints);
+    updateGameState(true);
   }
 }
 
-  function ascendTask(idx) {
-    const task = tasks[idx];
-    const current = task.ascendLevel || 0;
-    const nextStage = ASCEND_STAGES[current + 1];
-    const cost = task.getAscendCost();
-    
-    if (!nextStage || !cost || totalPoints < cost) return;
-    
-    totalPoints -= cost;
-    task.ascendLevel = current + 1;
-    task.level = 0;
-    task.rewardMultiplier = 1;
-    task.baseIdle = TASKS[idx].baseIdle;
-    task.ascendBonus = (task.ascendBonus || 1) * 2.0;
-    task.baseCycleTime = TASKS[idx].cycleTime * 2;
-    task.cycleTime = task.baseCycleTime;
-    
-    updateGameState();
-  }
+function ascendTask(idx) {
+  const task = tasks[idx];
+  const current = task.ascendLevel || 0;
+  const nextStage = ASCEND_STAGES[current + 1];
+  const cost = task.getAscendCost();
+  if (!nextStage || !cost || totalPoints < cost) return;
+  totalPoints -= cost;
+  task.ascendLevel = current + 1;
+  task.level = 0;
+  task.rewardMultiplier = 1;
+  task.baseIdle = TASKS[idx].baseIdle;
+  task.ascendBonus = (task.ascendBonus || 1) * 2.0;
+  task.baseCycleTime = TASKS[idx].cycleTime * 2;
+  task.cycleTime = task.baseCycleTime;
+  updateGameState(true);
+}
 
- function prestige(ignorePointsRequirement = false) {
-  // Zawsze operuj na globalnych window.*!
+function prestige(ignorePointsRequirement = false) {
   timers.forEach(t => clearInterval(t));
-  // Bezpieczny warunek
   if (!ignorePointsRequirement && window.totalPoints < 10000) return;
-  
   window.softSkills = Number(window.softSkills) + 1;
   window.burnout = Number(window.burnout) + 1;
   window.totalPoints = 0;
   window.upgradeCount = 0;
-  
-  // Resetuj zadania
   window.tasks = JSON.parse(JSON.stringify(TASKS));
   applyTaskMethods(window.tasks);
   window.tasks.forEach(t => t.ascendLevel = 0);
-
   applyDeskModsEffects();
-  // Pełne odświeżenie i synchronizacja stanu gry + UI
   updateGameState(true);
-
   if (window.softSkills === 1) showSoftSkillModal();
 }
+window.prestige = prestige;
 
   // ===== ACHIEVEMENTS =====
 function checkAchievements() {
   const state = {
     totalPoints, softSkills, burnout, tasks, deskModsOwned, upgradeCount
   };
-
+  let achievementUnlocked = false;
   ACHIEVEMENTS.forEach(a => {
     if (!a.unlocked && a.condition(state)) {
       a.unlocked = true;
-
-      // --- Dodane: Odblokowanie multi-buy ---
+      achievementUnlocked = true;
       if (a.reward?.type === "enableMultiBuy" && a.reward.enabled) {
         window.multiBuyEnabled = true;
-        window.multiBuyAmount = 1; // domyślnie
-      }
-      // Pozostałe nagrody
-      else if (a.reward?.type === "softSkillOverflow" && a.reward.enabled) {
+        window.multiBuyAmount = 1;
+      } else if (a.reward?.type === "softSkillOverflow" && a.reward.enabled) {
         softSkillOverflowEnabled = true;
       } else if (a.reward?.type === "baseClick") {
         tasks.forEach(t => {
@@ -574,18 +549,16 @@ function checkAchievements() {
           if (t.unlocked) t.multiplier += a.reward.multiplierInc; 
         });
       }
-
-      // Pokaż achievement
       const ui = window.IdleUI;
       if (ui?.showAchievement) {
         ui.showAchievement(a);
       } else {
         alert(`Osiągnięcie odblokowane: ${a.name}!`);
       }
-
-      updateGameState();
     }
   });
+  // Po każdej serii forEach sprawdź globalnie, czy coś się odblokowało
+  if (achievementUnlocked) updateGameState(true);
 }
 
   // ===== DESK MODS =====
@@ -614,12 +587,11 @@ function checkAchievements() {
           deskModsOwned.push(idx);
           softSkills -= DESK_MODS[idx].cost;
           window.softSkills = softSkills;
-          
           if (typeof DESK_MODS[idx].effect === "function") {
             DESK_MODS[idx].effect(gameState);
           }
           applyDeskModsEffects();
-          updateGameState();
+          updateGameState(true); // tu
           renderDeskSVG();
         }
       };
