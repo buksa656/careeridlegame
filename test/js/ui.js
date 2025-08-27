@@ -275,20 +275,23 @@ function setupSoftSkillButton() {
   const btn = document.getElementById('get-softskill-btn');
   if (!btn) return;
   btn.onclick = () => {
-    btn.disabled = true; // zabezpieczenie anty-spamowe
-    setTimeout(() => { btn.disabled = false; }, 200);
-
+    btn.disabled = true;
+    setTimeout(() => { btn.disabled = false; }, 250);
+    // Najpierw zrób snapshot ile można zdobyć softskills
+    let max = 0;
     if (window.softSkillOverflowEnabled) {
-      const maxSkills = Math.floor(window.totalPoints / 10000);
-      for (let i = 0; i < maxSkills; i++) {
-        window.prestige(true);
-      }
-    } else {
-      if (window.totalPoints >= 10000) window.prestige(true);
+      max = Math.floor(window.totalPoints / 10000);
+    } else if (window.totalPoints >= 10000) {
+      max = 1;
     }
-    // ZAWSZE natychmiast pełny refresh UI
-    if (window.IdleUI && typeof window.IdleUI.renderAll === "function") {
-      window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+    if (max > 0) {
+      let prevSoftSkills = window.softSkills;
+      for (let i=0; i < max; ++i) {
+        window.prestige(true);
+        // Zabezpieczenie pętli: jeśli liczba softskills nie rośnie, przerywamy
+        if (window.softSkills == prevSoftSkills) break;
+        prevSoftSkills = window.softSkills;
+      }
     }
   };
 }
