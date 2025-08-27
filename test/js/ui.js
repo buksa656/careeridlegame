@@ -275,7 +275,7 @@ function setupSoftSkillButton() {
   const btn = document.getElementById('get-softskill-btn');
   if (!btn) return;
   btn.onclick = () => {
-    btn.disabled = true; // zabezpieczenie przed spamem
+    btn.disabled = true; // zabezpieczenie anty-spamowe
     setTimeout(() => { btn.disabled = false; }, 200);
 
     if (window.softSkillOverflowEnabled) {
@@ -286,7 +286,7 @@ function setupSoftSkillButton() {
     } else {
       if (window.totalPoints >= 10000) window.prestige(true);
     }
-    // Od razu pełny refresh UI (choć prestige też już go wywołuje)
+    // ZAWSZE natychmiast pełny refresh UI
     if (window.IdleUI && typeof window.IdleUI.renderAll === "function") {
       window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
     }
