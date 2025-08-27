@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl" data-color-scheme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korposzczur - Corporate Idle Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="game-title" data-translate="game_title">Korposzczur</h1>
+                <div class="currency-display">
+                    <div class="currency-item">
+                        <span class="currency-label" data-translate="biuro_punkty">Biuro-Punkty</span>
+                        <span class="currency-value" id="bp-display">0</span>
+                    </div>
+                    <div class="currency-item">
+                        <span class="currency-label" data-translate="soft_skills">Soft Skills</span>
+                        <span class="currency-value" id="ss-display">0</span>
+                    </div>
+                </div>
+                <button class="btn btn--outline settings-btn" id="settings-toggle">⚙️</button>
+            </div>
+            
+            <!-- Corporate Quote Marquee -->
+            <div class="quote-marquee">
+                <div class="quote-text" id="quote-text">Zrobimy szybki catch-up po daily standup-ie</div>
+            </div>
+        </header>
 
+        <!-- Main Game Area -->
+        <main class="main-content">
+            <!-- Left Panel - Tasks -->
+            <section class="tasks-panel">
+                <h2>Zadania</h2>
+                <div class="unlock-progress">
+                    <div class="progress-label">Next Unlock</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="unlock-progress"></div>
+                    </div>
+                </div>
+                <div class="tasks-container" id="tasks-container">
+                    <!-- Tasks will be dynamically generated -->
+                </div>
+            </section>
+
+            <!-- Center Panel - Desk Visualization -->
+            <section class="desk-panel">
+                <div class="desk-container">
+                    <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
+                        <!-- Desk Base -->
+                        <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
+                        
+                        <!-- Hotspots for desk items -->
+                        <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
+                        <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
+                        <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
+                        <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
+                        <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="lamp"/>
+                        
+                        <!-- Items will be added dynamically -->
+                        <g id="desk-items"></g>
+                    </svg>
+                </div>
+                
+                <div class="desk-shop" id="desk-shop">
+                    <h3>Biuro Upgrade</h3>
+                    <div class="shop-items" id="shop-items">
+                        <!-- Shop items will be generated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel - Progress & Achievements -->
+            <section class="info-panel">
+                <div class="prestige-section">
+                    <button class="btn btn--primary btn--full-width" id="prestige-btn" data-translate="prestige" disabled>Prestiż</button>
+                    <p class="prestige-info" id="prestige-info">Requires 1,000,000 BP</p>
+                </div>
+                
+                <div class="achievements-section">
+                    <button class="achievements-toggle" id="achievements-toggle">
+                        <span data-translate="achievements">Achievementy</span>
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                    <div class="achievements-list" id="achievements-list">
+                        <!-- Achievements will be generated -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal hidden" id="settings-modal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <h3>Ustawienia</h3>
+                <div class="settings-options">
+                    <div class="setting-group">
+                        <label class="form-label">Language / Język</label>
+                        <select class="form-control" id="language-select">
+                            <option value="pl">Polski</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label class="form-label">Theme / Motyw</label>
+                        <select class="form-control" id="theme-select">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn--secondary" id="settings-close">Close</button>
+                    <button class="btn btn--outline" id="reset-save">Reset Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
