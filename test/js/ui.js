@@ -275,16 +275,23 @@ function setupSoftSkillButton() {
   const btn = document.getElementById('get-softskill-btn');
   if (!btn) return;
   btn.onclick = () => {
-    // Ochrona przed spamem
     btn.disabled = true;
     setTimeout(() => { btn.disabled = false; }, 250);
-    // TYLKO jeden prestige jeśli masz wystarczająco punktów!
-    if (window.totalPoints >= 10000) {
-      window.prestige(true); 
-      // Po prestiżu natychmiastowy pełen refresh UI
-      if (window.IdleUI && typeof window.IdleUI.renderAll === "function") {
-        window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+
+    let prestiges = 0;
+    if (window.softSkillOverflowEnabled) {
+      let max = Math.floor(window.totalPoints / 10000);
+      for (let i=0; i < max; ++i) {
+        window.prestige(true);
+        prestiges++;
       }
+    } else if (window.totalPoints >= 10000) {
+      window.prestige(true);
+      prestiges = 1;
+    }
+    // Odśwież UI raz, po zakończeniu całej pętli
+    if (prestiges > 0 && window.IdleUI) {
+      window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
     }
   };
 }
