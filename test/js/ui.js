@@ -227,17 +227,16 @@ function createUnlockedTile(task, idx, totalPoints) {
   }
 
 function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
+  const SOFTSKILL_COST = 10000;
   updateTopBar(totalPoints, softSkills);
   renderMultipliersBar(tasks);
   const visibleTasks = renderVisibleTasks(tasks, totalPoints);
   const softSkillBtn = (totalPoints >= SOFTSKILL_COST) ? createSoftSkillButton(totalPoints) : '';
-
   const multiBuyHTML = window.multiBuyEnabled
     ? `<div id="multi-buy-row" style="display:flex;justify-content:center;margin:4px 0 12px 0;">
           ${createMultiBuyButton(window.multiBuyAmount || 1)}
        </div>`
     : '';
-
   const karrieraPanel = $("#panel-kariera");
   if (karrieraPanel) {
     karrieraPanel.innerHTML = `
@@ -247,12 +246,15 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
       ${softSkillBtn}
       <div class="career-list">${visibleTasks.join('')}</div>`;
   }
-  renderUnlockProgress(tasks, totalPoints);
-  setupSoftSkillButton();
+  renderUnlockProgress(tasks, totalPoints); // aktualny progres do kolejnego taska
+  setupSoftSkillButton(); // ZAWSZE po innerHTML!
   addEvents();
-
+  // Zawsze natychmiast obsłuż dashboard + osiągnięcia!
   if (typeof window.refreshHexKpiDashboard === "function") {
     window.refreshHexKpiDashboard();
+  }
+  if (typeof window.IdleUI.renderAchievements === "function") {
+    window.IdleUI.renderAchievements(window.ACHIEVEMENTS);
   }
 }
 
@@ -269,42 +271,29 @@ function renderAll(tasks, totalPoints, softSkills, burnout = 0) {
   }
 
   // ===== SOFT SKILL BUTTON =====
-  function setupSoftSkillButton() {
-    function setupSoftSkillButton() {
+function setupSoftSkillButton() {
   const btn = document.getElementById('get-softskill-btn');
   if (!btn) return;
   btn.onclick = () => {
-    alert('CLICK');                            // test - czy się odpala!
-    window.prestige && window.prestige(true);  // faktyczne wywołanie
-    alert('AFTER PRESTIGE: softSkills=' + window.softSkills); // sprawdź stan!
+    btn.disabled = true; // zabezpieczenie przed spamem
+    setTimeout(() => { btn.disabled = false; }, 200);
+
+    if (window.softSkillOverflowEnabled) {
+      const maxSkills = Math.floor(window.totalPoints / 10000);
+      for (let i = 0; i < maxSkills; i++) {
+        window.prestige(true);
+      }
+    } else {
+      if (window.totalPoints >= 10000) window.prestige(true);
+    }
+    // Od razu pełny refresh UI (choć prestige też już go wywołuje)
+    if (window.IdleUI && typeof window.IdleUI.renderAll === "function") {
+      window.IdleUI.renderAll(window.tasks, window.totalPoints, window.softSkills, window.burnout);
+    }
   };
 }
-    const btn = $('#get-softskill-btn');
-    if (!btn) return;
-    btn.onclick = () => {
-      // Zabezpieczenie przed wielokrotnymi kliknięciami jednocześnie
-      btn.disabled = true;
-      setTimeout(() => { btn.disabled = false; }, 1000);
-  
-      if (window.softSkillOverflowEnabled) {
-        // Overdrive: MOŻESZ kupić kilka soft skills przy jednym kliknięciu (multi prestige)
-        const maxAmount = Math.floor(window.totalPoints / SOFTSKILL_COST);
-        if (!maxAmount || maxAmount < 1) return;
-        for (let i = 0; i < maxAmount; i++) {
-          if (typeof window.prestige === 'function') {
-            window.prestige(true); // prestige(true) żeby wymusić zresetowanie bez sprawdzania punktów
-          }
-        }
-      } else {
-        // Standardowy tryb: pojedynczy prestige jeśli masz wystarczająco punktów
-        if (window.totalPoints >= SOFTSKILL_COST && typeof window.prestige === 'function') {
-          window.prestige(true); // true: ignoruje wymaganie SOFTSKILL_COST jeśli już sprawdzone, lub przekazuje flagę na reset
-        }
-      }
-    };
-  }
 
-  // ===== POZOSTA艁E FUNKCJE RENDEROWANIA =====
+  // ===== POZOSTALE FUNKCJE RENDEROWANIA =====
   function updateTotalPoints(points) {
     const totalPointsStr = Number(points).toLocaleString('pl-PL', { 
       minimumFractionDigits: 3, 
