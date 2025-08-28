@@ -479,6 +479,7 @@ class KorposzczurGame {
                     this.manualUnlockTask(task.id, true);
                 });
                 this.renderTasks();
+                this.updateTaskButtonStates();
             },
             reset: () => {
                 localStorage.removeItem('korposzczur-save');
@@ -993,6 +994,7 @@ class KorposzczurGame {
         this.triggerEvent('taskUnlock', { taskId });
         this.checkAchievements();
         this.renderTasks();
+        this.updateTaskButtonStates();
         this.updateDisplay();
         
         return true;
@@ -1156,6 +1158,7 @@ class KorposzczurGame {
             
             this.checkAchievements();
             this.renderTasks();
+            this.updateTaskButtonStates();
             this.updateDisplay();
             
             // Visual feedback
@@ -1181,6 +1184,7 @@ class KorposzczurGame {
         this.gameState.stats.totalAscensions++;
         this.checkAchievements();
         this.renderTasks();
+        this.updateTaskButtonStates();
         this.showNotification(`Task ascended: ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}`);
     }
 
@@ -1247,6 +1251,7 @@ class KorposzczurGame {
         this.renderChallenges();
         this.updateDisplay();
         this.updateUnlockProgress();
+        this.updateTaskButtonStates();
     }
 
     renderTasks() {
