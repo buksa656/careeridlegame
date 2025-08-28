@@ -1454,6 +1454,9 @@ class KorposzczurGame {
                 <div class="achievement-info">
                     <div class="achievement-name">${name}</div>
                     <div class="achievement-desc">${desc}</div>
+                    <div class="achievement-bonus"${unlocked ? '' : ' style="opacity:0.6;"'}>
+                        ${this.translations[this.currentLanguage][achievement.bonusDesc] || ''}
+                    </div>
                 </div>
             `;
 
