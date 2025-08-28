@@ -88,6 +88,13 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
+                    "number_format": "Format liczb",
+                    "format_number_auto": "K/M/B/T",
+                    "format_number_scientific": "Naukowa (1.23e+9)",
+                    "format_number_engineering": "Inżynieryjna (1.23E6, 4.5E6)",
+                    "format_number_auto_desc": "Skróty tysięcy, milionów, miliardów itd.",
+                    "format_number_scientific_desc": "Zapis naukowy, np. 2.54e+15",
+                    "format_number_engineering_desc": "Zapis inżynieryjny (wykładnik podzielny przez 3), np. 1.23E6",
                     "bonusDesc_global_10": "+10% do wszystkich przychodów",
                     "bonusDesc_idle_20": "+20% do BP/s",
                     "bonusDesc_upgrade_discount_5": "Ulepszenia tańsze o 5%",
@@ -226,6 +233,13 @@ class KorposzczurGame {
                     "help_content": "Witaj w Korposzczur!\\n\\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\\n\\nMechaniki:\\n• Ręcznie odblokuj każde zadanie za BP (nawet pierwsze!)\\n• Ulepszaj zadania za BP aby zwiększyć przychód\\n• Awansuj zadania do wyższych rang\\n• Użyj Prestiżu aby zresetować grę za Soft Skills\\n• Kup przedmioty biurkowe za Soft Skills\\n• Zdobywaj achievementy aby odblokować nowe funkcje\\n• Ukończ wyzwania dla dodatkowych bonusów\\n• Prestiż Break pozwala zdobyć wiele Soft Skills na raz\\n\\nWskazówki:\\n• WSZYSTKIE zadania wymagają ręcznego odblokowania\\n• Multi-buy odblokuje się po 50 ulepszeniach\\n• Zablokowane kafelki zmieniają kolor gdy stać Cię na nie\\n• Wyzwania odblokują się przez przedmiot na biurku\\n• Prestiż Break odblokuje się po 10 prestiżach"
                 },
                 "en": {
+                    "number_format": "Number format",
+                    "format_number_auto": "K/M/B/T",
+                    "format_number_scientific": "Scientific (1.23e+9)",
+                    "format_number_engineering": "Engineering (1.23E6, 4.5E6)",
+                    "format_number_auto_desc": "Shortcuts for thousand, million, billion etc.",
+                    "format_number_scientific_desc": "Scientific notation, e.g. 2.54e+15",
+                    "format_number_engineering_desc": "Engineering notation (exponent divisible by 3), e.g. 1.23E6",
                     "bonusDesc_global_10": "+10% to all income",
                     "bonusDesc_idle_20": "+20% to BP/s",
                     "bonusDesc_upgrade_discount_5": "Upgrades 5% cheaper",
