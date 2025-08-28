@@ -646,7 +646,13 @@ class KorposzczurGame {
             if (!taskId || !action) return;
 
             const taskState = this.gameState.tasks[taskId];
-            if (!taskState || !taskState.unlocked) return;
+            if (!taskState || !taskState.unlocked) {
+                  btn.disabled = true;
+                  btn.className = `btn btn--sm btn--secondary disabled`;
+                  btn.classList.remove('cost-affordable');
+                  btn.classList.add('cost-unaffordable');
+                  return;
+                }
 
             if (action === 'upgrade') {
                 const amount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskId) : parseInt(this.multiBuyAmount);
