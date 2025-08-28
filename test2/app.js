@@ -303,38 +303,32 @@ class KorposzczurGame {
                 }
             },
             "quotes": {
-                "pl": [
-                    "Zrobimy szybki catch-up po daily standup-ie",
-                    "Musimy to deep-dive'ować na najbliższym sprint planning'u",
-                    "Poczekajmy na feedback od stakeholderów",
-                    "To jest bardzo low-hanging fruit",
-                    "Potrzebujemy więcej synergii w teamie",
-                    "Zorganizujemy brainstorming na ten temat",
-                    "Trzeba to jeszcze raz przeanalizować",
-                    "Prześlij mi ten deck po meetingu",
-                    "Wdrożymy to w następnym release'ie",
-                    "Potrzebujemy alignment z business'em",
-                    "Let's touch base offline na ten temat",
-                    "To jest bardzo scalable solution",
-                    "Musimy być bardziej agile w approach'u",
-                    "Ten task jest high-priority na backlog'u"
-                ],
-                "en": [
-                    "Let's do a quick catch-up after the daily standup",
-                    "We need to deep-dive this in the next sprint planning",
-                    "Let's wait for stakeholder feedback",
-                    "This is very low-hanging fruit",
-                    "We need more synergy in the team",
-                    "Let's organize a brainstorming session",
-                    "We need to analyze this once more",
-                    "Send me that deck after the meeting",
-                    "We'll implement this in the next release",
-                    "We need alignment with business",
-                    "Let's touch base offline about this",
-                    "This is a very scalable solution",
-                    "We need to be more agile in our approach",
-                    "This task is high-priority on the backlog"
-                ]
+              "pl": [
+                "Przeciętny email w pracy jest czytany w mniej niż 15 sekund.",
+                "Najwięcej kawy w roku pija się w poniedziałki po godzinie 9:00.",
+                "Open space powstał już w latach 60. i pierwotnie miał promować kreatywność.",
+                "65% spotkań można by zastąpić jednym mailem.",
+                "Badania pokazują, że praca zdalna zwiększa produktywność o średnio 13%.",
+                "Prawie 40% pracowników korporacji twierdzi, że nigdy nie korzysta z firmowego chill roomu.",
+                "Najczęściej używane słowo na spotkaniach to „synergia”.",
+                "Statystyczny pracownik klika „Wyślij” w mailu służbowym około 30 razy dziennie.",
+                "Zjedzenie ciastka z kuchni firmowej podnosi morale zespołu nawet o 5%.",
+                "Najczęściej kopiowany skrót w Excelu to Ctrl+C, a zaraz po nim Ctrl+V.",
+                "Najpopularniejsza „wymówka” na spóźnienie? Spotkanie z klientem."
+              ],
+              "en": [
+                "The average work email is read in less than 15 seconds.",
+                "Most office coffee is consumed on Mondays after 9 AM.",
+                "Open space offices were invented in the 1960s to promote creativity.",
+                "65% of meetings could be replaced by a single email.",
+                "Studies show remote work increases productivity by an average of 13%.",
+                "Nearly 40% of corporate employees say they never use the company chill-out room.",
+                "The most used word in office meetings is \"synergy\".",
+                "The average office worker clicks \"Send\" on an email about 30 times a day.",
+                "Eating a company kitchen cookie can raise team morale by up to 5%.",
+                "The most copied shortcut in Excel is Ctrl+C, closely followed by Ctrl+V.",
+                "The most popular excuse for being late? \"Client meeting.\""
+              ]
             },
             "ranks": ["Junior", "Mid", "Senior", "Lead", "Manager", "Director"]
         };
