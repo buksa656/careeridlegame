@@ -230,7 +230,29 @@ class KorposzczurGame {
                     "ach_challenge_master_desc": "Ukończ 5 wyzwań",
                     "ach_future_update": "Przyszłe aktualizacje",
                     "ach_future_update_desc": "Czekaj na więcej zawartości",
-                    "help_content": "Witaj w Korposzczur!\\n\\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\\n\\nMechaniki:\\n• Ręcznie odblokuj każde zadanie za BP (nawet pierwsze!)\\n• Ulepszaj zadania za BP aby zwiększyć przychód\\n• Awansuj zadania do wyższych rang\\n• Użyj Prestiżu aby zresetować grę za Soft Skills\\n• Kup przedmioty biurkowe za Soft Skills\\n• Zdobywaj achievementy aby odblokować nowe funkcje\\n• Ukończ wyzwania dla dodatkowych bonusów\\n• Prestiż Break pozwala zdobyć wiele Soft Skills na raz\\n\\nWskazówki:\\n• WSZYSTKIE zadania wymagają ręcznego odblokowania\\n• Multi-buy odblokuje się po 50 ulepszeniach\\n• Zablokowane kafelki zmieniają kolor gdy stać Cię na nie\\n• Wyzwania odblokują się przez przedmiot na biurku\\n• Prestiż Break odblokuje się po 10 prestiżach"
+                    "help_content": "Witaj w Korposzczur!\n\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\n\n"
+                    + "Mechaniki gry:\n"
+                    + "• Ręcznie odblokuj każde zadanie za BP (nawet pierwsze!)\n"
+                    + "• Ulepszaj zadania za BP aby zwiększyć przychód\n"
+                    + "• Awansuj zadania do wyższych rang\n"
+                    + "• Użyj Prestiżu aby zresetować grę za Soft Skills\n"
+                    + "• Kup przedmioty biurkowe za Soft Skills\n"
+                    + "• Zdobywaj achievementy aby odblokować nowe funkcje\n"
+                    + "• Ukończ wyzwania dla dodatkowych bonusów\n"
+                    + "• Prestiż Break pozwala zdobyć wiele Soft Skills na raz\n\n"
+                    + "Ustawienia i format liczb:\n"
+                    + "• W Ustawieniach możesz wybrać format wyświetlania dużych liczb:\n"
+                    + "   • K/M/B/T – klasyczne skróty tysiące/miliony/miliardy/tryliony itd.\n"
+                    + "   • Naukowy (Scientific) – np. 4.51e+7\n"
+                    + "   • Inżynieryjny – np. 2.34E6 (wykładnik zawsze podzielny przez 3)\n"
+                    + "Zmiana formatu wpływa na wszystkie liczby w grze.\n\n"
+                    + "Wskazówki:\n"
+                    + "• Multi-buy odblokuje się po 50 ulepszeniach\n"
+                    + "• Wyzwania pokazują się po zakupie odpowiedniego przedmiotu na biurko\n"
+                    + "• Prestiż Break odblokuje się po 10 prestiżach\n"
+                    + "• Zablokowane elementy podświetlają się, gdy uzbierasz wymaganą walutę\n"
+                    + "• W ustawieniach możesz wybrać język i motyw gry (jasny/ciemny)\n"
+                    + "\nMiłej gry!"                
                 },
                 "en": {
                     "number_format": "Number format",
@@ -375,7 +397,29 @@ class KorposzczurGame {
                     "ach_challenge_master_desc": "Complete 5 challenges",
                     "ach_future_update": "Future updates",
                     "ach_future_update_desc": "Wait for more content",
-                    "help_content": "Welcome to Corporate Rat!\\n\\nGoal: Develop your corporate career by completing tasks and earning Office Points (BP).\\n\\nMechanics:\\n• Manually unlock each task with BP (even the first one!)\\n• Upgrade tasks with BP to increase income\\n• Ascend tasks to higher ranks\\n• Use Prestige to reset game for Soft Skills\\n• Buy desk items with Soft Skills\\n• Earn achievements to unlock new features\\n• Complete challenges for additional bonuses\\n• Prestige Break allows earning multiple Soft Skills at once\\n\\nTips:\\n• ALL tasks require manual unlocking\\n• Multi-buy unlocks after 50 upgrades\\n• Locked tiles change color when affordable\\n• Challenges unlock through desk item\\n• Prestige Break unlocks after 10 prestiges"
+                    "help_content": "Welcome to Corporate Rat!\n\nGoal: Develop your corporate career by completing tasks and earning Office Points (BP).\n\n"
+                    + "Game mechanics:\n"
+                    + "• Manually unlock each task with BP (even the first one!)\n"
+                    + "• Upgrade tasks with BP to increase income\n"
+                    + "• Promote (ascend) tasks for higher ranks\n"
+                    + "• Use Prestige to reset for Soft Skills\n"
+                    + "• Buy desk items with Soft Skills\n"
+                    + "• Earn achievements to unlock new features\n"
+                    + "• Complete challenges for extra bonuses\n"
+                    + "• Prestige Break lets you get multiple Soft Skills at once\n\n"
+                    + "Settings and number format:\n"
+                    + "• In Settings, you can choose how large numbers are displayed:\n"
+                    + "   • K/M/B/T – classic thousands/millions/billions/trillions, etc.\n"
+                    + "   • Scientific – e.g. 4.51e+7\n"
+                    + "   • Engineering – e.g. 2.34E6 (exponent always divisible by 3)\n"
+                    + "Changing the format affects all numbers in the game.\n\n"
+                    + "Tips:\n"
+                    + "• Multi-buy unlocks after 50 upgrades\n"
+                    + "• Challenges appear after buying the right desk item\n"
+                    + "• Prestige Break unlocks after 10 prestiges\n"
+                    + "• Locked elements highlight when you can afford them\n"
+                    + "• You can choose game language and theme (light/dark) in settings\n"
+                    + "\nHave fun!"
                 }
             },
             "quotes": {
