@@ -88,6 +88,16 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
+                    "rank_intern": "Stażysta",
+                    "rank_assistant": "Asystent",
+                    "rank_junior_specialist": "Młodszy specjalista",
+                    "rank_specialist": "Specjalista",
+                    "rank_senior_specialist": "Starszy specjalista",
+                    "rank_expert": "Ekspert",
+                    "rank_team_leader": "Kierownik",
+                    "rank_manager": "Manager",
+                    "rank_director": "Dyrektor",
+                    "rank_board_member": "Członek Zarządu",
                     "number_format": "Format liczb",
                     "format_number_auto": "K/M/B/T",
                     "format_number_scientific": "Naukowa (1.23e+9)",
@@ -255,6 +265,16 @@ class KorposzczurGame {
                     + "\nMiłej gry!"                
                 },
                 "en": {
+                    "rank_intern": "Intern",
+                    "rank_assistant": "Assistant",
+                    "rank_junior_specialist": "Junior Specialist",
+                    "rank_specialist": "Specialist",
+                    "rank_senior_specialist": "Senior Specialist",
+                    "rank_expert": "Expert",
+                    "rank_team_leader": "Team Leader",
+                    "rank_manager": "Manager",
+                    "rank_director": "Director",
+                    "rank_board_member": "Board Member",
                     "number_format": "Number format",
                     "format_number_auto": "K/M/B/T",
                     "format_number_scientific": "Scientific (1.23e+9)",
@@ -450,7 +470,18 @@ class KorposzczurGame {
                 "The most popular excuse for being late? \"Client meeting.\""
               ]
             },
-            "ranks": ["Junior", "Mid", "Senior", "Lead", "Manager", "Director"]
+            "rankKeys": [
+              "rank_intern",
+              "rank_assistant",
+              "rank_junior_specialist",
+              "rank_specialist",
+              "rank_senior_specialist",
+              "rank_expert",
+              "rank_team_leader",
+              "rank_manager",
+              "rank_director",
+              "rank_board_member"
+            ]
         };
     }
 
@@ -1432,22 +1463,24 @@ performPrestige() {
         this.updateTaskButtonStates();
     }
 
-    createTaskCard(taskData, taskState) {
-        const card = document.createElement('div');
-        card.className = 'task-card';
-        
-        const rank = this.gameData.ranks[Math.min(taskState.ascensions, this.gameData.ranks.length - 1)];
-        const idleRate = this.calculateTaskIdleRate(taskData.id);
-        const buyAmount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskData.id) : parseInt(this.multiBuyAmount);
-        const upgradeCost = this.calculateMultiBuyCost(taskData.id, buyAmount);
-        const canUpgrade = this.gameState.bp >= upgradeCost && buyAmount > 0;
-        const canAscend = taskState.level >= 10;
+ccreateTaskCard(taskData, taskState) {
+    const card = document.createElement('div');
+    card.className = 'task-card';
 
-        card.innerHTML = `
-            <div class="task-header">
-                <div class="task-name">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
-                <div class="task-rank">${rank}</div>
-            </div>
+    const maxAscends = this.gameData.rankKeys.length;
+    const rankKey = this.gameData.rankKeys[Math.min(taskState.ascensions, maxAscends - 1)];
+    const rank = this.translations[this.currentLanguage][rankKey] || rankKey;
+    const idleRate = this.calculateTaskIdleRate(taskData.id);
+    const buyAmount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskData.id) : parseInt(this.multiBuyAmount);
+    const upgradeCost = this.calculateMultiBuyCost(taskData.id, buyAmount);
+    const canUpgrade = this.gameState.bp >= upgradeCost && buyAmount > 0;
+    const canAscend = taskState.level >= 10 && taskState.ascensions < maxAscends;
+
+    card.innerHTML = `
+        <div class="task-header">
+            <div class="task-name">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
+            <div class="task-rank">${rank}</div>
+        </div>
             
             <div class="hex-progress">
                 <svg viewBox="0 0 60 52">
@@ -1469,17 +1502,17 @@ performPrestige() {
                 </div>
             </div>
             
-            <div class="task-actions">
-                <button class="btn btn--sm ${canUpgrade ? 'btn--primary' : 'btn--secondary disabled'}" 
-                        data-task-id="${taskData.id}" data-action="upgrade" ${!canUpgrade ? 'disabled' : ''}>
-                    ${this.translations[this.currentLanguage].upgrade} ${buyAmount > 1 ? `(${buyAmount}x)` : ''} (${this.formatNumber(upgradeCost)})
-                </button>
-                <button class="btn btn--sm ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}" 
-                        data-task-id="${taskData.id}" data-action="ascend" ${!canAscend ? 'disabled' : ''}>
-                    ${this.translations[this.currentLanguage].ascend}
-                </button>
-            </div>
-        `;
+        <div class="task-actions">
+                    <button class="btn btn--sm ${canUpgrade ? 'btn--primary' : 'btn--secondary disabled'}"
+                            data-task-id="${taskData.id}" data-action="upgrade" ${!canUpgrade ? 'disabled' : ''}>
+                        ${this.translations[this.currentLanguage].upgrade} ${buyAmount > 1 ? `(${buyAmount}x)` : ''} (${this.formatNumber(upgradeCost)})
+                    </button>
+                    <button class="btn btn--sm ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}"
+                            data-task-id="${taskData.id}" data-action="ascend" ${!canAscend ? 'disabled' : ''}>
+                        ${this.translations[this.currentLanguage].ascend}
+                    </button>
+                </div>
+            `;
 
         // Add event listeners to task action buttons
         const upgradeBtn = card.querySelector('[data-action="upgrade"]');
