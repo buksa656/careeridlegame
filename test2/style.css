@@ -1108,11 +1108,23 @@ select.form-control {
 }
 
 .tasks-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem 1rem;
+  justify-items: stretch;
+  align-items: start;
+}
+@media (max-width: 900px) {
+    #tasks-container {
+        grid-template-columns: repeat(1, 1fr); /* Mobile: jedna kolumna */
+    }
 }
 
+@media (min-width: 1200px) {
+    #tasks-container {
+        grid-template-columns: repeat(3, 1fr); /* Duży ekran: trzy kolumny! */
+    }
+}
 /* Task Card */
 .task-card {
   background: var(--color-surface);
@@ -1121,6 +1133,8 @@ select.form-control {
   padding: var(--space-16);
   box-shadow: var(--shadow-sm);
   transition: all var(--duration-normal) var(--ease-standard);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .task-card:hover {
