@@ -801,16 +801,15 @@ select.form-control {
   font-family: var(--font-family-mono);
 }
 
-.header-actions {
+.header-buttons {
   display: flex;
   gap: var(--space-8);
-  align-items: center;
 }
 
-.settings-btn, .help-btn {
+.help-btn, .settings-btn {
   padding: var(--space-8);
-  border-radius: var(--radius-base);
-  font-size: var(--font-size-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-lg);
 }
 
 /* Quote Marquee */
@@ -836,44 +835,44 @@ select.form-control {
   100% { transform: translate3d(-100%, 0, 0); }
 }
 
-/* Navigation Tabs */
-.tabs-nav {
+/* Tab Navigation */
+.tab-navigation {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-card-border);
-  box-shadow: var(--shadow-xs);
-}
-
-.tabs-container {
-  display: flex;
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 0 var(--space-24);
 }
 
-.tab-button {
+.tab-container {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tab-btn {
   background: none;
   border: none;
-  padding: var(--space-16) var(--space-20);
+  padding: var(--space-16) var(--space-24);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid transparent;
   transition: all var(--duration-fast) var(--ease-standard);
 }
 
-.tab-button:hover {
+.tab-btn:hover:not(.disabled) {
   color: var(--color-text);
-  background: var(--color-secondary);
+  background: var(--color-bg-1);
 }
 
-.tab-button.active {
+.tab-btn.active {
   color: var(--color-primary);
   border-bottom-color: var(--color-primary);
 }
 
-.tab-button.hidden {
-  display: none;
+.tab-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Main Content Layout */
@@ -895,25 +894,148 @@ select.form-control {
 
 /* Career Tab Layout */
 .career-layout {
-  display: grid;
-  grid-template-columns: 1fr 320px;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-24);
 }
 
-@media (max-width: 1024px) {
-  .career-layout {
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      "tasks"
-      "prestige";
-  }
-  
-  .tasks-panel { grid-area: tasks; }
-  .prestige-panel { grid-area: prestige; }
+/* Multi-buy Controls */
+.multibuy-controls {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  position: relative;
 }
 
-/* Tasks Panel */
-.tasks-panel h2 {
+.multibuy-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.multibuy-buttons {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.multibuy-btn {
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.multibuy-btn.active {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+.multibuy-btn.affordable {
+  background: var(--color-bg-3);
+  border-color: var(--color-success);
+}
+
+.multibuy-btn.unaffordable {
+  background: var(--color-bg-4);
+  border-color: var(--color-error);
+  opacity: 0.6;
+}
+
+/* Multi-buy overlay */
+.multibuy-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--color-slate-900-rgb), 0.95);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.overlay-content {
+  text-align: center;
+  color: var(--color-surface);
+}
+
+.overlay-text {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-16);
+}
+
+.overlay-buttons {
+  display: flex;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Auto-buyer Controls */
+.autobuyer-controls {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
+}
+
+.autobuyer-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.toggle-switch {
+  appearance: none;
+  width: 48px;
+  height: 24px;
+  background: var(--color-secondary);
+  border-radius: var(--radius-full);
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  top: 2px;
+  left: 2px;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.toggle-switch:checked {
+  background: var(--color-primary);
+}
+
+.toggle-switch:checked::before {
+  transform: translateX(24px);
+}
+
+/* Tasks Section */
+.tasks-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
+}
+
+.tasks-section h2 {
   margin-bottom: var(--space-16);
   color: var(--color-text);
 }
@@ -951,7 +1073,6 @@ select.form-control {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
-  margin-bottom: var(--space-24);
 }
 
 /* Task Card */
@@ -966,17 +1087,6 @@ select.form-control {
 
 .task-card:hover {
   box-shadow: var(--shadow-md);
-}
-
-.task-card.locked {
-  background: var(--color-bg-4);
-  border-color: #ef4444;
-  opacity: 0.7;
-}
-
-.task-card.affordable {
-  border-color: var(--color-success);
-  background: var(--color-bg-3);
 }
 
 .task-header {
@@ -1073,136 +1183,75 @@ select.form-control {
   flex: 1;
   font-size: var(--font-size-sm);
   padding: var(--space-6) var(--space-12);
+  transition: all 50ms ease-out;
 }
 
-/* Multi-buy Section */
-.multibuy-section {
-  position: relative;
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
+/* Unlock Task Button */
+.unlock-task-btn {
+  width: 100%;
   padding: var(--space-16);
-  box-shadow: var(--shadow-sm);
-}
-
-.multibuy-lock-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(var(--color-slate-900-rgb), 0.8);
+  border: 2px dashed var(--color-border);
   border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  z-index: 2;
-  transition: opacity var(--duration-normal) var(--ease-standard);
-}
-
-.multibuy-lock-overlay.unlocked {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.lock-icon {
-  font-size: var(--font-size-4xl);
-  margin-bottom: var(--space-8);
-}
-
-.lock-text {
-  color: var(--color-text);
-  font-weight: var(--font-weight-medium);
-}
-
-.multibuy-controls h3 {
-  margin-bottom: var(--space-16);
-  color: var(--color-text);
-}
-
-.multibuy-buttons {
-  display: flex;
-  flex-wrap: wrap;
   gap: var(--space-8);
 }
 
-.multibuy-btn {
-  min-width: 60px;
+.unlock-task-btn.locked {
+  background: var(--color-bg-7);
 }
 
-.multibuy-btn.active {
-  background: var(--color-primary);
-  color: var(--color-btn-primary-text);
-}
-
-/* Prestige Panel */
-.prestige-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
-}
-
-.prestige-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-16);
-  box-shadow: var(--shadow-sm);
-}
-
-.prestige-progress-container h3 {
-  margin-bottom: var(--space-16);
+.unlock-task-btn.affordable {
+  background: var(--color-bg-3);
+  border-color: var(--color-success);
   color: var(--color-text);
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.prestige-bar {
-  height: var(--space-12);
-  margin-bottom: var(--space-16);
+.unlock-task-btn:hover:not(.disabled) {
+  background: var(--color-bg-3);
+  border-color: var(--color-primary);
+  color: var(--color-text);
+  transform: translateY(-2px);
 }
 
-.prestige-info {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  text-align: center;
-  margin: 0;
+.unlock-task-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.prestige-ready-container {
-  text-align: center;
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 0 rgba(var(--color-success-rgb), 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(var(--color-success-rgb), 0.6);
+  }
 }
 
-.prestige-btn {
-  margin-bottom: var(--space-12);
-  padding: var(--space-16);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+/* Locked task indicator */
+.task-locked {
+  background: var(--color-bg-7);
+  border: 2px dashed var(--color-border);
+  opacity: 0.7;
 }
 
-.prestige-reward {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-success);
-  margin-bottom: var(--space-8);
-}
-
-.prestige-warning {
-  font-size: var(--font-size-sm);
+.task-locked .task-name::after {
+  content: " 🔒";
   color: var(--color-error);
-  font-weight: var(--font-weight-medium);
 }
 
 /* Desk Tab Layout */
 .desk-layout {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-24);
-}
-
-@media (max-width: 1024px) {
-  .desk-layout {
-    grid-template-columns: 1fr;
-  }
 }
 
 .desk-container {
@@ -1287,19 +1336,28 @@ select.form-control {
   background: var(--color-bg-3);
 }
 
-/* Achievements Tab */
-.achievements-container {
-  max-width: 1000px;
+.shop-item.affordable {
+  background: var(--color-bg-3);
+  border-color: var(--color-success);
 }
 
-.achievements-container h2 {
+/* Achievements Tab Layout */
+.achievements-layout {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
+}
+
+.achievements-layout h2 {
   margin-bottom: var(--space-24);
   color: var(--color-text);
 }
 
-.achievements-grid {
+.achievements-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--space-16);
 }
 
@@ -1308,36 +1366,31 @@ select.form-control {
   align-items: center;
   gap: var(--space-12);
   padding: var(--space-16);
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--duration-normal) var(--ease-standard);
-}
-
-.achievement:hover {
-  box-shadow: var(--shadow-md);
+  background: var(--color-bg-6);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
 .achievement.unlocked {
   background: var(--color-bg-3);
   border-color: var(--color-success);
+  box-shadow: var(--shadow-sm);
 }
 
 .achievement-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-2xl);
-  background: var(--color-bg-6);
+  font-size: var(--font-size-xl);
   border-radius: var(--radius-full);
+  background: var(--color-secondary);
 }
 
 .achievement.unlocked .achievement-icon {
   background: var(--color-success);
-  color: var(--color-btn-primary-text);
 }
 
 .achievement-info {
@@ -1345,7 +1398,7 @@ select.form-control {
 }
 
 .achievement-name {
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text);
   margin-bottom: var(--space-4);
 }
@@ -1353,42 +1406,37 @@ select.form-control {
 .achievement-desc {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-4);
 }
 
-.achievement-bonus {
-  font-size: var(--font-size-xs);
-  color: var(--color-primary);
-  font-weight: var(--font-weight-medium);
+/* Challenges Tab Layout */
+.challenges-layout {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Challenges Tab */
-.challenges-container {
-  max-width: 1000px;
-}
-
-.challenges-container h2 {
+.challenges-layout h2 {
   margin-bottom: var(--space-24);
   color: var(--color-text);
 }
 
-.challenges-grid {
+.challenges-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: var(--space-16);
 }
 
 .challenge {
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
   padding: var(--space-16);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--duration-normal) var(--ease-standard);
-}
-
-.challenge:hover {
-  box-shadow: var(--shadow-md);
+  background: var(--color-bg-8);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
 .challenge.completed {
@@ -1404,12 +1452,11 @@ select.form-control {
 .challenge-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-12);
+  align-items: flex-start;
 }
 
 .challenge-name {
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text);
 }
 
@@ -1420,46 +1467,64 @@ select.form-control {
   font-weight: var(--font-weight-medium);
 }
 
-.challenge-status.completed {
-  background: var(--color-bg-3);
-  color: var(--color-success);
-}
-
-.challenge-status.in-progress {
-  background: var(--color-bg-2);
-  color: var(--color-warning);
-}
-
-.challenge-status.locked {
-  background: var(--color-bg-4);
-  color: var(--color-text-secondary);
-}
-
 .challenge-desc {
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-12);
-  font-size: var(--font-size-sm);
-}
-
-.challenge-reward {
-  font-size: var(--font-size-sm);
-  color: var(--color-primary);
-  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
 }
 
 .challenge-progress {
-  margin-top: var(--space-12);
+  margin-top: var(--space-8);
 }
 
-.challenge-progress .progress-bar {
+.challenge-progress-bar {
+  width: 100%;
   height: var(--space-6);
+  background: var(--color-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.challenge-progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-normal) var(--ease-standard);
+}
+
+/* Prestige Section */
+.prestige-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
+}
+
+.prestige-info {
+  margin-top: var(--space-8);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.prestige-break-info {
+  margin-top: var(--space-12);
+  padding: var(--space-12);
+  background: var(--color-bg-5);
+  border-radius: var(--radius-base);
+  text-align: center;
+}
+
+.prestige-break-label {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
   margin-bottom: var(--space-4);
 }
 
-.challenge-progress-text {
-  font-size: var(--font-size-xs);
+.prestige-break-desc {
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  text-align: center;
 }
 
 /* Modal Styles */
@@ -1527,13 +1592,23 @@ select.form-control {
 }
 
 .help-content {
-  line-height: var(--line-height-normal);
-  white-space: pre-line;
-  color: var(--color-text);
   margin-bottom: var(--space-24);
 }
 
+.help-content p {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  white-space: pre-line;
+}
+
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .desk-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;
@@ -1544,22 +1619,33 @@ select.form-control {
     flex-direction: row;
     gap: var(--space-16);
   }
-  
-  .tabs-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+
+  .tab-container {
+    flex-direction: column;
   }
-  
-  .achievements-grid {
+
+  .tab-btn {
+    text-align: center;
+    border-bottom: none;
+    border-right: 3px solid transparent;
+  }
+
+  .tab-btn.active {
+    border-right-color: var(--color-primary);
+    border-bottom-color: transparent;
+  }
+
+  .multibuy-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .achievements-list {
     grid-template-columns: 1fr;
   }
-  
-  .challenges-grid {
+
+  .challenges-list {
     grid-template-columns: 1fr;
-  }
-  
-  .multibuy-buttons {
-    justify-content: center;
   }
 }
 
@@ -1567,6 +1653,10 @@ select.form-control {
 .disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .pulse {
@@ -1586,6 +1676,25 @@ select.form-control {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
+}
+
+/* Real-time visual feedback */
+.btn-flash {
+  animation: btn-flash 0.3s ease-out;
+}
+
+@keyframes btn-flash {
+  0% { background: var(--color-success); }
+  100% { background: inherit; }
+}
+
+.cost-affordable {
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+}
+
+.cost-unaffordable {
+  color: var(--color-error);
 }
 
 /* Number formatting */
@@ -1624,4 +1733,22 @@ select.form-control {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border: var(--color-text);
+    --color-card-border: var(--color-text);
+  }
+}
+
+/* Print styles */
+@media print {
+  .quote-marquee,
+  .modal,
+  .header-buttons,
+  .tab-navigation {
+    display: none;
+  }
 }

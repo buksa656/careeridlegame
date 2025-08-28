@@ -22,8 +22,8 @@
                         <span class="currency-value" id="ss-display">0</span>
                     </div>
                 </div>
-                <div class="header-actions">
-                    <button class="btn btn--outline help-btn" id="help-toggle" data-translate="help">Pomoc</button>
+                <div class="header-buttons">
+                    <button class="btn btn--outline help-btn" id="help-toggle" data-translate="help">❓</button>
                     <button class="btn btn--outline settings-btn" id="settings-toggle">⚙️</button>
                 </div>
             </div>
@@ -34,13 +34,13 @@
             </div>
         </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="tabs-nav">
-            <div class="tabs-container">
-                <button class="tab-button active" data-tab="career" data-translate="tab_career">Kariera</button>
-                <button class="tab-button" data-tab="desk" data-translate="tab_desk">Biurko</button>
-                <button class="tab-button" data-tab="achievements" data-translate="tab_achievements">Achievementy</button>
-                <button class="tab-button hidden" data-tab="challenges" data-translate="tab_challenges" id="challenges-tab">Wyzwania</button>
+        <!-- Tab Navigation -->
+        <nav class="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="career" data-translate="tab_career">Kariera</button>
+                <button class="tab-btn disabled" data-tab="desk" data-translate="tab_desk">Biurko</button>
+                <button class="tab-btn" data-tab="achievements" data-translate="tab_achievements">Achievementy</button>
+                <button class="tab-btn disabled" data-tab="challenges" data-translate="tab_challenges">Wyzwania</button>
             </div>
         </nav>
 
@@ -49,8 +49,37 @@
             <!-- Career Tab -->
             <section class="tab-content active" id="career-tab">
                 <div class="career-layout">
+                    <!-- Multi-buy Controls -->
+                    <div class="multibuy-controls hidden" id="multibuy-controls">
+                        <span class="multibuy-label" data-translate="multibuy">Multi-buy:</span>
+                        <div class="multibuy-buttons">
+                            <button class="btn btn--sm multibuy-btn active" data-amount="1">1x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="2">2x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="5">5x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="10">10x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="20">20x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="50">50x</button>
+                            <button class="btn btn--sm multibuy-btn hidden" data-amount="max" data-translate="buy_max">Max</button>
+                        </div>
+                        <div class="multibuy-overlay hidden" id="multibuy-overlay">
+                            <div class="overlay-content">
+                                <div class="overlay-text">Kup ile?</div>
+                                <div class="overlay-buttons" id="overlay-buttons"></div>
+                                <button class="btn btn--sm btn--secondary" id="overlay-cancel">Anuluj</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto-buyer Controls -->
+                    <div class="autobuyer-controls hidden" id="autobuyer-controls">
+                        <div class="autobuyer-toggle">
+                            <label class="form-label" data-translate="auto_buyer">Auto-Kupowanie</label>
+                            <input type="checkbox" id="autobuyer-checkbox" class="toggle-switch">
+                        </div>
+                    </div>
+
                     <!-- Tasks Panel -->
-                    <div class="tasks-panel">
+                    <div class="tasks-section">
                         <h2>Zadania</h2>
                         <div class="unlock-progress">
                             <div class="progress-label" data-translate="next_unlock">Next Unlock</div>
@@ -61,46 +90,15 @@
                         <div class="tasks-container" id="tasks-container">
                             <!-- Tasks will be dynamically generated -->
                         </div>
-
-                        <!-- Multi-buy Controls -->
-                        <div class="multibuy-section" id="multibuy-section">
-                            <div class="multibuy-lock-overlay" id="multibuy-lock">
-                                <div class="lock-icon">🔒</div>
-                                <div class="lock-text">Zablokowane</div>
-                            </div>
-                            <div class="multibuy-controls" id="multibuy-controls">
-                                <h3 data-translate="multibuy">Multi-buy</h3>
-                                <div class="multibuy-buttons">
-                                    <button class="btn btn--sm multibuy-btn" data-amount="1">1x</button>
-                                    <button class="btn btn--sm multibuy-btn" data-amount="2">2x</button>
-                                    <button class="btn btn--sm multibuy-btn" data-amount="5">5x</button>
-                                    <button class="btn btn--sm multibuy-btn" data-amount="10">10x</button>
-                                    <button class="btn btn--sm multibuy-btn" data-amount="20">20x</button>
-                                    <button class="btn btn--sm multibuy-btn" data-amount="50">50x</button>
-                                    <button class="btn btn--sm multibuy-btn" data-amount="max" data-translate="buy_max">Max</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
-                    <!-- Prestige Panel -->
-                    <div class="prestige-panel">
-                        <div class="prestige-section" id="prestige-section">
-                            <div class="prestige-progress-container" id="prestige-progress-container">
-                                <h3 data-translate="prestige_progress">Progres do Prestiżu</h3>
-                                <div class="progress-bar prestige-bar">
-                                    <div class="progress-fill" id="prestige-progress-fill"></div>
-                                </div>
-                                <p class="prestige-info" id="prestige-info">Requires 50,000 BP</p>
-                            </div>
-                            
-                            <div class="prestige-ready-container hidden" id="prestige-ready-container">
-                                <button class="btn btn--primary btn--full-width prestige-btn" id="prestige-btn" data-translate="prestige_ready">Wykonaj prestiż</button>
-                                <div class="prestige-reward" id="prestige-reward">
-                                    <span data-translate="prestige_reward">Zdobądź</span> <span id="prestige-reward-amount">1</span> <span data-translate="soft_skills">Soft Skills</span>
-                                </div>
-                                <div class="prestige-warning" data-translate="prestige_warning">Uwaga. Prestiż resetuje grę</div>
-                            </div>
+                    <!-- Prestige Section -->
+                    <div class="prestige-section">
+                        <button class="btn btn--primary btn--full-width" id="prestige-btn" data-translate="prestige" disabled>Prestiż</button>
+                        <p class="prestige-info" id="prestige-info">Requires 50,000 BP</p>
+                        <div class="prestige-break-info hidden" id="prestige-break-info">
+                            <div class="prestige-break-label" data-translate="prestige_break">Prestige Break!</div>
+                            <div class="prestige-break-desc">Multiple Soft Skills at once</div>
                         </div>
                     </div>
                 </div>
@@ -109,6 +107,7 @@
             <!-- Desk Tab -->
             <section class="tab-content" id="desk-tab">
                 <div class="desk-layout">
+                    <!-- Desk Visualization -->
                     <div class="desk-container">
                         <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
                             <!-- Desk Base -->
@@ -119,15 +118,16 @@
                             <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
                             <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
                             <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
-                            <circle cx="280" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
-                            <rect x="80" y="100" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges" rx="3"/>
-                            <circle cx="350" cy="120" r="18" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
+                            <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
+                            <circle cx="350" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges"/>
+                            <circle cx="350" cy="180" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
                             
                             <!-- Items will be added dynamically -->
                             <g id="desk-items"></g>
                         </svg>
                     </div>
                     
+                    <!-- Desk Shop -->
                     <div class="desk-shop" id="desk-shop">
                         <h3>Biuro Upgrade</h3>
                         <div class="shop-items" id="shop-items">
@@ -139,19 +139,19 @@
 
             <!-- Achievements Tab -->
             <section class="tab-content" id="achievements-tab">
-                <div class="achievements-container">
+                <div class="achievements-layout">
                     <h2 data-translate="tab_achievements">Achievementy</h2>
-                    <div class="achievements-grid" id="achievements-grid">
+                    <div class="achievements-list" id="achievements-list">
                         <!-- Achievements will be generated -->
                     </div>
                 </div>
             </section>
 
             <!-- Challenges Tab -->
-            <section class="tab-content" id="challenges-tab-content">
-                <div class="challenges-container">
+            <section class="tab-content" id="challenges-tab">
+                <div class="challenges-layout">
                     <h2 data-translate="tab_challenges">Wyzwania</h2>
-                    <div class="challenges-grid" id="challenges-grid">
+                    <div class="challenges-list" id="challenges-list">
                         <!-- Challenges will be generated -->
                     </div>
                 </div>
@@ -192,25 +192,28 @@
             <div class="modal-content">
                 <h3 data-translate="help">Pomoc</h3>
                 <div class="help-content">
-                    <p data-translate="help_content">Witaj w Korposzczur!
-
-Cel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).
-
-Mechaniki:
-• Ręcznie odblokuj każde zadanie za BP
-• Ulepszaj zadania za BP aby zwiększyć przychód
-• Awansuj zadania do wyższych rang
-• Użyj Prestiżu aby zresetować grę za Soft Skills
-• Kup przedmioty biurkowe za Soft Skills
-• Zdobywaj achievementy aby odblokować nowe funkcje
-• Ukończ wyzwania dla dodatkowych bonusów
-• Prestiż Break pozwala zdobyć wiele Soft Skills na raz
-
-Wskazówki:
-• Multi-buy odblokuje się po 50 ulepszeniach
-• Zablokowane kafelki zmieniają kolor gdy stać Cię na nie
-• Wyzwania odblokują się przez przedmiot na biurku
-• Prestiż Break odblokuje się po 10 prestiżach</p>
+                    <p id="help-text" data-translate="help_content">
+                        Witaj w Korposzczur!
+                        
+                        Cel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).
+                        
+                        Mechaniki:
+                        • Ręcznie odblokuj każde zadanie za BP (nawet pierwsze!)
+                        • Ulepszaj zadania za BP aby zwiększyć przychód
+                        • Awansuj zadania do wyższych rang
+                        • Użyj Prestiżu aby zresetować grę za Soft Skills
+                        • Kup przedmioty biurkowe za Soft Skills
+                        • Zdobywaj achievementy aby odblokować nowe funkcje
+                        • Ukończ wyzwania dla dodatkowych bonusów
+                        • Prestiż Break pozwala zdobyć wiele Soft Skills na raz
+                        
+                        Wskazówki:
+                        • WSZYSTKIE zadania wymagają ręcznego odblokowania
+                        • Multi-buy odblokuje się po 50 ulepszeniach
+                        • Zablokowane kafelki zmieniają kolor gdy stać Cię na nie
+                        • Wyzwania odblokują się przez przedmiot na biurku
+                        • Prestiż Break odblokuje się po 10 prestiżach
+                    </p>
                 </div>
                 <div class="modal-actions">
                     <button class="btn btn--primary" id="help-close">OK</button>
