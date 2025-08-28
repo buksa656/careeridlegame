@@ -831,6 +831,10 @@ class KorposzczurGame {
                 }
                 } else if (action === 'ascend') {
                     const maxAscends = this.gameData.rankKeys.length;
+                    const isAscendMax = taskState.ascensions >= maxAscends;
+                    btn.textContent = isAscendMax
+                        ? (this.currentLanguage === "pl" ? "Max. Awans" : "Max Ascend")
+                        : this.translations[this.currentLanguage].ascend;
                     const canAscend = taskState.level >= 10 && taskState.ascensions < maxAscends;
                     btn.disabled = !canAscend;
                     btn.className = `btn btn--sm ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}`;
@@ -1480,6 +1484,10 @@ createTaskCard(taskData, taskState) {
     const upgradeCost = this.calculateMultiBuyCost(taskData.id, buyAmount);
     const canUpgrade = this.gameState.bp >= upgradeCost && buyAmount > 0;
     const canAscend = taskState.level >= 10 && taskState.ascensions < maxAscends;
+    const isAscendMax = taskState.ascensions >= maxAscends;
+    const ascendText = isAscendMax
+        ? (this.currentLanguage === "pl" ? "Max. Awans" : "Max Ascend")
+        : this.translations[this.currentLanguage].ascend;
 
     card.innerHTML = `
         <div class="task-header">
@@ -1513,8 +1521,9 @@ createTaskCard(taskData, taskState) {
                         ${this.translations[this.currentLanguage].upgrade} ${buyAmount > 1 ? `(${buyAmount}x)` : ''} (${this.formatNumber(upgradeCost)})
                     </button>
                     <button class="btn btn--sm ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}"
-                            data-task-id="${taskData.id}" data-action="ascend" ${!canAscend ? 'disabled' : ''}>
-                        ${this.translations[this.currentLanguage].ascend}
+                            data-task-id="${taskData.id}" data-action="ascend" ${!canAscend ? 'disabled' : ''}
+                            ${isAscendMax ? 'title="Osiągnięto maksymalną rangę!"' : ''}>
+                        ${ascendText}
                     </button>
                 </div>
             `;
