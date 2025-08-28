@@ -644,7 +644,13 @@ class KorposzczurGame {
             this.updateTheme();
             this.saveGameState();
         });
-
+        const numberFormatSelect = document.getElementById('number-format-select');
+        numberFormatSelect.value = this.gameState.settings.numberFormat || "auto";
+        numberFormatSelect.addEventListener('change', (e) => {
+            this.gameState.settings.numberFormat = e.target.value;
+            this.saveGameState();
+            this.renderAll();
+        });
         // Reset save
         document.getElementById('reset-save').addEventListener('click', (e) => {
             e.preventDefault();
@@ -907,6 +913,7 @@ class KorposzczurGame {
     updateTheme() {
         document.documentElement.setAttribute('data-color-scheme', this.gameState.settings.theme);
         document.getElementById('theme-select').value = this.gameState.settings.theme;
+        document.getElementById('number-format-select').value = this.gameState.settings.numberFormat;
     }
 
     startGameLoop() {
@@ -1652,11 +1659,33 @@ performPrestige() {
     }
 
     formatNumber(num) {
+        const fmt = this.gameState.settings?.numberFormat || "auto";
+        if (fmt === "scientific") {
+            // np. 1.23e+9
+            if (num < 1000) return Math.floor(num).toString();
+            return num.toExponential(2);
+        }
+        if (fmt === "engineering") {
+            // przesuń wykładnik do najbliższej liczby podzielnej przez 3: x.xxE6, x.xxE9
+            if (num < 1000) return Math.floor(num).toString();
+            const exp = Math.floor(Math.log10(num) / 3) * 3;
+            const value = num / Math.pow(10, exp);
+            return value.toFixed(2) + "E" + exp;
+        }
+        // klasycznie: K, M, B, T, aa, ab, ac, ..., az, ba, ...
+        const SUFFIXES = [
+            '', 'K', 'M', 'B', 'T',
+            'aa','ab','ac','ad','ae','af','ag','ah','ai','aj','ak','al','am','an','ao','ap','aq','ar','as','at','au','av','aw','ax','ay','az',
+            'ba','bb','bc','bd','be','bf','bg','bh','bi','bj','bk','bl','bm','bn','bo','bp','bq','br','bs','bt','bu','bv','bw','bx','by','bz',
+            // ...dodasz więcej jeśli kiedyś będzie potrzebne :)
+        ];
         if (num < 1000) return Math.floor(num).toString();
-        if (num < 1000000) return (num / 1000).toFixed(1) + 'K';
-        if (num < 1000000000) return (num / 1000000).toFixed(1) + 'M';
-        if (num < 1000000000000) return (num / 1000000000).toFixed(1) + 'B';
-        return (num / 1000000000000).toFixed(1) + 'T';
+        let tier = Math.floor(Math.log10(num) / 3);
+        if (tier < SUFFIXES.length) {
+            return (num / Math.pow(1000, tier)).toFixed(2) + SUFFIXES[tier];
+        } else {
+            return num.toExponential(2); // fallback na notację naukową jeśli za daleko
+        }
     }
     /**
      * Funkcja softcapująca dowolną wartość.
