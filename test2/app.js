@@ -972,7 +972,11 @@ class KorposzczurGame {
         
         // Apply global multipliers
         rate *= this.getGlobalMultiplier();
-        
+    
+        // SOFTCAP — dwustopniowy
+        // 1. powyżej 20k BP/s progres rośnie tylko do potęgi 0.7
+        // 2. powyżej 1M rośnie jeszcze wolniej, do potęgi 0.5
+        rate = this.softcap(rate, 20000, 0.7, 1_000_000, 0.5);
         return rate;
     }
 
@@ -1001,8 +1005,10 @@ class KorposzczurGame {
                 }
             }
         });
-        
-        return multiplier;
+    // PROGRESYWNY SOFTCAP — od 10 000 mnożymy coraz wolniej (0.7), a od miliona - bardzo wolno (0.5)
+    multiplier = this.softcap(multiplier, 10000, 0.7, 1_000_000, 0.5);
+
+    return multiplier;
     }
 
     // Critical: Manual unlock system - ALL tasks require manual unlocking
@@ -1606,6 +1612,25 @@ class KorposzczurGame {
         if (num < 1000000000) return (num / 1000000).toFixed(1) + 'M';
         if (num < 1000000000000) return (num / 1000000000).toFixed(1) + 'B';
         return (num / 1000000000000).toFixed(1) + 'T';
+    }
+    /**
+     * Funkcja softcapująca dowolną wartość.
+     * value — liczba do zmiękczenia,
+     * cap — próg od którego efekt rośnie wolniej,
+     * exp — wykładnik po przekroczeniu progu (np. 0.7),
+     * nextCap — opcjonalnie drugi prog dla jeszcze mocniejszego softcapu (np. >500k, exp2=0.5).
+     *
+     * Powraca zmiękczoną wartość.
+     */
+    softcap(value, cap, exp, nextCap = null, exp2 = null) {
+        if (value <= cap) return value;
+        if (nextCap && exp2 && value > nextCap) {
+            // Dwuetapowy softcap: po przekroczeniu nextCap miękczymy jeszcze mocniej
+            return cap
+                + Math.pow(nextCap - cap, exp)
+                + Math.pow(value - nextCap, exp2);
+        }
+        return cap + Math.pow(value - cap, exp);
     }
 
     showNotification(message) {
