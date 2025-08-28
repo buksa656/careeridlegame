@@ -468,7 +468,18 @@ pre code {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
+#prestige-btn.disabled, #prestige-btn[disabled] {
+    opacity: .45;
+    pointer-events: none;
+    filter: grayscale(1);
+    position: relative;
+}
+#prestige-btn .fa-lock, .locked-icon {
+    margin-left: 6px;
+    color: #b44;
+    font-size: 1.15em;
+    vertical-align: -8%;
+}
 /* Form elements */
 .form-control {
   display: block;
