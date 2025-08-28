@@ -829,10 +829,13 @@ class KorposzczurGame {
                     btn.classList.add('cost-unaffordable');
                     btn.classList.remove('cost-affordable');
                 }
-            } else if (action === 'ascend') {
-                const canAscend = taskState.level >= 10;
-                btn.disabled = !canAscend;
-                btn.className = `btn btn--sm ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}`;
+                } else if (action === 'ascend') {
+                    const maxAscends = this.gameData.rankKeys.length;
+                    const canAscend = taskState.level >= 10 && taskState.ascensions < maxAscends;
+                    btn.disabled = !canAscend;
+                    btn.className = `btn btn--sm ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}`;
+                    if (!canAscend) btn.setAttribute('title', 'Osiągnięto najwyższą rangę');
+                    else btn.removeAttribute('title');
             }
         });
     }
@@ -1334,7 +1337,9 @@ class KorposzczurGame {
 
     ascendTask(taskId) {
         const taskState = this.gameState.tasks[taskId];
+        const maxAscends = this.gameData.rankKeys.length;
         if (taskState.level < 10) return;
+        if (taskState.ascensions >= maxAscends) return;
 
         taskState.level = 1;
         taskState.ascensions++;
