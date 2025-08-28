@@ -765,6 +765,19 @@ select.form-control {
   margin: 0 auto;
 }
 
+.game-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.game-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-base);
+  object-fit: cover;
+}
+
 .game-title {
   color: var(--color-primary);
   font-size: var(--font-size-3xl);
@@ -786,6 +799,7 @@ select.form-control {
   background: var(--color-bg-1);
   border-radius: var(--radius-base);
   border: 1px solid var(--color-border);
+  min-width: 120px;
 }
 
 .currency-label {
@@ -801,15 +815,22 @@ select.form-control {
   font-family: var(--font-family-mono);
 }
 
-.header-controls {
-  display: flex;
-  gap: var(--space-8);
+.currency-rate {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-mono);
 }
 
-.settings-btn, .help-btn {
-  padding: var(--space-8) var(--space-12);
-  border-radius: var(--radius-base);
-  font-size: var(--font-size-sm);
+.header-actions {
+  display: flex;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.settings-btn {
+  padding: var(--space-8);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-lg);
 }
 
 /* Quote Marquee */
@@ -835,6 +856,41 @@ select.form-control {
   100% { transform: translate3d(-100%, 0, 0); }
 }
 
+/* Tabs Navigation */
+.tabs-nav {
+  display: flex;
+  gap: var(--space-4);
+  padding: 0 var(--space-24);
+  background: var(--color-bg-1);
+  border-top: 1px solid var(--color-border);
+}
+
+.tab-btn {
+  padding: var(--space-12) var(--space-20);
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border-top: 3px solid transparent;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.tab-btn:hover {
+  color: var(--color-text);
+  background: var(--color-secondary);
+}
+
+.tab-btn.active {
+  color: var(--color-primary);
+  border-top-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.tab-btn.hidden {
+  display: none;
+}
+
 /* Main Content Layout */
 .main-content {
   flex: 1;
@@ -842,38 +898,6 @@ select.form-control {
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-}
-
-/* Tab System */
-.tab-nav {
-  display: flex;
-  gap: var(--space-4);
-  margin-bottom: var(--space-24);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.tab-btn {
-  padding: var(--space-12) var(--space-20);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-base) var(--radius-base) 0 0;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-standard);
-  border-bottom: 2px solid transparent;
-}
-
-.tab-btn:hover {
-  background: var(--color-secondary);
-  color: var(--color-text);
-}
-
-.tab-btn.active {
-  background: var(--color-surface);
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
 }
 
 .tab-content {
@@ -884,31 +908,7 @@ select.form-control {
   display: block;
 }
 
-/* Career Tab Layout */
-.career-layout {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: var(--space-24);
-}
-
-@media (max-width: 1024px) {
-  .career-layout {
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      "tasks"
-      "info";
-  }
-  
-  .tasks-panel { grid-area: tasks; }
-  .info-panel { grid-area: info; }
-}
-
-/* Tasks Panel */
-.tasks-panel h2 {
-  margin-bottom: var(--space-16);
-  color: var(--color-text);
-}
-
+/* Career Tab */
 .unlock-progress {
   margin-bottom: var(--space-24);
   padding: var(--space-16);
@@ -921,6 +921,7 @@ select.form-control {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin-bottom: var(--space-8);
+  font-weight: var(--font-weight-medium);
 }
 
 .progress-bar {
@@ -937,20 +938,42 @@ select.form-control {
   background: var(--color-primary);
   border-radius: var(--radius-full);
   transition: width var(--duration-normal) var(--ease-standard);
-  width: 0%;
+}
+
+.progress-info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
 .progress-text {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  text-align: center;
   font-family: var(--font-family-mono);
 }
 
+.multibuy-controls {
+  margin-bottom: var(--space-24);
+  padding: var(--space-16);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-base);
+}
+
+.multibuy-controls .form-control {
+  max-width: 150px;
+}
+
+/* Tasks Container - Desktop 2-column layout */
 .tasks-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--space-16);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .tasks-container {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* Task Card */
@@ -969,7 +992,7 @@ select.form-control {
 
 .task-card.locked {
   opacity: 0.6;
-  background: var(--color-bg-7);
+  background: var(--color-bg-4);
 }
 
 .task-header {
@@ -995,7 +1018,7 @@ select.form-control {
 
 .task-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-12);
   margin-bottom: var(--space-16);
 }
@@ -1019,35 +1042,42 @@ select.form-control {
   font-family: var(--font-family-mono);
 }
 
-/* Task Progress Bar */
-.task-progress {
-  margin-bottom: var(--space-16);
-}
-
-.task-progress-bar {
-  width: 100%;
-  height: var(--space-6);
-  background: var(--color-secondary);
-  border-radius: var(--radius-full);
-  overflow: hidden;
+/* Hexagonal Progress */
+.hex-progress {
   position: relative;
+  width: 60px;
+  height: 52px;
+  margin: 0 auto var(--space-12);
 }
 
-.task-progress-fill {
+.hex-progress svg {
+  width: 100%;
   height: 100%;
-  background: var(--color-primary);
-  border-radius: var(--radius-full);
-  transition: width var(--duration-fast) ease-out;
-  width: 0%;
+  transform: rotate(-90deg);
 }
 
-.task-progress-fill.animated {
-  animation: progressFlow 2s ease-in-out infinite;
+.hex-progress .hex-bg {
+  fill: none;
+  stroke: var(--color-secondary);
+  stroke-width: 3;
 }
 
-@keyframes progressFlow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+.hex-progress .hex-fill {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray var(--duration-normal) var(--ease-standard);
+}
+
+.hex-progress .hex-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
 }
 
 .task-actions {
@@ -1061,55 +1091,35 @@ select.form-control {
   padding: var(--space-8) var(--space-12);
 }
 
-/* Info Panel */
-.info-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
+.upgrade-cost {
+  display: block;
+  font-size: var(--font-size-xs);
+  opacity: 0.8;
+  margin-top: var(--space-2);
 }
 
-.prestige-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-16);
-  box-shadow: var(--shadow-sm);
-}
-
+/* Prestige Info */
 .prestige-info {
-  margin-top: var(--space-8);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  text-align: center;
-}
-
-.multibuy-section {
+  margin-top: var(--space-24);
+  padding: var(--space-16);
   background: var(--color-surface);
   border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-16);
   box-shadow: var(--shadow-sm);
 }
 
-/* Desk Tab Layout */
-.desk-layout {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: var(--space-24);
+.prestige-progress {
+  margin-bottom: var(--space-12);
 }
 
-@media (max-width: 1024px) {
-  .desk-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Desk Tab */
 .desk-container {
   background: var(--color-surface);
   border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
   padding: var(--space-16);
   box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-24);
 }
 
 .desk-svg {
@@ -1182,8 +1192,8 @@ select.form-control {
 
 .shop-item-bonus {
   font-size: var(--font-size-xs);
-  color: var(--color-success);
-  margin-top: var(--space-2);
+  color: var(--color-primary);
+  font-style: italic;
 }
 
 .shop-item.owned {
@@ -1191,18 +1201,7 @@ select.form-control {
   background: var(--color-bg-3);
 }
 
-/* Achievements Tab */
-.achievements-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.achievements-container h2 {
-  margin-bottom: var(--space-24);
-  color: var(--color-text);
-  text-align: center;
-}
-
+/* Achievements Grid */
 .achievements-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1215,8 +1214,8 @@ select.form-control {
   gap: var(--space-12);
   padding: var(--space-16);
   background: var(--color-surface);
-  border-radius: var(--radius-lg);
   border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   transition: all var(--duration-normal) var(--ease-standard);
 }
@@ -1230,6 +1229,12 @@ select.form-control {
   border-color: var(--color-success);
 }
 
+.achievement.impossible {
+  opacity: 0.5;
+  background: var(--color-bg-7);
+  border-style: dashed;
+}
+
 .achievement-icon {
   width: 32px;
   height: 32px;
@@ -1237,8 +1242,8 @@ select.form-control {
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-xl);
-  background: var(--color-secondary);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-base);
+  background: var(--color-bg-4);
   flex-shrink: 0;
 }
 
@@ -1260,13 +1265,31 @@ select.form-control {
 .achievement-desc {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-8);
 }
 
 .achievement-bonus {
   font-size: var(--font-size-xs);
-  color: var(--color-success);
+  color: var(--color-primary);
   font-weight: var(--font-weight-medium);
+  background: var(--color-bg-1);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.achievement-progress {
+  margin-top: var(--space-8);
+}
+
+.achievement-progress .progress-bar {
+  height: 4px;
+  margin-bottom: var(--space-4);
+}
+
+.achievement-progress .progress-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
 }
 
 /* Modal Styles */
@@ -1334,9 +1357,72 @@ select.form-control {
 }
 
 .help-content {
-  line-height: var(--line-height-normal);
+  line-height: 1.6;
+  color: var(--color-text);
   margin-bottom: var(--space-24);
   white-space: pre-line;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+  
+  .game-header {
+    order: 1;
+  }
+  
+  .currency-display {
+    order: 2;
+    flex-wrap: wrap;
+    gap: var(--space-12);
+  }
+  
+  .header-actions {
+    order: 3;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-actions .btn {
+    width: 100%;
+  }
+  
+  .tabs-nav {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .task-actions {
+    flex-direction: column;
+  }
+  
+  .currency-item {
+    min-width: 100px;
+  }
+}
+
+/* Status indicators */
+.status-ready {
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+}
+
+.status-break {
+  color: var(--color-warning);
+  font-weight: var(--font-weight-bold);
+  animation: pulse 2s ease-in-out infinite;
 }
 
 /* Utility classes for game */
@@ -1395,35 +1481,18 @@ select.form-control {
   to { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: var(--space-16);
-  }
-  
-  .currency-display {
-    flex-direction: row;
-    gap: var(--space-16);
-  }
-  
-  .main-content {
-    padding: var(--space-16);
-  }
-  
-  .task-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .task-actions {
-    flex-direction: column;
-  }
+/* Auto-buyer indication */
+.auto-active {
+  background: var(--color-bg-3);
+  border-color: var(--color-success);
 }
 
-/* Notification Animation */
-@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+.auto-active::after {
+  content: '🤖';
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  font-size: var(--font-size-sm);
 }
 
 /* Performance optimizations */
@@ -1446,7 +1515,7 @@ select.form-control {
   .quote-marquee,
   .modal,
   .settings-btn,
-  .help-btn {
+  .tabs-nav {
     display: none;
   }
 }

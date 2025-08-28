@@ -1,5 +1,5 @@
-// Korposzczur - Corporate Idle Game
-// Fixed version addressing critical gameplay issues
+// Korposzczur - Enhanced Corporate Idle Game
+// Main game logic and state management
 
 class KorposzczurGame {
     constructor() {
@@ -7,14 +7,12 @@ class KorposzczurGame {
         this.gameState = this.loadGameState();
         this.translations = this.gameData.translations;
         this.currentLanguage = this.gameState.settings.language;
+        this.currentMultibuy = 1;
         this.lastSave = Date.now();
         this.lastUpdate = Date.now();
         this.updateInterval = null;
         this.saveInterval = null;
         this.quoteInterval = null;
-        this.uiUpdateInterval = null;
-        this.activeTab = 'career';
-        this.multiBuyAmount = 1;
         
         this.init();
     }
@@ -31,19 +29,28 @@ class KorposzczurGame {
             ],
             "achievements": [
                 {"id": "first_unlock", "nameKey": "ach_first_unlock", "descKey": "ach_first_unlock_desc", "condition": {"type": "tasks_unlocked", "value": 1}, "reward": {"type": "bp_bonus", "value": 1.05}, "bonusDesc": "bonusDesc_bp_5"},
-                {"id": "first_upgrade", "nameKey": "ach_first_upgrade", "descKey": "ach_first_upgrade_desc", "condition": {"type": "upgrades_bought", "value": 1}, "reward": {"type": "multibuy_unlock", "value": "upgrades"}, "bonusDesc": "bonusDesc_multibuy_upgrades"},
+                {"id": "upgrade_novice", "nameKey": "ach_upgrade_novice", "descKey": "ach_upgrade_novice_desc", "condition": {"type": "upgrades_bought", "value": 50}, "reward": {"type": "multibuy_unlock", "value": "upgrades"}, "bonusDesc": "bonusDesc_multibuy_upgrades"},
                 {"id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc", "condition": {"type": "task_unlocked", "taskId": "coffee"}, "reward": {"type": "idle_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_idle_10"},
-                {"id": "meeting_master", "nameKey": "ach_meeting_master", "descKey": "ach_meeting_master_desc", "condition": {"type": "task_level", "taskId": "meeting", "value": 10}, "reward": {"type": "upgrade_discount", "value": 0.95}, "bonusDesc": "bonusDesc_upgrade_discount_5"},
+                {"id": "meeting_master", "nameKey": "ach_meeting_master", "descKey": "ach_meeting_master_desc", "condition": {"type": "task_level", "taskId": "meeting", "value": 15}, "reward": {"type": "upgrade_discount", "value": 0.95}, "bonusDesc": "bonusDesc_upgrade_discount_5"},
                 {"id": "first_ascend", "nameKey": "ach_first_ascend", "descKey": "ach_first_ascend_desc", "condition": {"type": "ascensions", "value": 1}, "reward": {"type": "multibuy_unlock", "value": "ascend"}, "bonusDesc": "bonusDesc_multibuy_ascend"},
                 {"id": "kpi_analyst", "nameKey": "ach_kpi_analyst", "descKey": "ach_kpi_analyst_desc", "condition": {"type": "task_unlocked", "taskId": "kpi"}, "reward": {"type": "prestige_bonus", "value": 1.15}, "bonusDesc": "bonusDesc_prestige_15"},
-                {"id": "big_spender", "nameKey": "ach_big_spender", "descKey": "ach_big_spender_desc", "condition": {"type": "bp_spent", "value": 10000}, "reward": {"type": "bp_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_bp_10"},
+                {"id": "big_spender", "nameKey": "ach_big_spender", "descKey": "ach_big_spender_desc", "condition": {"type": "bp_spent", "value": 25000}, "reward": {"type": "bp_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_bp_10"},
                 {"id": "innovation_guru", "nameKey": "ach_innovation_guru", "descKey": "ach_innovation_guru_desc", "condition": {"type": "task_unlocked", "taskId": "brainstorm"}, "reward": {"type": "ascend_bonus", "value": 1.2}, "bonusDesc": "bonusDesc_ascend_20"},
                 {"id": "first_prestige", "nameKey": "ach_first_prestige", "descKey": "ach_first_prestige_desc", "condition": {"type": "prestiges", "value": 1}, "reward": {"type": "soft_skill_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_soft_skill_25"},
                 {"id": "optimizer", "nameKey": "ach_optimizer", "descKey": "ach_optimizer_desc", "condition": {"type": "task_unlocked", "taskId": "optimize"}, "reward": {"type": "global_mult", "value": 1.3}, "bonusDesc": "bonusDesc_global_30"},
-                {"id": "multibuy_expert", "nameKey": "ach_multibuy_expert", "descKey": "ach_multibuy_expert_desc", "condition": {"type": "multibuy_used", "value": 10}, "reward": {"type": "max_buy_unlock", "value": 1}, "bonusDesc": "bonusDesc_max_buy"},
-                {"id": "corporate_ladder", "nameKey": "ach_corporate_ladder", "descKey": "ach_corporate_ladder_desc", "condition": {"type": "total_ascensions", "value": 5}, "reward": {"type": "ascend_discount", "value": 0.9}, "bonusDesc": "bonusDesc_ascend_discount_10"},
+                {"id": "multibuy_expert", "nameKey": "ach_multibuy_expert", "descKey": "ach_multibuy_expert_desc", "condition": {"type": "multibuy_used", "value": 25}, "reward": {"type": "max_buy_unlock", "value": 1}, "bonusDesc": "bonusDesc_max_buy"},
+                {"id": "corporate_ladder", "nameKey": "ach_corporate_ladder", "descKey": "ach_corporate_ladder_desc", "condition": {"type": "total_ascensions", "value": 10}, "reward": {"type": "ascend_discount", "value": 0.9}, "bonusDesc": "bonusDesc_ascend_discount_10"},
                 {"id": "idle_master", "nameKey": "ach_idle_master", "descKey": "ach_idle_master_desc", "condition": {"type": "idle_rate", "value": 1000}, "reward": {"type": "idle_bonus", "value": 1.2}, "bonusDesc": "bonusDesc_idle_20"},
-                {"id": "dedication", "nameKey": "ach_dedication", "descKey": "ach_dedication_desc", "condition": {"type": "play_time", "value": 3600000}, "reward": {"type": "global_mult", "value": 1.15}, "bonusDesc": "bonusDesc_global_15"}
+                {"id": "dedication", "nameKey": "ach_dedication", "descKey": "ach_dedication_desc", "condition": {"type": "play_time", "value": 7200000}, "reward": {"type": "global_mult", "value": 1.15}, "bonusDesc": "bonusDesc_global_15"},
+                {"id": "soft_skills_beginner", "nameKey": "ach_soft_skills_beginner", "descKey": "ach_soft_skills_beginner_desc", "condition": {"type": "soft_skills_earned", "value": 1}, "reward": {"type": "desk_unlock", "value": 1}, "bonusDesc": "bonusDesc_desk_unlock"},
+                {"id": "soft_skills_expert", "nameKey": "ach_soft_skills_expert", "descKey": "ach_soft_skills_expert_desc", "condition": {"type": "soft_skills_earned", "value": 10}, "reward": {"type": "prestige_bonus", "value": 1.2}, "bonusDesc": "bonusDesc_prestige_20"},
+                {"id": "soft_skills_master", "nameKey": "ach_soft_skills_master", "descKey": "ach_soft_skills_master_desc", "condition": {"type": "soft_skills_earned", "value": 50}, "reward": {"type": "soft_skill_bonus", "value": 1.5}, "bonusDesc": "bonusDesc_soft_skill_50"},
+                {"id": "first_desk_item", "nameKey": "ach_first_desk_item", "descKey": "ach_first_desk_item_desc", "condition": {"type": "desk_items_bought", "value": 1}, "reward": {"type": "soft_skill_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_soft_skill_10"},
+                {"id": "office_decorator", "nameKey": "ach_office_decorator", "descKey": "ach_office_decorator_desc", "condition": {"type": "desk_items_bought", "value": 3}, "reward": {"type": "desk_discount", "value": 0.9}, "bonusDesc": "bonusDesc_desk_discount_10"},
+                {"id": "office_complete", "nameKey": "ach_office_complete", "descKey": "ach_office_complete_desc", "condition": {"type": "desk_items_bought", "value": 6}, "reward": {"type": "global_mult", "value": 1.25}, "bonusDesc": "bonusDesc_global_25"},
+                {"id": "prestige_veteran", "nameKey": "ach_prestige_veteran", "descKey": "ach_prestige_veteran_desc", "condition": {"type": "prestiges", "value": 5}, "reward": {"type": "prestige_bonus", "value": 1.3}, "bonusDesc": "bonusDesc_prestige_30"},
+                {"id": "prestige_master", "nameKey": "ach_prestige_master", "descKey": "ach_prestige_master_desc", "condition": {"type": "prestiges", "value": 10}, "reward": {"type": "prestige_break", "value": 1}, "bonusDesc": "bonusDesc_prestige_break"},
+                {"id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc", "condition": {"type": "impossible", "value": 1}, "reward": {"type": "coming_soon", "value": 1}, "bonusDesc": "bonusDesc_coming_soon"}
             ],
             "deskItems": [
                 {"id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": {"type": "global_mult", "value": 1.1}},
@@ -55,6 +62,7 @@ class KorposzczurGame {
             ],
             "multiBuyOptions": [1, 2, 5, 10, 20, 50, "max"],
             "prestigeThreshold": 50000,
+            "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
                     "game_title": "Korposzczur",
@@ -67,6 +75,7 @@ class KorposzczurGame {
                     "settings": "Ustawienia",
                     "prestige": "Prestiż",
                     "prestige_ready": "Prestiż Dostępny!",
+                    "prestige_break": "Prestiż Break!",
                     "upgrade": "Ulepsz",
                     "ascend": "Awansuj",
                     "unlock": "Odblokuj",
@@ -80,6 +89,7 @@ class KorposzczurGame {
                     "next_unlock": "Następne Odblokowanie",
                     "prestige_progress": "Progres do Prestiżu",
                     "cost": "Koszt",
+                    "total_cost": "Łączny koszt",
                     "per_second": "/s",
                     "task_email": "Pisanie maili",
                     "task_coffee": "Robienie kawki",
@@ -95,18 +105,20 @@ class KorposzczurGame {
                     "desk_autobuyer": "AI Asystent",
                     "ach_first_unlock": "Pierwszy krok",
                     "ach_first_unlock_desc": "Odblokuj pierwsze zadanie",
-                    "ach_first_upgrade": "Pierwsze ulepszenie", 
+                    "ach_upgrade_novice": "Nowicjusz ulepszeń",
+                    "ach_upgrade_novice_desc": "Kup 50 ulepszeń",
+                    "ach_first_upgrade": "Pierwsze ulepszenie",
                     "ach_first_upgrade_desc": "Kup pierwsze ulepszenie zadania",
                     "ach_coffee_lover": "Miłośnik kawy",
                     "ach_coffee_lover_desc": "Odblokuj zadanie kawowe",
                     "ach_meeting_master": "Mistrz spotkań",
-                    "ach_meeting_master_desc": "Osiągnij 10 poziom spotkań",
+                    "ach_meeting_master_desc": "Osiągnij 15 poziom spotkań",
                     "ach_first_ascend": "Pierwszy awans",
                     "ach_first_ascend_desc": "Awansuj pierwsze zadanie",
                     "ach_kpi_analyst": "Analityk KPI",
                     "ach_kpi_analyst_desc": "Odblokuj analizę KPI",
                     "ach_big_spender": "Wielki wydawca",
-                    "ach_big_spender_desc": "Wydaj 10,000 BP na ulepszenia",
+                    "ach_big_spender_desc": "Wydaj 25,000 BP na ulepszenia",
                     "ach_innovation_guru": "Guru innowacji",
                     "ach_innovation_guru_desc": "Odblokuj burzę mózgów",
                     "ach_first_prestige": "Soft Skills mistrz",
@@ -114,32 +126,59 @@ class KorposzczurGame {
                     "ach_optimizer": "Optymalizator",
                     "ach_optimizer_desc": "Odblokuj optymalizację procesów",
                     "ach_multibuy_expert": "Expert multi-buy",
-                    "ach_multibuy_expert_desc": "Użyj multi-buy 10 razy",
+                    "ach_multibuy_expert_desc": "Użyj multi-buy 25 razy",
                     "ach_corporate_ladder": "Drabina korporacyjna",
-                    "ach_corporate_ladder_desc": "Wykonaj 5 awansów",
+                    "ach_corporate_ladder_desc": "Wykonaj 10 awansów",
                     "ach_idle_master": "Mistrz idle",
                     "ach_idle_master_desc": "Osiągnij 1000 BP/s",
                     "ach_dedication": "Oddanie",
-                    "ach_dedication_desc": "Graj przez godzinę",
+                    "ach_dedication_desc": "Graj przez 2 godziny",
+                    "ach_soft_skills_beginner": "Soft Skills początkujący",
+                    "ach_soft_skills_beginner_desc": "Zdobądź pierwszy Soft Skills",
+                    "ach_soft_skills_expert": "Soft Skills ekspert",
+                    "ach_soft_skills_expert_desc": "Zdobądź 10 Soft Skills",
+                    "ach_soft_skills_master": "Soft Skills mistrz",
+                    "ach_soft_skills_master_desc": "Zdobądź 50 Soft Skills",
+                    "ach_first_desk_item": "Pierwszy gadżet",
+                    "ach_first_desk_item_desc": "Kup pierwszy przedmiot na biurko",
+                    "ach_office_decorator": "Dekorator biura",
+                    "ach_office_decorator_desc": "Kup 3 przedmioty na biurko",
+                    "ach_office_complete": "Kompletne biuro",
+                    "ach_office_complete_desc": "Kup wszystkie przedmioty na biurko",
+                    "ach_prestige_veteran": "Weteran prestiżu",
+                    "ach_prestige_veteran_desc": "Wykonaj 5 prestiży",
+                    "ach_prestige_master": "Mistrz prestiżu",
+                    "ach_prestige_master_desc": "Wykonaj 10 prestiży - odblokuje Prestiż Break",
+                    "ach_future_update": "W następnej wersji",
+                    "ach_future_update_desc": "Do zobaczenia w kolejnym update gry",
                     "bonusDesc_bp_5": "+5% do generowania BP",
                     "bonusDesc_bp_10": "+10% do generowania BP",
                     "bonusDesc_idle_10": "+10% do idle wszystkich zadań",
                     "bonusDesc_idle_20": "+20% do idle wszystkich zadań",
                     "bonusDesc_global_15": "+15% do wszystkich bonusów",
+                    "bonusDesc_global_25": "+25% do wszystkich bonusów",
                     "bonusDesc_global_30": "+30% do wszystkich bonusów",
                     "bonusDesc_upgrade_discount_5": "-5% koszt ulepszeń",
                     "bonusDesc_ascend_20": "+20% bonusu z awansów",
-                    "bonusDesc_ascend_discount_10": "-10% koszt awansów", 
+                    "bonusDesc_ascend_discount_10": "-10% koszt awansów",
                     "bonusDesc_prestige_15": "+15% Soft Skills z prestiżu",
+                    "bonusDesc_prestige_20": "+20% Soft Skills z prestiżu",
+                    "bonusDesc_prestige_30": "+30% Soft Skills z prestiżu",
+                    "bonusDesc_soft_skill_10": "+10% efektywność Soft Skills",
                     "bonusDesc_soft_skill_25": "+25% efektywność Soft Skills",
+                    "bonusDesc_soft_skill_50": "+50% efektywność Soft Skills",
+                    "bonusDesc_desk_unlock": "Odblokowanie karty Biurko",
+                    "bonusDesc_desk_discount_10": "-10% koszt przedmiotów biurka",
                     "bonusDesc_multibuy_upgrades": "Odblokowanie multi-buy dla ulepszeń",
                     "bonusDesc_multibuy_ascend": "Odblokowanie multi-buy dla awansów",
                     "bonusDesc_max_buy": "Odblokowanie opcji 'Kup max'",
-                    "help_content": "Witaj w Korposzczur!\n\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\n\nMechaniki:\n• Ręcznie odblokuj każde zadanie za BP\n• Ulepszaj zadania za BP aby zwiększyć przychód\n• Awansuj zadania do wyższych rang\n• Użyj Prestiżu aby zresetować grę za Soft Skills\n• Kup przedmioty biurkowe za Soft Skills\n• Zdobywaj achievementy aby odblokować nowe funkcje\n\nWskazówki:\n• Każde zadanie musi być najpierw ręcznie odblokowane\n• Buttony aktualizują się w czasie rzeczywistym\n• Multi-buy i auto-kupowanie odblokują się przez achievementy\n• Prestiż staje się dostępny po zebraniu wystarczającej ilości BP"
+                    "bonusDesc_prestige_break": "Odblokowanie Prestiż Break - wielokrotne Soft Skills",
+                    "bonusDesc_coming_soon": "Wkrótce w następnej aktualizacji!",
+                    "help_content": "Witaj w Korposzczur!\\n\\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\\n\\nMechaniki:\\n• Ręcznie odblokuj każde zadanie za BP\\n• Ulepszaj zadania za BP aby zwiększyć przychód\\n• Awansuj zadania do wyższych rang\\n• Użyj Prestiżu aby zresetować grę za Soft Skills\\n• Kup przedmioty biurkowe za Soft Skills\\n• Zdobywaj achievementy aby odblokować nowe funkcje\\n• Prestiż Break pozwala zdobyć wiele Soft Skills na raz\\n\\nWskazówki:\\n• Każde zadanie musi być najpierw ręcznie odblokowane\\n• Multi-buy pokazuje łączny koszt wszystkich ulepszeń\\n• Biurko staje się dostępne po pierwszym Soft Skills\\n• Prestiż Break odblokowuje się po 10 prestiżach"
                 },
                 "en": {
                     "game_title": "Corporate Rat",
-                    "tab_career": "Career", 
+                    "tab_career": "Career",
                     "tab_desk": "Desk",
                     "tab_achievements": "Achievements",
                     "help": "Help",
@@ -148,6 +187,7 @@ class KorposzczurGame {
                     "settings": "Settings",
                     "prestige": "Prestige",
                     "prestige_ready": "Prestige Ready!",
+                    "prestige_break": "Prestige Break!",
                     "upgrade": "Upgrade",
                     "ascend": "Promote",
                     "unlock": "Unlock",
@@ -161,11 +201,12 @@ class KorposzczurGame {
                     "next_unlock": "Next Unlock",
                     "prestige_progress": "Prestige Progress",
                     "cost": "Cost",
+                    "total_cost": "Total cost",
                     "per_second": "/s",
                     "task_email": "Writing emails",
                     "task_coffee": "Making coffee",
                     "task_meeting": "Teams meetings",
-                    "task_kpi": "KPI analysis", 
+                    "task_kpi": "KPI analysis",
                     "task_brainstorm": "Brainstorming",
                     "task_optimize": "Process optimization",
                     "desk_mug": "Company mug",
@@ -176,18 +217,20 @@ class KorposzczurGame {
                     "desk_autobuyer": "AI Assistant",
                     "ach_first_unlock": "First step",
                     "ach_first_unlock_desc": "Unlock first task",
+                    "ach_upgrade_novice": "Upgrade novice",
+                    "ach_upgrade_novice_desc": "Buy 50 upgrades",
                     "ach_first_upgrade": "First upgrade",
                     "ach_first_upgrade_desc": "Buy first task upgrade",
                     "ach_coffee_lover": "Coffee lover",
                     "ach_coffee_lover_desc": "Unlock coffee task",
                     "ach_meeting_master": "Meeting master",
-                    "ach_meeting_master_desc": "Reach level 10 in meetings",
+                    "ach_meeting_master_desc": "Reach level 15 in meetings",
                     "ach_first_ascend": "First promotion",
                     "ach_first_ascend_desc": "Ascend first task",
                     "ach_kpi_analyst": "KPI analyst",
                     "ach_kpi_analyst_desc": "Unlock KPI analysis",
                     "ach_big_spender": "Big spender",
-                    "ach_big_spender_desc": "Spend 10,000 BP on upgrades",
+                    "ach_big_spender_desc": "Spend 25,000 BP on upgrades",
                     "ach_innovation_guru": "Innovation guru",
                     "ach_innovation_guru_desc": "Unlock brainstorming",
                     "ach_first_prestige": "Soft Skills master",
@@ -195,28 +238,55 @@ class KorposzczurGame {
                     "ach_optimizer": "Optimizer",
                     "ach_optimizer_desc": "Unlock process optimization",
                     "ach_multibuy_expert": "Multi-buy expert",
-                    "ach_multibuy_expert_desc": "Use multi-buy 10 times",
+                    "ach_multibuy_expert_desc": "Use multi-buy 25 times",
                     "ach_corporate_ladder": "Corporate ladder",
-                    "ach_corporate_ladder_desc": "Perform 5 ascensions",
+                    "ach_corporate_ladder_desc": "Perform 10 ascensions",
                     "ach_idle_master": "Idle master",
                     "ach_idle_master_desc": "Reach 1000 BP/s",
                     "ach_dedication": "Dedication",
-                    "ach_dedication_desc": "Play for one hour",
+                    "ach_dedication_desc": "Play for 2 hours",
+                    "ach_soft_skills_beginner": "Soft Skills beginner",
+                    "ach_soft_skills_beginner_desc": "Earn first Soft Skills",
+                    "ach_soft_skills_expert": "Soft Skills expert",
+                    "ach_soft_skills_expert_desc": "Earn 10 Soft Skills",
+                    "ach_soft_skills_master": "Soft Skills master",
+                    "ach_soft_skills_master_desc": "Earn 50 Soft Skills",
+                    "ach_first_desk_item": "First gadget",
+                    "ach_first_desk_item_desc": "Buy first desk item",
+                    "ach_office_decorator": "Office decorator",
+                    "ach_office_decorator_desc": "Buy 3 desk items",
+                    "ach_office_complete": "Complete office",
+                    "ach_office_complete_desc": "Buy all desk items",
+                    "ach_prestige_veteran": "Prestige veteran",
+                    "ach_prestige_veteran_desc": "Perform 5 prestiges",
+                    "ach_prestige_master": "Prestige master",
+                    "ach_prestige_master_desc": "Perform 10 prestiges - unlocks Prestige Break",
+                    "ach_future_update": "Next update",
+                    "ach_future_update_desc": "Coming in the next game update",
                     "bonusDesc_bp_5": "+5% BP generation",
                     "bonusDesc_bp_10": "+10% BP generation",
                     "bonusDesc_idle_10": "+10% idle for all tasks",
-                    "bonusDesc_idle_20": "+20% idle for all tasks", 
+                    "bonusDesc_idle_20": "+20% idle for all tasks",
                     "bonusDesc_global_15": "+15% to all bonuses",
+                    "bonusDesc_global_25": "+25% to all bonuses",
                     "bonusDesc_global_30": "+30% to all bonuses",
                     "bonusDesc_upgrade_discount_5": "-5% upgrade costs",
                     "bonusDesc_ascend_20": "+20% ascension bonuses",
                     "bonusDesc_ascend_discount_10": "-10% ascension costs",
                     "bonusDesc_prestige_15": "+15% Soft Skills from prestige",
+                    "bonusDesc_prestige_20": "+20% Soft Skills from prestige",
+                    "bonusDesc_prestige_30": "+30% Soft Skills from prestige",
+                    "bonusDesc_soft_skill_10": "+10% Soft Skills effectiveness",
                     "bonusDesc_soft_skill_25": "+25% Soft Skills effectiveness",
+                    "bonusDesc_soft_skill_50": "+50% Soft Skills effectiveness",
+                    "bonusDesc_desk_unlock": "Unlocks Desk tab",
+                    "bonusDesc_desk_discount_10": "-10% desk item costs",
                     "bonusDesc_multibuy_upgrades": "Unlocks multi-buy for upgrades",
-                    "bonusDesc_multibuy_ascend": "Unlocks multi-buy for ascensions", 
+                    "bonusDesc_multibuy_ascend": "Unlocks multi-buy for ascensions",
                     "bonusDesc_max_buy": "Unlocks 'Buy max' option",
-                    "help_content": "Welcome to Corporate Rat!\n\nGoal: Develop your corporate career by completing tasks and earning Office Points (BP).\n\nMechanics:\n• Manually unlock each task with BP\n• Upgrade tasks with BP to increase income\n• Ascend tasks to higher ranks\n• Use Prestige to reset game for Soft Skills\n• Buy desk items with Soft Skills\n• Earn achievements to unlock new features\n\nTips:\n• Each task must be manually unlocked first\n• Buttons update in real-time\n• Multi-buy and auto-buyer unlock through achievements\n• Prestige becomes available after collecting enough BP"
+                    "bonusDesc_prestige_break": "Unlocks Prestige Break - multiple Soft Skills",
+                    "bonusDesc_coming_soon": "Coming soon in next update!",
+                    "help_content": "Welcome to Corporate Rat!\\n\\nGoal: Develop your corporate career by completing tasks and earning Office Points (BP).\\n\\nMechanics:\\n• Manually unlock each task with BP\\n• Upgrade tasks with BP to increase income\\n• Ascend tasks to higher ranks\\n• Use Prestige to reset game for Soft Skills\\n• Buy desk items with Soft Skills\\n• Earn achievements to unlock new features\\n• Prestige Break allows earning multiple Soft Skills at once\\n\\nTips:\\n• Each task must be manually unlocked first\\n• Multi-buy shows total cost for all upgrades\\n• Desk becomes available after first Soft Skills\\n• Prestige Break unlocks after 10 prestiges"
                 }
             },
             "quotes": {
@@ -230,7 +300,9 @@ class KorposzczurGame {
                     "Trzeba to jeszcze raz przeanalizować",
                     "Prześlij mi ten deck po meetingu",
                     "Wdrożymy to w następnym release'ie",
-                    "Potrzebujemy alignment z business'em"
+                    "Potrzebujemy alignment z business'em",
+                    "Let's touch base offline na ten temat",
+                    "To jest bardzo scalable solution"
                 ],
                 "en": [
                     "Let's do a quick catch-up after the daily standup",
@@ -238,11 +310,13 @@ class KorposzczurGame {
                     "Let's wait for stakeholder feedback",
                     "This is very low-hanging fruit",
                     "We need more synergy in the team",
-                    "Let's organize a brainstorming session", 
+                    "Let's organize a brainstorming session",
                     "We need to analyze this once more",
                     "Send me that deck after the meeting",
                     "We'll implement this in the next release",
-                    "We need alignment with business"
+                    "We need alignment with business",
+                    "Let's touch base offline about this",
+                    "This is a very scalable solution"
                 ]
             },
             "ranks": ["Junior", "Mid", "Senior", "Lead", "Manager", "Director"]
@@ -254,12 +328,12 @@ class KorposzczurGame {
             bp: 0,
             softSkills: 0,
             totalBPEarned: 0,
+            totalSoftSkillsEarned: 0,
             totalBPSpent: 0,
             prestigeCount: 0,
-            startTime: Date.now(),
+            playTimeStart: Date.now(),
             tasks: {
-                // Critical: Initialize first task as LOCKED
-                email: { level: 1, progress: 0, locked: true, ascensions: 0 }
+                email: { level: 1, progress: 0, unlocked: true, ascensions: 0 }
             },
             achievements: {},
             deskItems: {},
@@ -271,14 +345,12 @@ class KorposzczurGame {
             stats: {
                 totalUpgrades: 0,
                 totalAscensions: 0,
-                multiBuyUsed: 0,
+                multibuyUsed: 0,
+                deskItemsBought: 0,
                 playTime: 0
             },
-            unlocks: {
-                multiBuyUpgrades: false,
-                multiBuyAscend: false,
-                maxBuy: false,
-                autoBuyer: false
+            flags: {
+                prestigeBreakUnlocked: false
             }
         };
 
@@ -286,12 +358,12 @@ class KorposzczurGame {
             const saved = localStorage.getItem('korposzczur-save');
             if (saved) {
                 const parsed = JSON.parse(saved);
-                // Ensure first task is locked in existing saves
-                const mergedState = { ...defaultState, ...parsed };
-                if (!mergedState.tasks.email) {
-                    mergedState.tasks.email = { level: 1, progress: 0, locked: true, ascensions: 0 };
-                }
-                return mergedState;
+                // Migrate old saves
+                if (!parsed.totalSoftSkillsEarned) parsed.totalSoftSkillsEarned = parsed.softSkills || 0;
+                if (!parsed.stats) parsed.stats = defaultState.stats;
+                if (!parsed.flags) parsed.flags = defaultState.flags;
+                if (!parsed.playTimeStart) parsed.playTimeStart = Date.now();
+                return { ...defaultState, ...parsed };
             }
         } catch (e) {
             console.error('Failed to load save:', e);
@@ -302,6 +374,7 @@ class KorposzczurGame {
 
     saveGameState() {
         try {
+            this.gameState.stats.playTime = Date.now() - this.gameState.playTimeStart;
             localStorage.setItem('korposzczur-save', JSON.stringify(this.gameState));
             this.lastSave = Date.now();
         } catch (e) {
@@ -310,19 +383,21 @@ class KorposzczurGame {
     }
 
     init() {
+        // Wait for DOM to be fully loaded
         this.setupEventListeners();
         this.updateLanguage();
         this.updateTheme();
-        this.initializeTabs(); // Critical: Properly initialize tabs
+        this.setupTabs();
+        this.setupMultibuy();
+        this.renderAll();
         this.startGameLoop();
         this.startQuoteRotation();
-        this.startUIUpdates(); // Critical: Start real-time UI updates
 
         // Initialize debug commands
         window.debug = {
             addBP: (amount) => {
                 this.gameState.bp += amount;
-                this.onBPChanged();
+                this.updateDisplay();
             },
             addSS: (amount) => {
                 this.gameState.softSkills += amount;
@@ -331,11 +406,16 @@ class KorposzczurGame {
             unlockAll: () => {
                 this.gameData.tasks.forEach(task => {
                     if (!this.gameState.tasks[task.id]) {
-                        this.gameState.tasks[task.id] = { level: 1, progress: 0, locked: true, ascensions: 0 };
+                        this.gameState.tasks[task.id] = { level: 1, progress: 0, unlocked: true, ascensions: 0 };
+                    } else {
+                        this.gameState.tasks[task.id].unlocked = true;
                     }
-                    this.gameState.tasks[task.id].locked = false;
                 });
                 this.renderTasks();
+            },
+            unlockAchievement: (id) => {
+                this.gameState.achievements[id] = true;
+                this.renderAchievements();
             },
             reset: () => {
                 localStorage.removeItem('korposzczur-save');
@@ -344,246 +424,155 @@ class KorposzczurGame {
         };
     }
 
-    // Critical: Fix tab initialization
-    initializeTabs() {
-        // Set career tab as active by default
-        this.switchTab('career');
-    }
-
-    // Critical: Real-time UI updates every 100ms
-    startUIUpdates() {
-        this.uiUpdateInterval = setInterval(() => {
-            this.updateButtonStates();
-            this.updateTaskProgress();
-        }, 100);
-    }
-
-    // Critical: Event-driven BP change handler
-    onBPChanged() {
-        this.updateDisplay();
-        this.updateButtonStates();
-        this.updateUnlockProgress();
-    }
-
-    // Critical: Update all button states based on current BP
-    updateButtonStates() {
-        // Update upgrade buttons
-        document.querySelectorAll('[data-action="upgrade"]').forEach(btn => {
-            const taskId = btn.dataset.taskId;
-            const cost = this.calculateUpgradeCost(taskId);
-            const canAfford = this.gameState.bp >= cost;
-            
-            btn.disabled = !canAfford;
-            btn.classList.toggle('disabled', !canAfford);
-            
-            if (canAfford) {
-                btn.classList.remove('btn--secondary');
-                btn.classList.add('btn--primary');
-            } else {
-                btn.classList.remove('btn--primary');
-                btn.classList.add('btn--secondary');
-            }
-        });
-
-        // Update unlock buttons
-        document.querySelectorAll('[data-action="unlock"]').forEach(btn => {
-            const taskId = btn.dataset.taskId;
-            const task = this.gameData.tasks.find(t => t.id === taskId);
-            const canAfford = this.gameState.bp >= task.unlockCost;
-            
-            btn.disabled = !canAfford;
-            btn.classList.toggle('disabled', !canAfford);
-            
-            if (canAfford) {
-                btn.classList.remove('btn--secondary');
-                btn.classList.add('btn--primary');
-            } else {
-                btn.classList.remove('btn--primary');
-                btn.classList.add('btn--secondary');
-            }
-        });
-
-        // Update ascend buttons
-        document.querySelectorAll('[data-action="ascend"]').forEach(btn => {
-            const taskId = btn.dataset.taskId;
-            const taskState = this.gameState.tasks[taskId];
-            const canAscend = taskState && taskState.level >= 10;
-            
-            btn.disabled = !canAscend;
-            btn.classList.toggle('disabled', !canAscend);
-        });
-
-        // Update prestige button
-        const prestigeBtn = document.getElementById('prestige-btn');
-        const canPrestige = this.gameState.totalBPEarned >= this.gameData.prestigeThreshold;
-        if (prestigeBtn) {
-            prestigeBtn.disabled = !canPrestige;
-            prestigeBtn.classList.toggle('disabled', !canPrestige);
-        }
-
-        // Update desk shop buttons
-        document.querySelectorAll('[data-action="buy-desk"]').forEach(btn => {
-            const itemId = btn.dataset.itemId;
-            const item = this.gameData.deskItems.find(d => d.id === itemId);
-            const owned = this.gameState.deskItems[itemId];
-            const canAfford = !owned && this.gameState.softSkills >= item.cost;
-            
-            btn.disabled = !canAfford;
-            btn.classList.toggle('disabled', !canAfford);
-            
-            if (owned) {
-                btn.textContent = '✓';
-            } else if (canAfford) {
-                btn.classList.remove('btn--secondary');
-                btn.classList.add('btn--primary');
-            } else {
-                btn.classList.remove('btn--primary');
-                btn.classList.add('btn--secondary');
-            }
-        });
-    }
-
     setupEventListeners() {
-        // Tab system - Critical: Fix event delegation
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('tab-btn')) {
-                e.preventDefault();
-                const tab = e.target.dataset.tab;
-                if (tab) {
-                    this.switchTab(tab);
-                }
-            }
-            
-            // Task action delegation
-            if (e.target.dataset.action) {
-                const action = e.target.dataset.action;
-                const taskId = e.target.dataset.taskId;
-                const itemId = e.target.dataset.itemId;
-
-                switch (action) {
-                    case 'upgrade':
-                        this.upgradeTask(taskId);
-                        break;
-                    case 'ascend':
-                        this.ascendTask(taskId);
-                        break;
-                    case 'unlock':
-                        this.unlockTask(taskId);
-                        break;
-                    case 'buy-desk':
-                        this.buyDeskItem(itemId);
-                        break;
-                }
-            }
-        });
-
-        // Multi-buy selector
-        const multiBuySelect = document.getElementById('multibuy-select');
-        if (multiBuySelect) {
-            multiBuySelect.addEventListener('change', (e) => {
-                this.multiBuyAmount = e.target.value;
-            });
-        }
-
         // Settings modal
         const settingsToggle = document.getElementById('settings-toggle');
         const settingsModal = document.getElementById('settings-modal');
         const settingsClose = document.getElementById('settings-close');
-        const modalBackdrop = settingsModal?.querySelector('.modal-backdrop');
 
-        if (settingsToggle && settingsModal) {
-            settingsToggle.addEventListener('click', () => {
+        if (settingsToggle && settingsModal && settingsClose) {
+            settingsToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 settingsModal.classList.remove('hidden');
             });
 
-            const closeModal = () => {
+            const closeModal = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 settingsModal.classList.add('hidden');
             };
 
-            settingsClose?.addEventListener('click', closeModal);
-            modalBackdrop?.addEventListener('click', closeModal);
+            settingsClose.addEventListener('click', closeModal);
+            
+            const modalBackdrop = settingsModal.querySelector('.modal-backdrop');
+            if (modalBackdrop) {
+                modalBackdrop.addEventListener('click', closeModal);
+            }
         }
 
         // Help modal
-        const helpToggle = document.getElementById('help-toggle');
+        const helpBtn = document.getElementById('help-btn');
         const helpModal = document.getElementById('help-modal');
         const helpClose = document.getElementById('help-close');
-        const helpBackdrop = helpModal?.querySelector('.modal-backdrop');
 
-        if (helpToggle && helpModal) {
-            helpToggle.addEventListener('click', () => {
+        if (helpBtn && helpModal && helpClose) {
+            helpBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const helpContent = document.getElementById('help-content');
-                helpContent.textContent = this.translations[this.currentLanguage].help_content;
+                if (helpContent) {
+                    helpContent.textContent = this.translations[this.currentLanguage].help_content;
+                }
                 helpModal.classList.remove('hidden');
             });
 
-            const closeHelpModal = () => {
+            const closeHelpModal = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 helpModal.classList.add('hidden');
             };
 
-            helpClose?.addEventListener('click', closeHelpModal);
-            helpBackdrop?.addEventListener('click', closeHelpModal);
+            helpClose.addEventListener('click', closeHelpModal);
+            
+            const helpBackdrop = helpModal.querySelector('.modal-backdrop');
+            if (helpBackdrop) {
+                helpBackdrop.addEventListener('click', closeHelpModal);
+            }
         }
 
         // Language and theme selectors
-        document.getElementById('language-select')?.addEventListener('change', (e) => {
-            this.gameState.settings.language = e.target.value;
-            this.currentLanguage = e.target.value;
-            this.updateLanguage();
-            this.renderAll();
-            this.saveGameState();
-        });
+        const languageSelect = document.getElementById('language-select');
+        const themeSelect = document.getElementById('theme-select');
 
-        document.getElementById('theme-select')?.addEventListener('change', (e) => {
-            this.gameState.settings.theme = e.target.value;
-            this.updateTheme();
-            this.saveGameState();
-        });
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (e) => {
+                this.gameState.settings.language = e.target.value;
+                this.currentLanguage = e.target.value;
+                this.updateLanguage();
+                this.renderAll();
+                this.saveGameState();
+            });
+        }
+
+        if (themeSelect) {
+            themeSelect.addEventListener('change', (e) => {
+                this.gameState.settings.theme = e.target.value;
+                this.updateTheme();
+                this.saveGameState();
+            });
+        }
 
         // Reset save
-        document.getElementById('reset-save')?.addEventListener('click', () => {
-            if (confirm('Are you sure you want to reset your save? This cannot be undone!')) {
-                localStorage.removeItem('korposzczur-save');
-                location.reload();
-            }
-        });
+        const resetSaveBtn = document.getElementById('reset-save');
+        if (resetSaveBtn) {
+            resetSaveBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to reset your save? This cannot be undone!')) {
+                    localStorage.removeItem('korposzczur-save');
+                    location.reload();
+                }
+            });
+        }
 
         // Prestige button
-        document.getElementById('prestige-btn')?.addEventListener('click', () => {
-            this.performPrestige();
-        });
-    }
-
-    switchTab(tabName) {
-        this.activeTab = tabName;
-        
-        // Update tab buttons
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.tab === tabName);
-        });
-        
-        // Update tab content
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.toggle('active', content.dataset.tab === tabName);
-        });
-
-        // Render content for the active tab immediately
-        this.renderCurrentTab();
-    }
-
-    renderCurrentTab() {
-        if (this.activeTab === 'career') {
-            this.renderTasks();
-        } else if (this.activeTab === 'desk') {
-            this.renderDeskShop();
-            this.renderDesk();
-        } else if (this.activeTab === 'achievements') {
-            this.renderAchievements();
+        const prestigeBtn = document.getElementById('prestige-btn');
+        if (prestigeBtn) {
+            prestigeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.performPrestige();
+            });
         }
+    }
+
+    setupTabs() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const targetTab = btn.getAttribute('data-tab');
+                
+                // Remove active class from all tabs
+                tabButtons.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                btn.classList.add('active');
+                const targetContent = document.getElementById(targetTab + '-tab');
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+                
+                // Special handling for different tabs
+                if (targetTab === 'achievements') {
+                    this.renderAchievements();
+                } else if (targetTab === 'desk') {
+                    this.renderDeskShop();
+                    this.renderDesk();
+                }
+            });
+        });
+    }
+
+    setupMultibuy() {
+        const multibuySelect = document.getElementById('multibuy-select');
         
-        this.updateDisplay();
-        this.updateUnlockProgress();
-        this.updateMultiBuyOptions();
+        if (multibuySelect) {
+            // Initially hide multibuy until unlocked
+            const multibuyControls = document.querySelector('.multibuy-controls');
+            if (!this.gameState.achievements.upgrade_novice && multibuyControls) {
+                multibuyControls.style.display = 'none';
+            }
+
+            multibuySelect.addEventListener('change', (e) => {
+                this.currentMultibuy = e.target.value === 'max' ? 'max' : parseInt(e.target.value);
+                this.renderTasks(); // Re-render to update costs
+            });
+        }
     }
 
     updateLanguage() {
@@ -592,11 +581,7 @@ class KorposzczurGame {
             const key = el.getAttribute('data-translate');
             const translation = this.translations[this.currentLanguage][key];
             if (translation) {
-                if (el.tagName === 'OPTION') {
-                    el.textContent = translation;
-                } else {
-                    el.textContent = translation;
-                }
+                el.textContent = translation;
             }
         });
 
@@ -622,7 +607,7 @@ class KorposzczurGame {
 
         this.saveInterval = setInterval(() => {
             this.saveGameState();
-        }, 10000); // Auto-save every 10 seconds
+        }, 30000); // Auto-save every 30 seconds
     }
 
     startQuoteRotation() {
@@ -644,27 +629,24 @@ class KorposzczurGame {
         const deltaTime = now - this.lastUpdate;
         this.lastUpdate = now;
 
-        // Update play time
-        this.gameState.stats.playTime += deltaTime;
-
         // Update task progress and generate BP
         let totalBPGained = 0;
         let totalIdleRate = 0;
 
         Object.keys(this.gameState.tasks).forEach(taskId => {
             const taskState = this.gameState.tasks[taskId];
-            if (!taskState || taskState.locked) return;
+            if (!taskState.unlocked) return;
 
             const taskData = this.gameData.tasks.find(t => t.id === taskId);
             if (!taskData) return;
 
             const idleRate = this.calculateTaskIdleRate(taskId);
             totalIdleRate += idleRate;
+            
+            const cycleTime = taskData.cycleTime || 2000;
+            const progressIncrement = deltaTime / cycleTime;
 
-            // Calculate progress based on cycle time and idle rate
-            const cycleProgress = deltaTime / taskData.cycleTime;
-            taskState.progress += cycleProgress;
-
+            taskState.progress += progressIncrement;
             if (taskState.progress >= 1) {
                 const cycles = Math.floor(taskState.progress);
                 taskState.progress = taskState.progress % 1;
@@ -675,37 +657,44 @@ class KorposzczurGame {
         if (totalBPGained > 0) {
             this.gameState.bp += totalBPGained;
             this.gameState.totalBPEarned += totalBPGained;
-            this.onBPChanged(); // Critical: Trigger BP change event
         }
 
-        // Check achievements periodically
-        this.checkAchievements();
+        // Auto-buyer logic
+        if (this.gameState.deskItems.autobuyer && totalIdleRate > 0) {
+            this.runAutoBuyer();
+        }
 
-        // Auto-buyer functionality
-        if (this.gameState.deskItems.autobuyer && this.gameState.unlocks.autoBuyer) {
-            this.runAutoBuyer(deltaTime);
+        // Check for new unlocks and achievements
+        this.checkUnlocks();
+        this.checkAllAchievements();
+        
+        // Update UI periodically
+        if (now - this.lastSave > 200) { // Update UI every 200ms
+            this.updateDisplay();
+            this.updateTaskProgress();
+            this.updateUnlockProgress();
+            this.lastSave = now;
         }
     }
 
-    // Critical: Manual task unlocking system
-    unlockTask(taskId) {
-        const taskData = this.gameData.tasks.find(t => t.id === taskId);
-        if (!taskData) return;
+    runAutoBuyer() {
+        // Simple auto-buyer: upgrade cheapest available task
+        const availableTasks = Object.keys(this.gameState.tasks)
+            .filter(taskId => {
+                const taskState = this.gameState.tasks[taskId];
+                return taskState.unlocked;
+            })
+            .map(taskId => ({
+                id: taskId,
+                cost: this.calculateUpgradeCost(taskId, 1)
+            }))
+            .sort((a, b) => a.cost - b.cost);
 
-        if (this.gameState.bp >= taskData.unlockCost) {
-            this.gameState.bp -= taskData.unlockCost;
-            this.gameState.totalBPSpent += taskData.unlockCost;
-
-            if (!this.gameState.tasks[taskId]) {
-                this.gameState.tasks[taskId] = { level: 1, progress: 0, locked: true, ascensions: 0 };
+        if (availableTasks.length > 0) {
+            const cheapest = availableTasks[0];
+            if (this.gameState.bp >= cheapest.cost) {
+                this.upgradeTask(cheapest.id, 1);
             }
-            
-            this.gameState.tasks[taskId].locked = false;
-            
-            this.onBPChanged();
-            this.renderTasks();
-            this.checkAchievements();
-            this.showNotification(`${this.translations[this.currentLanguage][taskData.nameKey]} ${this.translations[this.currentLanguage].unlock.toLowerCase()}ed!`);
         }
     }
 
@@ -713,9 +702,7 @@ class KorposzczurGame {
         const taskData = this.gameData.tasks.find(t => t.id === taskId);
         const taskState = this.gameState.tasks[taskId];
         
-        if (!taskData || !taskState) return 0;
-        
-        let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier, taskState.level - 1);
+        let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier || 1.2, taskState.level - 1);
         
         // Apply ascension multiplier
         rate *= Math.pow(2, taskState.ascensions);
@@ -729,19 +716,24 @@ class KorposzczurGame {
     getGlobalMultiplier() {
         let multiplier = 1;
         
-        // Prestige multiplier
-        multiplier *= Math.pow(1.1, this.gameState.prestigeCount);
+        // Soft Skills multiplier
+        multiplier *= Math.pow(1.1, this.gameState.softSkills);
         
         // Achievement bonuses
-        Object.keys(this.gameState.achievements).forEach(achievementId => {
-            if (this.gameState.achievements[achievementId]) {
-                const achievement = this.gameData.achievements.find(a => a.id === achievementId);
-                if (achievement?.reward?.type === 'global_mult') {
-                    multiplier *= achievement.reward.value;
-                } else if (achievement?.reward?.type === 'bp_bonus') {
-                    multiplier *= achievement.reward.value;
-                } else if (achievement?.reward?.type === 'idle_bonus') {
-                    multiplier *= achievement.reward.value;
+        Object.keys(this.gameState.achievements).forEach(achId => {
+            if (!this.gameState.achievements[achId]) return;
+            const achievement = this.gameData.achievements.find(a => a.id === achId);
+            if (achievement && achievement.reward) {
+                switch (achievement.reward.type) {
+                    case 'bp_bonus':
+                        multiplier *= achievement.reward.value;
+                        break;
+                    case 'global_mult':
+                        multiplier *= achievement.reward.value;
+                        break;
+                    case 'idle_bonus':
+                        multiplier *= achievement.reward.value;
+                        break;
                 }
             }
         });
@@ -759,304 +751,361 @@ class KorposzczurGame {
         return multiplier;
     }
 
-    checkAchievements() {
-        this.gameData.achievements.forEach(achievement => {
-            if (this.gameState.achievements[achievement.id]) return;
-
-            let unlocked = false;
-            const condition = achievement.condition;
-
-            switch (condition.type) {
-                case 'tasks_unlocked':
-                    const unlockedTasks = Object.values(this.gameState.tasks).filter(t => !t.locked).length;
-                    unlocked = unlockedTasks >= condition.value;
-                    break;
-                case 'upgrades_bought':
-                    unlocked = this.gameState.stats.totalUpgrades >= condition.value;
-                    break;
-                case 'task_unlocked':
-                    const taskState = this.gameState.tasks[condition.taskId];
-                    unlocked = taskState && !taskState.locked;
-                    break;
-                case 'task_level':
-                    const levelTaskState = this.gameState.tasks[condition.taskId];
-                    unlocked = levelTaskState && levelTaskState.level >= condition.value;
-                    break;
-                case 'ascensions':
-                    unlocked = this.gameState.stats.totalAscensions >= condition.value;
-                    break;
-                case 'bp_spent':
-                    unlocked = this.gameState.totalBPSpent >= condition.value;
-                    break;
-                case 'prestiges':
-                    unlocked = this.gameState.prestigeCount >= condition.value;
-                    break;
-                case 'multibuy_used':
-                    unlocked = this.gameState.stats.multiBuyUsed >= condition.value;
-                    break;
-                case 'total_ascensions':
-                    unlocked = this.gameState.stats.totalAscensions >= condition.value;
-                    break;
-                case 'idle_rate':
-                    let totalRate = 0;
-                    Object.keys(this.gameState.tasks).forEach(taskId => {
-                        if (!this.gameState.tasks[taskId].locked) {
-                            totalRate += this.calculateTaskIdleRate(taskId);
-                        }
-                    });
-                    unlocked = totalRate >= condition.value;
-                    break;
-                case 'play_time':
-                    unlocked = this.gameState.stats.playTime >= condition.value;
-                    break;
-            }
-
-            if (unlocked) {
-                this.gameState.achievements[achievement.id] = true;
-                this.applyAchievementReward(achievement);
-                this.renderAchievements();
-                this.showNotification(`Achievement: ${this.translations[this.currentLanguage][achievement.nameKey]}!`);
+    checkUnlocks() {
+        let unlocked = false;
+        this.gameData.tasks.forEach(task => {
+            if (!this.gameState.tasks[task.id] || !this.gameState.tasks[task.id].unlocked) {
+                if (this.gameState.bp >= task.unlockCost) {
+                    if (!this.gameState.tasks[task.id]) {
+                        this.gameState.tasks[task.id] = { level: 1, progress: 0, unlocked: false, ascensions: 0 };
+                    }
+                    // Don't auto-unlock, show unlock button instead
+                }
             }
         });
+        if (unlocked) {
+            this.renderTasks();
+        }
+    }
+
+    checkAllAchievements() {
+        this.gameData.achievements.forEach(achievement => {
+            if (!this.gameState.achievements[achievement.id] && achievement.condition.type !== 'impossible') {
+                this.checkAchievement(achievement.id);
+            }
+        });
+    }
+
+    checkAchievement(achievementId) {
+        if (this.gameState.achievements[achievementId]) return;
+
+        const achievement = this.gameData.achievements.find(a => a.id === achievementId);
+        if (!achievement) return;
+
+        let unlocked = false;
+        const condition = achievement.condition;
+
+        switch (condition.type) {
+            case 'tasks_unlocked':
+                const unlockedTasks = Object.values(this.gameState.tasks).filter(t => t.unlocked).length;
+                unlocked = unlockedTasks >= condition.value;
+                break;
+            case 'upgrades_bought':
+                unlocked = this.gameState.stats.totalUpgrades >= condition.value;
+                break;
+            case 'task_unlocked':
+                const taskState = this.gameState.tasks[condition.taskId];
+                unlocked = taskState && taskState.unlocked;
+                break;
+            case 'task_level':
+                const taskLevelState = this.gameState.tasks[condition.taskId];
+                unlocked = taskLevelState && taskLevelState.level >= condition.value;
+                break;
+            case 'ascensions':
+                unlocked = this.gameState.stats.totalAscensions >= condition.value;
+                break;
+            case 'bp_spent':
+                unlocked = this.gameState.totalBPSpent >= condition.value;
+                break;
+            case 'prestiges':
+                unlocked = this.gameState.prestigeCount >= condition.value;
+                break;
+            case 'multibuy_used':
+                unlocked = this.gameState.stats.multibuyUsed >= condition.value;
+                break;
+            case 'total_ascensions':
+                unlocked = this.gameState.stats.totalAscensions >= condition.value;
+                break;
+            case 'idle_rate':
+                let totalRate = 0;
+                Object.keys(this.gameState.tasks).forEach(taskId => {
+                    if (this.gameState.tasks[taskId].unlocked) {
+                        totalRate += this.calculateTaskIdleRate(taskId);
+                    }
+                });
+                unlocked = totalRate >= condition.value;
+                break;
+            case 'play_time':
+                const playTime = Date.now() - this.gameState.playTimeStart;
+                unlocked = playTime >= condition.value;
+                break;
+            case 'soft_skills_earned':
+                unlocked = this.gameState.totalSoftSkillsEarned >= condition.value;
+                break;
+            case 'desk_items_bought':
+                unlocked = this.gameState.stats.deskItemsBought >= condition.value;
+                break;
+        }
+
+        if (unlocked) {
+            this.gameState.achievements[achievementId] = true;
+            this.applyAchievementReward(achievement);
+            this.showNotification(`Achievement Unlocked: ${this.translations[this.currentLanguage][achievement.nameKey]}`);
+            
+            // Special handling for prestige break unlock
+            if (achievement.reward.type === 'prestige_break') {
+                this.gameState.flags.prestigeBreakUnlocked = true;
+            }
+            
+            // Update UI elements that may have been unlocked
+            if (achievement.reward.type === 'multibuy_unlock') {
+                this.updateMultibuyOptions();
+            }
+            
+            if (achievement.reward.type === 'desk_unlock') {
+                this.showDeskTab();
+            }
+        }
     }
 
     applyAchievementReward(achievement) {
-        const reward = achievement.reward;
-        switch (reward.type) {
-            case 'multibuy_unlock':
-                if (reward.value === 'upgrades') {
-                    this.gameState.unlocks.multiBuyUpgrades = true;
-                } else if (reward.value === 'ascend') {
-                    this.gameState.unlocks.multiBuyAscend = true;
-                }
-                break;
-            case 'max_buy_unlock':
-                this.gameState.unlocks.maxBuy = true;
-                this.updateMultiBuyOptions();
-                break;
-            case 'auto_buyer':
-                this.gameState.unlocks.autoBuyer = true;
-                break;
+        // Rewards are passive and applied in calculations
+        // Some rewards need immediate UI updates
+        if (achievement.reward.type === 'multibuy_unlock') {
+            this.updateMultibuyOptions();
         }
     }
 
-    updateMultiBuyOptions() {
-        const multiBuySelect = document.getElementById('multibuy-select');
-        if (!multiBuySelect) return;
-
-        // Clear existing options
-        multiBuySelect.innerHTML = '';
-
-        // Add basic options
-        [1, 2, 5, 10, 20, 50].forEach(value => {
-            const option = document.createElement('option');
-            option.value = value;
-            option.textContent = value;
-            multiBuySelect.appendChild(option);
+    updateMultibuyOptions() {
+        const multibuySelect = document.getElementById('multibuy-select');
+        const multibuyControls = document.querySelector('.multibuy-controls');
+        
+        if (!multibuySelect || !multibuyControls) return;
+        
+        // Show multibuy controls
+        multibuyControls.style.display = 'block';
+        
+        // Clear and repopulate options
+        multibuySelect.innerHTML = '';
+        
+        this.gameData.multiBuyOptions.forEach(option => {
+            if (option === 'max' && !this.gameState.achievements.multibuy_expert) {
+                return; // Don't show max until expert achievement
+            }
+            
+            const optionEl = document.createElement('option');
+            optionEl.value = option;
+            optionEl.textContent = option === 'max' ? this.translations[this.currentLanguage].buy_max : `${option}x`;
+            multibuySelect.appendChild(optionEl);
         });
+    }
 
-        // Add max option if unlocked
-        if (this.gameState.unlocks.maxBuy) {
-            const maxOption = document.createElement('option');
-            maxOption.value = 'max';
-            maxOption.textContent = this.translations[this.currentLanguage].buy_max;
-            multiBuySelect.appendChild(maxOption);
+    showDeskTab() {
+        const deskTab = document.getElementById('desk-tab');
+        if (deskTab) {
+            deskTab.classList.remove('hidden');
         }
     }
 
-    upgradeTask(taskId) {
+    unlockTask(taskId) {
+        const task = this.gameData.tasks.find(t => t.id === taskId);
+        if (!task || this.gameState.bp < task.unlockCost) return;
+
+        this.gameState.bp -= task.unlockCost;
+        this.gameState.totalBPSpent += task.unlockCost;
+        
+        if (!this.gameState.tasks[taskId]) {
+            this.gameState.tasks[taskId] = { level: 1, progress: 0, unlocked: false, ascensions: 0 };
+        }
+        this.gameState.tasks[taskId].unlocked = true;
+        
+        this.renderTasks();
+        this.updateDisplay();
+    }
+
+    upgradeTask(taskId, amount = null) {
+        const actualAmount = amount || this.currentMultibuy;
+        const upgradesToBuy = actualAmount === 'max' ? this.calculateMaxUpgrades(taskId) : actualAmount;
+        
+        if (upgradesToBuy === 0) return;
+        
+        const totalCost = this.calculateUpgradeCost(taskId, upgradesToBuy);
+        if (this.gameState.bp < totalCost) return;
+
+        this.gameState.bp -= totalCost;
+        this.gameState.totalBPSpent += totalCost;
+        this.gameState.tasks[taskId].level += upgradesToBuy;
+        this.gameState.stats.totalUpgrades += upgradesToBuy;
+        
+        if (actualAmount !== 1) {
+            this.gameState.stats.multibuyUsed++;
+        }
+        
+        this.renderTasks();
+        this.updateDisplay();
+    }
+
+    calculateMaxUpgrades(taskId) {
         const taskData = this.gameData.tasks.find(t => t.id === taskId);
         const taskState = this.gameState.tasks[taskId];
         
-        if (!taskData || !taskState || taskState.locked) return;
-        
-        const amount = this.calculateBuyAmount(taskId, 'upgrade');
+        let maxUpgrades = 0;
         let totalCost = 0;
-        let actualBuys = 0;
-
-        // Calculate total cost for multi-buy
-        for (let i = 0; i < amount; i++) {
-            const cost = this.calculateUpgradeCost(taskId, taskState.level + actualBuys);
-            if (totalCost + cost <= this.gameState.bp) {
-                totalCost += cost;
-                actualBuys++;
-            } else {
-                break;
-            }
-        }
-
-        if (actualBuys > 0 && this.gameState.bp >= totalCost) {
-            this.gameState.bp -= totalCost;
-            this.gameState.totalBPSpent += totalCost;
-            taskState.level += actualBuys;
-            this.gameState.stats.totalUpgrades += actualBuys;
+        let currentLevel = taskState.level;
+        
+        while (totalCost <= this.gameState.bp) {
+            const nextCost = this.calculateSingleUpgradeCost(taskData, currentLevel + maxUpgrades);
+            if (totalCost + nextCost > this.gameState.bp) break;
             
-            if (actualBuys > 1) {
-                this.gameState.stats.multiBuyUsed++;
-            }
+            totalCost += nextCost;
+            maxUpgrades++;
             
-            this.onBPChanged();
-            this.renderTasks();
-            this.checkAchievements();
+            // Prevent infinite loops
+            if (maxUpgrades > 1000) break;
         }
+        
+        return maxUpgrades;
     }
 
-    calculateUpgradeCost(taskId, level = null) {
+    calculateUpgradeCost(taskId, amount = 1) {
         const taskData = this.gameData.tasks.find(t => t.id === taskId);
         const taskState = this.gameState.tasks[taskId];
         
-        if (!taskData || !taskState) return Infinity;
+        let totalCost = 0;
+        for (let i = 0; i < amount; i++) {
+            totalCost += this.calculateSingleUpgradeCost(taskData, taskState.level + i);
+        }
         
-        const currentLevel = level !== null ? level : taskState.level;
-        let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
-        
-        // Apply upgrade discount from achievements
-        Object.keys(this.gameState.achievements).forEach(achievementId => {
-            if (this.gameState.achievements[achievementId]) {
-                const achievement = this.gameData.achievements.find(a => a.id === achievementId);
-                if (achievement?.reward?.type === 'upgrade_discount') {
-                    cost *= achievement.reward.value;
+        // Apply upgrade discount from achievements/desk items
+        let discountMultiplier = 1;
+        Object.keys(this.gameState.achievements).forEach(achId => {
+            if (this.gameState.achievements[achId]) {
+                const achievement = this.gameData.achievements.find(a => a.id === achId);
+                if (achievement && achievement.reward.type === 'upgrade_discount') {
+                    discountMultiplier *= achievement.reward.value;
                 }
             }
         });
-
-        // Apply upgrade discount from desk items
+        
         Object.keys(this.gameState.deskItems).forEach(itemId => {
             if (this.gameState.deskItems[itemId]) {
                 const item = this.gameData.deskItems.find(d => d.id === itemId);
                 if (item && item.bonus.type === 'upgrade_discount') {
-                    cost *= item.bonus.value;
+                    discountMultiplier *= item.bonus.value;
                 }
             }
         });
         
-        return Math.floor(cost);
+        return Math.floor(totalCost * discountMultiplier);
     }
 
-    calculateBuyAmount(taskId, type) {
-        if (this.multiBuyAmount === 'max') {
-            return this.calculateMaxBuy(taskId, type);
-        }
-        return parseInt(this.multiBuyAmount);
+    calculateSingleUpgradeCost(taskData, level) {
+        return Math.floor(taskData.baseCost * Math.pow(taskData.costMultiplier, level));
     }
 
-    calculateMaxBuy(taskId, type) {
-        let maxAffordable = 0;
-        let currentCost = 0;
-        
-        if (type === 'upgrade') {
-            const taskState = this.gameState.tasks[taskId];
-            let totalCost = 0;
-            let level = taskState.level;
-            
-            while (totalCost <= this.gameState.bp && maxAffordable < 1000) {
-                const cost = this.calculateUpgradeCost(taskId, level);
-                if (totalCost + cost <= this.gameState.bp) {
-                    totalCost += cost;
-                    maxAffordable++;
-                    level++;
-                } else {
-                    break;
-                }
-            }
-        }
-        
-        return maxAffordable;
-    }
-
-    // Critical: Ascend button in individual task tiles
     ascendTask(taskId) {
         const taskState = this.gameState.tasks[taskId];
-        if (!taskState || taskState.level < 10) return;
+        if (taskState.level < 25) return;
 
-        const amount = this.calculateBuyAmount(taskId, 'ascend');
-        let actualAscensions = 0;
-
-        for (let i = 0; i < amount; i++) {
-            if (taskState.level >= 10) {
-                taskState.level = Math.max(1, taskState.level - 9); // Keep some levels
-                taskState.ascensions++;
-                actualAscensions++;
-                this.gameState.stats.totalAscensions++;
-            } else {
-                break;
-            }
-        }
-
-        if (actualAscensions > 0) {
-            taskState.progress = 0;
-            
-            if (actualAscensions > 1) {
-                this.gameState.stats.multiBuyUsed++;
-            }
-            
-            this.renderTasks();
-            this.checkAchievements();
-            this.showNotification(`${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]} ${this.translations[this.currentLanguage].ascend.toLowerCase()}ed!`);
-        }
+        taskState.level = 1;
+        taskState.ascensions++;
+        taskState.progress = 0;
+        this.gameState.stats.totalAscensions++;
+        
+        this.renderTasks();
     }
 
     performPrestige() {
-        if (this.gameState.totalBPEarned < this.gameData.prestigeThreshold) return;
+        const threshold = this.gameData.prestigeThreshold;
+        if (this.gameState.totalBPEarned < threshold) return;
 
-        const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / this.gameData.prestigeThreshold));
+        let softSkillsGain;
+        
+        if (this.gameState.flags.prestigeBreakUnlocked) {
+            // Prestige Break: Multiple soft skills based on threshold multiples
+            softSkillsGain = Math.floor(this.gameState.totalBPEarned / threshold);
+        } else {
+            // Normal prestige: 1 soft skill per threshold
+            softSkillsGain = 1;
+        }
+
+        // Apply prestige bonuses
+        let prestigeMultiplier = 1;
+        Object.keys(this.gameState.achievements).forEach(achId => {
+            if (this.gameState.achievements[achId]) {
+                const achievement = this.gameData.achievements.find(a => a.id === achId);
+                if (achievement && achievement.reward.type === 'prestige_bonus') {
+                    prestigeMultiplier *= achievement.reward.value;
+                }
+            }
+        });
+        
+        Object.keys(this.gameState.deskItems).forEach(itemId => {
+            if (this.gameState.deskItems[itemId]) {
+                const item = this.gameData.deskItems.find(d => d.id === itemId);
+                if (item && item.bonus.type === 'prestige_mult') {
+                    prestigeMultiplier *= item.bonus.value;
+                }
+            }
+        });
+
+        softSkillsGain = Math.floor(softSkillsGain * prestigeMultiplier);
         
         // Reset game state but keep achievements, desk items, and settings
         const achievementsToKeep = { ...this.gameState.achievements };
         const deskItemsToKeep = { ...this.gameState.deskItems };
         const settingsToKeep = { ...this.gameState.settings };
-        const unlocksToKeep = { ...this.gameState.unlocks };
+        const flagsToKeep = { ...this.gameState.flags };
+        const playTimeStart = this.gameState.playTimeStart;
+        const totalSoftSkillsEarned = this.gameState.totalSoftSkillsEarned + softSkillsGain;
 
         this.gameState = this.loadGameState();
         this.gameState.softSkills += softSkillsGain;
+        this.gameState.totalSoftSkillsEarned = totalSoftSkillsEarned;
         this.gameState.prestigeCount++;
         this.gameState.achievements = achievementsToKeep;
         this.gameState.deskItems = deskItemsToKeep;
         this.gameState.settings = settingsToKeep;
-        this.gameState.unlocks = unlocksToKeep;
-        
-        // Initialize first task as locked (critical fix)
-        this.gameState.tasks = {
-            email: { level: 1, progress: 0, locked: true, ascensions: 0 }
-        };
+        this.gameState.flags = flagsToKeep;
+        this.gameState.playTimeStart = playTimeStart;
 
-        this.checkAchievements();
         this.renderAll();
-        this.onBPChanged();
-        this.showNotification(`${this.translations[this.currentLanguage].prestige}! +${softSkillsGain} ${this.translations[this.currentLanguage].soft_skills}!`);
+        
+        const statusText = this.gameState.flags.prestigeBreakUnlocked ? 'prestige_break' : 'prestige_ready';
+        this.showNotification(`${this.translations[this.currentLanguage][statusText]} Gained ${softSkillsGain} Soft Skills!`);
     }
 
     buyDeskItem(itemId) {
         const item = this.gameData.deskItems.find(d => d.id === itemId);
-        if (!item || this.gameState.deskItems[itemId] || this.gameState.softSkills < item.cost) return;
+        if (!item || this.gameState.deskItems[itemId]) return;
 
-        this.gameState.softSkills -= item.cost;
+        let cost = item.cost;
+        
+        // Apply desk discount
+        let discountMultiplier = 1;
+        Object.keys(this.gameState.achievements).forEach(achId => {
+            if (this.gameState.achievements[achId]) {
+                const achievement = this.gameData.achievements.find(a => a.id === achId);
+                if (achievement && achievement.reward.type === 'desk_discount') {
+                    discountMultiplier *= achievement.reward.value;
+                }
+            }
+        });
+        
+        cost = Math.floor(cost * discountMultiplier);
+        
+        if (this.gameState.softSkills < cost) return;
+
+        this.gameState.softSkills -= cost;
         this.gameState.deskItems[itemId] = true;
+        this.gameState.stats.deskItemsBought++;
         
         this.renderDeskShop();
         this.renderDesk();
         this.updateDisplay();
-        this.showNotification(`${this.translations[this.currentLanguage][item.nameKey]} ${this.translations[this.currentLanguage].buy.toLowerCase()}ed!`);
-    }
-
-    runAutoBuyer(deltaTime) {
-        // Simple auto-buyer that tries to buy the cheapest available upgrade
-        Object.keys(this.gameState.tasks).forEach(taskId => {
-            const taskState = this.gameState.tasks[taskId];
-            if (taskState && !taskState.locked) {
-                const cost = this.calculateUpgradeCost(taskId);
-                if (this.gameState.bp >= cost && cost <= this.gameState.bp * 0.1) {
-                    this.upgradeTask(taskId);
-                }
-            }
-        });
     }
 
     renderAll() {
-        this.renderCurrentTab();
+        this.renderTasks();
+        if (this.gameState.totalSoftSkillsEarned > 0) {
+            this.showDeskTab();
+            this.renderDeskShop();
+            this.renderDesk();
+        }
+        this.renderAchievements();
+        this.updateMultibuyOptions();
         this.updateDisplay();
         this.updateUnlockProgress();
-        this.updateMultiBuyOptions();
     }
 
     renderTasks() {
@@ -1065,126 +1114,87 @@ class KorposzczurGame {
         
         container.innerHTML = '';
 
-        // Show all tasks (locked and unlocked)
         this.gameData.tasks.forEach(taskData => {
             const taskState = this.gameState.tasks[taskData.id];
-            const isLocked = !taskState || taskState.locked;
+            const isUnlocked = taskState && taskState.unlocked;
+            const canUnlock = !isUnlocked && this.gameState.bp >= taskData.unlockCost;
             
-            const taskCard = this.createTaskCard(taskData, taskState, isLocked);
+            if (!isUnlocked && !canUnlock) return; // Don't show locked tasks that can't be unlocked
+
+            const taskCard = this.createTaskCard(taskData, taskState, isUnlocked);
             container.appendChild(taskCard);
         });
     }
 
-    createTaskCard(taskData, taskState, isLocked) {
+    createTaskCard(taskData, taskState, isUnlocked) {
         const card = document.createElement('div');
-        card.className = `task-card ${isLocked ? 'locked' : ''}`;
+        card.className = `task-card ${!isUnlocked ? 'locked' : ''}`;
         
-        if (isLocked) {
-            // Locked task display
-            const canUnlock = this.gameState.bp >= taskData.unlockCost;
-            
+        if (!isUnlocked) {
+            // Show unlock button
             card.innerHTML = `
                 <div class="task-header">
                     <div class="task-name">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
                     <div class="task-rank">${this.translations[this.currentLanguage].locked}</div>
                 </div>
-                
-                <div class="task-stats">
-                    <div class="task-stat">
-                        <div class="stat-label">${this.translations[this.currentLanguage].cost}</div>
-                        <div class="stat-value">${this.formatNumber(taskData.unlockCost)} BP</div>
-                    </div>
-                    <div class="task-stat">
-                        <div class="stat-label">Base BP/s</div>
-                        <div class="stat-value">${this.formatNumber(taskData.baseIdle)}</div>
-                    </div>
-                </div>
-                
                 <div class="task-actions">
-                    <button class="btn ${canUnlock ? 'btn--primary' : 'btn--secondary disabled'}" 
-                            data-action="unlock" data-task-id="${taskData.id}" ${!canUnlock ? 'disabled' : ''}>
-                        ${this.translations[this.currentLanguage].unlock} (${this.formatNumber(taskData.unlockCost)})
+                    <button class="btn btn--primary btn--full-width" onclick="game.unlockTask('${taskData.id}')">
+                        ${this.translations[this.currentLanguage].unlock} (${this.formatNumber(taskData.unlockCost)} BP)
                     </button>
                 </div>
             `;
-        } else {
-            // Unlocked task display
-            const rank = this.gameData.ranks[Math.min(taskState.ascensions, this.gameData.ranks.length - 1)];
-            const idleRate = this.calculateTaskIdleRate(taskData.id);
-            const upgradeCost = this.calculateUpgradeCost(taskData.id);
-            const canUpgrade = this.gameState.bp >= upgradeCost;
-            const canAscend = taskState.level >= 10;
-            
-            // Critical: Progress bar animation speed tied to idle rate
-            const progressAnimationClass = idleRate > 0 ? 'animated' : '';
-            
-            card.innerHTML = `
-                <div class="task-header">
-                    <div class="task-name">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
-                    <div class="task-rank">${rank}</div>
-                </div>
-                
-                <div class="task-progress">
-                    <div class="task-progress-bar">
-                        <div class="task-progress-fill ${progressAnimationClass}" 
-                             data-task-id="${taskData.id}" 
-                             style="width: ${taskState.progress * 100}%"></div>
-                    </div>
-                </div>
-                
-                <div class="task-stats">
-                    <div class="task-stat">
-                        <div class="stat-label">${this.translations[this.currentLanguage].level}</div>
-                        <div class="stat-value">${taskState.level}</div>
-                    </div>
-                    <div class="task-stat">
-                        <div class="stat-label">BP/s</div>
-                        <div class="stat-value">${this.formatNumber(idleRate)}</div>
-                    </div>
-                    <div class="task-stat">
-                        <div class="stat-label">${this.translations[this.currentLanguage].rank}</div>
-                        <div class="stat-value">${taskState.ascensions}</div>
-                    </div>
-                </div>
-                
-                <div class="task-actions">
-                    <button class="btn ${canUpgrade ? 'btn--primary' : 'btn--secondary disabled'}" 
-                            data-action="upgrade" data-task-id="${taskData.id}" ${!canUpgrade ? 'disabled' : ''}>
-                        ${this.translations[this.currentLanguage].upgrade} (${this.formatNumber(upgradeCost)})
-                    </button>
-                    <button class="btn ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}" 
-                            data-action="ascend" data-task-id="${taskData.id}" ${!canAscend ? 'disabled' : ''}>
-                        ${this.translations[this.currentLanguage].ascend}
-                    </button>
-                </div>
-            `;
+            return card;
         }
+        
+        const rank = this.gameData.ranks[Math.min(taskState.ascensions, this.gameData.ranks.length - 1)];
+        const idleRate = this.calculateTaskIdleRate(taskData.id);
+        
+        const upgradeAmount = this.currentMultibuy === 'max' ? this.calculateMaxUpgrades(taskData.id) : this.currentMultibuy;
+        const upgradeCost = this.calculateUpgradeCost(taskData.id, upgradeAmount);
+        const canUpgrade = this.gameState.bp >= upgradeCost && upgradeAmount > 0;
+        const canAscend = taskState.level >= 25;
+
+        card.innerHTML = `
+            <div class="task-header">
+                <div class="task-name">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
+                <div class="task-rank">${rank}</div>
+            </div>
+            
+            <div class="hex-progress">
+                <svg viewBox="0 0 60 52">
+                    <polygon class="hex-bg" points="30,2 52,15 52,37 30,50 8,37 8,15" stroke-dasharray="140"/>
+                    <polygon class="hex-fill" points="30,2 52,15 52,37 30,50 8,37 8,15" 
+                             stroke-dasharray="${140 * (taskState.progress || 0)}, 140"/>
+                </svg>
+                <div class="hex-text">${Math.floor((taskState.progress || 0) * 100)}%</div>
+            </div>
+            
+            <div class="task-stats">
+                <div class="task-stat">
+                    <div class="stat-label">${this.translations[this.currentLanguage].level}</div>
+                    <div class="stat-value">${taskState.level}</div>
+                </div>
+                <div class="task-stat">
+                    <div class="stat-label">BP${this.translations[this.currentLanguage].per_second}</div>
+                    <div class="stat-value">${this.formatNumber(idleRate)}</div>
+                </div>
+            </div>
+            
+            <div class="task-actions">
+                <button class="btn ${canUpgrade ? 'btn--primary' : 'btn--secondary disabled'}" 
+                        onclick="game.upgradeTask('${taskData.id}')" ${!canUpgrade ? 'disabled' : ''}>
+                    ${this.translations[this.currentLanguage].upgrade}
+                    ${upgradeAmount > 1 ? ` (${upgradeAmount}x)` : ''}
+                    <span class="upgrade-cost">${this.formatNumber(upgradeCost)} BP</span>
+                </button>
+                <button class="btn ${canAscend ? 'btn--outline' : 'btn--secondary disabled'}" 
+                        onclick="game.ascendTask('${taskData.id}')" ${!canAscend ? 'disabled' : ''}>
+                    ${this.translations[this.currentLanguage].ascend}
+                </button>
+            </div>
+        `;
 
         return card;
-    }
-
-    // Critical: Update task progress bars with animation speed based on idle rate
-    updateTaskProgress() {
-        document.querySelectorAll('.task-progress-fill').forEach(progressBar => {
-            const taskId = progressBar.dataset.taskId;
-            const taskState = this.gameState.tasks[taskId];
-            
-            if (taskState && !taskState.locked) {
-                const progress = taskState.progress * 100;
-                progressBar.style.width = `${progress}%`;
-                
-                // Update animation speed based on idle rate
-                const idleRate = this.calculateTaskIdleRate(taskId);
-                if (idleRate > 0) {
-                    progressBar.classList.add('animated');
-                    // Adjust animation duration based on idle rate (faster idle = faster animation)
-                    const animationDuration = Math.max(0.5, 3 - (idleRate / 100));
-                    progressBar.style.animationDuration = `${animationDuration}s`;
-                } else {
-                    progressBar.classList.remove('animated');
-                }
-            }
-        });
     }
 
     renderDeskShop() {
@@ -1195,19 +1205,34 @@ class KorposzczurGame {
 
         this.gameData.deskItems.forEach(item => {
             const owned = this.gameState.deskItems[item.id];
-            const canBuy = !owned && this.gameState.softSkills >= item.cost;
+            
+            let cost = item.cost;
+            let discountMultiplier = 1;
+            Object.keys(this.gameState.achievements).forEach(achId => {
+                if (this.gameState.achievements[achId]) {
+                    const achievement = this.gameData.achievements.find(a => a.id === achId);
+                    if (achievement && achievement.reward.type === 'desk_discount') {
+                        discountMultiplier *= achievement.reward.value;
+                    }
+                }
+            });
+            cost = Math.floor(cost * discountMultiplier);
+            
+            const canBuy = !owned && this.gameState.softSkills >= cost;
 
             const shopItem = document.createElement('div');
             shopItem.className = `shop-item ${owned ? 'owned' : ''}`;
             
+            const bonusText = this.getBonusDescription(item.bonus);
+            
             shopItem.innerHTML = `
                 <div class="shop-item-info">
                     <div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
-                    <div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
-                    <div class="shop-item-bonus">${this.getBonusDescription(item.bonus)}</div>
+                    <div class="shop-item-cost">${owned ? 'Owned' : `${cost} SS`}</div>
+                    <div class="shop-item-bonus">${bonusText}</div>
                 </div>
                 <button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}" 
-                        data-action="buy-desk" data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
+                        onclick="game.buyDeskItem('${item.id}')" ${!canBuy ? 'disabled' : ''}>
                     ${owned ? '✓' : this.translations[this.currentLanguage].buy}
                 </button>
             `;
@@ -1217,24 +1242,21 @@ class KorposzczurGame {
     }
 
     getBonusDescription(bonus) {
-        const multiplier = ((bonus.value - 1) * 100).toFixed(0);
-        const discount = ((1 - bonus.value) * 100).toFixed(0);
-        
         switch (bonus.type) {
             case 'global_mult':
-                return `+${multiplier}% global bonus`;
+                return `+${Math.round((bonus.value - 1) * 100)}% Global`;
             case 'idle_mult':
-                return `+${multiplier}% idle speed`;
+                return `+${Math.round((bonus.value - 1) * 100)}% Idle`;
             case 'upgrade_discount':
-                return `-${discount}% upgrade costs`;
+                return `-${Math.round((1 - bonus.value) * 100)}% Upgrade Cost`;
             case 'prestige_mult':
-                return `+${multiplier}% prestige gain`;
+                return `+${Math.round((bonus.value - 1) * 100)}% Prestige`;
             case 'ascend_bonus':
-                return `+${multiplier}% ascension bonus`;
+                return `+${Math.round((bonus.value - 1) * 100)}% Ascend`;
             case 'auto_buyer':
-                return 'Auto-buy upgrades';
+                return 'Auto-Buyer';
             default:
-                return 'Special bonus';
+                return 'Special Bonus';
         }
     }
 
@@ -1268,12 +1290,12 @@ class KorposzczurGame {
                     item.innerHTML = `<ellipse cx="200" cy="240" rx="40" ry="15" fill="#1a1a1a"/>`;
                     break;
                 case 'laptop':
-                    item.innerHTML = `<rect x="65" y="125" width="20" height="15" fill="#333" rx="2"/>
-                                     <rect x="67" y="127" width="16" height="11" fill="#555" rx="1"/>`;
+                    item.innerHTML = `<rect x="270" y="130" width="20" height="15" fill="#333" rx="2"/>
+                                     <rect x="272" y="132" width="16" height="11" fill="#4CAF50" rx="1"/>`;
                     break;
                 case 'autobuyer':
-                    item.innerHTML = `<circle cx="350" cy="130" r="12" fill="#4CAF50"/>
-                                     <text x="350" y="135" text-anchor="middle" fill="white" font-size="8">AI</text>`;
+                    item.innerHTML = `<circle cx="80" cy="140" r="10" fill="#FFD700"/>
+                                     <text x="80" y="145" text-anchor="middle" font-size="8" fill="#333">🤖</text>`;
                     break;
             }
             
@@ -1282,23 +1304,35 @@ class KorposzczurGame {
     }
 
     renderAchievements() {
-        const container = document.getElementById('achievements-list');
+        const container = document.getElementById('achievements-grid');
         if (!container) return;
         
         container.innerHTML = '';
 
         this.gameData.achievements.forEach(achievement => {
             const unlocked = this.gameState.achievements[achievement.id];
+            const isImpossible = achievement.condition.type === 'impossible';
             
             const achievementEl = document.createElement('div');
-            achievementEl.className = `achievement ${unlocked ? 'unlocked' : ''}`;
+            achievementEl.className = `achievement ${unlocked ? 'unlocked' : ''} ${isImpossible ? 'impossible' : ''}`;
+            
+            const progress = this.getAchievementProgress(achievement);
+            const bonusText = this.translations[this.currentLanguage][achievement.bonusDesc] || '';
             
             achievementEl.innerHTML = `
-                <div class="achievement-icon">${unlocked ? '🏆' : '🔒'}</div>
+                <div class="achievement-icon">${unlocked ? '🏆' : isImpossible ? '❓' : '🔒'}</div>
                 <div class="achievement-info">
                     <div class="achievement-name">${this.translations[this.currentLanguage][achievement.nameKey]}</div>
                     <div class="achievement-desc">${this.translations[this.currentLanguage][achievement.descKey]}</div>
-                    <div class="achievement-bonus">${unlocked ? this.translations[this.currentLanguage][achievement.bonusDesc] || 'Special bonus' : ''}</div>
+                    ${bonusText ? `<div class="achievement-bonus">${bonusText}</div>` : ''}
+                    ${!unlocked && !isImpossible && progress ? `
+                        <div class="achievement-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+                            </div>
+                            <div class="progress-text">${progress.current} / ${progress.target}</div>
+                        </div>
+                    ` : ''}
                 </div>
             `;
 
@@ -1306,53 +1340,172 @@ class KorposzczurGame {
         });
     }
 
+    getAchievementProgress(achievement) {
+        if (this.gameState.achievements[achievement.id] || achievement.condition.type === 'impossible') {
+            return null;
+        }
+
+        const condition = achievement.condition;
+        let current = 0;
+        let target = condition.value;
+
+        switch (condition.type) {
+            case 'tasks_unlocked':
+                current = Object.values(this.gameState.tasks).filter(t => t.unlocked).length;
+                break;
+            case 'upgrades_bought':
+                current = this.gameState.stats.totalUpgrades;
+                break;
+            case 'task_level':
+                const taskState = this.gameState.tasks[condition.taskId];
+                current = taskState ? taskState.level : 0;
+                break;
+            case 'ascensions':
+            case 'total_ascensions':
+                current = this.gameState.stats.totalAscensions;
+                break;
+            case 'bp_spent':
+                current = this.gameState.totalBPSpent;
+                break;
+            case 'prestiges':
+                current = this.gameState.prestigeCount;
+                break;
+            case 'multibuy_used':
+                current = this.gameState.stats.multibuyUsed;
+                break;
+            case 'soft_skills_earned':
+                current = this.gameState.totalSoftSkillsEarned;
+                break;
+            case 'desk_items_bought':
+                current = this.gameState.stats.deskItemsBought;
+                break;
+            case 'play_time':
+                current = Date.now() - this.gameState.playTimeStart;
+                break;
+            default:
+                return null;
+        }
+
+        return {
+            current: condition.type === 'play_time' ? Math.floor(current / 1000 / 60) + 'm' : this.formatNumber(current),
+            target: condition.type === 'play_time' ? Math.floor(target / 1000 / 60) + 'm' : this.formatNumber(target),
+            percentage: Math.min((current / target) * 100, 100)
+        };
+    }
+
     updateDisplay() {
         const bpDisplay = document.getElementById('bp-display');
         const ssDisplay = document.getElementById('ss-display');
-        
-        if (bpDisplay) {
-            bpDisplay.textContent = this.formatNumber(Math.floor(this.gameState.bp));
-        }
-        if (ssDisplay) {
-            ssDisplay.textContent = Math.floor(this.gameState.softSkills);
-        }
+        const bpRate = document.getElementById('bp-rate');
+
+        if (bpDisplay) bpDisplay.textContent = this.formatNumber(Math.floor(this.gameState.bp));
+        if (ssDisplay) ssDisplay.textContent = Math.floor(this.gameState.softSkills);
+
+        // Update BP rate
+        let totalRate = 0;
+        Object.keys(this.gameState.tasks).forEach(taskId => {
+            if (this.gameState.tasks[taskId].unlocked) {
+                totalRate += this.calculateTaskIdleRate(taskId);
+            }
+        });
+        if (bpRate) bpRate.textContent = `${this.formatNumber(totalRate)}${this.translations[this.currentLanguage].per_second}`;
 
         // Update prestige button
-        const canPrestige = this.gameState.totalBPEarned >= this.gameData.prestigeThreshold;
+        const threshold = this.gameData.prestigeThreshold;
+        const canPrestige = this.gameState.totalBPEarned >= threshold;
         const prestigeBtn = document.getElementById('prestige-btn');
-        const prestigeInfo = document.getElementById('prestige-info');
         
-        if (prestigeBtn && prestigeInfo) {
+        if (prestigeBtn) {
             prestigeBtn.disabled = !canPrestige;
             if (canPrestige) {
-                const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / this.gameData.prestigeThreshold));
-                prestigeInfo.textContent = `Gain ${softSkillsGain} ${this.translations[this.currentLanguage].soft_skills}`;
+                let softSkillsGain = this.gameState.flags.prestigeBreakUnlocked ? 
+                    Math.floor(this.gameState.totalBPEarned / threshold) : 1;
+                
+                // Apply prestige bonuses for display
+                let prestigeMultiplier = 1;
+                Object.keys(this.gameState.achievements).forEach(achId => {
+                    if (this.gameState.achievements[achId]) {
+                        const achievement = this.gameData.achievements.find(a => a.id === achId);
+                        if (achievement && achievement.reward.type === 'prestige_bonus') {
+                            prestigeMultiplier *= achievement.reward.value;
+                        }
+                    }
+                });
+                
+                Object.keys(this.gameState.deskItems).forEach(itemId => {
+                    if (this.gameState.deskItems[itemId]) {
+                        const item = this.gameData.deskItems.find(d => d.id === itemId);
+                        if (item && item.bonus.type === 'prestige_mult') {
+                            prestigeMultiplier *= item.bonus.value;
+                        }
+                    }
+                });
+
+                softSkillsGain = Math.floor(softSkillsGain * prestigeMultiplier);
+                
+                const statusText = this.gameState.flags.prestigeBreakUnlocked ? 'prestige_break' : 'prestige_ready';
+                prestigeBtn.textContent = `${this.translations[this.currentLanguage][statusText]} (+${softSkillsGain} SS)`;
                 prestigeBtn.classList.remove('disabled');
-                prestigeBtn.textContent = this.translations[this.currentLanguage].prestige_ready;
+                
+                if (this.gameState.flags.prestigeBreakUnlocked) {
+                    prestigeBtn.classList.add('status-break');
+                } else {
+                    prestigeBtn.classList.add('status-ready');
+                }
             } else {
-                prestigeInfo.textContent = `Requires ${this.formatNumber(this.gameData.prestigeThreshold)} total BP earned`;
-                prestigeBtn.classList.add('disabled');
                 prestigeBtn.textContent = this.translations[this.currentLanguage].prestige;
+                prestigeBtn.classList.add('disabled');
+                prestigeBtn.classList.remove('status-ready', 'status-break');
             }
         }
+
+        // Update prestige progress bar
+        const progressBar = document.getElementById('prestige-progress-bar');
+        const progressText = document.getElementById('prestige-progress-text');
+        if (progressBar && progressText) {
+            const progress = Math.min(this.gameState.totalBPEarned / threshold, 1);
+            progressBar.style.width = `${progress * 100}%`;
+            progressText.textContent = `${this.formatNumber(this.gameState.totalBPEarned)} / ${this.formatNumber(threshold)} BP`;
+        }
+    }
+
+    updateTaskProgress() {
+        document.querySelectorAll('.hex-fill').forEach((fill, index) => {
+            const taskIds = Object.keys(this.gameState.tasks);
+            if (index < taskIds.length) {
+                const taskId = taskIds[index];
+                const taskState = this.gameState.tasks[taskId];
+                if (taskState && taskState.unlocked) {
+                    const progress = taskState.progress * 140;
+                    fill.setAttribute('stroke-dasharray', `${progress}, 140`);
+                    
+                    const textEl = fill.closest('.hex-progress').querySelector('.hex-text');
+                    if (textEl) {
+                        textEl.textContent = `${Math.floor(taskState.progress * 100)}%`;
+                    }
+                }
+            }
+        });
     }
 
     updateUnlockProgress() {
         const nextTask = this.gameData.tasks.find(task => {
             const taskState = this.gameState.tasks[task.id];
-            return !taskState || taskState.locked;
+            return !taskState || !taskState.unlocked;
         });
 
         const progressBar = document.getElementById('unlock-progress');
-        const progressText = document.getElementById('unlock-text');
+        const progressInfo = document.getElementById('progress-info');
         
-        if (nextTask && progressBar && progressText) {
-            const progress = Math.min(this.gameState.bp / nextTask.unlockCost, 1);
-            progressBar.style.width = `${progress * 100}%`;
-            progressText.textContent = `${this.formatNumber(this.gameState.bp)} / ${this.formatNumber(nextTask.unlockCost)} BP`;
-        } else if (progressBar && progressText) {
-            progressBar.style.width = '100%';
-            progressText.textContent = `All tasks available`;
+        if (progressBar && progressInfo) {
+            if (nextTask) {
+                const progress = Math.min(this.gameState.bp / nextTask.unlockCost, 1);
+                progressBar.style.width = `${progress * 100}%`;
+                progressInfo.textContent = `${this.translations[this.currentLanguage][nextTask.nameKey]}: ${this.formatNumber(this.gameState.bp)} / ${this.formatNumber(nextTask.unlockCost)} BP`;
+            } else {
+                progressBar.style.width = '100%';
+                progressInfo.textContent = 'All tasks unlocked!';
+            }
         }
     }
 
@@ -1361,11 +1514,12 @@ class KorposzczurGame {
         if (num < 1000000) return (num / 1000).toFixed(1) + 'K';
         if (num < 1000000000) return (num / 1000000).toFixed(1) + 'M';
         if (num < 1000000000000) return (num / 1000000000).toFixed(1) + 'B';
-        return (num / 1000000000000).toFixed(1) + 'T';
+        if (num < 1000000000000000) return (num / 1000000000000).toFixed(1) + 'T';
+        return (num / 1000000000000000).toFixed(1) + 'Q';
     }
 
     showNotification(message) {
-        // Simple notification system
+        // Create notification element
         const notification = document.createElement('div');
         notification.style.cssText = `
             position: fixed;
@@ -1376,18 +1530,30 @@ class KorposzczurGame {
             padding: var(--space-12) var(--space-16);
             border-radius: var(--radius-base);
             box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
+            z-index: 1001;
             max-width: 300px;
             font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
         `;
         notification.textContent = message;
         
         document.body.appendChild(notification);
         
+        // Animate in
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-out forwards';
-            setTimeout(() => notification.remove(), 300);
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
         }, 3000);
     }
 
@@ -1395,28 +1561,20 @@ class KorposzczurGame {
         if (this.updateInterval) clearInterval(this.updateInterval);
         if (this.saveInterval) clearInterval(this.saveInterval);
         if (this.quoteInterval) clearInterval(this.quoteInterval);
-        if (this.uiUpdateInterval) clearInterval(this.uiUpdateInterval);
     }
 }
 
+// Make functions globally accessible
+window.game = null;
+
 // Initialize game when DOM is loaded
-let game;
 document.addEventListener('DOMContentLoaded', () => {
-    game = new KorposzczurGame();
+    window.game = new KorposzczurGame();
 });
 
 // Save on page unload
 window.addEventListener('beforeunload', () => {
-    if (game) {
-        game.saveGameState();
+    if (window.game) {
+        window.game.saveGameState();
     }
 });
-
-// Add notification animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideOut {
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);

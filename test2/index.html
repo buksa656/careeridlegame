@@ -11,19 +11,23 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1 class="game-title" data-translate="game_title">Korposzczur</h1>
+                <div class="game-header">
+                    <img src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/1444d8bf-fbeb-4e6a-aeaf-0aceda3c54f4.png" alt="Korposzczur Logo" class="game-logo">
+                    <h1 class="game-title" data-translate="game_title">Korposzczur</h1>
+                </div>
                 <div class="currency-display">
                     <div class="currency-item">
                         <span class="currency-label" data-translate="biuro_punkty">Biuro-Punkty</span>
                         <span class="currency-value" id="bp-display">0</span>
+                        <span class="currency-rate" id="bp-rate">0/s</span>
                     </div>
                     <div class="currency-item">
                         <span class="currency-label" data-translate="soft_skills">Soft Skills</span>
                         <span class="currency-value" id="ss-display">0</span>
                     </div>
                 </div>
-                <div class="header-controls">
-                    <button class="btn btn--outline help-btn" id="help-toggle" data-translate="help">Pomoc</button>
+                <div class="header-actions">
+                    <button class="btn btn--primary" id="prestige-btn" data-translate="prestige" disabled>Prestiż</button>
                     <button class="btn btn--outline settings-btn" id="settings-toggle">⚙️</button>
                 </div>
             </div>
@@ -32,93 +36,82 @@
             <div class="quote-marquee">
                 <div class="quote-text" id="quote-text">Zrobimy szybki catch-up po daily standup-ie</div>
             </div>
+
+            <!-- Tabs Navigation -->
+            <nav class="tabs-nav">
+                <button class="tab-btn active" data-tab="career" data-translate="tab_career">Kariera</button>
+                <button class="tab-btn hidden" id="desk-tab" data-tab="desk" data-translate="tab_desk">Biurko</button>
+                <button class="tab-btn" data-tab="achievements" data-translate="tab_achievements">Achievementy</button>
+                <button class="tab-btn" id="help-btn" data-translate="help">Pomoc</button>
+            </nav>
         </header>
 
         <!-- Main Game Area -->
         <main class="main-content">
-            <!-- Tab System -->
-            <nav class="tab-nav">
-                <button class="tab-btn active" data-tab="career" data-translate="tab_career">Kariera</button>
-                <button class="tab-btn" data-tab="desk" data-translate="tab_desk">Biurko</button>
-                <button class="tab-btn" data-tab="achievements" data-translate="tab_achievements">Achievementy</button>
-            </nav>
-
             <!-- Career Tab -->
-            <section class="tab-content active" data-tab="career">
-                <div class="career-layout">
-                    <div class="tasks-panel">
-                        <h2>Zadania Korporacyjne</h2>
-                        <div class="unlock-progress">
-                            <div class="progress-label" data-translate="next_unlock">Następne Odblokowanie</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="unlock-progress"></div>
-                            </div>
-                            <div class="progress-text" id="unlock-text">0 / 0 BP</div>
-                        </div>
-                        <div class="tasks-container" id="tasks-container">
-                            <!-- Tasks will be dynamically generated -->
-                        </div>
+            <section class="tab-content active" id="career-tab">
+                <div class="unlock-progress">
+                    <div class="progress-label" data-translate="next_unlock">Następne Odblokowanie</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="unlock-progress"></div>
                     </div>
-                    
-                    <div class="info-panel">
-                        <div class="prestige-section">
-                            <button class="btn btn--primary btn--full-width" id="prestige-btn" data-translate="prestige" disabled>Prestiż</button>
-                            <p class="prestige-info" id="prestige-info">Requires 50,000 total BP earned</p>
+                    <div class="progress-info" id="progress-info">Wszystkie zadania odblokowane</div>
+                </div>
+
+                <div class="multibuy-controls">
+                    <label class="form-label" data-translate="multibuy">Multi-buy</label>
+                    <select class="form-control" id="multibuy-select">
+                        <option value="1">1x</option>
+                    </select>
+                </div>
+
+                <div class="tasks-container" id="tasks-container">
+                    <!-- Tasks will be dynamically generated -->
+                </div>
+
+                <div class="prestige-info" id="prestige-info-detailed">
+                    <div class="prestige-progress">
+                        <div class="progress-label" data-translate="prestige_progress">Progres do Prestiżu</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="prestige-progress-bar"></div>
                         </div>
-                        
-                        <div class="multibuy-section">
-                            <label class="form-label" data-translate="multibuy">Multi-buy</label>
-                            <select class="form-control" id="multibuy-select">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="max" data-translate="buy_max">Kup max</option>
-                            </select>
-                        </div>
+                        <div class="progress-text" id="prestige-progress-text">0 / 50,000 BP</div>
                     </div>
                 </div>
             </section>
 
             <!-- Desk Tab -->
-            <section class="tab-content" data-tab="desk">
-                <div class="desk-layout">
-                    <div class="desk-container">
-                        <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
-                            <!-- Desk Base -->
-                            <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
-                            
-                            <!-- Hotspots for desk items -->
-                            <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
-                            <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
-                            <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
-                            <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
-                            <rect x="60" y="120" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop" rx="3"/>
-                            <circle cx="350" cy="130" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
-                            
-                            <!-- Items will be added dynamically -->
-                            <g id="desk-items"></g>
-                        </svg>
-                    </div>
-                    
-                    <div class="desk-shop" id="desk-shop">
-                        <h3>Biuro Upgrade</h3>
-                        <div class="shop-items" id="shop-items">
-                            <!-- Shop items will be generated -->
-                        </div>
+            <section class="tab-content" id="desk-tab-content">
+                <div class="desk-container">
+                    <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
+                        <!-- Desk Base -->
+                        <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
+                        
+                        <!-- Hotspots for desk items -->
+                        <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
+                        <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
+                        <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
+                        <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
+                        <circle cx="280" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
+                        <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
+                        
+                        <!-- Items will be added dynamically -->
+                        <g id="desk-items"></g>
+                    </svg>
+                </div>
+                
+                <div class="desk-shop">
+                    <h3>Biuro Upgrade</h3>
+                    <div class="shop-items" id="shop-items">
+                        <!-- Shop items will be generated -->
                     </div>
                 </div>
             </section>
 
             <!-- Achievements Tab -->
-            <section class="tab-content" data-tab="achievements">
-                <div class="achievements-container">
-                    <h2 data-translate="tab_achievements">Achievementy</h2>
-                    <div class="achievements-grid" id="achievements-list">
-                        <!-- Achievements will be generated -->
-                    </div>
+            <section class="tab-content" id="achievements-tab">
+                <div class="achievements-grid" id="achievements-grid">
+                    <!-- Achievements will be generated -->
                 </div>
             </section>
         </main>
@@ -157,10 +150,10 @@
             <div class="modal-content">
                 <h3 data-translate="help">Pomoc</h3>
                 <div class="help-content" id="help-content">
-                    <!-- Help content will be populated by JS -->
+                    <!-- Help content will be loaded from translations -->
                 </div>
                 <div class="modal-actions">
-                    <button class="btn btn--secondary" id="help-close">Close</button>
+                    <button class="btn btn--primary" id="help-close">OK</button>
                 </div>
             </div>
         </div>
