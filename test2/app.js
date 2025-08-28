@@ -1236,46 +1236,63 @@ class KorposzczurGame {
         this.showNotification(`Task ascended: ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}`);
     }
 
-    performPrestige() {
-        const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-        if (this.gameState.totalBPEarned < threshold) return;
+performPrestige() {
+    // Ustal threshold zależnie od trybu prestige break
+    const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
+    if (this.gameState.totalBPEarned < threshold) return;
 
-        const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
-        
-        // Reset game state but keep achievements, desk items, and features
-        const achievementsToKeep = { ...this.gameState.achievements };
-        const deskItemsToKeep = { ...this.gameState.deskItems };
-        const settingsToKeep = { ...this.gameState.settings };
-        const featuresState = { ...this.gameState.features };
-        const challengesState = { ...this.gameState.challenges };
+    // Sprawdź, czy gracz zdobył osiągnięcie prestige_master
+    const hasPrestigeBreak = !!this.gameState.achievements["prestige_master"];
 
-        this.gameState = this.loadGameState();
-        
-        // ALL tasks start locked again after prestige
-        this.gameData.tasks.forEach(task => {
-            this.gameState.tasks[task.id] = { 
-                level: 1, 
-                progress: 0, 
-                unlocked: false, 
-                ascensions: 0, 
-                locked: true 
-            };
-        });
-        
-        this.gameState.softSkills += softSkillsGain;
-        this.gameState.stats.softSkillsEarned += softSkillsGain;
-        this.gameState.prestigeCount++;
-        this.gameState.achievements = achievementsToKeep;
-        this.gameState.deskItems = deskItemsToKeep;
-        this.gameState.settings = settingsToKeep;
-        this.gameState.features = featuresState;
-        this.gameState.challenges = challengesState;
-
-        this.checkAchievements();
-        this.checkFeatureUnlocks();
-        this.renderAll();
-        this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skills!`);
+    // Jeśli NIE ma prestige_master: cap na 1 SS (mimo wzoru)
+    let softSkillsGain;
+    if (!hasPrestigeBreak) {
+        softSkillsGain = 1;
+    } else {
+        softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
     }
+
+    // ZAPISZ elementy, które zostają
+    const achievementsToKeep = { ...this.gameState.achievements };
+    const deskItemsToKeep = { ...this.gameState.deskItems };
+    const settingsToKeep = { ...this.gameState.settings };
+    const featuresState = { ...this.gameState.features };
+    const challengesState = { ...this.gameState.challenges };
+
+    // TOTAL RESET: wszystko z wyjątkiem achievements, desk items, settings, features, challenges
+    // WAŻNE: Resetuj BP na zero oraz progres tasków (BP, levels, ascensions itd.)
+    this.gameState = this.loadGameState();
+
+    // Wszystkie zadania zostają zablokowane po prestige
+    this.gameData.tasks.forEach(task => {
+        this.gameState.tasks[task.id] = {
+            level: 1,
+            progress: 0,
+            unlocked: false,
+            ascensions: 0,
+            locked: true
+        };
+    });
+
+    // Dodaj SS oraz licz do statystyk
+    this.gameState.softSkills += softSkillsGain;
+    this.gameState.stats.softSkillsEarned += softSkillsGain;
+    this.gameState.prestigeCount++;
+    this.gameState.achievements = achievementsToKeep;
+    this.gameState.deskItems = deskItemsToKeep;
+    this.gameState.settings = settingsToKeep;
+    this.gameState.features = featuresState;
+    this.gameState.challenges = challengesState;
+
+    // BP = 0 po prestiżu!
+    this.gameState.bp = 0;
+
+    // Odśwież UI itd.
+    this.checkAchievements();
+    this.checkFeatureUnlocks();
+    this.renderAll();
+    this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}!`);
+}
 
     buyDeskItem(itemId) {
         const item = this.gameData.deskItems.find(d => d.id === itemId);
