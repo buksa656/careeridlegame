@@ -1601,8 +1601,14 @@ performPrestige() {
             prestigeInfo.textContent = `Gain ${softSkillsGain} Soft Skills`;
             prestigeBtn.classList.remove('disabled');
         } else {
-            prestigeInfo.textContent = `Requires ${this.formatNumber(threshold)} total BP earned`;
+            // Dodaj widoczną cenę, a nie tylko tekst
+            const earned = this.formatNumber(this.gameState.totalBPEarned);
+            const requirement = this.formatNumber(threshold);
+            prestigeInfo.innerHTML = `<span style="color:#888;">${earned} / ${requirement} BP</span>
+                <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
             prestigeBtn.classList.add('disabled');
+            // Opcjonalnie zmień zawartość buttona na "Zablokowane" + kłódka, jeśli chcesz!
+            prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
         }
     }
 
