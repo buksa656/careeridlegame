@@ -1285,6 +1285,7 @@ class KorposzczurGame {
             const taskCard = this.createTaskCard(taskData, taskState);
             container.appendChild(taskCard);
         });
+        this.updateTaskButtonStates();
     }
 
     createTaskCard(taskData, taskState) {
