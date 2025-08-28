@@ -1445,7 +1445,16 @@ select.form-control {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
-
+.achievement-bonus {
+    font-size: 13px;
+    color: var(--color-success, #219e94);
+    margin-top: 3px;
+    font-weight: 500;
+}
+.achievement:not(.unlocked) .achievement-bonus {
+    color: #999;
+    opacity: 0.65;
+}
 /* Challenges Tab Layout */
 .challenges-layout {
   background: var(--color-surface);
