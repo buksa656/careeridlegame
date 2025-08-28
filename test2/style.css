@@ -1401,13 +1401,14 @@ select.form-control {
 
 .achievement {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-12);
   padding: var(--space-16);
   background: var(--color-bg-6);
   border-radius: var(--radius-base);
   border: 1px solid var(--color-border);
   transition: all var(--duration-fast) var(--ease-standard);
+  min-height: unset !important;
 }
 
 .achievement.unlocked {
@@ -1433,6 +1434,12 @@ select.form-control {
 
 .achievement-info {
   flex: 1;
+  min-width: 0;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .achievement-name {
@@ -1446,10 +1453,13 @@ select.form-control {
   color: var(--color-text-secondary);
 }
 .achievement-bonus {
-    font-size: 13px;
-    color: var(--color-success, #219e94);
-    margin-top: 3px;
-    font-weight: 500;
+  font-size: 13px;
+  color: var(--color-success, #219e94);
+  margin-top: 6px;
+  font-weight: 500;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.35;
 }
 .achievement:not(.unlocked) .achievement-bonus {
     color: #999;
