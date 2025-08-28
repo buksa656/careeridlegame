@@ -68,13 +68,13 @@ class KorposzczurGame {
                 {"id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc", "condition": {"type": "impossible", "value": 1}, "reward": {"type": "coming_soon", "value": 1}, "bonusDesc": "bonusDesc_coming_soon"}
             ],
             "deskItems": [
-                {"id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": {"type": "global_mult", "value": 1.1}},
-                {"id": "monitor", "nameKey": "desk_monitor", "cost": 5, "bonus": {"type": "idle_mult", "value": 1.2}},
-                {"id": "plant", "nameKey": "desk_plant", "cost": 10, "bonus": {"type": "upgrade_discount", "value": 0.95}},
-                {"id": "mousepad", "nameKey": "desk_mousepad", "cost": 25, "bonus": {"type": "prestige_mult", "value": 1.15}},
-                {"id": "laptop", "nameKey": "desk_laptop", "cost": 50, "bonus": {"type": "ascend_bonus", "value": 1.1}},
-                {"id": "challenges", "nameKey": "desk_challenges", "cost": 75, "bonus": {"type": "challenges_unlock", "value": 1}},
-                {"id": "autobuyer", "nameKey": "desk_autobuyer", "cost": 100, "bonus": {"type": "auto_buyer", "value": 1}}
+                { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "global_mult", "value": 1.1 }, "bonusDesc": "bonusDesc_global_10" },
+                { "id": "monitor", "nameKey": "desk_monitor", "cost": 5, "bonus": { "type": "idle_mult", "value": 1.2 }, "bonusDesc": "bonusDesc_idle_20" },
+                { "id": "plant", "nameKey": "desk_plant", "cost": 10, "bonus": { "type": "upgrade_discount", "value": 0.95 }, "bonusDesc": "bonusDesc_upgrade_discount_5" },
+                { "id": "mousepad", "nameKey": "desk_mousepad", "cost": 25, "bonus": { "type": "prestige_mult", "value": 1.15 }, "bonusDesc": "bonusDesc_prestige_mult_15" },
+                { "id": "laptop", "nameKey": "desk_laptop", "cost": 50, "bonus": { "type": "ascend_bonus", "value": 1.1 }, "bonusDesc": "bonusDesc_ascend_10" },
+                { "id": "challenges", "nameKey": "desk_challenges", "cost": 75, "bonus": { "type": "challenges_unlock", "value": 1 }, "bonusDesc": "bonusDesc_challenges_unlock" },
+                { "id": "autobuyer", "nameKey": "desk_autobuyer", "cost": 100, "bonus": { "type": "auto_buyer", "value": 1 }, "bonusDesc": "bonusDesc_autobuyer" }
             ],
             "challenges": [
                 {"id": "speed_run", "nameKey": "challenge_speed_run", "descKey": "challenge_speed_run_desc", "condition": {"type": "bp_in_time", "value": 10000, "time": 300000}, "reward": {"type": "idle_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_speed_bonus"},
@@ -88,6 +88,13 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
+                    "bonusDesc_global_10": "+10% do wszystkich przychodów",
+                    "bonusDesc_idle_20": "+20% do BP/s",
+                    "bonusDesc_upgrade_discount_5": "Ulepszenia tańsze o 5%",
+                    "bonusDesc_prestige_mult_15": "+15% do mnożnika Prestiżu",
+                    "bonusDesc_ascend_10": "+10% do bonusu awansu",
+                    "bonusDesc_challenges_unlock": "Odblokowuje wyzwania",
+                    "bonusDesc_autobuyer": "Odblokowuje auto-kupowanie (AI Asystent)",
                     "bonusDesc_bp_5": "+5% do przychodu Biuro-Punktów",
                     "bonusDesc_multibuy_upgrades": "Odblokowuje Multi-buy",
                     "bonusDesc_idle_10": "+10% do BP/s zadań",
@@ -219,6 +226,13 @@ class KorposzczurGame {
                     "help_content": "Witaj w Korposzczur!\\n\\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\\n\\nMechaniki:\\n• Ręcznie odblokuj każde zadanie za BP (nawet pierwsze!)\\n• Ulepszaj zadania za BP aby zwiększyć przychód\\n• Awansuj zadania do wyższych rang\\n• Użyj Prestiżu aby zresetować grę za Soft Skills\\n• Kup przedmioty biurkowe za Soft Skills\\n• Zdobywaj achievementy aby odblokować nowe funkcje\\n• Ukończ wyzwania dla dodatkowych bonusów\\n• Prestiż Break pozwala zdobyć wiele Soft Skills na raz\\n\\nWskazówki:\\n• WSZYSTKIE zadania wymagają ręcznego odblokowania\\n• Multi-buy odblokuje się po 50 ulepszeniach\\n• Zablokowane kafelki zmieniają kolor gdy stać Cię na nie\\n• Wyzwania odblokują się przez przedmiot na biurku\\n• Prestiż Break odblokuje się po 10 prestiżach"
                 },
                 "en": {
+                    "bonusDesc_global_10": "+10% to all income",
+                    "bonusDesc_idle_20": "+20% to BP/s",
+                    "bonusDesc_upgrade_discount_5": "Upgrades 5% cheaper",
+                    "bonusDesc_prestige_mult_15": "+15% to Prestige multiplier",
+                    "bonusDesc_ascend_10": "+10% to ascend bonus",
+                    "bonusDesc_challenges_unlock": "Unlocks challenges",
+                    "bonusDesc_autobuyer": "Unlocks auto-buyer (AI Assistant)",
                     "bonusDesc_bp_5": "+5% to Office Points income",
                     "bonusDesc_multibuy_upgrades": "Unlocks Multi-buy",
                     "bonusDesc_idle_10": "+10% to task BP/s",
@@ -1437,9 +1451,17 @@ performPrestige() {
             shopItem.className = `shop-item ${owned ? 'owned' : ''} ${canBuy ? 'affordable' : ''}`;
             shopItem.setAttribute('data-item-id', item.id);
             
+            const bonusDescKey = item.bonusDesc;
+            const bonusDesc = bonusDescKey 
+                ? (this.translations[this.currentLanguage][bonusDescKey] || '')
+                : '';
+            
             shopItem.innerHTML = `
                 <div class="shop-item-info">
                     <div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
+                    <div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
+                        ${bonusDesc}
+                    </div>
                     <div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
                 </div>
                 <button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}" 
