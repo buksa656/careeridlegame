@@ -1341,7 +1341,7 @@ class KorposzczurGame {
         const upgradeBtn = card.querySelector('[data-action="upgrade"]');
         const ascendBtn = card.querySelector('[data-action="ascend"]');
         
-        if (upgradeBtn && !upgradeBtn.disabled) {
+        if (upgradeBtn) {
             upgradeBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -1349,7 +1349,7 @@ class KorposzczurGame {
             });
         }
         
-        if (ascendBtn && !ascendBtn.disabled) {
+        if (ascendBtn) {
             ascendBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
