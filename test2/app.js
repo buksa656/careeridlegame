@@ -1463,7 +1463,7 @@ performPrestige() {
         this.updateTaskButtonStates();
     }
 
-ccreateTaskCard(taskData, taskState) {
+createTaskCard(taskData, taskState) {
     const card = document.createElement('div');
     card.className = 'task-card';
 
