@@ -1392,7 +1392,12 @@ select.form-control {
   background: var(--color-bg-3);
   border-color: var(--color-success);
 }
-
+.shop-item-bonus {
+    font-size: .95em;
+    color: #78906f;
+    margin: .4em 0 .2em 0;
+    min-height: 1.1em;
+}
 /* Achievements Tab Layout */
 .achievements-layout {
   background: var(--color-surface);
