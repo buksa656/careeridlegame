@@ -39,7 +39,10 @@ class KorposzczurGame {
                 {"id": "meeting", "nameKey": "task_meeting", "baseCost": 150, "baseIdle": 12, "unlockCost": 500, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1500},
                 {"id": "kpi", "nameKey": "task_kpi", "baseCost": 1500, "baseIdle": 70, "unlockCost": 3500, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1200},
                 {"id": "brainstorm", "nameKey": "task_brainstorm", "baseCost": 15000, "baseIdle": 400, "unlockCost": 35000, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1000},
-                {"id": "optimize", "nameKey": "task_optimize", "baseCost": 180000, "baseIdle": 2200, "unlockCost": 350000, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 800}
+                {"id": "optimize", "nameKey": "task_optimize", "baseCost": 180000, "baseIdle": 2200, "unlockCost": 350000, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 800},
+                { "id": "lunch", "nameKey": "task_lunch", "baseCost": 500000, "baseIdle": 4000, "unlockCost": 1200000, "costMultiplier": 1.17, "idleMultiplier": 1.22, "cycleTime": 700 },
+                { "id": "report", "nameKey": "task_report", "baseCost": 1500000, "baseIdle": 9500, "unlockCost": 3500000, "costMultiplier": 1.18, "idleMultiplier": 1.25, "cycleTime": 600 },
+                { "id": "motivation", "nameKey": "task_motivation", "baseCost": 10000000, "baseIdle": 30000, "unlockCost": 25000000, "costMultiplier": 1.2, "idleMultiplier": 1.28, "cycleTime": 500 }
             ],
             "achievements": [
                 {"id": "first_unlock", "nameKey": "ach_first_unlock", "descKey": "ach_first_unlock_desc", "condition": {"type": "tasks_unlocked", "value": 1}, "reward": {"type": "bp_bonus", "value": 1.05}, "bonusDesc": "bonusDesc_bp_5"},
@@ -68,13 +71,12 @@ class KorposzczurGame {
                 {"id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc", "condition": {"type": "impossible", "value": 1}, "reward": {"type": "coming_soon", "value": 1}, "bonusDesc": "bonusDesc_coming_soon"}
             ],
             "deskItems": [
-                { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "global_mult", "value": 1.1 }, "bonusDesc": "bonusDesc_global_10" },
-                { "id": "monitor", "nameKey": "desk_monitor", "cost": 5, "bonus": { "type": "idle_mult", "value": 1.2 }, "bonusDesc": "bonusDesc_idle_20" },
-                { "id": "plant", "nameKey": "desk_plant", "cost": 10, "bonus": { "type": "upgrade_discount", "value": 0.95 }, "bonusDesc": "bonusDesc_upgrade_discount_5" },
-                { "id": "mousepad", "nameKey": "desk_mousepad", "cost": 25, "bonus": { "type": "prestige_mult", "value": 1.15 }, "bonusDesc": "bonusDesc_prestige_mult_15" },
-                { "id": "laptop", "nameKey": "desk_laptop", "cost": 50, "bonus": { "type": "ascend_bonus", "value": 1.1 }, "bonusDesc": "bonusDesc_ascend_10" },
-                { "id": "challenges", "nameKey": "desk_challenges", "cost": 75, "bonus": { "type": "challenges_unlock", "value": 1 }, "bonusDesc": "bonusDesc_challenges_unlock" },
-                { "id": "autobuyer", "nameKey": "desk_autobuyer", "cost": 100, "bonus": { "type": "auto_buyer", "value": 1 }, "bonusDesc": "bonusDesc_autobuyer" }
+                { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "single_task_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_single_boost" },
+                { "id": "phone", "nameKey": "desk_phone", "cost": 3, "bonus": { "type": "all_active_boost", "value": 1.05 }, "bonusDesc": "bonusDesc_active_boost" },
+                { "id": "organizer", "nameKey": "desk_organizer", "cost": 8, "bonus": { "type": "focus_slot", "value": 1 }, "bonusDesc": "bonusDesc_focus_slot" },
+                { "id": "lamp", "nameKey": "desk_lamp", "cost": 6, "bonus": { "type": "night_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_night_boost" },
+                { "id": "multitool", "nameKey": "desk_multitool", "cost": 12, "bonus": { "type": "focus_switch_discount", "value": 0.5 }, "bonusDesc": "bonusDesc_switch_discount" },
+                { "id": "trophy", "nameKey": "desk_trophy", "cost": 20, "bonus": { "type": "focus_slot", "value": 2 }, "prestige": 1, "bonusDesc": "bonusDesc_trophy" }
             ],
             "challenges": [
                 {"id": "speed_run", "nameKey": "challenge_speed_run", "descKey": "challenge_speed_run_desc", "condition": {"type": "bp_in_time", "value": 10000, "time": 300000}, "reward": {"type": "idle_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_speed_bonus"},
@@ -88,6 +90,9 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
+                    "task_lunch": "Lunch firmowy",
+                    "task_report": "Tworzenie raportów",
+                    "task_motivation": "Motywacyjne spotkanie",
                     "rank_intern": "Stażysta",
                     "rank_assistant": "Asystent",
                     "rank_junior_specialist": "Młodszy specjalista",
@@ -176,6 +181,17 @@ class KorposzczurGame {
                     "task_brainstorm": "Burza mózgów",
                     "task_optimize": "Optymalizacja procesów",
                     "desk_mug": "Kubek z logo",
+                    "desk_phone": "Telefon służbowy",
+                    "desk_organizer": "Biurkowy organizer",
+                    "desk_lamp": "Lampka biurowa",
+                    "desk_multitool": "Multitool",
+                    "desk_trophy": "Trofeum zespołowe",
+                    "bonusDesc_single_boost": "+10% BP do wybranego aktywnego zadania",
+                    "bonusDesc_active_boost": "+5% BP do wszystkich aktywnych zadań",
+                    "bonusDesc_focus_slot": "+1 slot focus (więcej aktywnych tasków)",
+                    "bonusDesc_night_boost": "+10% BP nocą",
+                    "bonusDesc_switch_discount": "Zmiana aktywnego tasku kosztuje 50% mniej BP",
+                    "bonusDesc_trophy": "+2 sloty focus, ale -10% do łącznego BP",
                     "desk_monitor": "Drugi monitor",
                     "desk_plant": "Kwiatek na biurko",
                     "desk_mousepad": "Ergonomiczna podkładka",
@@ -265,6 +281,9 @@ class KorposzczurGame {
                     + "\nMiłej gry!"                
                 },
                 "en": {
+                    "task_lunch": "Office lunch",
+                    "task_report": "Report creation",
+                    "task_motivation": "Motivational meet",
                     "rank_intern": "Intern",
                     "rank_assistant": "Assistant",
                     "rank_junior_specialist": "Junior Specialist",
@@ -352,7 +371,18 @@ class KorposzczurGame {
                     "task_kpi": "KPI analysis",
                     "task_brainstorm": "Brainstorming",
                     "task_optimize": "Process optimization",
-                    "desk_mug": "Company mug",
+                    "desk_mug": "Logo Mug",
+                    "desk_phone": "Work Phone",
+                    "desk_organizer": "Desk Organizer",
+                    "desk_lamp": "Desk Lamp",
+                    "desk_multitool": "Multitool",
+                    "desk_trophy": "Team Trophy",
+                    "bonusDesc_single_boost": "+10% BP to selected active task",
+                    "bonusDesc_active_boost": "+5% BP to all active tasks",
+                    "bonusDesc_focus_slot": "+1 focus slot (more active tasks)",
+                    "bonusDesc_night_boost": "+10% BP at night",
+                    "bonusDesc_switch_discount": "Changing active task costs 50% less BP",
+                    "bonusDesc_trophy": "+2 focus slots, but -10% to total BP",
                     "desk_monitor": "Second monitor",
                     "desk_plant": "Desk plant",
                     "desk_mousepad": "Ergonomic mousepad",
@@ -499,6 +529,7 @@ class KorposzczurGame {
             achievements: {},
             deskItems: {},
             challenges: {},
+            focus: [],
             settings: {
                 language: 'pl',
                 theme: 'light',
@@ -1043,6 +1074,7 @@ class KorposzczurGame {
         Object.keys(this.gameState.tasks).forEach(taskId => {
             const taskState = this.gameState.tasks[taskId];
             if (!taskState || !taskState.unlocked) return;
+            if (!this.gameState.focus.includes(taskId)) return;
 
             const taskData = this.gameData.tasks.find(t => t.id === taskId);
             if (!taskData) return;
@@ -1089,14 +1121,56 @@ class KorposzczurGame {
         
         // Apply global multipliers
         rate *= this.getGlobalMultiplier();
-    
+        const isActive = this.gameState.focus.includes(taskId);
+        
+        // all_active_boost
+        if (isActive) {
+            Object.keys(this.gameState.deskItems).forEach(id => {
+                if (!this.gameState.deskItems[id]) return;
+                const item = this.gameData.deskItems.find(d => d.id === id);
+                if (item && item.bonus.type === 'all_active_boost') {
+                    rate *= item.bonus.value;
+                }
+            });
+        }
+        
+        // single_task_boost
+        if (isActive && this.gameState.singleBoostTaskId === taskId) {
+            const item = this.gameData.deskItems.find(d => d.id === 'mug'); // lub znajdź po typie
+            if (item && this.gameState.deskItems['mug']) {
+                rate *= item.bonus.value;
+            }
+        }
+        
+        // night_boost (np. 22:00–6:00)
+        const hour = new Date().getHours();
+        if (hour >= 22 || hour < 6) {
+            Object.keys(this.gameState.deskItems).forEach(id => {
+                if (!this.gameState.deskItems[id]) return;
+                const item = this.gameData.deskItems.find(d => d.id === id);
+                if (item && item.bonus.type === 'night_boost') {
+                    rate *= item.bonus.value;
+                }
+            });
+        }
         // SOFTCAP — dwustopniowy
         // 1. powyżej 20k BP/s progres rośnie tylko do potęgi 0.7
         // 2. powyżej 1M rośnie jeszcze wolniej, do potęgi 0.5
         rate = this.softcap(rate, 20000, 0.7, 1_000_000, 0.5);
         return rate;
     }
-
+    getMaxFocusSlots() {
+        let base = 4;
+        Object.keys(this.gameState.deskItems).forEach(id => {
+            if (this.gameState.deskItems[id]) {
+                const item = this.gameData.deskItems.find(d => d.id === id);
+                if (item && item.bonus.type === "focus_slot") {
+                    base += item.bonus.value;
+                }
+            }
+        });
+        return base;
+    }
     getGlobalMultiplier() {
         let multiplier = 1;
         
@@ -1161,7 +1235,10 @@ class KorposzczurGame {
         this.renderTasks();
         this.updateTaskButtonStates();
         this.updateDisplay();
-        
+        // auto-focus: jeśli jest wolny slot, dodaj świeżo odblokowany task
+        if (!this.gameState.focus.includes(taskId) && this.gameState.focus.length < this.getMaxFocusSlots()) {
+            this.gameState.focus.push(taskId);
+        }
         return true;
     }
 
@@ -1438,39 +1515,80 @@ performPrestige() {
         this.updateTaskButtonStates();
     }
 
-    renderTasks() {
-        const container = document.getElementById('tasks-container');
-        container.innerHTML = '';
+renderTasks() {
+    const container = document.getElementById('tasks-container');
+    container.innerHTML = '';
 
-        this.gameData.tasks.forEach(taskData => {
-            const taskState = this.gameState.tasks[taskData.id];
-            
-            // Show unlock button for locked tasks
-            if (!taskState || !taskState.unlocked || taskState.locked) {
-                const unlockBtn = document.createElement('div');
-                unlockBtn.className = `unlock-task-btn ${this.gameState.bp >= taskData.unlockCost ? 'affordable' : 'locked'}`;
-                unlockBtn.setAttribute('data-task-id', taskData.id);
-                
-                unlockBtn.innerHTML = `
-                    <div style="font-weight: 600;">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
-                    <div>${this.translations[this.currentLanguage].unlock} (${this.formatNumber(taskData.unlockCost)} BP)</div>
-                `;
-                
-                unlockBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.manualUnlockTask(taskData.id);
-                });
-                
-                container.appendChild(unlockBtn);
-                return;
+    this.gameData.tasks.forEach(taskData => {
+        const taskState = this.gameState.tasks[taskData.id];
+
+        // Locked -> przycisk odblokowania
+        if (!taskState || !taskState.unlocked || taskState.locked) {
+            const unlockBtn = document.createElement('div');
+            unlockBtn.className = `unlock-task-btn ${this.gameState.bp >= taskData.unlockCost ? 'affordable' : 'locked'}`;
+            unlockBtn.setAttribute('data-task-id', taskData.id);
+            unlockBtn.innerHTML = `
+                <div style="font-weight: 600;">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
+                <div>${this.translations[this.currentLanguage].unlock} (${this.formatNumber(taskData.unlockCost)} BP)</div>
+            `;
+            unlockBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.manualUnlockTask(taskData.id);
+            });
+            container.appendChild(unlockBtn);
+            return;
+        }
+
+        const isActive = this.gameState.focus.includes(taskData.id);
+        const taskCard = this.createTaskCard(taskData, taskState);
+
+        // Checkbox "Aktywne"
+        const focusCheckbox = document.createElement('input');
+        focusCheckbox.type = 'checkbox';
+        focusCheckbox.setAttribute('data-task-id', taskData.id);
+        focusCheckbox.checked = isActive;
+        focusCheckbox.disabled = !isActive && this.gameState.focus.length >= this.getMaxFocusSlots();
+
+        const label = document.createElement('label');
+        label.style.marginLeft = '10px';
+        label.appendChild(focusCheckbox);
+        label.appendChild(document.createTextNode(this.currentLanguage === 'pl' ? 'Aktywne' : 'Active'));
+
+        const focusHost = taskCard.querySelector('.task-header');
+        focusHost && focusHost.appendChild(label);
+
+        // Handler zmiany focusu + blokada przepełnienia
+        focusCheckbox.addEventListener('change', (e) => {
+            const taskId = e.target.getAttribute('data-task-id');
+            if (e.target.checked) {
+                if (this.gameState.focus.length >= this.getMaxFocusSlots()) {
+                    this.showNotification(this.currentLanguage === 'pl'
+                        ? 'Brak wolnych slotów focus!'
+                        : 'No free focus slots left!');
+                    e.target.checked = false;
+                    return;
+                }
+                if (!this.gameState.focus.includes(taskId)) {
+                    this.gameState.focus.push(taskId);
+                }
+            } else {
+                this.gameState.focus = this.gameState.focus.filter(id => id !== taskId);
             }
-
-            const taskCard = this.createTaskCard(taskData, taskState);
-            container.appendChild(taskCard);
+            this.saveGameState(); // opcjonalnie: od razu zapisz wybór
+            this.renderTasks();
         });
-        this.updateTaskButtonStates();
+
+        container.appendChild(taskCard);
+    });
+
+    // Ustaw domyślny singleBoostTaskId: pierwszy aktywny lub null
+    if (!this.gameState.singleBoostTaskId || !this.gameState.focus.includes(this.gameState.singleBoostTaskId)) {
+        this.gameState.singleBoostTaskId = this.gameState.focus.length ? this.gameState.focus : null;
     }
+
+    this.updateTaskButtonStates();
+}
 
 createTaskCard(taskData, taskState) {
     const card = document.createElement('div');
@@ -1493,6 +1611,7 @@ createTaskCard(taskData, taskState) {
         <div class="task-header">
             <div class="task-name">${this.translations[this.currentLanguage][taskData.nameKey]}</div>
             <div class="task-rank">${rank}</div>
+            <div class="task-focus-slot"></div>
         </div>
             
             <div class="hex-progress">
