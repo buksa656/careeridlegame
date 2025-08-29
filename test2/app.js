@@ -585,6 +585,7 @@ class KorposzczurGame {
             activeSkills: {},
             adsWatchedToday: 0,
             lastAdWatch: 0,
+            lastAdDay: Math.floor(Date.now() / (24 * 60 * 60 * 1000)),
             bp: 0,
             softSkills: 0,
             totalBPEarned: 0,
@@ -732,136 +733,166 @@ class KorposzczurGame {
         };
     }
 
-    setupEventListeners() {
-        // Tab navigation - Fixed to handle challenges tab properly
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const tab = e.target.getAttribute('data-tab');
-                if (!e.target.classList.contains('disabled')) {
-                    this.switchTab(tab);
+setupEventListeners() {
+    // Tab navigation - Fixed to handle challenges tab properly
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const tab = e.target.getAttribute('data-tab');
+            if (!e.target.classList.contains('disabled')) {
+                this.switchTab(tab);
+            }
+        });
+    });
+
+    // Settings modal
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsClose = document.getElementById('settings-close');
+    const settingsBackdrop = settingsModal.querySelector('.modal-backdrop');
+
+    settingsToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        settingsModal.classList.remove('hidden');
+    });
+
+    const closeSettingsModal = () => {
+        settingsModal.classList.add('hidden');
+    };
+
+    settingsClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeSettingsModal();
+    });
+    settingsBackdrop.addEventListener('click', closeSettingsModal);
+
+    // Energy dropdown - NOWY SYSTEM
+    const energyButton = document.getElementById('energy-button');
+    const energyMenu = document.getElementById('energy-menu');
+
+    if (energyButton && energyMenu) {
+        energyButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            energyMenu.classList.toggle('show');
+        });
+
+        // Zamknij dropdown po kliknięciu poza nim
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.energy-dropdown')) {
+                energyMenu.classList.remove('show');
+            }
+        });
+
+        // Event listenery dla opcji w dropdown
+        document.querySelectorAll('.energy-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                const skill = e.target.getAttribute('data-skill');
+                
+                if (skill) {
+                    this.useSkill(skill);
+                } else if (e.target.id === 'watch-ad-option') {
+                    this.watchAdForEnergy();
                 }
+                
+                // Zamknij dropdown po wyborze
+                energyMenu.classList.remove('show');
             });
-        });
-
-        // Settings modal
-        const settingsToggle = document.getElementById('settings-toggle');
-        const settingsModal = document.getElementById('settings-modal');
-        const settingsClose = document.getElementById('settings-close');
-        const settingsBackdrop = settingsModal.querySelector('.modal-backdrop');
-
-        settingsToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            settingsModal.classList.remove('hidden');
-        });
-
-        const closeSettingsModal = () => {
-            settingsModal.classList.add('hidden');
-        };
-
-        settingsClose.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeSettingsModal();
-        });
-        settingsBackdrop.addEventListener('click', closeSettingsModal);
-
-        // Energy skills
-        document.getElementById('coffee-break-btn').addEventListener('click', () => this.useSkill('coffeeBreak'));
-        document.getElementById('focus-mode-btn').addEventListener('click', () => this.useSkill('focusMode'));
-        document.getElementById('overtime-btn').addEventListener('click', () => this.useSkill('overtime'));
-        document.getElementById('watch-ad-btn').addEventListener('click', () => this.watchAdForEnergy());
-
-        // Help modal
-        const helpToggle = document.getElementById('help-toggle');
-        const helpModal = document.getElementById('help-modal');
-        const helpClose = document.getElementById('help-close');
-        const helpBackdrop = helpModal.querySelector('.modal-backdrop');
-
-        helpToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            helpModal.classList.remove('hidden');
-        });
-
-        const closeHelpModal = () => {
-            helpModal.classList.add('hidden');
-        };
-
-        helpClose.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeHelpModal();
-        });
-        helpBackdrop.addEventListener('click', closeHelpModal);
-
-        // Multi-buy buttons
-        document.querySelectorAll('.multibuy-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                document.querySelectorAll('.multibuy-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.multiBuyAmount = e.target.getAttribute('data-amount');
-                // Immediate update of button states
-                this.updateTaskButtonStates();
-            });
-        });
-
-        // Auto-buyer toggle
-        const autoBuyerCheckbox = document.getElementById('autobuyer-checkbox');
-        autoBuyerCheckbox.addEventListener('change', (e) => {
-            e.stopPropagation();
-            this.autoBuyerEnabled = e.target.checked;
-            if (this.autoBuyerEnabled && !this.autoBuyerInterval) {
-                this.startAutoBuyer();
-            } else if (!this.autoBuyerEnabled && this.autoBuyerInterval) {
-                this.stopAutoBuyer();
-            }
-        });
-
-        // Language and theme selectors
-        document.getElementById('language-select').addEventListener('change', (e) => {
-            e.stopPropagation();
-            this.gameState.settings.language = e.target.value;
-            this.currentLanguage = e.target.value;
-            this.updateLanguage();
-            this.renderAll();
-            this.saveGameState();
-        });
-
-        document.getElementById('theme-select').addEventListener('change', (e) => {
-            e.stopPropagation();
-            this.gameState.settings.theme = e.target.value;
-            this.updateTheme();
-            this.saveGameState();
-        });
-        const numberFormatSelect = document.getElementById('number-format-select');
-        numberFormatSelect.value = this.gameState.settings.numberFormat || "auto";
-        numberFormatSelect.addEventListener('change', (e) => {
-            this.gameState.settings.numberFormat = e.target.value;
-            this.saveGameState();
-            this.renderAll();
-        });
-        // Reset save
-        document.getElementById('reset-save').addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (confirm('Are you sure you want to reset your save? This cannot be undone!')) {
-                localStorage.removeItem('korposzczur-save');
-                location.reload();
-            }
-        });
-
-        // Prestige button
-        document.getElementById('prestige-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.performPrestige();
         });
     }
+
+    // Help modal
+    const helpToggle = document.getElementById('help-toggle');
+    const helpModal = document.getElementById('help-modal');
+    const helpClose = document.getElementById('help-close');
+    const helpBackdrop = helpModal.querySelector('.modal-backdrop');
+
+    helpToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        helpModal.classList.remove('hidden');
+    });
+
+    const closeHelpModal = () => {
+        helpModal.classList.add('hidden');
+    };
+
+    helpClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeHelpModal();
+    });
+    helpBackdrop.addEventListener('click', closeHelpModal);
+
+    // Multi-buy buttons
+    document.querySelectorAll('.multibuy-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            document.querySelectorAll('.multibuy-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            this.multiBuyAmount = e.target.getAttribute('data-amount');
+            // Immediate update of button states
+            this.updateTaskButtonStates();
+        });
+    });
+
+    // Auto-buyer toggle
+    const autoBuyerCheckbox = document.getElementById('autobuyer-checkbox');
+    autoBuyerCheckbox.addEventListener('change', (e) => {
+        e.stopPropagation();
+        this.autoBuyerEnabled = e.target.checked;
+        if (this.autoBuyerEnabled && !this.autoBuyerInterval) {
+            this.startAutoBuyer();
+        } else if (!this.autoBuyerEnabled && this.autoBuyerInterval) {
+            this.stopAutoBuyer();
+        }
+    });
+
+    // Language and theme selectors
+    document.getElementById('language-select').addEventListener('change', (e) => {
+        e.stopPropagation();
+        this.gameState.settings.language = e.target.value;
+        this.currentLanguage = e.target.value;
+        this.updateLanguage();
+        this.renderAll();
+        this.saveGameState();
+    });
+
+    document.getElementById('theme-select').addEventListener('change', (e) => {
+        e.stopPropagation();
+        this.gameState.settings.theme = e.target.value;
+        this.updateTheme();
+        this.saveGameState();
+    });
+
+    const numberFormatSelect = document.getElementById('number-format-select');
+    numberFormatSelect.value = this.gameState.settings.numberFormat || "auto";
+    numberFormatSelect.addEventListener('change', (e) => {
+        this.gameState.settings.numberFormat = e.target.value;
+        this.saveGameState();
+        this.renderAll();
+    });
+
+    // Reset save
+    document.getElementById('reset-save').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (confirm('Are you sure you want to reset your save? This cannot be undone!')) {
+            localStorage.removeItem('korposzczur-save');
+            location.reload();
+        }
+    });
+
+    // Prestige button
+    document.getElementById('prestige-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.performPrestige();
+    });
+}
 
     // Fixed tab switching to properly handle all tabs including challenges
     switchTab(tabName) {
@@ -1301,10 +1332,23 @@ showRewardedAd(onComplete) {
         // 1. powyżej 20k BP/s progres rośnie tylko do potęgi 0.7
         // 2. powyżej 1M rośnie jeszcze wolniej, do potęgi 0.5
         rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
+        const now = Date.now();
+    
+        // Coffee Break: 2x mnożnik przez 15 min
+        if (this.gameState.activeSkills.coffeeBreak && now < this.gameState.activeSkills.coffeeBreak) {
+            rate *= 2;
+        }
+        
+        // Focus Mode: +50% przez 20 min
+        if (this.gameState.activeSkills.focusMode && now < this.gameState.activeSkills.focusMode) {
+        rate *= 1.5;
+    }
         return rate;
     }
     getMaxFocusSlots() {
         let base = 4;
+        
+        // Desk items
         Object.keys(this.gameState.deskItems).forEach(id => {
             if (this.gameState.deskItems[id]) {
                 const item = this.gameData.deskItems.find(d => d.id === id);
@@ -1313,6 +1357,13 @@ showRewardedAd(onComplete) {
                 }
             }
         });
+        
+        // DODAJ: Overtime skill
+        const now = Date.now();
+        if (this.gameState.activeSkills.overtime && now < this.gameState.activeSkills.overtime) {
+            base += 1;
+        }
+        
         return base;
     }
     getGlobalMultiplier() {
@@ -1756,7 +1807,7 @@ renderTasks() {
 
     // Ustaw domyślny singleBoostTaskId: pierwszy aktywny lub null (naprawa: nie przypisuj całej tablicy)
     if (!this.gameState.singleBoostTaskId || !this.gameState.focus.includes(this.gameState.singleBoostTaskId)) {
-        this.gameState.singleBoostTaskId = this.gameState.focus.length ? this.gameState.focus : null;
+        this.gameState.singleBoostTaskId = this.gameState.focus.length ? this.gameState.focus[0] : null;
     }
 
     this.updateTaskButtonStates();
@@ -2089,6 +2140,24 @@ renderDesk() {
         document.getElementById('bp-display').textContent = this.formatNumber(Math.floor(this.gameState.bp));
         document.getElementById('ss-display').textContent = Math.floor(this.gameState.softSkills);
 
+        const energyBtn = document.getElementById('energy-button');
+        if (energyBtn) {
+            energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
+        }
+    
+        // NOWE: Disable przyciski jeśli za mało energii
+        document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
+            const skill = btn.getAttribute('data-skill');
+            const skillCosts = {
+                coffeeBreak: 25,
+                focusMode: 40,
+                overtime: 60
+            };
+            
+            if (skillCosts[skill]) {
+                btn.disabled = this.gameState.energy < skillCosts[skill];
+            }
+        });
         // Update prestige button
         const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
         const canPrestige = this.gameState.totalBPEarned >= threshold;
