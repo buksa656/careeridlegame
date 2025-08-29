@@ -13,6 +13,7 @@ class KorposzczurGame {
         this.lastSave = Date.now();
         this.lastUpdate = Date.now();
         this.lastBPValue = 0;
+        this.adsAvailable = false;
         
         // Intervals for different update loops
         this.gameLoopInterval = null;
@@ -1244,6 +1245,15 @@ setupEventListeners() {
     return true;
 }
       watchAdForEnergy() {
+    if (!this.adsAvailable) {
+    this.showNotification(
+        this.currentLanguage === 'pl' 
+            ? "Reklamy nie są teraz dostępne"
+            : "Ads are not available right now"
+    );
+    return false;
+    }
+          
     const now = Date.now();
     const daysSinceEpoch = Math.floor(now / (24 * 60 * 60 * 1000));
     
@@ -2135,51 +2145,66 @@ renderDesk() {
         });
     }
 
-    updateDisplay() {
-        document.getElementById('energy-display').textContent = this.gameState.energy;
-        document.getElementById('bp-display').textContent = this.formatNumber(Math.floor(this.gameState.bp));
-        document.getElementById('ss-display').textContent = Math.floor(this.gameState.softSkills);
-
-        const energyBtn = document.getElementById('energy-button');
-        if (energyBtn) {
-            energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
-        }
+updateDisplay() {
+    document.getElementById('energy-display').textContent = this.gameState.energy;
+    document.getElementById('bp-display').textContent = this.formatNumber(Math.floor(this.gameState.bp));
+    document.getElementById('ss-display').textContent = Math.floor(this.gameState.softSkills);
     
-        // NOWE: Disable przyciski jeśli za mało energii
-        document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
-            const skill = btn.getAttribute('data-skill');
-            const skillCosts = {
-                coffeeBreak: 25,
-                focusMode: 40,
-                overtime: 60
-            };
-            
-            if (skillCosts[skill]) {
-                btn.disabled = this.gameState.energy < skillCosts[skill];
-            }
-        });
-        // Update prestige button
-        const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-        const canPrestige = this.gameState.totalBPEarned >= threshold;
-        const prestigeBtn = document.getElementById('prestige-btn');
-        const prestigeInfo = document.getElementById('prestige-info');
+    const energyBtn = document.getElementById('energy-button');
+    if (energyBtn) {
+        energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
+    }
+
+    // NOWE: Disable przyciski jeśli za mało energii
+    document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
+        const skill = btn.getAttribute('data-skill');
+        const skillCosts = {
+            coffeeBreak: 25,
+            focusMode: 40,
+            overtime: 60
+        };
         
-        prestigeBtn.disabled = !canPrestige;
-        if (canPrestige) {
-            const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
-            prestigeInfo.textContent = `Gain ${softSkillsGain} Soft Skills`;
-            prestigeBtn.classList.remove('disabled');
+        if (skillCosts[skill]) {
+            btn.disabled = this.gameState.energy < skillCosts[skill];
+        }
+    });
+
+    // Ad button update
+    const adButton = document.getElementById('watch-ad-option');
+    if (adButton) {
+        if (!this.adsAvailable) {
+            adButton.disabled = true;
+            adButton.classList.add('disabled');
+            adButton.style.opacity = '0.5';
+            adButton.title = this.currentLanguage === 'pl'
+                ? "Reklamy będą dostępne po weryfikacji konta"
+                : "Ads will be available after account verification";
         } else {
-            // Dodaj widoczną cenę, a nie tylko tekst
-            const earned = this.formatNumber(this.gameState.totalBPEarned);
-            const requirement = this.formatNumber(threshold);
-            prestigeInfo.innerHTML = `<span style="color:#888;">${earned} / ${requirement} BP</span>
-                <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
-            prestigeBtn.classList.add('disabled');
-            // Opcjonalnie zmień zawartość buttona na "Zablokowane" + kłódka, jeśli chcesz!
-            prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
+            adButton.disabled = false;
+            adButton.classList.remove('disabled');
+            adButton.style.opacity = '1';
+            adButton.title = '';
         }
     }
+    const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
+    const canPrestige = this.gameState.totalBPEarned >= threshold;
+    const prestigeBtn = document.getElementById('prestige-btn');
+    const prestigeInfo = document.getElementById('prestige-info');
+    
+    prestigeBtn.disabled = !canPrestige;
+    if (canPrestige) {
+        const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
+        prestigeInfo.textContent = `Gain ${softSkillsGain} Soft Skills`;
+        prestigeBtn.classList.remove('disabled');
+    } else {
+        const earned = this.formatNumber(this.gameState.totalBPEarned);
+        const requirement = this.formatNumber(threshold);
+        prestigeInfo.innerHTML = `<span style="color:#888;">${earned} / ${requirement} BP</span>
+            <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
+        prestigeBtn.classList.add('disabled');
+        prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
+    }
+}
 
     updateTaskProgress() {
         document.querySelectorAll('.hex-fill').forEach((fill, index) => {
