@@ -1807,50 +1807,147 @@ createTaskCard(taskData, taskState) {
         });
     }
 
-    renderDesk() {
-        const itemsGroup = document.getElementById('desk-items');
-        itemsGroup.innerHTML = '';
+renderDesk() {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const itemsGroup = document.getElementById('desk-items');
+    if (!itemsGroup) return;
+    itemsGroup.innerHTML = '';
 
-        // Add visual representations of owned desk items
-        Object.keys(this.gameState.deskItems).forEach(itemId => {
-            if (!this.gameState.deskItems[itemId]) return;
+    Object.keys(this.gameState.deskItems).forEach(itemId => {
+        if (!this.gameState.deskItems[itemId]) return;
 
-            const item = document.createElement('g');
-            item.className = 'desk-item';
-            
-            switch (itemId) {
-                case 'mug':
-                    item.innerHTML = `<circle cx="120" cy="160" r="12" fill="#8B4513"/>
-                                     <rect x="115" y="165" width="10" height="3" fill="#654321"/>`;
-                    break;
-                case 'monitor':
-                    item.innerHTML = `<rect x="210" y="125" width="50" height="35" fill="#2c3e50" rx="3"/>
-                                     <rect x="213" y="128" width="44" height="29" fill="#3498db" rx="2"/>`;
-                    break;
-                case 'plant':
-                    item.innerHTML = `<circle cx="320" cy="168" r="8" fill="#8B4513"/>
-                                     <circle cx="320" cy="155" r="12" fill="#228B22"/>`;
-                    break;
-                case 'mousepad':
-                    item.innerHTML = `<ellipse cx="200" cy="240" rx="40" ry="15" fill="#1a1a1a"/>`;
-                    break;
-                case 'laptop':
-                    item.innerHTML = `<rect x="70" y="130" width="20" height="15" fill="#2c3e50" rx="2"/>
-                                     <rect x="72" y="132" width="16" height="11" fill="#3498db" rx="1"/>`;
-                    break;
-                case 'challenges':
-                    item.innerHTML = `<rect x="340" y="130" width="20" height="15" fill="#FFD700" rx="2"/>
-                                     <text x="350" y="142" text-anchor="middle" font-size="8" fill="#000">!</text>`;
-                    break;
-                case 'autobuyer':
-                    item.innerHTML = `<circle cx="350" cy="180" r="10" fill="#FFD700"/>
-                                     <circle cx="350" cy="180" r="6" fill="#FFA500"/>`;
-                    break;
+        const g = document.createElementNS(svgNS, 'g');
+        g.setAttribute('class', 'desk-item');
+
+        const append = (el) => g.appendChild(el);
+
+        switch (itemId) {
+            case 'mug': {
+                const cup = document.createElementNS(svgNS, 'circle');
+                cup.setAttribute('cx','120'); cup.setAttribute('cy','160'); cup.setAttribute('r','12');
+                cup.setAttribute('fill','#8B4513'); append(cup);
+                const base = document.createElementNS(svgNS, 'rect');
+                base.setAttribute('x','115'); base.setAttribute('y','165');
+                base.setAttribute('width','10'); base.setAttribute('height','3');
+                base.setAttribute('fill','#654321'); append(base);
+                break;
             }
-            
-            itemsGroup.appendChild(item);
-        });
-    }
+            case 'monitor': {
+                const body = document.createElementNS(svgNS, 'rect');
+                body.setAttribute('x','210'); body.setAttribute('y','125');
+                body.setAttribute('width','50'); body.setAttribute('height','35');
+                body.setAttribute('fill','#2c3e50'); body.setAttribute('rx','3'); append(body);
+                const screen = document.createElementNS(svgNS, 'rect');
+                screen.setAttribute('x','213'); screen.setAttribute('y','128');
+                screen.setAttribute('width','44'); screen.setAttribute('height','29');
+                screen.setAttribute('fill','#3498db'); screen.setAttribute('rx','2'); append(screen);
+                break;
+            }
+            case 'plant': {
+                const pot = document.createElementNS(svgNS, 'circle');
+                pot.setAttribute('cx','320'); pot.setAttribute('cy','168'); pot.setAttribute('r','8');
+                pot.setAttribute('fill','#8B4513'); append(pot);
+                const leaves = document.createElementNS(svgNS, 'circle');
+                leaves.setAttribute('cx','320'); leaves.setAttribute('cy','155'); leaves.setAttribute('r','12');
+                leaves.setAttribute('fill','#228B22'); append(leaves);
+                break;
+            }
+            case 'mousepad': {
+                const pad = document.createElementNS(svgNS, 'ellipse');
+                pad.setAttribute('cx','200'); pad.setAttribute('cy','240');
+                pad.setAttribute('rx','40'); pad.setAttribute('ry','15');
+                pad.setAttribute('fill','#1a1a1a'); append(pad);
+                break;
+            }
+            case 'laptop': {
+                const base = document.createElementNS(svgNS, 'rect');
+                base.setAttribute('x','70'); base.setAttribute('y','130');
+                base.setAttribute('width','20'); base.setAttribute('height','15');
+                base.setAttribute('fill','#2c3e50'); base.setAttribute('rx','2'); append(base);
+                const scr = document.createElementNS(svgNS, 'rect');
+                scr.setAttribute('x','72'); scr.setAttribute('y','132');
+                scr.setAttribute('width','16'); scr.setAttribute('height','11');
+                scr.setAttribute('fill','#3498db'); scr.setAttribute('rx','1'); append(scr);
+                break;
+            }
+            case 'challenges': {
+                const box = document.createElementNS(svgNS, 'rect');
+                box.setAttribute('x','340'); box.setAttribute('y','130');
+                box.setAttribute('width','20'); box.setAttribute('height','15');
+                box.setAttribute('fill','#FFD700'); box.setAttribute('rx','2'); append(box);
+                const mark = document.createElementNS(svgNS, 'text');
+                mark.setAttribute('x','350'); mark.setAttribute('y','142');
+                mark.setAttribute('text-anchor','middle'); mark.setAttribute('font-size','8');
+                mark.setAttribute('fill','#000'); mark.textContent = '!'; append(mark);
+                break;
+            }
+            case 'autobuyer': {
+                const a = document.createElementNS(svgNS, 'circle');
+                a.setAttribute('cx','350'); a.setAttribute('cy','180'); a.setAttribute('r','10');
+                a.setAttribute('fill','#FFD700'); append(a);
+                const b = document.createElementNS(svgNS, 'circle');
+                b.setAttribute('cx','350'); b.setAttribute('cy','180'); b.setAttribute('r','6');
+                b.setAttribute('fill','#FFA500'); append(b);
+                break;
+            }
+
+            // Nowe wizualizacje dla itemów ze sklepu
+            case 'phone': {
+                const body = document.createElementNS(svgNS, 'rect');
+                body.setAttribute('x','260'); body.setAttribute('y','125');
+                body.setAttribute('width','14'); body.setAttribute('height','28');
+                body.setAttribute('rx','3'); body.setAttribute('fill','#444'); append(body);
+                const scr = document.createElementNS(svgNS, 'rect');
+                scr.setAttribute('x','262'); scr.setAttribute('y','129');
+                scr.setAttribute('width','10'); scr.setAttribute('height','20');
+                scr.setAttribute('rx','2'); scr.setAttribute('fill','#9ad'); append(scr);
+                break;
+            }
+            case 'organizer': {
+                const org = document.createElementNS(svgNS, 'rect');
+                org.setAttribute('x','150'); org.setAttribute('y','110');
+                org.setAttribute('width','24'); org.setAttribute('height','16');
+                org.setAttribute('rx','2'); org.setAttribute('fill','#8b5e3c'); append(org);
+                const line = document.createElementNS(svgNS, 'line');
+                line.setAttribute('x1','152'); line.setAttribute('y1','114');
+                line.setAttribute('x2','172'); line.setAttribute('y2','114');
+                line.setAttribute('stroke','#fff'); line.setAttribute('stroke-width','1'); append(line);
+                break;
+            }
+            case 'lamp': {
+                const arm = document.createElementNS(svgNS, 'line');
+                arm.setAttribute('x1','185'); arm.setAttribute('y1','115');
+                arm.setAttribute('x2','195'); arm.setAttribute('y2','105');
+                arm.setAttribute('stroke','#888'); arm.setAttribute('stroke-width','2'); append(arm);
+                const bulb = document.createElementNS(svgNS, 'circle');
+                bulb.setAttribute('cx','198'); bulb.setAttribute('cy','102'); bulb.setAttribute('r','6');
+                bulb.setAttribute('fill','#ffd54f'); append(bulb);
+                break;
+            }
+            case 'multitool': {
+                const ring = document.createElementNS(svgNS, 'circle');
+                ring.setAttribute('cx','280'); ring.setAttribute('cy','230'); ring.setAttribute('r','8');
+                ring.setAttribute('fill','#888'); append(ring);
+                const blade = document.createElementNS(svgNS, 'path');
+                blade.setAttribute('d','M276 226 L284 234');
+                blade.setAttribute('stroke','#ccc'); blade.setAttribute('stroke-width','2'); append(blade);
+                break;
+            }
+            case 'trophy': {
+                const base = document.createElementNS(svgNS, 'rect');
+                base.setAttribute('x','240'); base.setAttribute('y','210');
+                base.setAttribute('width','16'); base.setAttribute('height','8');
+                base.setAttribute('fill','#996515'); append(base);
+                const cup = document.createElementNS(svgNS, 'circle');
+                cup.setAttribute('cx','248'); cup.setAttribute('cy','202'); cup.setAttribute('r','10');
+                cup.setAttribute('fill','#FFD700'); append(cup);
+                break;
+            }
+        }
+
+        itemsGroup.appendChild(g);
+    });
+}
 
     renderAchievements() {
         const container = document.getElementById('achievements-list');
