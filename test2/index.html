@@ -211,40 +211,20 @@
         </div>
 
         <!-- Help Modal -->
-        <div class="modal hidden" id="help-modal">
-            <div class="modal-backdrop"></div>
-            <div class="modal-content">
-                <h3 data-translate="help">Pomoc</h3>
-                <div class="help-content">
-                    <p id="help-text" data-translate="help_content">
-                        Witaj w Korposzczur!
-                        
-                        Cel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).
-                        
-                        Mechaniki:
-                        • Ręcznie odblokuj każde zadanie za BP (nawet pierwsze!)
-                        • Ulepszaj zadania za BP aby zwiększyć przychód
-                        • Awansuj zadania do wyższych rang
-                        • Użyj Prestiżu aby zresetować grę za Soft Skills
-                        • Kup przedmioty biurkowe za Soft Skills
-                        • Zdobywaj achievementy aby odblokować nowe funkcje
-                        • Ukończ wyzwania dla dodatkowych bonusów
-                        • Prestiż Break pozwala zdobyć wiele Soft Skills na raz
-                        
-                        Wskazówki:
-                        • WSZYSTKIE zadania wymagają ręcznego odblokowania
-                        • Multi-buy odblokuje się po 50 ulepszeniach
-                        • Zablokowane kafelki zmieniają kolor gdy stać Cię na nie
-                        • Wyzwania odblokują się przez przedmiot na biurku
-                        • Prestiż Break odblokuje się po 10 prestiżach
-                    </p>
-                </div>
-                <div class="modal-actions">
-                    <button class="btn btn--primary" id="help-close">OK</button>
-                </div>
+<div id="help-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content help-modal-content">
+        <div class="modal-header">
+            <h2 data-translate="help">Pomoc</h2>
+            <button id="help-close" class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+            <div data-translate="help_content">
+                
             </div>
         </div>
     </div>
+</div>
 
     <script src="app.js"></script>
 </body>
