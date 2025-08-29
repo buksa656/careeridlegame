@@ -579,6 +579,12 @@ class KorposzczurGame {
 
     loadGameState() {
         const defaultState = {
+            energy: 100,
+            maxEnergy: 100,
+            lastEnergyUpdate: Date.now(),
+            activeSkills: {},
+            adsWatchedToday: 0,
+            lastAdWatch: 0,
             bp: 0,
             softSkills: 0,
             totalBPEarned: 0,
@@ -761,6 +767,12 @@ class KorposzczurGame {
             closeSettingsModal();
         });
         settingsBackdrop.addEventListener('click', closeSettingsModal);
+
+        // Energy skills
+        document.getElementById('coffee-break-btn').addEventListener('click', () => this.useSkill('coffeeBreak'));
+        document.getElementById('focus-mode-btn').addEventListener('click', () => this.useSkill('focusMode'));
+        document.getElementById('overtime-btn').addEventListener('click', () => this.useSkill('overtime'));
+        document.getElementById('watch-ad-btn').addEventListener('click', () => this.watchAdForEnergy());
 
         // Help modal
         const helpToggle = document.getElementById('help-toggle');
@@ -1127,6 +1139,7 @@ class KorposzczurGame {
     }
 
     gameLoop() {
+        this.updateEnergy();
         const now = Date.now();
         const deltaTime = now - this.lastUpdate;
         this.lastUpdate = now;
@@ -1171,7 +1184,72 @@ class KorposzczurGame {
         this.updateTaskProgress();
         this.updateUnlockProgress();
     }
+    updateEnergy() {
+        const now = Date.now();
+        const timePassed = now - this.gameState.lastEnergyUpdate;
+        const energyToAdd = Math.floor(timePassed / (10 * 60 * 1000)); // 1 per 10min
+        
+        if (energyToAdd > 0) {
+            this.gameState.energy = Math.min(
+                this.gameState.energy + energyToAdd, 
+                this.gameState.maxEnergy
+            );
+            this.gameState.lastEnergyUpdate = now;
+        }
+    }
+    useSkill(skillName) {
+    const skills = {
+        coffeeBreak: { cost: 25, duration: 15 * 60 * 1000, multiplier: 2 },
+        focusMode: { cost: 40, duration: 20 * 60 * 1000, bonus: 1.5 },
+        overtime: { cost: 60, duration: 30 * 60 * 1000, extraSlot: 1 }
+    };
+    
+    const skill = skills[skillName];
+    if (!skill || this.gameState.energy < skill.cost) return false;
+    
+    this.gameState.energy -= skill.cost;
+    this.gameState.activeSkills[skillName] = Date.now() + skill.duration;
+    this.saveGameState();
+    return true;
+}
+      watchAdForEnergy() {
+    const now = Date.now();
+    const daysSinceEpoch = Math.floor(now / (24 * 60 * 60 * 1000));
+    
+    // Reset dzienny licznik
+    if (this.gameState.lastAdDay !== daysSinceEpoch) {
+        this.gameState.adsWatchedToday = 0;
+        this.gameState.lastAdDay = daysSinceEpoch;
+    }
+    
+    // Sprawdź limity
+    if (this.gameState.adsWatchedToday >= 5) {
+        this.showNotification("Daily ad limit reached!");
+        return false;
+    }
+    
+    if (now - this.gameState.lastAdWatch < 10 * 60 * 1000) {
+        this.showNotification("Please wait 10 minutes between ads");
+        return false;
+    }
+    
+    // Symulacja SDK reklamy
+    this.showRewardedAd(() => {
+        this.gameState.energy = Math.min(this.gameState.energy + 20, 100);
+        this.gameState.adsWatchedToday++;
+        this.gameState.lastAdWatch = now;
+        this.showNotification("Energy refilled! (+20)");
+        this.updateDisplay();
+    });
+}
 
+showRewardedAd(onComplete) {
+    // Tutaj integracja z rzeczywistym SDK (AdMob, Unity Ads, etc.)
+    // Tymczasowo: symulacja
+    if (confirm("Watch 30-second ad for 20 energy?")) {
+        setTimeout(onComplete, 3000); // Symuluje ad duration
+    }
+}      
     calculateTaskIdleRate(taskId) {
         const taskData = this.gameData.tasks.find(t => t.id === taskId);
         const taskState = this.gameState.tasks[taskId];
@@ -2007,6 +2085,7 @@ renderDesk() {
     }
 
     updateDisplay() {
+        document.getElementById('energy-display').textContent = this.gameState.energy;
         document.getElementById('bp-display').textContent = this.formatNumber(Math.floor(this.gameState.bp));
         document.getElementById('ss-display').textContent = Math.floor(this.gameState.softSkills);
 
