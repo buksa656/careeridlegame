@@ -2146,16 +2146,28 @@ renderDesk() {
     }
 
 updateDisplay() {
-    document.getElementById('energy-display').textContent = this.gameState.energy;
-    document.getElementById('bp-display').textContent = this.formatNumber(Math.floor(this.gameState.bp));
-    document.getElementById('ss-display').textContent = Math.floor(this.gameState.softSkills);
-    
+    // ✅ BEZPIECZNE sprawdzanie przed ustawieniem
+    const energyDisplay = document.getElementById('energy-display');
+    if (energyDisplay) {
+        energyDisplay.textContent = this.gameState.energy;
+    }
+
+    const bpDisplay = document.getElementById('bp-display');
+    if (bpDisplay) {
+        bpDisplay.textContent = this.formatNumber(Math.floor(this.gameState.bp));
+    }
+
+    const ssDisplay = document.getElementById('ss-display');
+    if (ssDisplay) {
+        ssDisplay.textContent = Math.floor(this.gameState.softSkills);
+    }
+
     const energyBtn = document.getElementById('energy-button');
     if (energyBtn) {
         energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
     }
 
-    // NOWE: Disable przyciski jeśli za mało energii
+    // Bezpieczne sprawdzenie przed disable/enable przycisków
     document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
         const skill = btn.getAttribute('data-skill');
         const skillCosts = {
@@ -2169,7 +2181,7 @@ updateDisplay() {
         }
     });
 
-    // Ad button update
+    // Bezpieczne sprawdzenie ad button
     const adButton = document.getElementById('watch-ad-option');
     if (adButton) {
         if (!this.adsAvailable) {
@@ -2186,26 +2198,30 @@ updateDisplay() {
             adButton.title = '';
         }
     }
-    const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-    const canPrestige = this.gameState.totalBPEarned >= threshold;
+
+    // Bezpieczne sprawdzenie prestige button
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
     
-    prestigeBtn.disabled = !canPrestige;
-    if (canPrestige) {
-        const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
-        prestigeInfo.textContent = `Gain ${softSkillsGain} Soft Skills`;
-        prestigeBtn.classList.remove('disabled');
-    } else {
-        const earned = this.formatNumber(this.gameState.totalBPEarned);
-        const requirement = this.formatNumber(threshold);
-        prestigeInfo.innerHTML = `<span style="color:#888;">${earned} / ${requirement} BP</span>
-            <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
-        prestigeBtn.classList.add('disabled');
-        prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
+    if (prestigeBtn && prestigeInfo) {
+        const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
+        const canPrestige = this.gameState.totalBPEarned >= threshold;
+        
+        prestigeBtn.disabled = !canPrestige;
+        if (canPrestige) {
+            const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
+            prestigeInfo.textContent = `Gain ${softSkillsGain} Soft Skills`;
+            prestigeBtn.classList.remove('disabled');
+        } else {
+            const earned = this.formatNumber(this.gameState.totalBPEarned);
+            const requirement = this.formatNumber(threshold);
+            prestigeInfo.innerHTML = `<span style="color:#888;">${earned} / ${requirement} BP</span>
+                <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
+            prestigeBtn.classList.add('disabled');
+            prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
+        }
     }
 }
-
     updateTaskProgress() {
         document.querySelectorAll('.hex-fill').forEach((fill, index) => {
             const tasks = Object.keys(this.gameState.tasks).filter(taskId => 
