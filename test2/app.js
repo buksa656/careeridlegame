@@ -38,38 +38,128 @@ class KorposzczurGame {
                 {"id": "coffee", "nameKey": "task_coffee", "baseCost": 25, "baseIdle": 3, "unlockCost": 75, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1800},
                 {"id": "meeting", "nameKey": "task_meeting", "baseCost": 150, "baseIdle": 12, "unlockCost": 500, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1500},
                 {"id": "kpi", "nameKey": "task_kpi", "baseCost": 1500, "baseIdle": 70, "unlockCost": 3500, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1200},
-                {"id": "brainstorm", "nameKey": "task_brainstorm", "baseCost": 15000, "baseIdle": 400, "unlockCost": 35000, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 1000},
-                {"id": "optimize", "nameKey": "task_optimize", "baseCost": 180000, "baseIdle": 2200, "unlockCost": 350000, "costMultiplier": 1.15, "idleMultiplier": 1.2, "cycleTime": 800},
-                { "id": "lunch", "nameKey": "task_lunch", "baseCost": 500000, "baseIdle": 4000, "unlockCost": 1200000, "costMultiplier": 1.17, "idleMultiplier": 1.22, "cycleTime": 700 },
-                { "id": "report", "nameKey": "task_report", "baseCost": 1500000, "baseIdle": 9500, "unlockCost": 3500000, "costMultiplier": 1.18, "idleMultiplier": 1.25, "cycleTime": 600 },
-                { "id": "motivation", "nameKey": "task_motivation", "baseCost": 10000000, "baseIdle": 30000, "unlockCost": 25000000, "costMultiplier": 1.2, "idleMultiplier": 1.28, "cycleTime": 500 }
+                {"id": "brainstorm", "nameKey": "task_brainstorm", "baseCost": 15000, "baseIdle": 400, "unlockCost": 35000, "costMultiplier": 1.16, "idleMultiplier": 1.22, "cycleTime": 1000},
+                {"id": "optimize", "nameKey": "task_optimize", "baseCost": 180000, "baseIdle": 2200, "unlockCost": 350000, "costMultiplier": 1.17, "idleMultiplier": 1.22, "cycleTime": 800},
+                { "id": "lunch", "nameKey": "task_lunch", "baseCost": 500000, "baseIdle": 4000, "unlockCost": 1800000, "costMultiplier": 1.18, "idleMultiplier": 1.24, "cycleTime": 700 },
+                { "id": "report", "nameKey": "task_report", "baseCost": 1500000, "baseIdle": 9500, "unlockCost": 5250000, "costMultiplier": 1.19, "idleMultiplier": 1.27, "cycleTime": 600 },
+                { "id": "motivation", "nameKey": "task_motivation", "baseCost": 10000000, "baseIdle": 30000, "unlockCost": 37500000, "costMultiplier": 1.21, "idleMultiplier": 1.30, "cycleTime": 500 }
             ],
-            "achievements": [
-                {"id": "first_unlock", "nameKey": "ach_first_unlock", "descKey": "ach_first_unlock_desc", "condition": {"type": "tasks_unlocked", "value": 1}, "reward": {"type": "bp_bonus", "value": 1.05}, "bonusDesc": "bonusDesc_bp_5"},
-                {"id": "upgrade_novice", "nameKey": "ach_upgrade_novice", "descKey": "ach_upgrade_novice_desc", "condition": {"type": "upgrades_bought", "value": 50}, "reward": {"type": "multibuy_unlock", "value": "upgrades"}, "bonusDesc": "bonusDesc_multibuy_upgrades"},
-                {"id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc", "condition": {"type": "task_unlocked", "taskId": "coffee"}, "reward": {"type": "idle_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_idle_10"},
-                {"id": "meeting_master", "nameKey": "ach_meeting_master", "descKey": "ach_meeting_master_desc", "condition": {"type": "task_level", "taskId": "meeting", "value": 15}, "reward": {"type": "upgrade_discount", "value": 0.95}, "bonusDesc": "bonusDesc_upgrade_discount_5"},
-                {"id": "first_ascend", "nameKey": "ach_first_ascend", "descKey": "ach_first_ascend_desc", "condition": {"type": "ascensions", "value": 1}, "reward": {"type": "multibuy_unlock", "value": "ascend"}, "bonusDesc": "bonusDesc_multibuy_ascend"},
-                {"id": "kpi_analyst", "nameKey": "ach_kpi_analyst", "descKey": "ach_kpi_analyst_desc", "condition": {"type": "task_unlocked", "taskId": "kpi"}, "reward": {"type": "prestige_bonus", "value": 1.15}, "bonusDesc": "bonusDesc_prestige_15"},
-                {"id": "big_spender", "nameKey": "ach_big_spender", "descKey": "ach_big_spender_desc", "condition": {"type": "bp_spent", "value": 25000}, "reward": {"type": "bp_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_bp_10"},
-                {"id": "innovation_guru", "nameKey": "ach_innovation_guru", "descKey": "ach_innovation_guru_desc", "condition": {"type": "task_unlocked", "taskId": "brainstorm"}, "reward": {"type": "ascend_bonus", "value": 1.2}, "bonusDesc": "bonusDesc_ascend_20"},
-                {"id": "first_prestige", "nameKey": "ach_first_prestige", "descKey": "ach_first_prestige_desc", "condition": {"type": "prestiges", "value": 1}, "reward": {"type": "soft_skill_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_soft_skill_25"},
-                {"id": "optimizer", "nameKey": "ach_optimizer", "descKey": "ach_optimizer_desc", "condition": {"type": "task_unlocked", "taskId": "optimize"}, "reward": {"type": "global_mult", "value": 1.3}, "bonusDesc": "bonusDesc_global_30"},
-                {"id": "multibuy_expert", "nameKey": "ach_multibuy_expert", "descKey": "ach_multibuy_expert_desc", "condition": {"type": "multibuy_used", "value": 25}, "reward": {"type": "max_buy_unlock", "value": 1}, "bonusDesc": "bonusDesc_max_buy"},
-                {"id": "corporate_ladder", "nameKey": "ach_corporate_ladder", "descKey": "ach_corporate_ladder_desc", "condition": {"type": "total_ascensions", "value": 10}, "reward": {"type": "ascend_discount", "value": 0.9}, "bonusDesc": "bonusDesc_ascend_discount_10"},
-                {"id": "idle_master", "nameKey": "ach_idle_master", "descKey": "ach_idle_master_desc", "condition": {"type": "idle_rate", "value": 1000}, "reward": {"type": "idle_bonus", "value": 1.2}, "bonusDesc": "bonusDesc_idle_20"},
-                {"id": "dedication", "nameKey": "ach_dedication", "descKey": "ach_dedication_desc", "condition": {"type": "play_time", "value": 7200000}, "reward": {"type": "global_mult", "value": 1.15}, "bonusDesc": "bonusDesc_global_15"},
-                {"id": "soft_skills_beginner", "nameKey": "ach_soft_skills_beginner", "descKey": "ach_soft_skills_beginner_desc", "condition": {"type": "soft_skills_earned", "value": 1}, "reward": {"type": "desk_unlock", "value": 1}, "bonusDesc": "bonusDesc_desk_unlock"},
-                {"id": "soft_skills_expert", "nameKey": "ach_soft_skills_expert", "descKey": "ach_soft_skills_expert_desc", "condition": {"type": "soft_skills_earned", "value": 10}, "reward": {"type": "prestige_bonus", "value": 1.2}, "bonusDesc": "bonusDesc_prestige_20"},
-                {"id": "soft_skills_master", "nameKey": "ach_soft_skills_master", "descKey": "ach_soft_skills_master_desc", "condition": {"type": "soft_skills_earned", "value": 50}, "reward": {"type": "soft_skill_bonus", "value": 1.5}, "bonusDesc": "bonusDesc_soft_skill_50"},
-                {"id": "first_desk_item", "nameKey": "ach_first_desk_item", "descKey": "ach_first_desk_item_desc", "condition": {"type": "desk_items_bought", "value": 1}, "reward": {"type": "soft_skill_bonus", "value": 1.1}, "bonusDesc": "bonusDesc_soft_skill_10"},
-                {"id": "office_decorator", "nameKey": "ach_office_decorator", "descKey": "ach_office_decorator_desc", "condition": {"type": "desk_items_bought", "value": 3}, "reward": {"type": "desk_discount", "value": 0.9}, "bonusDesc": "bonusDesc_desk_discount_10"},
-                {"id": "office_complete", "nameKey": "ach_office_complete", "descKey": "ach_office_complete_desc", "condition": {"type": "desk_items_bought", "value": 6}, "reward": {"type": "global_mult", "value": 1.25}, "bonusDesc": "bonusDesc_global_25"},
-                {"id": "prestige_veteran", "nameKey": "ach_prestige_veteran", "descKey": "ach_prestige_veteran_desc", "condition": {"type": "prestiges", "value": 5}, "reward": {"type": "prestige_bonus", "value": 1.3}, "bonusDesc": "bonusDesc_prestige_30"},
-                {"id": "prestige_master", "nameKey": "ach_prestige_master", "descKey": "ach_prestige_master_desc", "condition": {"type": "prestiges", "value": 10}, "reward": {"type": "prestige_break", "value": 1}, "bonusDesc": "bonusDesc_prestige_break"},
-                {"id": "challenge_master", "nameKey": "ach_challenge_master", "descKey": "ach_challenge_master_desc", "condition": {"type": "challenges_completed", "value": 5}, "reward": {"type": "global_mult", "value": 1.5}, "bonusDesc": "bonusDesc_challenge_master"},
-                {"id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc", "condition": {"type": "impossible", "value": 1}, "reward": {"type": "coming_soon", "value": 1}, "bonusDesc": "bonusDesc_coming_soon"}
-            ],
+"achievements": [
+  { "id": "first_unlock", "nameKey": "ach_first_unlock", "descKey": "ach_first_unlock_desc",
+    "condition": { "type": "tasks_unlocked", "value": 1 },
+    "reward": { "type": "bp_bonus", "value": 1.05 },
+    "bonusDesc": "bonusDesc_bp_5" },
+
+  { "id": "upgrade_novice", "nameKey": "ach_upgrade_novice", "descKey": "ach_upgrade_novice_desc",
+    "condition": { "type": "upgrades_bought", "value": 50 },
+    "reward": { "type": "multibuy_unlock", "value": "upgrades" },
+    "bonusDesc": "bonusDesc_multibuy_upgrades" },
+
+  { "id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc",
+    "condition": { "type": "task_unlocked", "taskId": "coffee" },
+    "reward": { "type": "idle_bonus", "value": 1.10 },
+    "bonusDesc": "bonusDesc_idle_10" },
+
+  { "id": "meeting_master", "nameKey": "ach_meeting_master", "descKey": "ach_meeting_master_desc",
+    "condition": { "type": "task_level", "taskId": "meeting", "value": 15 },
+    "reward": { "type": "upgrade_discount", "value": 0.95 },
+    "bonusDesc": "bonusDesc_upgrade_discount_5" },
+
+  { "id": "first_ascend", "nameKey": "ach_first_ascend", "descKey": "ach_first_ascend_desc",
+    "condition": { "type": "ascensions", "value": 1 },
+    "reward": { "type": "career_stats_unlock", "value": 1 },
+    "bonusDesc": "bonusDesc_career_stats" },
+
+  { "id": "kpi_analyst", "nameKey": "ach_kpi_analyst", "descKey": "ach_kpi_analyst_desc",
+    "condition": { "type": "task_unlocked", "taskId": "kpi" },
+    "reward": { "type": "prestige_bonus", "value": 1.15 },
+    "bonusDesc": "bonusDesc_prestige_15" },
+
+  { "id": "big_spender", "nameKey": "ach_big_spender", "descKey": "ach_big_spender_desc",
+    "condition": { "type": "bp_spent", "value": 25000 },
+    "reward": { "type": "bp_bonus", "value": 1.10 },
+    "bonusDesc": "bonusDesc_bp_10" },
+
+  { "id": "innovation_guru", "nameKey": "ach_innovation_guru", "descKey": "ach_innovation_guru_desc",
+    "condition": { "type": "task_unlocked", "taskId": "brainstorm" },
+    "reward": { "type": "ascend_bonus", "value": 1.20 },
+    "bonusDesc": "bonusDesc_ascend_20" },
+
+  { "id": "first_prestige", "nameKey": "ach_first_prestige", "descKey": "ach_first_prestige_desc",
+    "condition": { "type": "prestiges", "value": 1 },
+    "reward": { "type": "desk_unlock", "value": 1 },
+    "bonusDesc": "bonusDesc_desk_unlock" },
+
+  { "id": "optimizer", "nameKey": "ach_optimizer", "descKey": "ach_optimizer_desc",
+    "condition": { "type": "task_unlocked", "taskId": "optimize" },
+    "reward": { "type": "global_mult", "value": 1.30 },
+    "bonusDesc": "bonusDesc_global_30" },
+
+  { "id": "multibuy_expert", "nameKey": "ach_multibuy_expert", "descKey": "ach_multibuy_expert_desc",
+    "condition": { "type": "multibuy_used", "value": 25 },
+    "reward": { "type": "max_buy_unlock", "value": 1 },
+    "bonusDesc": "bonusDesc_max_buy" },
+
+  { "id": "corporate_ladder", "nameKey": "ach_corporate_ladder", "descKey": "ach_corporate_ladder_desc",
+    "condition": { "type": "total_ascensions", "value": 10 },
+    "reward": { "type": "ascend_discount", "value": 0.90 },
+    "bonusDesc": "bonusDesc_ascend_discount_10" },
+
+  { "id": "idle_master", "nameKey": "ach_idle_master", "descKey": "ach_idle_master_desc",
+    "condition": { "type": "idle_rate", "value": 1500 },
+    "reward": { "type": "idle_bonus", "value": 1.15 },
+    "bonusDesc": "bonusDesc_idle_20" },
+
+  { "id": "soft_skills_beginner", "nameKey": "ach_soft_skills_beginner", "descKey": "ach_soft_skills_beginner_desc",
+    "condition": { "type": "soft_skills_earned", "value": 1 },
+    "reward": { "type": "desk_unlock", "value": 1 },
+    "bonusDesc": "bonusDesc_desk_unlock" },
+
+  { "id": "soft_skills_expert", "nameKey": "ach_soft_skills_expert", "descKey": "ach_soft_skills_expert_desc",
+    "condition": { "type": "soft_skills_earned", "value": 10 },
+    "reward": { "type": "prestige_bonus", "value": 1.20 },
+    "bonusDesc": "bonusDesc_prestige_20" },
+
+  { "id": "soft_skills_master", "nameKey": "ach_soft_skills_master", "descKey": "ach_soft_skills_master_desc",
+    "condition": { "type": "soft_skills_earned", "value": 50 },
+    "reward": { "type": "soft_skill_bonus", "value": 1.50 },
+    "bonusDesc": "bonusDesc_soft_skill_50" },
+
+  { "id": "first_desk_item", "nameKey": "ach_first_desk_item", "descKey": "ach_first_desk_item_desc",
+    "condition": { "type": "desk_items_bought", "value": 1 },
+    "reward": { "type": "soft_skill_bonus", "value": 1.10 },
+    "bonusDesc": "bonusDesc_soft_skill_10" },
+
+  { "id": "office_decorator", "nameKey": "ach_office_decorator", "descKey": "ach_office_decorator_desc",
+    "condition": { "type": "desk_items_bought", "value": 3 },
+    "reward": { "type": "desk_discount", "value": 0.90 },
+    "bonusDesc": "bonusDesc_desk_discount_10" },
+
+  { "id": "office_complete", "nameKey": "ach_office_complete", "descKey": "ach_office_complete_desc",
+    "condition": { "type": "desk_items_bought", "value": 6 },
+    "reward": { "type": "global_mult", "value": 1.25 },
+    "bonusDesc": "bonusDesc_global_25" },
+
+  { "id": "prestige_veteran", "nameKey": "ach_prestige_veteran", "descKey": "ach_prestige_veteran_desc",
+    "condition": { "type": "prestiges", "value": 5 },
+    "reward": { "type": "prestige_bonus", "value": 1.30 },
+    "bonusDesc": "bonusDesc_prestige_30" },
+
+  { "id": "prestige_master", "nameKey": "ach_prestige_master", "descKey": "ach_prestige_master_desc",
+    "condition": { "type": "prestiges", "value": 10 },
+    "reward": { "type": "prestige_break", "value": 1 },
+    "bonusDesc": "bonusDesc_prestige_break" },
+
+  { "id": "challenge_master", "nameKey": "ach_challenge_master", "descKey": "ach_challenge_master_desc",
+    "condition": { "type": "challenges_completed", "value": 5 },
+    "reward": { "type": "global_mult", "value": 1.50 },
+    "bonusDesc": "bonusDesc_challenge_master" },
+
+  { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
+    "condition": { "type": "impossible", "value": 1 },
+    "reward": { "type": "coming_soon", "value": 1 },
+    "bonusDesc": "bonusDesc_coming_soon" }
+],
             "deskItems": [
                 { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "single_task_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_single_boost" },
                 { "id": "phone", "nameKey": "desk_phone", "cost": 3, "bonus": { "type": "all_active_boost", "value": 1.05 }, "bonusDesc": "bonusDesc_active_boost" },
@@ -86,7 +176,7 @@ class KorposzczurGame {
                 {"id": "marathon", "nameKey": "challenge_marathon", "descKey": "challenge_marathon_desc", "condition": {"type": "continuous_play", "value": 3600000}, "reward": {"type": "global_mult", "value": 1.2}, "bonusDesc": "bonusDesc_marathon_bonus"}
             ],
             "multiBuyOptions": [1, 2, 5, 10, 20, 50, "max"],
-            "prestigeThreshold": 50000,
+            "prestigeThreshold": 40000,
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
@@ -113,6 +203,7 @@ class KorposzczurGame {
                     "bonusDesc_global_10": "+10% do wszystkich przychodów",
                     "bonusDesc_idle_20": "+20% do BP/s",
                     "bonusDesc_upgrade_discount_5": "Ulepszenia tańsze o 5%",
+                    "bonusDesc_career_stats": "Odblokuj statystyki kariery i śledzenie postępu awansów",
                     "bonusDesc_prestige_mult_15": "+15% do mnożnika Prestiżu",
                     "bonusDesc_ascend_10": "+10% do bonusu awansu",
                     "bonusDesc_challenges_unlock": "Odblokowuje wyzwania",
@@ -120,7 +211,6 @@ class KorposzczurGame {
                     "bonusDesc_bp_5": "+5% do przychodu Biuro-Punktów",
                     "bonusDesc_multibuy_upgrades": "Odblokowuje Multi-buy",
                     "bonusDesc_idle_10": "+10% do BP/s zadań",
-                    "bonusDesc_upgrade_discount_5": "5% tańsze ulepszenia",
                     "bonusDesc_multibuy_ascend": "Odblokowuje Multi-buy dla awansów",
                     "bonusDesc_prestige_15": "+15% do mnożnika Prestiżu",
                     "bonusDesc_bp_10": "+10% do przychodu Biuro-Punktów",
@@ -129,6 +219,7 @@ class KorposzczurGame {
                     "bonusDesc_global_30": "+30% do wszystkich przychodów",
                     "bonusDesc_max_buy": "Odblokowuje Kup Max",
                     "bonusDesc_ascend_discount_10": "Awans tańszy o 10%",
+                    "bonusDesc_idle_15": "+15% do BP/s",
                     "bonusDesc_idle_20": "+20% do BP/s",
                     "bonusDesc_global_15": "+15% do wszystkich przychodów",
                     "bonusDesc_desk_unlock": "Odblokowuje Biurko",
@@ -233,7 +324,7 @@ class KorposzczurGame {
                     "ach_corporate_ladder": "Drabina korporacyjna",
                     "ach_corporate_ladder_desc": "Wykonaj 10 awansów łącznie",
                     "ach_idle_master": "Mistrz idle",
-                    "ach_idle_master_desc": "Osiągnij 1000 BP/s przychodu",
+                    "ach_idle_master_desc": "Osiągnij 1500 BP/s przychodu",
                     "ach_dedication": "Oddanie",
                     "ach_dedication_desc": "Graj przez 2 godziny",
                     "ach_soft_skills_beginner": "Początkujący soft skills",
@@ -303,7 +394,7 @@ class KorposzczurGame {
                     "bonusDesc_bp_5": "+5% to Office Points income",
                     "bonusDesc_multibuy_upgrades": "Unlocks Multi-buy",
                     "bonusDesc_idle_10": "+10% to task BP/s",
-                    "bonusDesc_upgrade_discount_5": "Upgrades 5% cheaper",
+                    "bonusDesc_idle_15": "+15% to BP/s",
                     "bonusDesc_multibuy_ascend": "Unlocks Multi-buy for ascensions",
                     "bonusDesc_prestige_15": "+15% to Prestige multiplier",
                     "bonusDesc_bp_10": "+10% to Office Points income",
@@ -416,7 +507,7 @@ class KorposzczurGame {
                     "ach_corporate_ladder": "Corporate ladder",
                     "ach_corporate_ladder_desc": "Perform 10 total ascensions",
                     "ach_idle_master": "Idle master",
-                    "ach_idle_master_desc": "Reach 1000 BP/s income",
+                    "ach_idle_master_desc": "Reach 1500 BP/s income",
                     "ach_dedication": "Dedication",
                     "ach_dedication_desc": "Play for 2 hours",
                     "ach_soft_skills_beginner": "Soft skills beginner",
@@ -439,21 +530,8 @@ class KorposzczurGame {
                     "ach_challenge_master_desc": "Complete 5 challenges",
                     "ach_future_update": "Future updates",
                     "ach_future_update_desc": "Wait for more content",
-                    "help_content": "Welcome to Corposzczur!\n\nGoal: Advance your corporate career by completing tasks and earning Office Points (BP).\n\n"
-                    + "• Goal: Advance your career, unlock tasks, and earn BP; spend Soft Skills on your desk.\n"
-                    + "• Basics: Unlock tasks for BP, upgrade them, and level up after level 10; prestige resets your Soft Skills progress.\n"
-                    + "• Focus: Only tasks marked "Active" produce BP; start with 4 slots, more are provided by desk items (Organizer +1, Trophy +2).\n"
-                    + "• Auto‑focus: A new task is added to focus if there is an empty slot.\n"
-                    + "• Use Prestige to reset the game for Soft Skills.\n"
-                    + "• Desk Bonuses:\n"
-                    + "• Phone: +5% BP to active tasks.\n"
-                    + " • Mug: +10% BP for one active task (default: first on the list).\n"
-                    + " • Lamp: +10% BP at night (10:00 PM–6:00 AM).\n\n"
-                    + "• Challenges and achievements: grant permanent bonuses or unlock features (e.g., multi-buy, buy max, prestige break).\n"
-                    + "• In Settings, you can choose the format for displaying large numbers:\n"
-                    + "• Tips: keep the most profitable tasks in focus; upgrading inactive ones doesn't grant BP until they're in focus; the number of active ones increases with the desk.\n"
-                    + "• Settings: number format (F/M/B/T, science, engineering), language, theme.\n"
-                    + "\nHave fun!"
+                    "bonusDesc_career_stats": "Unlocks career stats (ascensions, rankings)",
+                    "help_content": "Welcome to Corporate Rat!\n\nGoal: Develop your career by completing tasks and earning Office Points (BP).\n\n• Goal: Advance your career, unlock tasks, and earn BP; spend Soft Skills on your desk.\n• Basics: Unlock tasks for BP, upgrade them, and ascend at level 10; prestige resets progress for Soft Skills.\n• Focus: Only tasks marked Active produce BP; you start with 4 slots, more via desk items (Organizer +1, Trophy +2).\n• Auto-focus: Newly unlocked tasks are auto-added to focus if a slot is free.\n• Desk bonuses:\n  • Phone: +5% BP to active tasks.\n  • Mug: +10% BP to one active task (defaults to the first active).\n  • Lamp: +10% BP at night (22:00–06:00).\n\n• Challenges & achievements: grant permanent bonuses or unlock features (e.g., multi-buy, buy max, prestige break).\n• Settings: number format (K/M/B/T, scientific, engineering), language, theme.\n\nHave fun!"
                 }
             },
             "quotes": {
@@ -1105,6 +1183,10 @@ class KorposzczurGame {
         
         // Apply global multipliers
         rate *= this.getGlobalMultiplier();
+        const segment = Math.floor((taskState.level - 1) / 10);
+        if (segment > 0) {
+            rate *= Math.pow(1.05, segment);
+        }
         const isActive = this.gameState.focus.includes(taskId);
         
         // all_active_boost
@@ -1140,7 +1222,7 @@ class KorposzczurGame {
         // SOFTCAP — dwustopniowy
         // 1. powyżej 20k BP/s progres rośnie tylko do potęgi 0.7
         // 2. powyżej 1M rośnie jeszcze wolniej, do potęgi 0.5
-        rate = this.softcap(rate, 20000, 0.7, 1_000_000, 0.5);
+        rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
         return rate;
     }
     getMaxFocusSlots() {
@@ -1305,6 +1387,10 @@ class KorposzczurGame {
         
         for (let i = 0; i < amount; i++) {
             let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
+            const segment = Math.floor(currentLevel / 10);
+            if (segment > 0) {
+                cost *= (1 + 0.10 * segment);
+            }
             
             // Apply upgrade discount from desk items and achievements
             Object.keys(this.gameState.deskItems).forEach(itemId => {
@@ -1340,7 +1426,7 @@ class KorposzczurGame {
         let totalCost = 0;
         let currentLevel = taskState.level;
         
-        while (totalCost <= this.gameState.bp && amount < 1000) {
+        while (totalCost <= this.gameState.bp && amount < 50) {
             let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
             
             // Apply upgrade discount
@@ -1542,10 +1628,12 @@ renderTasks() {
         const focusHost = taskCard.querySelector('.task-header');
         focusHost && focusHost.appendChild(label);
 
-        // Handler zmiany focusu + blokada przepełnienia
+        // Handler zmiany focusu + blokada przepełnienia + (opcjonalny) koszt przełączania
         focusCheckbox.addEventListener('change', (e) => {
             const taskId = e.target.getAttribute('data-task-id');
+
             if (e.target.checked) {
+                // limit slotów
                 if (this.gameState.focus.length >= this.getMaxFocusSlots()) {
                     this.showNotification(this.currentLanguage === 'pl'
                         ? 'Brak wolnych slotów focus!'
@@ -1553,27 +1641,48 @@ renderTasks() {
                     e.target.checked = false;
                     return;
                 }
+
+                // opcjonalny koszt przełączania (gdy flaga włączona)
+                if (this.gameState.settings?.focusSwitchCostEnabled) {
+                    let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005)); // 0.5% BP, min 1000
+                    if (this.gameState.deskItems['multitool']) {
+                        const mt = this.gameData.deskItems.find(d => d.id === 'multitool');
+                        if (mt && mt.bonus.type === 'focus_switch_discount') {
+                            switchCost = Math.floor(switchCost * mt.bonus.value); // np. 0.5
+                        }
+                    }
+                    if (this.gameState.bp < switchCost) {
+                        this.showNotification(this.currentLanguage === 'pl'
+                            ? 'Za mało BP na zmianę focus!'
+                            : 'Not enough BP to switch focus!');
+                        e.target.checked = false;
+                        return;
+                    }
+                    this.updateBP(this.gameState.bp - switchCost);
+                }
+
                 if (!this.gameState.focus.includes(taskId)) {
                     this.gameState.focus.push(taskId);
                 }
             } else {
+                // Odznaczanie nie wymaga kosztu
                 this.gameState.focus = this.gameState.focus.filter(id => id !== taskId);
             }
-            this.saveGameState(); // opcjonalnie: od razu zapisz wybór
+
+            this.saveGameState(); // zapisz wybór od razu
             this.renderTasks();
         });
 
         container.appendChild(taskCard);
     });
 
-    // Ustaw domyślny singleBoostTaskId: pierwszy aktywny lub null
+    // Ustaw domyślny singleBoostTaskId: pierwszy aktywny lub null (naprawa: nie przypisuj całej tablicy)
     if (!this.gameState.singleBoostTaskId || !this.gameState.focus.includes(this.gameState.singleBoostTaskId)) {
         this.gameState.singleBoostTaskId = this.gameState.focus.length ? this.gameState.focus : null;
     }
 
     this.updateTaskButtonStates();
 }
-
 createTaskCard(taskData, taskState) {
     const card = document.createElement('div');
     card.className = 'task-card';
