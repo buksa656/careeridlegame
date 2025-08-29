@@ -348,21 +348,7 @@ class KorposzczurGame {
                     "ach_challenge_master_desc": "Ukończ 5 wyzwań",
                     "ach_future_update": "Przyszłe aktualizacje",
                     "ach_future_update_desc": "Czekaj na więcej zawartości",
-                    "help_content": "Witaj w Korposzczur!\n\nCel: Rozwijaj karierę korporacyjną wykonując zadania i zdobywając Biuro-Punkty (BP).\n\n"
-                    + "• Cel: rozwijaj karierę, odblokowuj zadania i zdobywaj BP; wydawaj Soft Skills na biurko.\n"
-                    + "• Podstawy: odblokuj zadania za BP, ulepszaj je, awansuj po poziomie 10; prestiż resetuje progres za Soft Skills.\n"
-                    + "• Focus: tylko zadania oznaczone “Aktywne” produkują BP; start 4 sloty, więcej dają przedmioty biurka (Organizer +1, Trofeum +2).\n"
-                    + "• Auto‑focus: nowe zadanie trafia do focus, jeśli jest wolny slot.\n"
-                    + "• Użyj Prestiżu aby zresetować grę za Soft Skills\n"
-                    + "• Bonusy biurka:\n"
-                    + "    • Telefon: +5% BP do aktywnych zadań.\n"
-                    + "    • Kubek: +10% BP dla jednego aktywnego zadania (domyślnie pierwszy z listy).\n"
-                    + "    • Lampka: +10% BP nocą (22:00–6:00).\n\n"
-                    + "• Wyzwania i achievementy: dają stałe bonusy lub odblokowują funkcje (np. multi‑buy, kup max, prestiż break).\n"
-                    + "• W Ustawieniach możesz wybrać format wyświetlania dużych liczb:\n"
-                    + "• Wskazówki: trzymaj w focus najlepiej opłacalne zadania; ulepszanie nieaktywnych nie daje BP, dopóki nie są w focus; liczba aktywnych rośnie z biurkiem.\n"
-                    + "• Ustawienia: format liczb (K/M/B/T, naukowy, inżynieryjny), język, motyw.\n"
-                    + "\nMiłej gry!"                
+                    "help_content": "<h2>Pomoc - Poradnik do Korposzczura</h2>\n<h3>[Cel Gry]</h3>\n<p>Rozwijaj karierę, zdobywaj <strong>Biuro-Punkty (BP)</strong> i odblokowuj zadania. Wydawaj <strong>Soft Skills</strong> na ulepszenia.</p>\n<h3>[Sterowanie]</h3>\n<ul>\n<li>Klikaj przyciski, aby odblokować, ulepszyć i awansować zadania.</li>\n<li>Wybierz <em>aktywne zadania</em> (Focus), które generują BP.</li>\n</ul>\n<h3>[Energia]</h3>\n<ul>\n<li>Regeneruje się automatycznie: 1 energia co 10 min (max 100).</li>\n<li>Specjalne umiejętności za energię: Coffee Break (25 energii), Focus Mode (40 energii), Overtime (60 energii).</li>\n<li>Oglądaj reklamy, aby odzyskać energię (max 5 dziennie, min 10 min między reklamami).</li>\n<li>Energia nie resetuje się przy prestiżu — motywuje do oglądania reklam.</li>\n</ul>\n<h3>[Focus]</h3>\n<ul>\n<li>Tylko zadania „aktywne" w Focus generują BP.</li>\n<li>Startujesz z 4 slotami, które można zwiększyć (np. Organizer, Trofeum).</li>\n<li>Zmiana Focus może mieć koszt, zależnie od ustawień.</li>\n</ul>\n<h3>[Zadania]</h3>\n<ul>\n<li>Odkrywaj nowe zadania, ulepszaj i awansuj, by maksymalizować produkcję BP.</li>\n<li>Bonusy ze stopni, awansów, dóbr na biurku i umiejętności zwiększają efektywność.</li>\n</ul>\n<h3>[Soft Skills]</h3>\n<ul>\n<li>Zdobądź Soft Skills prestiżując i wykonując wyzwania.</li>\n<li>Wydawaj je, aby kupować przedmioty na biurko z bonusami.</li>\n<li>Przedmioty zwiększają produkcję BP oraz dają dodatkowe sloty Focus.</li>\n</ul>\n<h3>[Prestiż]</h3>\n<ul>\n<li>Reset postępu, zachowuje osiągnięcia i przedmioty.</li>\n<li>Wynagradza Soft Skills, które mają trwały wpływ.</li>\n<li>Daje dostęp do zaawansowanych funkcji i wyzwań.</li>\n</ul>\n<h3>[Wskazówki]</h3>\n<ul>\n<li>Stawiaj w Focus zadania z najlepszym BP.</li>\n<li>Ulepszaj głównie aktywne zadania.</li>\n<li>Rozszerzaj sloty Focus za pomocą biurka i umiejętności.</li>\n<li>Dostosuj grę pod siebie w ustawieniach.</li>\n</ul>\n<p>Miłej gry! 🍀</p>"            
                 },
                 "en": {
                     "task_lunch": "Office lunch",
@@ -532,8 +518,8 @@ class KorposzczurGame {
                     "ach_future_update": "Future updates",
                     "ach_future_update_desc": "Wait for more content",
                     "bonusDesc_career_stats": "Unlocks career stats (ascensions, rankings)",
-                    "help_content": "Welcome to Corporate Rat!\n\nGoal: Develop your career by completing tasks and earning Office Points (BP).\n\n• Goal: Advance your career, unlock tasks, and earn BP; spend Soft Skills on your desk.\n• Basics: Unlock tasks for BP, upgrade them, and ascend at level 10; prestige resets progress for Soft Skills.\n• Focus: Only tasks marked Active produce BP; you start with 4 slots, more via desk items (Organizer +1, Trophy +2).\n• Auto-focus: Newly unlocked tasks are auto-added to focus if a slot is free.\n• Desk bonuses:\n  • Phone: +5% BP to active tasks.\n  • Mug: +10% BP to one active task (defaults to the first active).\n  • Lamp: +10% BP at night (22:00–06:00).\n\n• Challenges & achievements: grant permanent bonuses or unlock features (e.g., multi-buy, buy max, prestige break).\n• Settings: number format (K/M/B/T, scientific, engineering), language, theme.\n\nHave fun!"
-                }
+                    "help_content": "<h2>Help - Corporate Rat Guide</h2>\n<h3>[Game Goal]</h3>\n<p>Develop your career, earn <strong>Office Points (BP)</strong> and unlock tasks. Spend <strong>Soft Skills</strong> on upgrades.</p>\n<h3>[Controls]</h3>\n<ul>\n<li>Click buttons to unlock, upgrade and ascend tasks.</li>\n<li>Select <em>active tasks</em> (Focus) that generate BP.</li>\n</ul>\n<h3>[Energy]</h3>\n<ul>\n<li>Regenerates automatically: 1 energy per 10 min (max 100).</li>\n<li>Special skills for energy: Coffee Break (25 energy), Focus Mode (40 energy), Overtime (60 energy).</li>\n<li>Watch ads to recover energy (max 5 daily, min 10 min between ads).</li>\n<li>Energy doesn't reset on prestige — motivates ad watching.</li>\n</ul>\n<h3>[Focus]</h3>\n<ul>\n<li>Only 'active' tasks in Focus generate BP.</li>\n<li>Start with 4 slots, expandable (e.g. Organizer, Trophy).</li>\n<li>Focus switching may have cost, depending on settings.</li>\n</ul>\n<h3>[Tasks]</h3>\n<ul>\n<li>Discover new tasks, upgrade and ascend to maximize BP production.</li>\n<li>Bonuses from levels, ascensions, desk items and skills boost efficiency.</li>\n</ul>\n<h3>[Soft Skills]</h3>\n<ul>\n<li>Earn Soft Skills through prestige and challenges.</li>\n<li>Spend them to buy desk items with bonuses.</li>\n<li>Items boost BP production and provide additional Focus slots.</li>\n</ul>\n<h3>[Prestige]</h3>\n<ul>\n<li>Resets progress, keeps achievements and items.</li>\n<li>Rewards Soft Skills with permanent impact.</li>\n<li>Unlocks advanced features and challenges.</li>\n</ul>\n<h3>[Tips]</h3>\n<ul>\n<li>Focus on tasks with best BP output.</li>\n<li>Upgrade mainly active tasks.</li>\n<li>Expand Focus slots via desk and skills.</li>\n<li>Customize game in settings.</li>\n</ul>\n<p>Have fun! 🍀</p>"
+               }
             },
             "quotes": {
               "pl": [
@@ -1125,19 +1111,23 @@ setupEventListeners() {
         }
     }
 
-    updateLanguage() {
-        const elements = document.querySelectorAll('[data-translate]');
-        elements.forEach(el => {
-            const key = el.getAttribute('data-translate');
-            const translation = this.translations[this.currentLanguage][key];
-            if (translation) {
-                if (key === 'help_content') {
-                    el.textContent = translation.replace(/\\n/g, '\n');
-                } else {
-                    el.textContent = translation;
-                }
+updateLanguage() {
+    const elements = document.querySelectorAll('[data-translate]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-translate');
+        const translation = this.translations[this.currentLanguage][key];
+        if (translation) {
+            if (key === 'help_content') {
+                el.innerHTML = translation;
+            } else {
+                el.textContent = translation;
             }
-        });
+        }
+    });
+
+    document.getElementById('language-select').value = this.currentLanguage;
+    document.documentElement.lang = this.currentLanguage;
+}
 
         document.getElementById('language-select').value = this.currentLanguage;
         document.documentElement.lang = this.currentLanguage;
