@@ -24,6 +24,15 @@
                         <span class="currency-label" data-translate="soft_skills">Soft Skills</span>
                         <span class="currency-value" id="ss-display">0</span>
                     </div>
+                    <div class="energy-panel">
+                      <div class="energy-display">⚡ <span id="energy-display">100</span>/100</div>
+                      <div class="energy-skills">
+                        <button id="coffee-break-btn" class="btn btn--sm">Coffee Break (25⚡)</button>
+                        <button id="focus-mode-btn" class="btn btn--sm">Focus Mode (40⚡)</button>
+                        <button id="overtime-btn" class="btn btn--sm">Overtime (60⚡)</button>
+                        <button id="watch-ad-btn" class="btn btn--sm">📺 Watch Ad (+20⚡)</button>
+                      </div>
+                    </div>
                 </div>
                 <div class="header-buttons">
                     <button class="btn btn--outline help-btn" id="help-toggle" data-translate="help">❓</button>
@@ -124,7 +133,11 @@
                             <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
                             <circle cx="350" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges"/>
                             <circle cx="350" cy="180" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
-                            
+                            <rect x="250" y="120" width="20" height="35" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="phone" rx="3"/>
+                            <rect x="140" y="105" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="organizer" rx="2"/>
+                            <circle cx="195" cy="105" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="lamp"/>
+                            <circle cx="280" cy="230" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="multitool"/>
+                            <rect x="235" y="200" width="20" height="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="trophy" rx="2"/>
                             <!-- Items will be added dynamically -->
                             <g id="desk-items"></g>
                         </svg>
