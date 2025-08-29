@@ -24,13 +24,13 @@
                         <span class="currency-label" data-translate="soft_skills">Soft Skills</span>
                         <span class="currency-value" id="ss-display">0</span>
                     </div>
-                    <div class="energy-panel">
-                      <div class="energy-display">⚡ <span id="energy-display">100</span>/100</div>
-                      <div class="energy-skills">
-                        <button id="coffee-break-btn" class="btn btn--sm">Coffee Break (25⚡)</button>
-                        <button id="focus-mode-btn" class="btn btn--sm">Focus Mode (40⚡)</button>
-                        <button id="overtime-btn" class="btn btn--sm">Overtime (60⚡)</button>
-                        <button id="watch-ad-btn" class="btn btn--sm">📺 Watch Ad (+20⚡)</button>
+                    <div class="energy-dropdown" id="energy-dropdown-container">
+                      <button id="energy-button">⚡ 100/100 ▼</button>
+                      <div id="energy-menu" class="energy-menu">
+                        <button class="energy-option" data-skill="coffeeBreak">☕ Coffee Break (25⚡)</button>
+                        <button class="energy-option" data-skill="focusMode">🎯 Focus Mode (40⚡)</button>
+                        <button class="energy-option" data-skill="overtime">⏰ Overtime (60⚡)</button>
+                        <button class="energy-option" id="watch-ad-option">📺 Watch Ad (+20⚡)</button>
                       </div>
                     </div>
                 </div>
