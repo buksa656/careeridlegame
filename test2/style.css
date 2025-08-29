@@ -389,7 +389,25 @@ pre code {
   background: none;
   padding: 0;
 }
+/* Energia */
+.energy-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
 
+.energy-skills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .energy-skills {
+    flex-direction: column;
+  }
+}
 /* Buttons */
 .btn {
   display: inline-flex;
