@@ -1130,12 +1130,12 @@ activateTempoBuff(buffId) {
                 
                 // Update cost display in real-time
 				const upgradeText = this.translations[this.currentLanguage].upgrade;
-				const amountDisplay = amount > 1 ? `(${amount}x)` : '';
-				const costDisplay = `(${this.formatNumber(cost)})`;
-				const newText = [upgradeText, amountDisplay, costDisplay].filter(Boolean).join(' ');
-                if (btn.textContent !== newText) {
-                    btn.textContent = newText;
-                }
+				const amountText = amount > 1 ? '(' + amount + 'x)' : '';
+				const costDisplay = '(' + this.formatNumber(cost) + ')';
+				const newText = `${upgradeText} ${amountText} ${costDisplay}`;
+				if (btn.textContent !== newText) {
+				  btn.textContent = newText;
+				}
                 
                 // Visual feedback for affordability
                 if (canAfford) {
