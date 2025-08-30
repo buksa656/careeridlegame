@@ -1130,9 +1130,9 @@ activateTempoBuff(buffId) {
                 
                 // Update cost display in real-time
 				const upgradeText = this.translations[this.currentLanguage].upgrade;
-				const amountText = amount > 1 ? `(${amount}x)` : '';
-				const costDisplayText = `(${this.formatNumber(cost)})`;
-				const newText = `${upgradeText} ${amountText} ${costDisplayText}`;
+				const amountDisplay = amount > 1 ? `(${amount}x)` : '';
+				const costDisplay = `(${this.formatNumber(cost)})`;
+				const newText = [upgradeText, amountDisplay, costDisplay].filter(Boolean).join(' ');
                 if (btn.textContent !== newText) {
                     btn.textContent = newText;
                 }
