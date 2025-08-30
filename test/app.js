@@ -1130,7 +1130,7 @@ activateTempoBuff(buffId) {
                 
                 // Update cost display in real-time
                 const costText = btn.textContent.match(/\(([^)]+)\)$/);
-                const newText = `${this.translations[this.currentLanguage].upgrade} ${amount > 1 ? `(${amount}x)` : ''} (${this.formatNumber(cost)})`;
+                const newText = `${this.translations[this.currentLanguage].upgrade} ${amount > 1 ? '(' + amount + 'x)' : ''} (${this.formatNumber(cost)})`;
                 if (btn.textContent !== newText) {
                     btn.textContent = newText;
                 }
