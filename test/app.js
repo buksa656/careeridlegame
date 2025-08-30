@@ -936,52 +936,41 @@ setupEventListeners() {
         });
     });
 	// Grantowanie Tempo Tokena
-	grantTempoToken(reason = "test") {
-		this.gameState.tempo.tokens = (this.gameState.tempo.tokens || 0) + 1;
-		this.gameState.tempo.lastGrants.push({ type: reason, ts: Date.now() });
-		
-		// Spersonalizowane komunikaty
-		const messages = {
-			'efficient_upgrades': this.translations[this.currentLanguage]?.tempoEventEfficiency,
-			'focus_activity': this.translations[this.currentLanguage]?.tempoEventFocus,
-			'optimal_ascend': this.translations[this.currentLanguage]?.tempoEventAscend,
-			'achievement_milestone': this.translations[this.currentLanguage]?.tempoEventAchievement,
-			'rapid_optimization': this.translations[this.currentLanguage]?.tempoEventRapid
-		};
-		
-		const message = messages[reason] || this.translations[this.currentLanguage]?.tempoTokenGained || "Tempo Token gained!";
-		this.showNotification(message);
-		this.updateDisplay && this.updateDisplay();
-	}
+	this.grantTempoToken = (reason = "test") => {
+	  this.gameState.tempo.tokens = (this.gameState.tempo.tokens || 0) + 1;
+	  this.gameState.tempo.lastGrants.push({ type: reason, ts: Date.now() });
+
+	  const messages = {
+		'efficient_upgrades': this.translations[this.currentLanguage]?.tempoEventEfficiency,
+		'focus_activity': this.translations[this.currentLanguage]?.tempoEventFocus,
+		'optimal_ascend': this.translations[this.currentLanguage]?.tempoEventAscend,
+		'achievement_milestone': this.translations[this.currentLanguage]?.tempoEventAchievement,
+		'rapid_optimization': this.translations[this.currentLanguage]?.tempoEventRapid
+	  };
+
+	  const message = messages[reason] || this.translations[this.currentLanguage]?.tempoTokenGained || "Tempo Token gained!";
+	  this.showNotification(message);
+	  this.updateDisplay && this.updateDisplay();
+	};
 	
-activateTempoBuff(buffId) {
-    const buff = this.gameData.tempoBuffs.find(b => b.id === buffId);
-    if (!buff || this.gameState.tempo.tokens <= 0) {
-        this.showNotification(this.translations[this.currentLanguage]?.notEnoughTempo || "Brak Tempo Tokenów!");
-        return;
-    }
-    
-    // Specjalna obsługa dla Cashout (natychmiastowy efekt)
-    if (buffId === 'cashout') {
-        this.gameState.tempo.tokens--;
-        this.executeCashoutPulse();
-        this.updateDisplay();
-        return;
-    }
-    
-    // Standardowe buffy czasowe
-    this.gameState.tempo.tokens--;
-    const expiresAt = Date.now() + buff.duration * 1000;
-    this.gameState.tempo.activeBuffs.push({
-        id: buff.id, 
-        type: buff.effect, 
-        expiresAt, 
-        params: buff
-    });
-    
-    this.showNotification(this.translations[this.currentLanguage][buff.nameKey]);
-    this.updateDisplay();
-}
+	this.activateTempoBuff = (buffId) => {
+	  const buff = this.gameData.tempoBuffs.find(b => b.id === buffId);
+	  if (!buff || this.gameState.tempo.tokens <= 0) {
+		this.showNotification(this.translations[this.currentLanguage]?.notEnoughTempo || "Brak Tempo Tokenów!");
+		return;
+	  }
+	  if (buffId === 'cashout') {
+		this.gameState.tempo.tokens--;
+		this.executeCashoutPulse();
+		this.updateDisplay();
+		return;
+	  }
+	  this.gameState.tempo.tokens--;
+	  const expiresAt = Date.now() + buff.duration * 1000;
+	  this.gameState.tempo.activeBuffs.push({ id: buff.id, type: buff.effect, expiresAt, params: buff });
+	  this.showNotification(this.translations[this.currentLanguage][buff.nameKey]);
+	  this.updateDisplay();
+	};
 	
 	
     // Auto-buyer toggle
