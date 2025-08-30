@@ -1920,7 +1920,11 @@ createTaskCard(taskData, taskState) {
 			let boostSelectHTML = '';
 			if (item.id === 'mug' && owned) {
 				// Tylko zadania aktywne i odblokowane
-				const focusedTasks = this.gameState.focus.filter(id => this.gameState.tasks[id] && this.gameState.tasks[id].unlocked);
+				const focusedTasks = this.gameState.focus.filter(id => 
+				this.gameState.tasks[id] && 
+				this.gameState.tasks[id].unlocked === true && 
+				this.gameState.tasks[id].locked === false
+				);
 				if (focusedTasks.length > 0) {
 					boostSelectHTML += `
 					<div style="margin-top:8px">
