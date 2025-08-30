@@ -1919,29 +1919,28 @@ createTaskCard(taskData, taskState) {
 
 			let boostSelectHTML = '';
 			if (item.id === 'mug' && owned) {
-				// Tylko zadania aktywne i odblokowane
-				const focusedTasks = this.gameState.focus.filter(id => 
-				this.gameState.tasks[id] && 
-				this.gameState.tasks[id].unlocked === true && 
-				this.gameState.tasks[id].locked === false
+				const focusedTasks = this.gameState.focus.filter(id =>
+					this.gameState.tasks[id] &&
+					this.gameState.tasks[id].unlocked === true &&
+					this.gameState.tasks[id].locked === false
 				);
 				if (focusedTasks.length > 0) {
 					boostSelectHTML += `
 					<div style="margin-top:8px">
-					  <label style="font-size:0.96em">${this.currentLanguage === 'pl' ? 'Wybierz zadanie z bonusem:' : 'Select boosted task:'}</label>
-					  <select id="boost-task-select" style="margin-left:8px">
-						${focusedTasks.map(id => `
-						  <option value="${id}" ${this.gameState.singleBoostTaskId === id ? 'selected' : ''}>
+						<label style="font-size:0.96em">${this.currentLanguage === 'pl' ? 'Wybierz zadanie z bonusem:' : 'Select boosted task:'}</label>
+						<select id="boost-task-select" style="margin-left:8px">
+							${focusedTasks.map(id => `
+							<option value="${id}" ${this.gameState.singleBoostTaskId === id ? 'selected' : ''}>
 							${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === id).nameKey]}
-						  </option>
-						`).join('')}
-					  </select>
+							</option>
+							`).join('')}
+						</select>
 					</div>
 					`;
 				} else {
 					boostSelectHTML = '<div style="margin-top:6px;font-size:0.94em;color:#888">' + (this.currentLanguage === 'pl' ? '(Brak aktywnych zadań)' : '(No active tasks)') + '</div>';
 				}
-			}        
+			}     
 			shopItem.innerHTML = `
 				<div class="shop-item-info">
 					<div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
