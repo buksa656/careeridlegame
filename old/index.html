@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>KorpoSzczur Idle</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="scorebar">
+  🏢 Biuro-punkty: <b id="top-total-points"></b>
+  &nbsp;| 🧠 Soft Skills: <b id="top-soft-skills"></b>
+</div>
+<div id="multipliersBar" class="multipliers-bar"></div>
+<div id="quote" class="quote"></div>
+<header id="topbar">
+  <div class="brand">KorpoSzczur 🐀</div>
+  <nav>
+    <button class="tab-btn" data-panel="kariera">Kariera</button>
+    <button class="tab-btn" data-panel="firma">Rzuć robotę</button>
+    <button class="tab-btn" data-panel="ustawienia">Ustawienia</button>
+  </nav>
+</header>
+<main id="app">
+  <section id="panel-kariera" class="panel"></section>
+  <section id="panel-firma" class="panel" style="display:none;"></section>
+  <section id="panel-ustawienia" class="panel" style="display:none;"></section>
+</main>
+<!-- Wykres postępu -->
+<div id="points-chart-wrapper"><canvas id="points-chart" width="380" height="70"></canvas></div>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
