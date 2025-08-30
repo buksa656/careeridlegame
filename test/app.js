@@ -630,13 +630,20 @@ class KorposzczurGame {
                             ascensions: 0, 
                             locked: true 
                         };
-                    } else {
-                        // Ensure locked state is set for all tasks
-                        if (mergedState.tasks[task.id].unlocked === false) {
-                            mergedState.tasks[task.id].locked = true;
-                        }
-                    }
-                });
+					} else {
+						if (mergedState.tasks[task.id].unlocked === true) {
+							mergedState.tasks[task.id].locked = false;
+						} else if (mergedState.tasks[task.id].unlocked === false) {
+							mergedState.tasks[task.id].locked = true;
+						}
+					}
+				});
+
+				mergedState.focus = (mergedState.focus || []).filter(id =>
+					mergedState.tasks[id] &&
+					mergedState.tasks[id].unlocked === true &&
+					mergedState.tasks[id].locked === false
+				);
                 
                 return mergedState;
             }
@@ -1430,6 +1437,11 @@ showRewardedAd(onComplete) {
         if (!this.gameState.focus.includes(taskId) && this.gameState.focus.length < this.getMaxFocusSlots()) {
             this.gameState.focus.push(taskId);
         }
+			this.gameState.focus = (this.gameState.focus || []).filter(id =>
+			this.gameState.tasks[id] &&
+			this.gameState.tasks[id].unlocked === true &&
+			this.gameState.tasks[id].locked === false
+		);
         return true;
     }
 
