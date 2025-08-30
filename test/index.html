@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pl" data-color-scheme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korposzczur - Corporate Idle Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8646013233970978"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-title-container">
+                    <img src="korposzczur-logo.png" alt="Logo Korposzczur" class="korpo-logo"/>
+                    <h1 class="game-title" data-translate="game_title">Korposzczur</h1>
+                </div>
+                <div class="currency-display">
+                    <div class="currency-item">
+                        <span class="currency-label" data-translate="biuro_punkty">Biuro-Punkty</span>
+                        <span class="currency-value" id="bp-display">0</span>
+                    </div>
+                    <div class="currency-item">
+                        <span class="currency-label" data-translate="soft_skills">Soft Skills</span>
+                        <span class="currency-value" id="ss-display">0</span>
+                    </div>
+                    <div class="energy-dropdown" id="energy-dropdown-container">
+                      <button id="energy-button">⚡ 100/100 ▼</button>
+                      <div id="energy-menu" class="energy-menu">
+                        <button class="energy-option" data-skill="coffeeBreak">☕ Coffee Break (25⚡)</button>
+                        <button class="energy-option" data-skill="focusMode">🎯 Focus Mode (40⚡)</button>
+                        <button class="energy-option" data-skill="overtime">⏰ Overtime (60⚡)</button>
+                        <button class="energy-option" id="watch-ad-option">📺 Watch Ad (+20⚡)</button>
+                      </div>
+                    </div>
+                </div>
+                <div class="header-buttons">
+                    <button class="btn btn--outline help-btn" id="help-toggle" data-translate="help">❓</button>
+                    <button class="btn btn--outline settings-btn" id="settings-toggle">⚙️</button>
+                </div>
+            </div>
+            
+            <!-- Corporate Quote Marquee -->
+            <div class="quote-marquee">
+                <div class="quote-text" id="quote-text">Zrobimy szybki catch-up po daily standup-ie</div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="career" data-translate="tab_career">Kariera</button>
+                <button class="tab-btn disabled" data-tab="desk" data-translate="tab_desk">Biurko</button>
+                <button class="tab-btn" data-tab="achievements" data-translate="tab_achievements">Achievementy</button>
+                <button class="tab-btn disabled" data-tab="challenges" data-translate="tab_challenges">Wyzwania</button>
+            </div>
+        </nav>
+
+        <!-- Main Game Area -->
+        <main class="main-content">
+            <!-- Career Tab -->
+            <section class="tab-content active" id="career-tab">
+                <div class="career-layout">
+                    <!-- Multi-buy Controls -->
+                    <div class="multibuy-controls hidden" id="multibuy-controls">
+                        <span class="multibuy-label" data-translate="multibuy">Multi-buy:</span>
+                        <div class="multibuy-buttons">
+                            <button class="btn btn--sm multibuy-btn active" data-amount="1">1x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="2">2x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="5">5x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="10">10x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="20">20x</button>
+                            <button class="btn btn--sm multibuy-btn" data-amount="50">50x</button>
+                            <button class="btn btn--sm multibuy-btn hidden" data-amount="max" data-translate="buy_max">Max</button>
+                        </div>
+                        <div class="multibuy-overlay hidden" id="multibuy-overlay">
+                            <div class="overlay-content">
+                                <div class="overlay-text">Kup ile?</div>
+                                <div class="overlay-buttons" id="overlay-buttons"></div>
+                                <button class="btn btn--sm btn--secondary" id="overlay-cancel">Anuluj</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto-buyer Controls -->
+                    <div class="autobuyer-controls hidden" id="autobuyer-controls">
+                        <div class="autobuyer-toggle">
+                            <label class="form-label" data-translate="auto_buyer">Auto-Kupowanie</label>
+                            <input type="checkbox" id="autobuyer-checkbox" class="toggle-switch">
+                        </div>
+                    </div>
+
+                    <!-- Tasks Panel -->
+                    <div class="tasks-section">
+                        <h2>Zadania</h2>
+                        <div class="unlock-progress">
+                            <div class="progress-label" data-translate="next_unlock">Next Unlock</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="unlock-progress"></div>
+                            </div>
+                        </div>
+                        <div class="tasks-container" id="tasks-container">
+                            <!-- Tasks will be dynamically generated -->
+                        </div>
+                    </div>
+
+                    <!-- Prestige Section -->
+                    <div class="prestige-section">
+                        <button class="btn btn--primary btn--full-width" id="prestige-btn" data-translate="prestige" disabled>Prestiż</button>
+                        <p class="prestige-info" id="prestige-info">Requires 50,000 BP</p>
+                        <div class="prestige-break-info hidden" id="prestige-break-info">
+                            <div class="prestige-break-label" data-translate="prestige_break">Prestige Break!</div>
+                            <div class="prestige-break-desc">Multiple Soft Skills at once</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desk Tab -->
+            <section class="tab-content" id="desk-tab">
+                <div class="desk-layout">
+                    <!-- Desk Visualization -->
+                    <div class="desk-container">
+                        <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
+                            <!-- Desk Base -->
+                            <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
+                            
+                            <!-- Hotspots for desk items -->
+                            <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
+                            <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
+                            <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
+                            <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
+                            <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
+                            <circle cx="350" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges"/>
+                            <circle cx="350" cy="180" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
+                            <rect x="250" y="120" width="20" height="35" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="phone" rx="3"/>
+                            <rect x="140" y="105" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="organizer" rx="2"/>
+                            <circle cx="195" cy="105" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="lamp"/>
+                            <circle cx="280" cy="230" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="multitool"/>
+                            <rect x="235" y="200" width="20" height="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="trophy" rx="2"/>
+                            <!-- Items will be added dynamically -->
+                            <g id="desk-items"></g>
+                        </svg>
+                    </div>
+                    
+                    <!-- Desk Shop -->
+                    <div class="desk-shop" id="desk-shop">
+                        <h3>Biuro Upgrade</h3>
+                        <div class="shop-items" id="shop-items">
+                            <!-- Shop items will be generated -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Tab -->
+            <section class="tab-content" id="achievements-tab">
+                <div class="achievements-layout">
+                    <h2 data-translate="tab_achievements">Achievementy</h2>
+                    <div class="achievements-list" id="achievements-list">
+                        <!-- Achievements will be generated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Challenges Tab -->
+            <section class="tab-content" id="challenges-tab">
+                <div class="challenges-layout">
+                    <h2 data-translate="tab_challenges">Wyzwania</h2>
+                    <div class="challenges-list" id="challenges-list">
+                        <!-- Challenges will be generated -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal hidden" id="settings-modal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <h3 data-translate="settings">Ustawienia</h3>
+                <div class="settings-options">
+                    <div class="setting-group">
+                        <label class="form-label">Language / Język</label>
+                        <select class="form-control" id="language-select">
+                            <option value="pl">Polski</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label class="form-label">Theme / Motyw</label>
+                        <select class="form-control" id="theme-select">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label class="form-label" data-translate="number_format">Format liczb / Number format</label>
+                        <select class="form-control" id="number-format-select">
+                            <option value="auto">K/M/B/T</option>
+                            <option value="scientific">Naukowa (1.23e+9)</option>
+                            <option value="engineering">Inżynieryjna (1.23E6, 4.5E6)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn--secondary" id="settings-close">Close</button>
+                    <button class="btn btn--outline" id="reset-save">Reset Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+<div id="help-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content help-modal-content">
+        <div class="modal-header">
+            <h2 data-translate="help">Pomoc</h2>
+            <button id="help-close" class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+            <div data-translate="help_content">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
