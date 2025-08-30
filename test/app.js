@@ -1904,33 +1904,67 @@ createTaskCard(taskData, taskState) {
             const bonusDesc = bonusDescKey 
                 ? (this.translations[this.currentLanguage][bonusDescKey] || '')
                 : '';
-            
-            shopItem.innerHTML = `
-                <div class="shop-item-info">
-                    <div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
-                    <div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
-                        ${bonusDesc}
-                    </div>
-                    <div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
-                </div>
-                <button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}" 
-                        data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
-                    ${owned ? '✓' : this.translations[this.currentLanguage].buy}
-                </button>
-            `;
 
-            const buyBtn = shopItem.querySelector('button');
-            if (buyBtn && !buyBtn.disabled) {
-                buyBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.buyDeskItem(item.id);
-                });
-            }
+			let boostSelectHTML = '';
+			if (item.id === 'mug' && owned) {
+				// Tylko zadania aktywne i odblokowane
+				const focusedTasks = this.gameState.focus.filter(id => this.gameState.tasks[id] && this.gameState.tasks[id].unlocked);
+				if (focusedTasks.length > 0) {
+					boostSelectHTML += `
+					<div style="margin-top:8px">
+					  <label style="font-size:0.96em">${this.currentLanguage === 'pl' ? 'Wybierz zadanie z bonusem:' : 'Select boosted task:'}</label>
+					  <select id="boost-task-select" style="margin-left:8px">
+						${focusedTasks.map(id => `
+						  <option value="${id}" ${this.gameState.singleBoostTaskId === id ? 'selected' : ''}>
+							${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === id).nameKey]}
+						  </option>
+						`).join('')}
+					  </select>
+					</div>
+					`;
+				} else {
+					boostSelectHTML = '<div style="margin-top:6px;font-size:0.94em;color:#888">' + (this.currentLanguage === 'pl' ? '(Brak aktywnych zadań)' : '(No active tasks)') + '</div>';
+				}
+			}        
+			shopItem.innerHTML = `
+				<div class="shop-item-info">
+					<div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
+					<div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
+						${bonusDesc}
+					</div>
+					${boostSelectHTML}
+					<div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
+				</div>
+				<button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}"
+						data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
+					${owned ? '✓' : this.translations[this.currentLanguage].buy}
+				</button>
+			`;
+			// Obsługa wyboru boosta (tylko jeśli już kupiony kubek)
+			if(item.id === 'mug' && owned){
+				setTimeout(() => { // Odrocz aby był wczytany do DOM
+					const select = shopItem.querySelector('#boost-task-select');
+					if(select){
+					  select.addEventListener('change', (e) => {
+						this.gameState.singleBoostTaskId = e.target.value;
+						this.saveGameState(); // Persist
+						this.renderAll(); // Odśwież wyświetlanie bonusów/statów
+					  });
+					}
+				}, 0);
+			}
+			const buyBtn = shopItem.querySelector('button');
+			if (buyBtn && !buyBtn.disabled) {
+				buyBtn.addEventListener('click', (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					this.buyDeskItem(item.id);
+				});
+			}
 
-            container.appendChild(shopItem);
-        });
-    }
+			container.appendChild(shopItem);
+		});
+	}
 
 renderDesk() {
     const svgNS = 'http://www.w3.org/2000/svg';
