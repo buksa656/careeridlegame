@@ -828,7 +828,6 @@ class KorposzczurGame {
 				// fallback, żeby nie wysypało gry przy braku migracji
 				this.gameData.tempoBuffs = [];
 			}
-        };
     }
 
 setupEventListeners() {
