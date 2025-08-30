@@ -1129,8 +1129,10 @@ activateTempoBuff(buffId) {
                 btn.className = `btn btn--sm ${canAfford ? 'btn--primary' : 'btn--secondary disabled'}`;
                 
                 // Update cost display in real-time
-                const costText = btn.textContent.match(/\(([^)]+)\)$/);
-                const newText = `${this.translations[this.currentLanguage].upgrade} ${amount > 1 ? '(' + amount + 'x)' : ''} (${this.formatNumber(cost)})`;
+				const upgradeText = this.translations[this.currentLanguage].upgrade;
+				const amountText = amount > 1 ? `(${amount}x)` : '';
+				const costDisplayText = `(${this.formatNumber(cost)})`;
+				const newText = `${upgradeText} ${amountText} ${costDisplayText}`;
                 if (btn.textContent !== newText) {
                     btn.textContent = newText;
                 }
