@@ -338,7 +338,15 @@ class KorposzczurGame {
                     "ach_first_desk_item_desc": "Kup pierwszy przedmiot na biurko",
                     "ach_office_decorator": "Dekorator biura",
                     "ach_office_decorator_desc": "Kup 3 przedmioty na biurko",
-                    "ach_office_complete": "Kompletne biuro",
+                    "tempo_ff": "Przyspieszenie cykli",
+					"tempo_ff_desc": "Przyspiesz wszystkie taski o 25% na 120 sekund.",
+					"tempo_discount": "Flash Zniżka",
+					"tempo_discount_desc": "Obniż koszt ulepszeń o 15% przez 60 sekund.",
+					"tempo_focus": "Focus Snap",
+					"tempo_focus_desc": "Darmowe przełączenia focusów i +1 slot na 90 sekund.",
+					"tempo_cashout": "Cashout Pulse",
+					"tempo_cashout_desc": "Natychmiastowo ukończ wszystkie trwające cykle zadań.",
+					"ach_office_complete": "Kompletne biuro",
                     "ach_office_complete_desc": "Kup wszystkie 6 przedmiotów",
                     "ach_prestige_veteran": "Weteran prestiżu",
                     "ach_prestige_veteran_desc": "Wykonaj 5 prestiży",
@@ -348,6 +356,13 @@ class KorposzczurGame {
                     "ach_challenge_master_desc": "Ukończ 5 wyzwań",
                     "ach_future_update": "Przyszłe aktualizacje",
                     "ach_future_update_desc": "Czekaj na więcej zawartości",
+					"tempoTokenGained": "Zdobyto Tempo Token!",
+					"notEnoughTempo": "Brak Tempo Tokenów!",
+					"tempoEventEfficiency": "Efektywne zarządzanie!",
+					"tempoEventFocus": "Mistrz koncentracji!",
+					"tempoEventAscend": "Optymalny awans!",
+					"tempoEventAchievement": "Kamień milowy!",
+					"tempoEventRapid": "Szybka optymalizacja!",
                     "help_content": "<h2>Pomoc - Poradnik do Korposzczura</h2>\n<h3>[Cel Gry]</h3>\n<p>Rozwijaj karierę, zdobywaj <strong>Biuro-Punkty (BP)</strong> i odblokowuj zadania. Wydawaj <strong>Soft Skills</strong> na ulepszenia.</p>\n<h3>[Sterowanie]</h3>\n<ul>\n<li>Klikaj przyciski, aby odblokować, ulepszyć i awansować zadania.</li>\n<li>Wybierz <em>aktywne zadania</em> (Focus), które generują BP.</li>\n</ul>\n<h3>[Energia]</h3>\n<ul>\n<li>Regeneruje się automatycznie: 1 energia co 10 min (max 100).</li>\n<li>Specjalne umiejętności za energię: \nCoffee Break (25 energii): Podwaja (<strong>x2</strong>) produkcję Biuro-Punktów (BP) ze wszystkich zadań przez <strong>15 minut</strong>, \nFocus Mode (40 energii):+50% (<strong>x1.5</strong>) do produkcji BP ze wszystkich zadań przez <strong>20 minut</strong>, \nOvertime (60 energii):+1 dodatkowy slot Focus (możesz mieć więcej aktywnych zadań) przez <strong>30 minut</strong>\n</li>\n<li>Oglądaj reklamy, aby odzyskać energię (max 5 dziennie, min 10 min między reklamami).</li>\n<li>Energia nie resetuje się przy prestiżu — motywuje do oglądania reklam.</li>\n</ul>\n<h3>[Focus]</h3>\n<ul>\n<li>Tylko zadania aktywne w Focus generują BP.</li>\n<li>Startujesz z 4 slotami, które można zwiększyć (np. Organizer, Trofeum).</li>\n<li>Zmiana Focus może mieć koszt, zależnie od ustawień.</li>\n</ul>\n<h3>[Zadania]</h3>\n<ul>\n<li>Odkrywaj nowe zadania, ulepszaj i awansuj, by maksymalizować produkcję BP.</li>\n<li>Bonusy ze stopni, awansów, dóbr na biurku i umiejętności zwiększają efektywność.</li>\n</ul>\n<h3>[Soft Skills]</h3>\n<ul>\n<li>Zdobądź Soft Skills prestiżując i wykonując wyzwania.</li>\n<li>Wydawaj je, aby kupować przedmioty na biurko z bonusami.</li>\n<li>Przedmioty zwiększają produkcję BP oraz dają dodatkowe sloty Focus.</li>\n</ul>\n<h3>[Prestiż]</h3>\n<ul>\n<li>Reset postępu, zachowuje osiągnięcia i przedmioty.</li>\n<li>Wynagradza Soft Skills, które mają trwały wpływ.</li>\n<li>Daje dostęp do zaawansowanych funkcji i wyzwań.</li>\n</ul>\n<h3>[Wskazówki]</h3>\n<ul>\n<li>Stawiaj w Focus zadania z najlepszym BP.</li>\n<li>Ulepszaj głównie aktywne zadania.</li>\n<li>Rozszerzaj sloty Focus za pomocą biurka i umiejętności.</li>\n<li>Dostosuj grę pod siebie w ustawieniach.</li>\n</ul>\n<p>Miłej gry! 🍀</p>"
               },
                 "en": {
@@ -406,7 +421,15 @@ class KorposzczurGame {
                     "tab_career": "Career",
                     "tab_desk": "Desk",
                     "tab_achievements": "Achievements",
-                    "tab_challenges": "Challenges",
+                    "tempo_ff": "Cycle Fast Forward",
+					"tempo_ff_desc": "Speed up all tasks by 25% for 120 seconds.",
+					"tempo_discount": "Flash Discount",
+					"tempo_discount_desc": "Reduce upgrade costs by 15% for 60 seconds.",
+					"tempo_focus": "Focus Snap",
+					"tempo_focus_desc": "Free focus switches & +1 slot for 90 seconds.",
+					"tempo_cashout": "Cashout Pulse",
+					"tempo_cashout_desc": "Instantly finish progress on all active cycles.",
+					"tab_challenges": "Challenges",
                     "help": "Help",
                     "biuro_punkty": "Office Points",
                     "soft_skills": "Soft Skills",
@@ -518,6 +541,13 @@ class KorposzczurGame {
                     "ach_future_update": "Future updates",
                     "ach_future_update_desc": "Wait for more content",
                     "bonusDesc_career_stats": "Unlocks career stats (ascensions, rankings)",
+					"tempoTokenGained": "Tempo Token gained!",
+					"notEnoughTempo": "Not enough Tempo Tokens!",
+					"tempoEventEfficiency": "Efficient management!",
+					"tempoEventFocus": "Focus master!",
+					"tempoEventAscend": "Optimal promotion!",
+					"tempoEventAchievement": "Milestone reached!",
+					"tempoEventRapid": "Rapid optimization!",
                     "help_content": "<h2>Help - Corporate Rat</h2>\n\n<h3>Game Goal</h3>\n<p>Develop your career, earn <strong>Office Points (BP)</strong> and unlock tasks. Spend <strong>Soft Skills</strong> on upgrades.</p>\n\n<h3>Controls</h3>\n<ul>\n<li>Click buttons to unlock, upgrade, and ascend tasks.</li>\n<li>Select <em>active</em> tasks to generate BP (Focus).</li>\n</ul>\n\n<h3>Energy</h3>\n<ul>\n<li>Regenerates automatically at 1 energy every 10 minutes (max 100).</li>\n<li>Special skills cost energy: Coffee Break (25), Focus Mode (40), Overtime (60).</li>\n<li>Watch ads to recover energy (max 5 ads/day, 10 min cooldown).</li>\n<li>Energy does not reset on prestige – incentivizing ad watching.</li>\n</ul>\n\n<h3>Focus</h3>\n<ul>\n<li>Only active tasks in Focus generate BP.</li>\n<li>Start with 4 focus slots, expanded by desk items.</li>\n<li>Switching Focus may cost BP, depending on settings.</li>\n</ul>\n\n<h3>Tasks</h3>\n<ul>\n<li>Unlock new tasks and upgrade/ascend them to increase BP production.</li>\n<li>Bonuses from levels, ascensions, desk items, and skills boost efficiency.</li>\n</ul>\n\n<h3>Soft Skills</h3>\n<ul>\n<li>Earn Soft Skills through prestiges and challenges.</li>\n<li>Spend Soft Skills on desk items that grant bonuses and extra focus slots.</li>\n<li>Desk items significantly boost BP production.</li>\n</ul>\n\n<h3>Prestige</h3>\n<ul>\n<li>Resets most progress, but retains achievements and desk items.</li>\n<li>Grants Soft Skills that provide permanent bonuses.</li>\n<li>Unlocks advanced features and challenges.</li>\n</ul>\n\n<h3>Tips</h3>\n<ul>\n<li>Focus on maximizing BP by prioritizing active tasks.</li>\n<li>Upgrade mainly your active tasks.</li>\n<li>Expand your Focus slots via desk items and skills.</li>\n<li>Use the settings to tailor the game to your preferences.</li>\n</ul>\n\n<p>Enjoy the game! 🍀</p>"
                }
             },
@@ -549,6 +579,44 @@ class KorposzczurGame {
                 "The most popular excuse for being late? \"Client meeting.\""
               ]
             },
+			"tempoBuffs": [
+			  {
+				id: "micro_ff",
+				nameKey: "tempo_ff",
+				effect: "speed",
+				value: 1.25,
+				duration: 120,
+				diminishing: 0.8,
+				descKey: "tempo_ff_desc"
+			  },
+			  {
+				id: "flash_discount",
+				nameKey: "tempo_discount",
+				effect: "upgrade_discount",
+				value: 0.85,
+				duration: 60,
+				diminishing: 0.8,
+				descKey: "tempo_discount_desc"
+			  },
+			  {
+				id: "focus_snap",
+				nameKey: "tempo_focus",
+				effect: "focus_slot",
+				value: 1,
+				duration: 90,
+				diminishing: 0.8,
+				descKey: "tempo_focus_desc"
+			  },
+			  {
+				id: "cashout",
+				nameKey: "tempo_cashout",
+				effect: "instant_progress",
+				value: 1,
+				duration: 0,
+				diminishing: 1,
+				descKey: "tempo_cashout_desc"
+			  }
+			],
             "rankKeys": [
               "rank_intern",
               "rank_assistant",
@@ -610,48 +678,69 @@ class KorposzczurGame {
                 deskUnlocked: false,
                 challengesUnlocked: false,
                 prestigeBreakUnlocked: false
-            }
+            },
+			tempo: {
+			tokens: 0,
+			activeBuffs: [],
+			lastGrants: [],
+			eventTracking: {
+				recentUpgrades: [], // {taskId, timestamp, amount}
+				fullFocusTime: 0,   // ile czasu focus był pełny
+				lastFullFocusCheck: Date.now()
+			}
+			},
         };
-
-        try {
-            const saved = localStorage.getItem('korposzczur-save');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // Ensure all tasks are properly initialized with locked state
-                const mergedState = { ...defaultState, ...parsed };
-                
-                // Initialize missing tasks with locked state
-                this.gameData.tasks.forEach(task => {
-                    if (!mergedState.tasks[task.id]) {
-                        mergedState.tasks[task.id] = { 
-                            level: 1, 
-                            progress: 0, 
-                            unlocked: false, 
-                            ascensions: 0, 
-                            locked: true 
-                        };
+		// Po załadowaniu stanu, upewnij się że eventTracking istnieje
+			if (!mergedState.tempo.eventTracking) {
+				mergedState.tempo.eventTracking = {
+					recentUpgrades: [],
+					fullFocusTime: 0,
+					lastFullFocusCheck: Date.now()
+				};
+			}
+		try {
+			const saved = localStorage.getItem('korposzczur-save');
+			if (saved) {
+				const parsed = JSON.parse(saved);
+				const mergedState = { ...defaultState, ...parsed };
+				
+				// Po załadowaniu stanu, upewnij się że eventTracking istnieje
+				if (!mergedState.tempo) {
+					mergedState.tempo = { tokens: 0, activeBuffs: [], lastGrants: [] };
+				}
+				if (!mergedState.tempo.eventTracking) {
+					mergedState.tempo.eventTracking = {
+						recentUpgrades: [],
+						fullFocusTime: 0,
+						lastFullFocusCheck: Date.now()
+					};
+				}
+				
+				// Initialize missing tasks with locked state
+				this.gameData.tasks.forEach(task => {
+					if (!mergedState.tasks[task.id]) {
+						mergedState.tasks[task.id] = { 
+							level: 1, 
+							progress: 0, 
+							unlocked: false, 
+							ascensions: 0, 
+							locked: true 
+						};
 					} else {
-						if (mergedState.tasks[task.id].unlocked === true) {
-							mergedState.tasks[task.id].locked = false;
-						} else if (mergedState.tasks[task.id].unlocked === false) {
+						// Ensure locked state is set for all tasks
+						if (mergedState.tasks[task.id].unlocked === false) {
 							mergedState.tasks[task.id].locked = true;
 						}
 					}
 				});
+				
+				return mergedState;
+			}
+		} catch (e) {
+			console.error('Failed to load save:', e);
+		}
 
-				mergedState.focus = (mergedState.focus || []).filter(id =>
-					mergedState.tasks[id] &&
-					mergedState.tasks[id].unlocked === true &&
-					mergedState.tasks[id].locked === false
-				);
-                
-                return mergedState;
-            }
-        } catch (e) {
-            console.error('Failed to load save:', e);
-        }
-
-        return defaultState;
+		return defaultState;
     }
 
     saveGameState() {
@@ -696,7 +785,13 @@ class KorposzczurGame {
         this.startFastUIUpdates(); // Critical: Start 50ms UI update loop
         this.startQuoteRotation();
         this.checkFeatureUnlocks();
-
+		// Sprawdź czy elementy Tempo istnieją w DOM
+		const tempoElements = ['btn-ff', 'btn-disc', 'btn-focus', 'btn-cash', 'tempo-token-display'];
+		tempoElements.forEach(id => {
+			if (!document.getElementById(id)) {
+				console.warn(`Missing Tempo element: ${id}`);
+			}
+		});
         // Set up real-time BP change listener
         this.addEventListener('bpChange', () => {
             this.updateTaskButtonStates();
@@ -724,6 +819,15 @@ class KorposzczurGame {
                 localStorage.removeItem('korposzczur-save');
                 location.reload();
             }
+			};
+			// Inicjalizacja tempo
+			if (!this.gameState.tempo) {
+				this.gameState.tempo = { tokens: 0, activeBuffs: [], lastGrants: [] };
+			}
+			if (!this.gameData.tempoBuffs) {
+				// fallback, żeby nie wysypało gry przy braku migracji
+				this.gameData.tempoBuffs = [];
+			}
         };
     }
 
@@ -832,7 +936,55 @@ setupEventListeners() {
             this.updateTaskButtonStates();
         });
     });
-
+	// Grantowanie Tempo Tokena
+	grantTempoToken(reason = "test") {
+		this.gameState.tempo.tokens = (this.gameState.tempo.tokens || 0) + 1;
+		this.gameState.tempo.lastGrants.push({ type: reason, ts: Date.now() });
+		
+		// Spersonalizowane komunikaty
+		const messages = {
+			'efficient_upgrades': this.translations[this.currentLanguage]?.tempoEventEfficiency,
+			'focus_activity': this.translations[this.currentLanguage]?.tempoEventFocus,
+			'optimal_ascend': this.translations[this.currentLanguage]?.tempoEventAscend,
+			'achievement_milestone': this.translations[this.currentLanguage]?.tempoEventAchievement,
+			'rapid_optimization': this.translations[this.currentLanguage]?.tempoEventRapid
+		};
+		
+		const message = messages[reason] || this.translations[this.currentLanguage]?.tempoTokenGained || "Tempo Token gained!";
+		this.showNotification(message);
+		this.updateDisplay && this.updateDisplay();
+	}
+	
+activateTempoBuff(buffId) {
+    const buff = this.gameData.tempoBuffs.find(b => b.id === buffId);
+    if (!buff || this.gameState.tempo.tokens <= 0) {
+        this.showNotification(this.translations[this.currentLanguage]?.notEnoughTempo || "Brak Tempo Tokenów!");
+        return;
+    }
+    
+    // Specjalna obsługa dla Cashout (natychmiastowy efekt)
+    if (buffId === 'cashout') {
+        this.gameState.tempo.tokens--;
+        this.executeCashoutPulse();
+        this.updateDisplay();
+        return;
+    }
+    
+    // Standardowe buffy czasowe
+    this.gameState.tempo.tokens--;
+    const expiresAt = Date.now() + buff.duration * 1000;
+    this.gameState.tempo.activeBuffs.push({
+        id: buff.id, 
+        type: buff.effect, 
+        expiresAt, 
+        params: buff
+    });
+    
+    this.showNotification(this.translations[this.currentLanguage][buff.nameKey]);
+    this.updateDisplay();
+}
+	
+	
     // Auto-buyer toggle
     const autoBuyerCheckbox = document.getElementById('autobuyer-checkbox');
     autoBuyerCheckbox.addEventListener('change', (e) => {
@@ -879,8 +1031,14 @@ setupEventListeners() {
             location.reload();
         }
     });
-
-    // Prestige button
+	
+	// obsluga przyciskow buffow
+	document.getElementById('btn-ff').addEventListener('click', () => this.activateTempoBuff("micro_ff"));
+	document.getElementById('btn-disc').addEventListener('click', () => this.activateTempoBuff("flash_discount"));
+	document.getElementById('btn-focus').addEventListener('click', () => this.activateTempoBuff("focus_snap"));
+	document.getElementById('btn-cash').addEventListener('click', () => this.activateTempoBuff("cashout"));
+    
+	// Prestige button
     document.getElementById('prestige-btn').addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -908,6 +1066,33 @@ setupEventListeners() {
             this.currentTab = tabName;
         }
     }
+
+	executeCashoutPulse() {
+		let totalBPGained = 0;
+		
+		Object.keys(this.gameState.tasks).forEach(taskId => {
+			const taskState = this.gameState.tasks[taskId];
+			if (!taskState?.unlocked || !this.gameState.focus.includes(taskId)) return;
+			
+			const taskData = this.gameData.tasks.find(t => t.id === taskId);
+			if (!taskData || taskState.progress <= 0) return;
+			
+			// Instant zakończ obecny cykl
+			const idleRate = this.calculateTaskIdleRate(taskId);
+			totalBPGained += idleRate * taskState.progress; // Pro-rata za obecny postęp
+			taskState.progress = 0; // Reset cyklu
+		});
+		
+		if (totalBPGained > 0) {
+			this.updateBP(this.gameState.bp + totalBPGained);
+			this.gameState.totalBPEarned += totalBPGained;
+			this.showNotification(
+				`Cashout! +${this.formatNumber(totalBPGained)} BP`
+			);
+			this.updateDisplay();
+		}
+	}
+
 
     // Critical: Fast UI update loop at 50ms (20 FPS)
     startFastUIUpdates() {
@@ -1162,10 +1347,58 @@ updateLanguage() {
         rotateQuote(); // Initial quote
         this.quoteInterval = setInterval(rotateQuote, 15000); // Change every 15 seconds
     }
+	updateActiveBuffs() {
+		const now = Date.now();
+		const expiredCount = this.gameState.tempo.activeBuffs.length;
+		this.gameState.tempo.activeBuffs = this.gameState.tempo.activeBuffs.filter(buff => now < buff.expiresAt);
+		
+		// Powiadom o wygaśnięciu buffów
+		if (this.gameState.tempo.activeBuffs.length < expiredCount) {
+			this.updateDisplay();
+		}
+	}
+	trackFullFocusActivity() {
+    const now = Date.now();
+    const maxSlots = this.getMaxFocusSlots();
+    const currentSlots = this.gameState.focus.length;
+    const isFullFocus = currentSlots >= maxSlots && currentSlots >= 4; // min 4 sloty
+    
+    const timeSinceLastCheck = now - this.gameState.tempo.eventTracking.lastFullFocusCheck;
+    this.gameState.tempo.eventTracking.lastFullFocusCheck = now;
+    
+    if (isFullFocus) {
+        this.gameState.tempo.eventTracking.fullFocusTime += timeSinceLastCheck;
+        
+        // Sprawdź czy osiągnął 5 minut (300s)
+        if (this.gameState.tempo.eventTracking.fullFocusTime >= 5 * 60 * 1000) {
+            this.checkFocusActivityGrant();
+        }
+    } else {
+        // Reset jeśli focus nie jest pełny
+        this.gameState.tempo.eventTracking.fullFocusTime = 0;
+    }
+	}
+
+	checkFocusActivityGrant() {
+		const now = Date.now();
+		
+		// Sprawdź czy nie za często (max 1 token na 15 min)
+		const recentGrants = this.gameState.tempo.lastGrants.filter(
+			grant => grant.type === 'focus_activity' && now - grant.ts < 15 * 60 * 1000
+		);
+		
+		if (recentGrants.length === 0) {
+			this.grantTempoToken('focus_activity');
+			this.gameState.tempo.eventTracking.fullFocusTime = 0; // Reset
+		}
+	}
 
     gameLoop() {
-        this.updateEnergy();
-        const now = Date.now();
+		this.updateActiveBuffs();
+		this.updateEnergy();
+		this.trackFullFocusActivity();
+		
+		const now = Date.now();
         const deltaTime = now - this.lastUpdate;
         this.lastUpdate = now;
 
@@ -1284,70 +1517,74 @@ showRewardedAd(onComplete) {
         setTimeout(onComplete, 3000); // Symuluje ad duration
     }
 }      
-    calculateTaskIdleRate(taskId) {
-        const taskData = this.gameData.tasks.find(t => t.id === taskId);
-        const taskState = this.gameState.tasks[taskId];
-        
-        let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier, taskState.level - 1);
-        
-        // Apply ascension multiplier
-        rate *= Math.pow(2, taskState.ascensions);
-        
-        // Apply global multipliers
-        rate *= this.getGlobalMultiplier();
-        const segment = Math.floor((taskState.level - 1) / 10);
-        if (segment > 0) {
-            rate *= Math.pow(1.05, segment);
-        }
-        const isActive = this.gameState.focus.includes(taskId);
-        
-        // all_active_boost
-        if (isActive) {
-            Object.keys(this.gameState.deskItems).forEach(id => {
-                if (!this.gameState.deskItems[id]) return;
-                const item = this.gameData.deskItems.find(d => d.id === id);
-                if (item && item.bonus.type === 'all_active_boost') {
-                    rate *= item.bonus.value;
-                }
-            });
-        }
-        
-        // single_task_boost
-        if (isActive && this.gameState.singleBoostTaskId === taskId) {
-            const item = this.gameData.deskItems.find(d => d.id === 'mug'); // lub znajdź po typie
-            if (item && this.gameState.deskItems['mug']) {
+calculateTaskIdleRate(taskId) {
+    const taskData = this.gameData.tasks.find(t => t.id === taskId);
+    const taskState = this.gameState.tasks[taskId];
+    
+    let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier, taskState.level - 1);
+    
+    // Apply ascension multiplier
+    rate *= Math.pow(2, taskState.ascensions);
+    
+    // Apply global multipliers
+    rate *= this.getGlobalMultiplier();
+    const segment = Math.floor((taskState.level - 1) / 10);
+    if (segment > 0) {
+        rate *= Math.pow(1.05, segment);
+    }
+    const isActive = this.gameState.focus.includes(taskId);
+
+    // all_active_boost - np. telefon, działa na wszystkie aktywne
+    if (isActive) {
+        Object.keys(this.gameState.deskItems).forEach(id => {
+            if (!this.gameState.deskItems[id]) return;
+            const item = this.gameData.deskItems.find(d => d.id === id);
+            if (item && item.bonus.type === 'all_active_boost') {
                 rate *= item.bonus.value;
             }
-        }
-        
-        // night_boost (np. 22:00–6:00)
-        const hour = new Date().getHours();
-        if (hour >= 22 || hour < 6) {
-            Object.keys(this.gameState.deskItems).forEach(id => {
-                if (!this.gameState.deskItems[id]) return;
-                const item = this.gameData.deskItems.find(d => d.id === id);
-                if (item && item.bonus.type === 'night_boost') {
-                    rate *= item.bonus.value;
-                }
-            });
-        }
-        // SOFTCAP — dwustopniowy
-        // 1. powyżej 20k BP/s progres rośnie tylko do potęgi 0.7
-        // 2. powyżej 1M rośnie jeszcze wolniej, do potęgi 0.5
-        rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
-        const now = Date.now();
+        });
+    }
+
+    // ---- KUBEK: +10% tylko do pierwszego aktywnego w focus ----
+    if (
+        this.gameState.deskItems['mug'] &&
+        this.gameState.focus.length > 0 &&
+        this.gameState.focus[0] === taskId
+    ) {
+        const item = this.gameData.deskItems.find(d => d.id === 'mug');
+        if (item) rate *= item.bonus.value;
+    }
     
-        // Coffee Break: 2x mnożnik przez 15 min
-        if (this.gameState.activeSkills.coffeeBreak && now < this.gameState.activeSkills.coffeeBreak) {
-            rate *= 2;
-        }
-        
-        // Focus Mode: +50% przez 20 min
-        if (this.gameState.activeSkills.focusMode && now < this.gameState.activeSkills.focusMode) {
+    // night_boost (np. lampka biurowa 22:00-6:00)
+    const hour = new Date().getHours();
+    if (hour >= 22 || hour < 6) {
+        Object.keys(this.gameState.deskItems).forEach(id => {
+            if (!this.gameState.deskItems[id]) return;
+            const item = this.gameData.deskItems.find(d => d.id === id);
+            if (item && item.bonus.type === 'night_boost') {
+                rate *= item.bonus.value;
+            }
+        });
+    }
+
+    // SOFTCAP — dwustopniowy
+    rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
+	const now = Date.now();
+    // Coffee Break: 2x mnożnik przez 15 min
+    if (this.gameState.activeSkills.coffeeBreak && now < this.gameState.activeSkills.coffeeBreak) {
+        rate *= 2;
+    }
+    // Focus Mode: +50% przez 20 min
+    if (this.gameState.activeSkills.focusMode && now < this.gameState.activeSkills.focusMode) {
         rate *= 1.5;
     }
-        return rate;
-    }
+	// TEMPO BUFF: Micro Fast Forward - przyspieszenie cykli o 25%
+	const microFFBuff = this.gameState.tempo.activeBuffs.find(b => b.type === 'speed' && now < b.expiresAt);
+	if (microFFBuff) {
+		rate *= microFFBuff.params.value; // 1.25
+	}
+    return rate;
+}
     getMaxFocusSlots() {
         let base = 4;
         
@@ -1360,13 +1597,16 @@ showRewardedAd(onComplete) {
                 }
             }
         });
-        
-        // DODAJ: Overtime skill
         const now = Date.now();
+        // DODAJ: Overtime skill
         if (this.gameState.activeSkills.overtime && now < this.gameState.activeSkills.overtime) {
             base += 1;
         }
-        
+        // TEMPO BUFF: Focus Snap - dodatkowy slot
+		const focusBuff = this.gameState.tempo.activeBuffs.find(b => b.type === 'focus_slot' && now < b.expiresAt);
+		if (focusBuff) {
+			base += focusBuff.params.value; // +1 slot
+		}
         return base;
     }
     getGlobalMultiplier() {
@@ -1437,11 +1677,6 @@ showRewardedAd(onComplete) {
         if (!this.gameState.focus.includes(taskId) && this.gameState.focus.length < this.getMaxFocusSlots()) {
             this.gameState.focus.push(taskId);
         }
-			this.gameState.focus = (this.gameState.focus || []).filter(id =>
-			this.gameState.tasks[id] &&
-			this.gameState.tasks[id].unlocked === true &&
-			this.gameState.tasks[id].locked === false
-		);
         return true;
     }
 
@@ -1507,6 +1742,8 @@ showRewardedAd(onComplete) {
 
             if (unlocked) {
                 this.gameState.achievements[achievement.id] = true;
+				// TEMPO EVENT: Grant za ważne achievementy
+				this.checkAchievementMilestone(achievement.id);
                 this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
                 this.renderAchievements();
                 this.checkFeatureUnlocks();
@@ -1514,7 +1751,17 @@ showRewardedAd(onComplete) {
             }
         });
     }
-
+	checkAchievementMilestone(achievementId) {
+		// Lista ważnych achievementów które grantują Tempo Token
+		const milestoneAchievements = [
+			'first_prestige', 'optimizer', 'idle_master', 'challenge_master',
+			'prestige_veteran', 'prestige_master', 'office_complete'
+		];
+		
+		if (milestoneAchievements.includes(achievementId)) {
+			this.grantTempoToken('achievement_milestone');
+		}
+	}
     calculateMultiBuyCost(taskId, amount) {
         const taskData = this.gameData.tasks.find(t => t.id === taskId);
         const taskState = this.gameState.tasks[taskId];
@@ -1547,7 +1794,12 @@ showRewardedAd(onComplete) {
                     }
                 }
             });
-            
+            // TEMPO BUFF: Flash Discount - tańsze upgrade'y
+			const now = Date.now();
+			const discountBuff = this.gameState.tempo.activeBuffs.find(b => b.type === 'upgrade_discount' && now < b.expiresAt);
+			if (discountBuff) {
+				cost *= discountBuff.params.value; // 0.85 (15% taniej)
+			}
             totalCost += cost;
             currentLevel++;
         }
@@ -1617,7 +1869,63 @@ showRewardedAd(onComplete) {
                 setTimeout(() => btn.classList.remove('btn-flash'), 300);
             }
         }
+		this.trackEffectiveUpgrade(taskId, amount);
     }
+
+	trackEffectiveUpgrade(taskId, amount) {
+		const now = Date.now();
+		
+		// Dodaj do trackingu
+		this.gameState.tempo.eventTracking.recentUpgrades.push({
+			taskId,
+			timestamp: now,
+			amount,
+			bpGain: this.calculateTaskIdleRate(taskId) * amount * 0.1 // przybliżony wzrost BP/s
+		});
+		
+		// Usuń stare wpisy (starsze niż 90 sekund)
+		this.gameState.tempo.eventTracking.recentUpgrades = 
+			this.gameState.tempo.eventTracking.recentUpgrades.filter(
+				up => now - up.timestamp < 90 * 1000
+			);
+		
+		// Sprawdź warunki grantowania
+		this.checkEfficiencyGrant();
+	}
+
+	checkEfficiencyGrant() {
+		const now = Date.now();
+		const recentUpgrades = this.gameState.tempo.eventTracking.recentUpgrades;
+		
+		// Warunek: min 5 upgrade'ów w 90s, które zwiększają łączny BP/s o min 20%
+		if (recentUpgrades.length >= 5) {
+			const totalBPGain = recentUpgrades.reduce((sum, up) => sum + up.bpGain, 0);
+			const currentTotalBP = this.getTotalBPPerSecond();
+			
+			if (totalBPGain >= currentTotalBP * 0.2) {
+				// Sprawdź czy nie za często (max 1 token na 10 min z tego eventu)
+				const recentGrants = this.gameState.tempo.lastGrants.filter(
+					grant => grant.type === 'efficient_upgrades' && now - grant.ts < 10 * 60 * 1000
+				);
+				
+				if (recentGrants.length === 0) {
+					this.grantTempoToken('efficient_upgrades');
+					// Wyczyść tracking aby zapobiec wielokrotnemu grantowaniu
+					this.gameState.tempo.eventTracking.recentUpgrades = [];
+				}
+			}
+		}
+	}
+
+	getTotalBPPerSecond() {
+		return Object.keys(this.gameState.tasks).reduce((sum, taskId) => {
+			const taskState = this.gameState.tasks[taskId];
+			if (taskState?.unlocked && this.gameState.focus.includes(taskId)) {
+				return sum + this.calculateTaskIdleRate(taskId);
+			}
+			return sum;
+		}, 0);
+	}
 
     calculateUpgradeCost(taskId) {
         return this.calculateMultiBuyCost(taskId, 1);
@@ -1628,17 +1936,43 @@ showRewardedAd(onComplete) {
         const maxAscends = this.gameData.rankKeys.length;
         if (taskState.level < 10) return;
         if (taskState.ascensions >= maxAscends) return;
-
+		// TEMPO EVENT: Sprawdź optymalizację przed awansem
+		const currentBPRate = this.calculateTaskIdleRate(taskId);
+		const upgradeCost = this.calculateUpgradeCost(taskId);
+		
+		// Wykonaj awans
         taskState.level = 1;
         taskState.ascensions++;
         taskState.progress = 0;
         this.gameState.stats.totalAscensions++;
+		
+		// TEMPO EVENT: Sprawdź po awansie
+		const newBPRate = this.calculateTaskIdleRate(taskId);
+		this.checkOptimalAscend(taskId, currentBPRate, newBPRate, upgradeCost);	
+		
         this.checkAchievements();
         this.renderTasks();
         this.updateTaskButtonStates();
         this.showNotification(`Task ascended: ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}`);
     }
-
+	checkOptimalAscend(taskId, oldRate, newRate, lastUpgradeCost) {
+		const improvement = newRate / oldRate;
+		const costEfficiency = newRate / lastUpgradeCost;
+		
+		// Warunek: awans zwiększył BP/s o min 80% i efficiency jest dobra
+		if (improvement >= 1.8 && costEfficiency > 0.001) {
+			const now = Date.now();
+			
+			// Limit: 1 token na 20 min z tego eventu
+			const recentGrants = this.gameState.tempo.lastGrants.filter(
+				grant => grant.type === 'optimal_ascend' && now - grant.ts < 20 * 60 * 1000
+			);
+			
+			if (recentGrants.length === 0) {
+				this.grantTempoToken('optimal_ascend');
+			}
+		}
+	}
 performPrestige() {
     // Ustal threshold zależnie od trybu prestige break
     const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
@@ -1770,6 +2104,8 @@ renderTasks() {
             const taskId = e.target.getAttribute('data-task-id');
 
             if (e.target.checked) {
+				// TEMPO EVENT: Track rapid switching
+				this.trackRapidFocusSwitch();
                 // limit slotów
                 if (this.gameState.focus.length >= this.getMaxFocusSlots()) {
                     this.showNotification(this.currentLanguage === 'pl'
@@ -1781,6 +2117,10 @@ renderTasks() {
 
                 // opcjonalny koszt przełączania (gdy flaga włączona)
                 if (this.gameState.settings?.focusSwitchCostEnabled) {
+					// TEMPO BUFF: Focus Snap - darmowe przełączenia
+					const now = Date.now();
+					const focusBuff = this.gameState.tempo.activeBuffs.find(b => b.type === 'focus_slot' && now < b.expiresAt);
+					if (!focusBuff) { // Tylko jeśli BRAK buffa, pobieraj koszt
                     let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005)); // 0.5% BP, min 1000
                     if (this.gameState.deskItems['multitool']) {
                         const mt = this.gameData.deskItems.find(d => d.id === 'multitool');
@@ -1813,13 +2153,44 @@ renderTasks() {
         container.appendChild(taskCard);
     });
 
-    // Ustaw domyślny singleBoostTaskId: pierwszy aktywny lub null (naprawa: nie przypisuj całej tablicy)
-    if (!this.gameState.singleBoostTaskId || !this.gameState.focus.includes(this.gameState.singleBoostTaskId)) {
-        this.gameState.singleBoostTaskId = this.gameState.focus.length ? this.gameState.focus[0] : null;
-    }
-
     this.updateTaskButtonStates();
 }
+
+trackRapidFocusSwitch() {
+    const now = Date.now();
+    
+    if (!this.gameState.tempo.eventTracking.lastFocusSwitch) {
+        this.gameState.tempo.eventTracking.lastFocusSwitch = now;
+        this.gameState.tempo.eventTracking.rapidSwitches = 0;
+        return;
+    }
+    
+    const timeSinceLastSwitch = now - this.gameState.tempo.eventTracking.lastFocusSwitch;
+    
+    // Jeśli switch w ciągu 30s
+    if (timeSinceLastSwitch < 30 * 1000) {
+        this.gameState.tempo.eventTracking.rapidSwitches = 
+            (this.gameState.tempo.eventTracking.rapidSwitches || 0) + 1;
+            
+        // Po 4 szybkich switchach
+        if (this.gameState.tempo.eventTracking.rapidSwitches >= 4) {
+            const recentGrants = this.gameState.tempo.lastGrants.filter(
+                grant => grant.type === 'rapid_optimization' && now - grant.ts < 5 * 60 * 1000
+            );
+            
+            if (recentGrants.length === 0) {
+                this.grantTempoToken('rapid_optimization');
+                this.gameState.tempo.eventTracking.rapidSwitches = 0;
+            }
+        }
+    } else {
+        // Reset jeśli za długa przerwa
+        this.gameState.tempo.eventTracking.rapidSwitches = 0;
+    }
+    
+    this.gameState.tempo.eventTracking.lastFocusSwitch = now;
+}
+
 createTaskCard(taskData, taskState) {
     const card = document.createElement('div');
     card.className = 'task-card';
@@ -1900,89 +2271,57 @@ createTaskCard(taskData, taskState) {
         return card;
     }
 
-    renderDeskShop() {
-        const container = document.getElementById('shop-items');
-        container.innerHTML = '';
+ renderDeskShop() {
+    const container = document.getElementById('shop-items');
+    container.innerHTML = '';
 
-        this.gameData.deskItems.forEach(item => {
-            const owned = this.gameState.deskItems[item.id];
-            const canBuy = !owned && this.gameState.softSkills >= item.cost;
+    this.gameData.deskItems.forEach(item => {
+        const owned = this.gameState.deskItems[item.id];
+        const canBuy = !owned && this.gameState.softSkills >= item.cost;
 
-            const shopItem = document.createElement('div');
-            shopItem.className = `shop-item ${owned ? 'owned' : ''} ${canBuy ? 'affordable' : ''}`;
-            shopItem.setAttribute('data-item-id', item.id);
-            
-            const bonusDescKey = item.bonusDesc;
-            const bonusDesc = bonusDescKey 
-                ? (this.translations[this.currentLanguage][bonusDescKey] || '')
-                : '';
+        const shopItem = document.createElement('div');
+        shopItem.className = `shop-item ${owned ? 'owned' : ''} ${canBuy ? 'affordable' : ''}`;
+        shopItem.setAttribute('data-item-id', item.id);
 
-			let boostSelectHTML = '';
-			if (item.id === 'mug' && owned) {
-				// Lista: wszystkie taski odblokowane (unlocked && !locked)
-				const unlockedTasks = Object.keys(this.gameState.tasks).filter(id =>
-					this.gameState.tasks[id] &&
-					this.gameState.tasks[id].unlocked === true &&
-					this.gameState.tasks[id].locked === false
-				);
-				if (unlockedTasks.length > 0) {
-					boostSelectHTML += `
-					<div style="margin-top:8px">
-					  <label style="font-size:0.96em">${this.currentLanguage === 'pl' ? 'Wybierz zadanie z bonusem:' : 'Select boosted task:'}</label>
-					  <select id="boost-task-select" style="margin-left:8px">
-						${unlockedTasks.map(id => `
-						  <option value="${id}" ${this.gameState.singleBoostTaskId === id ? 'selected' : ''}>
-							${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === id).nameKey]}
-						  </option>
-						`).join('')}
-					  </select>
-					</div>
-					`;
-				} else {
-					boostSelectHTML = '<div style="margin-top:6px;font-size:0.94em;color:#888">' +
-						(this.currentLanguage === 'pl' ? '(Brak odblokowanych zadań)' : '(No unlocked tasks)') +
-						'</div>';
-				}
-			}  
-			shopItem.innerHTML = `
-				<div class="shop-item-info">
-					<div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
-					<div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
-						${bonusDesc}
-					</div>
-					${boostSelectHTML}
-					<div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
-				</div>
-				<button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}"
-						data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
-					${owned ? '✓' : this.translations[this.currentLanguage].buy}
-				</button>
-			`;
-			// Obsługa wyboru boosta (tylko jeśli już kupiony kubek)
-			if(item.id === 'mug' && owned){
-				setTimeout(() => { // Odrocz aby był wczytany do DOM
-					const select = shopItem.querySelector('#boost-task-select');
-					if(select){
-					  select.addEventListener('change', (e) => {
-						this.gameState.singleBoostTaskId = e.target.value;
-						this.saveGameState(); // Persist
-						this.renderAll(); // Odśwież wyświetlanie bonusów/statów
-					  });
-					}
-				}, 0);
-			}
-			const buyBtn = shopItem.querySelector('button');
-			if (buyBtn && !buyBtn.disabled) {
-				buyBtn.addEventListener('click', (e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					this.buyDeskItem(item.id);
-				});
-			}
+        const bonusDescKey = item.bonusDesc;
+        let bonusDesc = bonusDescKey 
+            ? (this.translations[this.currentLanguage][bonusDescKey] || '')
+            : '';
 
-			container.appendChild(shopItem);
-		});
-	}
+        // Dla kubka wyraźnie podkreśl, że bonus jest do pierwszego aktywnego
+        if (item.id === 'mug') {
+            bonusDesc = this.currentLanguage === 'pl'
+                ? "+10% BP do pierwszego aktywnego zadania"
+                : "+10% BP to the first active task";
+        }
+
+        shopItem.innerHTML = `
+            <div class="shop-item-info">
+                <div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
+                <div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
+                    ${bonusDesc}
+                </div>
+                <div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
+            </div>
+            <button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}" 
+                    data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
+                ${owned ? '✓' : this.translations[this.currentLanguage].buy}
+            </button>
+        `;
+
+        const buyBtn = shopItem.querySelector('button');
+        if (buyBtn && !buyBtn.disabled) {
+            buyBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buyDeskItem(item.id);
+            });
+        }
+
+        container.appendChild(shopItem);
+    });
+}
+
 
 renderDesk() {
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -2184,7 +2523,7 @@ renderDesk() {
     }
 
 updateDisplay() {
-    // ✅ BEZPIECZNE sprawdzanie przed ustawieniem
+    
     const energyDisplay = document.getElementById('energy-display');
     if (energyDisplay) {
         energyDisplay.textContent = this.gameState.energy;
@@ -2204,7 +2543,12 @@ updateDisplay() {
     if (energyBtn) {
         energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
     }
-
+	
+	const tempoTokenDisplay = document.getElementById('tempo-token-display');
+	if (tempoTokenDisplay) {
+		tempoTokenDisplay.textContent = this.gameState.tempo.tokens;
+	}
+	
     // Bezpieczne sprawdzenie przed disable/enable przycisków
     document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
         const skill = btn.getAttribute('data-skill');
@@ -2236,7 +2580,21 @@ updateDisplay() {
             adButton.title = '';
         }
     }
-
+// Update tempo buff button states
+	['micro_ff', 'flash_discount', 'focus_snap', 'cashout'].forEach(buffId => {
+		const btn = document.getElementById(`btn-${buffId.split('_')[1] || buffId}`);
+		if (btn) {
+			const canUse = this.gameState.tempo.tokens > 0;
+			btn.disabled = !canUse;
+			btn.style.opacity = canUse ? '1' : '0.5';
+			
+			// Pokaż aktywność buffa
+			const isActive = this.gameState.tempo.activeBuffs.some(b => 
+				b.id === buffId && Date.now() < b.expiresAt
+			);
+			btn.style.border = isActive ? '2px solid #00ff00' : '';
+		}
+	});
     // Bezpieczne sprawdzenie prestige button
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
