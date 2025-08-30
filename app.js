@@ -1277,70 +1277,70 @@ showRewardedAd(onComplete) {
         setTimeout(onComplete, 3000); // Symuluje ad duration
     }
 }      
-    calculateTaskIdleRate(taskId) {
-        const taskData = this.gameData.tasks.find(t => t.id === taskId);
-        const taskState = this.gameState.tasks[taskId];
-        
-        let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier, taskState.level - 1);
-        
-        // Apply ascension multiplier
-        rate *= Math.pow(2, taskState.ascensions);
-        
-        // Apply global multipliers
-        rate *= this.getGlobalMultiplier();
-        const segment = Math.floor((taskState.level - 1) / 10);
-        if (segment > 0) {
-            rate *= Math.pow(1.05, segment);
-        }
-        const isActive = this.gameState.focus.includes(taskId);
-        
-        // all_active_boost
-        if (isActive) {
-            Object.keys(this.gameState.deskItems).forEach(id => {
-                if (!this.gameState.deskItems[id]) return;
-                const item = this.gameData.deskItems.find(d => d.id === id);
-                if (item && item.bonus.type === 'all_active_boost') {
-                    rate *= item.bonus.value;
-                }
-            });
-        }
-        
-        // single_task_boost
-        if (isActive && this.gameState.singleBoostTaskId === taskId) {
-            const item = this.gameData.deskItems.find(d => d.id === 'mug'); // lub znajdź po typie
-            if (item && this.gameState.deskItems['mug']) {
+calculateTaskIdleRate(taskId) {
+    const taskData = this.gameData.tasks.find(t => t.id === taskId);
+    const taskState = this.gameState.tasks[taskId];
+    
+    let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier, taskState.level - 1);
+    
+    // Apply ascension multiplier
+    rate *= Math.pow(2, taskState.ascensions);
+    
+    // Apply global multipliers
+    rate *= this.getGlobalMultiplier();
+    const segment = Math.floor((taskState.level - 1) / 10);
+    if (segment > 0) {
+        rate *= Math.pow(1.05, segment);
+    }
+    const isActive = this.gameState.focus.includes(taskId);
+
+    // all_active_boost - np. telefon, działa na wszystkie aktywne
+    if (isActive) {
+        Object.keys(this.gameState.deskItems).forEach(id => {
+            if (!this.gameState.deskItems[id]) return;
+            const item = this.gameData.deskItems.find(d => d.id === id);
+            if (item && item.bonus.type === 'all_active_boost') {
                 rate *= item.bonus.value;
             }
-        }
-        
-        // night_boost (np. 22:00–6:00)
-        const hour = new Date().getHours();
-        if (hour >= 22 || hour < 6) {
-            Object.keys(this.gameState.deskItems).forEach(id => {
-                if (!this.gameState.deskItems[id]) return;
-                const item = this.gameData.deskItems.find(d => d.id === id);
-                if (item && item.bonus.type === 'night_boost') {
-                    rate *= item.bonus.value;
-                }
-            });
-        }
-        // SOFTCAP — dwustopniowy
-        // 1. powyżej 20k BP/s progres rośnie tylko do potęgi 0.7
-        // 2. powyżej 1M rośnie jeszcze wolniej, do potęgi 0.5
-        rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
-        const now = Date.now();
+        });
+    }
+
+    // ---- KUBEK: +10% tylko do pierwszego aktywnego w focus ----
+    if (
+        this.gameState.deskItems['mug'] &&
+        this.gameState.focus.length > 0 &&
+        this.gameState.focus[0] === taskId
+    ) {
+        const item = this.gameData.deskItems.find(d => d.id === 'mug');
+        if (item) rate *= item.bonus.value;
+    }
     
-        // Coffee Break: 2x mnożnik przez 15 min
-        if (this.gameState.activeSkills.coffeeBreak && now < this.gameState.activeSkills.coffeeBreak) {
-            rate *= 2;
-        }
-        
-        // Focus Mode: +50% przez 20 min
-        if (this.gameState.activeSkills.focusMode && now < this.gameState.activeSkills.focusMode) {
+    // night_boost (np. lampka biurowa 22:00-6:00)
+    const hour = new Date().getHours();
+    if (hour >= 22 || hour < 6) {
+        Object.keys(this.gameState.deskItems).forEach(id => {
+            if (!this.gameState.deskItems[id]) return;
+            const item = this.gameData.deskItems.find(d => d.id === id);
+            if (item && item.bonus.type === 'night_boost') {
+                rate *= item.bonus.value;
+            }
+        });
+    }
+
+    // SOFTCAP — dwustopniowy
+    rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
+    const now = Date.now();
+
+    // Coffee Break: 2x mnożnik przez 15 min
+    if (this.gameState.activeSkills.coffeeBreak && now < this.gameState.activeSkills.coffeeBreak) {
+        rate *= 2;
+    }
+    // Focus Mode: +50% przez 20 min
+    if (this.gameState.activeSkills.focusMode && now < this.gameState.activeSkills.focusMode) {
         rate *= 1.5;
     }
-        return rate;
-    }
+    return rate;
+}
     getMaxFocusSlots() {
         let base = 4;
         
@@ -1801,11 +1801,6 @@ renderTasks() {
         container.appendChild(taskCard);
     });
 
-    // Ustaw domyślny singleBoostTaskId: pierwszy aktywny lub null (naprawa: nie przypisuj całej tablicy)
-    if (!this.gameState.singleBoostTaskId || !this.gameState.focus.includes(this.gameState.singleBoostTaskId)) {
-        this.gameState.singleBoostTaskId = this.gameState.focus.length ? this.gameState.focus[0] : null;
-    }
-
     this.updateTaskButtonStates();
 }
 createTaskCard(taskData, taskState) {
@@ -1888,49 +1883,57 @@ createTaskCard(taskData, taskState) {
         return card;
     }
 
-    renderDeskShop() {
-        const container = document.getElementById('shop-items');
-        container.innerHTML = '';
+ renderDeskShop() {
+    const container = document.getElementById('shop-items');
+    container.innerHTML = '';
 
-        this.gameData.deskItems.forEach(item => {
-            const owned = this.gameState.deskItems[item.id];
-            const canBuy = !owned && this.gameState.softSkills >= item.cost;
+    this.gameData.deskItems.forEach(item => {
+        const owned = this.gameState.deskItems[item.id];
+        const canBuy = !owned && this.gameState.softSkills >= item.cost;
 
-            const shopItem = document.createElement('div');
-            shopItem.className = `shop-item ${owned ? 'owned' : ''} ${canBuy ? 'affordable' : ''}`;
-            shopItem.setAttribute('data-item-id', item.id);
-            
-            const bonusDescKey = item.bonusDesc;
-            const bonusDesc = bonusDescKey 
-                ? (this.translations[this.currentLanguage][bonusDescKey] || '')
-                : '';
-            
-            shopItem.innerHTML = `
-                <div class="shop-item-info">
-                    <div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
-                    <div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
-                        ${bonusDesc}
-                    </div>
-                    <div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
+        const shopItem = document.createElement('div');
+        shopItem.className = `shop-item ${owned ? 'owned' : ''} ${canBuy ? 'affordable' : ''}`;
+        shopItem.setAttribute('data-item-id', item.id);
+
+        const bonusDescKey = item.bonusDesc;
+        let bonusDesc = bonusDescKey 
+            ? (this.translations[this.currentLanguage][bonusDescKey] || '')
+            : '';
+
+        // Dla kubka wyraźnie podkreśl, że bonus jest do pierwszego aktywnego
+        if (item.id === 'mug') {
+            bonusDesc = this.currentLanguage === 'pl'
+                ? "+10% BP do pierwszego aktywnego zadania"
+                : "+10% BP to the first active task";
+        }
+
+        shopItem.innerHTML = `
+            <div class="shop-item-info">
+                <div class="shop-item-name">${this.translations[this.currentLanguage][item.nameKey]}</div>
+                <div class="shop-item-bonus"${owned ? '' : ' style="opacity:0.7;"'}>
+                    ${bonusDesc}
                 </div>
-                <button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}" 
-                        data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
-                    ${owned ? '✓' : this.translations[this.currentLanguage].buy}
-                </button>
-            `;
+                <div class="shop-item-cost">${owned ? 'Owned' : `${item.cost} SS`}</div>
+            </div>
+            <button class="btn btn--sm ${canBuy ? 'btn--primary' : 'btn--secondary disabled'}" 
+                    data-item-id="${item.id}" ${!canBuy ? 'disabled' : ''}>
+                ${owned ? '✓' : this.translations[this.currentLanguage].buy}
+            </button>
+        `;
 
-            const buyBtn = shopItem.querySelector('button');
-            if (buyBtn && !buyBtn.disabled) {
-                buyBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.buyDeskItem(item.id);
-                });
-            }
+        const buyBtn = shopItem.querySelector('button');
+        if (buyBtn && !buyBtn.disabled) {
+            buyBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buyDeskItem(item.id);
+            });
+        }
 
-            container.appendChild(shopItem);
-        });
-    }
+        container.appendChild(shopItem);
+    });
+}
+
 
 renderDesk() {
     const svgNS = 'http://www.w3.org/2000/svg';
