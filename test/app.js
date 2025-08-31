@@ -182,7 +182,7 @@ class KorposzczurGame {
             "translations": {
                 "pl": {
                     "onboarding_title": "Witaj w Korposzczur!",
-					"onboarding_body": "Test",
+					"onboarding_body": "Zostałeś właśnie zatrudniony na pozycji szeregowego pracownika w korporacji. <p>Rozwijaj karierę, zdobywaj <strong>Biuro-Punkty (BP)</strong> i odblokowuj zadania. Od Ciebie zależy jak potoczy się gra. Powodzenia!",
 					"onboarding_close": "Zaczynam!",
 					"task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
