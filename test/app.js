@@ -925,7 +925,7 @@ class KorposzczurGame {
                     "65% spotkań można by zastąpić jednym mailem.",
                     "Badania pokazują, że praca zdalna zwiększa produktywność o średnio 13%.",
                     "Prawie 40% pracowników korporacji twierdzi, że nigdy nie korzysta z firmowego chill roomu.",
-                    "Najczęściej używane słowo na spotkaniach to „synergia".",
+                    "Najczęściej używane słowo na spotkaniach to synergia.",
                     "Statystyczny pracownik klika Wyślij w mailu służbowym około 30 razy dziennie",
                     "Zjedzenie ciastka z kuchni firmowej podnosi morale zespołu nawet o 5%.",
                     "Najczęściej kopiowany skrót w Excelu to Ctrl+C, a zaraz po nim Ctrl+V.",
