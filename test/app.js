@@ -182,16 +182,7 @@ class KorposzczurGame {
             "translations": {
                 "pl": {
                     "onboarding_title": "Witaj w Korposzczur!",`
-					"onboarding_body": "<p>Witaj w fascynującym świecie <b>Korposzczura</b>! 🌇🐭<br><br>
-Rozpoczynasz swoją przygodę jako stażysta – mały trybik w wielkiej korporacyjnej maszynie.<br><br>
-<b>Wspinaj się po korpodrabince</b>, awansuj na coraz wyższe stanowiska i pokaż na co Cię stać!<br>
-Inwestuj w rozwój, zdobywaj <b>Biuro-Punkty (BP)</b>, odblokowuj zadania, kolekcjonuj osiągnięcia i urządzaj swoje wymarzone biurko.<br><br>
-Każda decyzja przybliża Cię do awansu i pozwala odblokować nowe możliwości.<br>
-<strong>Odkrywaj, baw się, wygrywaj – Twoja ścieżka kariery stoi otworem!</stromg>
-</p>
-<p>
-<em>Powodzenia – niech Twoja kariera rośnie jak na drożdżach! 🍀</em>
-</p>",
+					"onboarding_body": "", 
 					"onboarding_close": "Zaczynam!",
 					"task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
@@ -370,16 +361,7 @@ Każda decyzja przybliża Cię do awansu i pozwala odblokować nowe możliwości
               },
                 "en": {
                     "task_lunch": "Office lunch",
-                    "onboarding_body": "<p>Welcome to the thrilling world of <b>Corporate Rat</b>! 🌇🐭<br><br>
-You start your journey as an intern — a small cog in the great corporate machine.<br><br>
-<b>Climb the corporate ladder</b>, earn new promotions, and show what you’re made of!<br>
-Invest in your development, gather <b>Office Points (BP)</b>, unlock tasks, collect achievements, and design your dream desk.<br><br>
-Every choice brings you closer to your next promotion and unlocks new opportunities.<br>
-<strong>Explore, play, win—your career path is wide open!</strong>
-</p>
-<p>
-<em>Good luck—may your career grow strong! 🍀</em>
-</p>",
+                    "onboarding_body": "",
 					"task_report": "Report creation",
                     "task_motivation": "Motivational meet",
                     "rank_intern": "Intern",
