@@ -191,7 +191,7 @@ Każda decyzja przybliża Cię do awansu i pozwala odblokować nowe możliwości
 </p>
 <p>
 <em>Powodzenia – niech Twoja kariera rośnie jak na drożdżach! 🍀</em>
-</p>`",
+</p>",
 					"onboarding_close": "Zaczynam!",
 					"task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
