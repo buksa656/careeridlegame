@@ -181,8 +181,8 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
-                    "onboarding_title": "Witaj w Korposzczur!",`
-					"onboarding_body": "", 
+                    "onboarding_title": "Witaj w Korposzczur!",
+					"onboarding_body": "Test",
 					"onboarding_close": "Zaczynam!",
 					"task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
@@ -361,8 +361,7 @@ class KorposzczurGame {
               },
                 "en": {
                     "task_lunch": "Office lunch",
-                    "onboarding_body": "",
-					"task_report": "Report creation",
+                    "task_report": "Report creation",
                     "task_motivation": "Motivational meet",
                     "rank_intern": "Intern",
                     "rank_assistant": "Assistant",
