@@ -1644,74 +1644,83 @@ calculateTaskIdleRate(taskId) {
         return Math.floor(Math.sqrt(totalBPEarned / threshold));
     }
 
-    performPrestige() {
-        // Ustal threshold zależnie od trybu prestige break
-        const threshold = this.gameState.features.prestigeBreakUnlocked ? 
-            this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-            
-        if (this.gameState.totalBPEarned < threshold) return;
-
-        // NOWA LOGIKA SOFT SKILL CAP
-        const hasPrestigeAchievement = !!this.gameState.achievements["prestige_master"];
-        const hasDeskItem = !!this.gameState.deskItems["desk_skill_cap_breaker"];
+performPrestige() {
+    // Ustal threshold zależnie od trybu prestige break
+    const threshold = this.gameState.features.prestigeBreakUnlocked ? 
+        this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
         
-        let softSkillsGain;
-        if (!hasPrestigeAchievement && !hasDeskItem) {
-            // Ograniczenie do 1 soft skill jeśli żaden warunek nie jest spełniony
-            softSkillsGain = 1;
-            console.log("[PRESTIGE] Soft Skill cap active - awarding 1 SS only");
-        } else {
-            // Pełna formula jeśli spełniono przynajmniej jeden warunek
-            softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
-            console.log(`[PRESTIGE] Soft Skill cap unlocked - awarding ${softSkillsGain} SS (achievement: ${hasPrestigeAchievement}, desk item: ${hasDeskItem})`);
-        }
+    if (this.gameState.totalBPEarned < threshold) return;
 
-        // ZAPISZ elementy, które zostają
-        const achievementsToKeep = { ...this.gameState.achievements };
-        const deskItemsToKeep = { ...this.gameState.deskItems };
-        const settingsToKeep = { ...this.gameState.settings };
-        const featuresState = { ...this.gameState.features };
-        const challengesState = { ...this.gameState.challenges };
-
-        // TOTAL RESET: wszystko z wyjątkiem achievements, desk items, settings, features, challenges
-        this.gameState = this.loadGameState();
-        
-        // Wszystkie zadania zostają zablokowane po prestige
-        this.gameData.tasks.forEach(task => {
-            this.gameState.tasks[task.id] = {
-                level: 1,
-                progress: 0,
-                unlocked: false,
-                ascensions: 0,
-                locked: true
-            };
-        });
-
-        // Dodaj SS oraz licz do statystyk
-        this.gameState.softSkills += softSkillsGain;
-        this.gameState.stats.softSkillsEarned += softSkillsGain;
-        this.gameState.prestigeCount++;
-
-        // Przywróć zachowane elementy
-        this.gameState.achievements = achievementsToKeep;
-        this.gameState.deskItems = deskItemsToKeep;
-        this.gameState.settings = settingsToKeep;
-        this.gameState.features = featuresState;
-        this.gameState.challenges = challengesState;
-
-        // BP = 0 po prestiżu!
-        this.gameState.bp = 0;
-
-        // Odśwież UI itd.
-        this.checkAchievements();
-        this.checkFeatureUnlocks();
-        this.renderAll();
-        
-        // Komunikat z informacją o soft skill cap
-        const capMessage = !this.isSoftSkillCapUnlocked() ? 
-            ` (${this.translations[this.currentLanguage].prestige_limit_warning.split('.')[0]})` : "";
-        this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}!${capMessage}`);
+    // NOWA LOGIKA SOFT SKILL CAP
+    const hasPrestigeAchievement = !!this.gameState.achievements["prestige_master"];
+    const hasDeskItem = !!this.gameState.deskItems["desk_skill_cap_breaker"];
+    
+    let softSkillsGain;
+    if (!hasPrestigeAchievement && !hasDeskItem) {
+        softSkillsGain = 1;
+        console.log("[PRESTIGE] Soft Skill cap active - awarding 1 SS only");
+    } else {
+        softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
+        console.log(`[PRESTIGE] Soft Skill cap unlocked - awarding ${softSkillsGain} SS`);
     }
+
+    // ZAPISZ elementy, które zostają
+    const achievementsToKeep = { ...this.gameState.achievements };
+    const deskItemsToKeep = { ...this.gameState.deskItems };
+    const settingsToKeep = { ...this.gameState.settings };
+    const featuresState = { ...this.gameState.features };
+    const challengesState = { ...this.gameState.challenges };
+
+    // TOTAL RESET: wszystko z wyjątkiem achievements, desk items, settings, features, challenges
+    this.gameState = this.loadGameState();
+    
+    // Wszystkie zadania zostają zablokowane po prestige
+    this.gameData.tasks.forEach(task => {
+        this.gameState.tasks[task.id] = {
+            level: 1,
+            progress: 0,
+            unlocked: false,
+            ascensions: 0,
+            locked: true
+        };
+    });
+
+    // Dodaj SS oraz licz do statystyk
+    this.gameState.softSkills += softSkillsGain;
+    this.gameState.stats.softSkillsEarned += softSkillsGain;
+    this.gameState.prestigeCount++;
+
+    // Przywróć zachowane elementy
+    this.gameState.achievements = achievementsToKeep;
+    this.gameState.deskItems = deskItemsToKeep;
+    this.gameState.settings = settingsToKeep;
+    this.gameState.features = featuresState;
+    this.gameState.challenges = challengesState;
+
+    // BP = 0 po prestiżu!
+    this.gameState.bp = 0;
+
+    // Odśwież UI itd.
+    this.checkAchievements();
+    this.checkFeatureUnlocks();
+    this.renderAll();
+    
+    // 🛠️ POPRAWKA: Bezpieczne tworzenie komunikatu o cap
+    let capMessage = "";
+    if (!this.isSoftSkillCapUnlocked()) {
+        const warningText = this.translations[this.currentLanguage]?.prestige_limit_warning;
+        if (warningText) {
+            // Bezpiecznie wyciągnij pierwszą część przed kropką
+            const firstPart = warningText.split('.')[0];
+            capMessage = ` (${firstPart})`;
+        } else {
+            // Fallback message jeśli brak tłumaczenia
+            capMessage = " (Soft Skill cap active)";
+        }
+    }
+    
+    this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}!${capMessage}`);
+}
 	
 	// Zmodyfikowana metoda renderowania prestiżu z komunikatami o limitach
     renderPrestigeSection() {
