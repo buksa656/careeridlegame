@@ -187,9 +187,9 @@ Rozpoczynasz swoją przygodę jako stażysta – mały trybik w wielkiej korpora
 <b>Wspinaj się po korpodrabince</b>, awansuj na coraz wyższe stanowiska i pokaż na co Cię stać!<br>
 Inwestuj w rozwój, zdobywaj <b>Biuro-Punkty (BP)</b>, odblokowuj zadania, kolekcjonuj osiągnięcia i urządzaj swoje wymarzone biurko.<br><br>
 Każda decyzja przybliża Cię do awansu i pozwala odblokować nowe możliwości.<br>
-<span style=\"color:#317c72; font-weight:500;\">Odkrywaj, baw się, wygrywaj – Twoja ścieżka kariery stoi otworem!</span>
+<strong>Odkrywaj, baw się, wygrywaj – Twoja ścieżka kariery stoi otworem!</stromg>
 </p>
-<p style='margin:16px 0 0 0; font-size:0.93em; color:#777;'>
+<p>
 <em>Powodzenia – niech Twoja kariera rośnie jak na drożdżach! 🍀</em>
 </p>`",
 					"onboarding_close": "Zaczynam!",
@@ -375,9 +375,9 @@ You start your journey as an intern — a small cog in the great corporate machi
 <b>Climb the corporate ladder</b>, earn new promotions, and show what you’re made of!<br>
 Invest in your development, gather <b>Office Points (BP)</b>, unlock tasks, collect achievements, and design your dream desk.<br><br>
 Every choice brings you closer to your next promotion and unlocks new opportunities.<br>
-<span style=\"color:#317c72; font-weight:500;\">Explore, play, win—your career path is wide open!</span>
+<strong>Explore, play, win—your career path is wide open!</strong>
 </p>
-<p style='margin:16px 0 0 0; font-size:0.93em; color:#777;'>
+<p>
 <em>Good luck—may your career grow strong! 🍀</em>
 </p>",
 					"task_report": "Report creation",
