@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Korposzczur - Corporate Idle Game</title>
     <link rel="stylesheet" href="style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8646013233970978"
-     crossorigin="anonymous"></script>
+    <link rel="icon" href="korposzczur-logo.jpg" type="image/jpeg">
 </head>
 <body>
     <div class="game-container">
@@ -14,9 +13,10 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo-title-container">
-                    <img src="korposzczur-logo.png" alt="Logo Korposzczur" class="korpo-logo"/>
+                    <img src="korposzczur-logo.jpg" alt="Korposzczur Logo" class="korpo-logo">
                     <h1 class="game-title" data-translate="game_title">Korposzczur</h1>
                 </div>
+                
                 <div class="currency-display">
                     <div class="currency-item">
                         <span class="currency-label" data-translate="biuro_punkty">Biuro-Punkty</span>
@@ -24,36 +24,44 @@
                     </div>
                     <div class="currency-item">
                         <span class="currency-label" data-translate="soft_skills">Soft Skills</span>
-                        <span class="currency-value" id="ss-display">0</span>
+                        <span class="currency-value" id="soft-skills-display">0</span>
                     </div>
-					<div id="tempo-panel" class="tempo-panel">
-					  <span id="tempo-token-display"></span>
-					  <button id="btn-ff" title="Przyspieszenie cykli">⏩</button>
-					  <button id="btn-disc" title="Flash Zniżka">💸</button>
-					  <button id="btn-focus" title="Focus Snap">🎯</button>
-					  <button id="btn-cash" title="Cashout">⚡</button>
-					</div>
-                    <div class="energy-dropdown" id="energy-dropdown-container">
-                      <button id="energy-button">⚡ 100/100 ▼</button>
-                      <div id="energy-menu" class="energy-menu">
-                        <button class="energy-option" data-skill="coffeeBreak">☕ Coffee Break (25⚡)</button>
-                        <button class="energy-option" data-skill="focusMode">🎯 Focus Mode (40⚡)</button>
-                        <button class="energy-option" data-skill="overtime">⏰ Overtime (60⚡)</button>
-                        <button class="energy-option" id="watch-ad-option">📺 Watch Ad (+20⚡)</button>
-                      </div>
+                    
+                    <!-- Energy Dropdown System -->
+                    <div class="energy-dropdown">
+                        <button id="energy-button">
+                            <span>⚡ <span id="energy-value">100</span>/100</span>
+                            <span>▼</span>
+                        </button>
+                        <div class="energy-menu" id="energy-menu">
+                            <button class="energy-option" data-skill="coffeeBreak" id="coffee-break-option">
+                                ☕ Przerwa na kawę (25⚡) - x2 BP przez 15 min
+                            </button>
+                            <button class="energy-option" data-skill="focusMode" id="focus-mode-option">
+                                🎯 Tryb skupienia (40⚡) - +50% BP przez 20 min
+                            </button>
+                            <button class="energy-option" data-skill="overtime" id="overtime-option">
+                                ⏰ Nadgodziny (60⚡) - +1 slot przez 30 min
+                            </button>
+                            <hr style="margin: 4px 0; border: none; border-top: 1px solid #eee;">
+                            <button class="energy-option" id="watch-ad-option">
+                                📺 Obejrzyj reklamę (+20⚡)
+                            </button>
+                        </div>
                     </div>
                 </div>
+
                 <div class="header-buttons">
-                    <button class="btn btn--outline help-btn" id="help-toggle" data-translate="help">❓</button>
-                    <button class="btn btn--outline settings-btn" id="settings-toggle">⚙️</button>
+                    <button id="help-toggle" class="btn btn--secondary help-btn">?</button>
+                    <button id="settings-toggle" class="btn btn--secondary settings-btn">⚙</button>
                 </div>
-            </div>
-            
-            <!-- Corporate Quote Marquee -->
-            <div class="quote-marquee">
-                <div class="quote-text" id="quote-text">Zrobimy szybki catch-up po daily standup-ie</div>
             </div>
         </header>
+
+        <!-- Quote Marquee -->
+        <div class="quote-marquee">
+            <div class="quote-text" id="quote-text">Przeciętny email w pracy jest czytany w mniej niż 15 sekund.</div>
+        </div>
 
         <!-- Tab Navigation -->
         <nav class="tab-navigation">
@@ -65,176 +73,231 @@
             </div>
         </nav>
 
-        <!-- Main Game Area -->
+        <!-- Main Content -->
         <main class="main-content">
+            
             <!-- Career Tab -->
-            <section class="tab-content active" id="career-tab">
+            <div id="career-tab" class="tab-content active">
                 <div class="career-layout">
+                    
                     <!-- Multi-buy Controls -->
-                    <div class="multibuy-controls hidden" id="multibuy-controls">
-                        <span class="multibuy-label" data-translate="multibuy">Multi-buy:</span>
-                        <div class="multibuy-buttons">
-                            <button class="btn btn--sm multibuy-btn active" data-amount="1">1x</button>
-                            <button class="btn btn--sm multibuy-btn" data-amount="2">2x</button>
-                            <button class="btn btn--sm multibuy-btn" data-amount="5">5x</button>
-                            <button class="btn btn--sm multibuy-btn" data-amount="10">10x</button>
-                            <button class="btn btn--sm multibuy-btn" data-amount="20">20x</button>
-                            <button class="btn btn--sm multibuy-btn" data-amount="50">50x</button>
-                            <button class="btn btn--sm multibuy-btn hidden" data-amount="max" data-translate="buy_max">Max</button>
+                    <div id="multibuy-controls" class="multibuy-controls hidden">
+                        <div class="multibuy-label">
+                            <span data-translate="multibuy">Multi-buy:</span>
                         </div>
-                        <div class="multibuy-overlay hidden" id="multibuy-overlay">
+                        <div class="multibuy-buttons">
+                            <button class="multibuy-btn btn btn--sm btn--outline active" data-amount="1">1x</button>
+                            <button class="multibuy-btn btn btn--sm btn--outline" data-amount="2">2x</button>
+                            <button class="multibuy-btn btn btn--sm btn--outline" data-amount="5">5x</button>
+                            <button class="multibuy-btn btn btn--sm btn--outline" data-amount="10">10x</button>
+                            <button class="multibuy-btn btn btn--sm btn--outline" data-amount="20">20x</button>
+                            <button class="multibuy-btn btn btn--sm btn--outline" data-amount="50">50x</button>
+                            <button class="multibuy-btn btn btn--sm btn--outline hidden" data-amount="max" data-translate="buy_max">Max</button>
+                        </div>
+                        
+                        <!-- Multi-buy Overlay for Amount Selection -->
+                        <div id="multibuy-overlay" class="multibuy-overlay" style="display: none;">
                             <div class="overlay-content">
-                                <div class="overlay-text">Kup ile?</div>
-                                <div class="overlay-buttons" id="overlay-buttons"></div>
-                                <button class="btn btn--sm btn--secondary" id="overlay-cancel">Anuluj</button>
+                                <div class="overlay-text" data-translate="buy_amount_question">Kup ile?</div>
+                                <div class="overlay-buttons">
+                                    <button class="btn btn--sm btn--outline" data-amount="1">1</button>
+                                    <button class="btn btn--sm btn--outline" data-amount="5">5</button>
+                                    <button class="btn btn--sm btn--outline" data-amount="10">10</button>
+                                    <button class="btn btn--sm btn--outline" data-amount="25">25</button>
+                                    <button class="btn btn--sm btn--outline" data-amount="max">Max</button>
+                                </div>
+                                <button class="btn btn--sm btn--secondary" data-translate="cancel">Anuluj</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Auto-buyer Controls -->
-                    <div class="autobuyer-controls hidden" id="autobuyer-controls">
+                    <div id="autobuyer-controls" class="autobuyer-controls hidden">
                         <div class="autobuyer-toggle">
-                            <label class="form-label" data-translate="auto_buyer">Auto-Kupowanie</label>
                             <input type="checkbox" id="autobuyer-checkbox" class="toggle-switch">
+                            <label for="autobuyer-checkbox" data-translate="auto_buyer">Auto-Kupowanie</label>
                         </div>
                     </div>
 
-                    <!-- Tasks Panel -->
+                    <!-- Tasks Section -->
                     <div class="tasks-section">
-                        <h2>Zadania</h2>
+                        <h2 data-translate="task_section_title">Zadania</h2>
+                        
+                        <!-- Unlock Progress -->
                         <div class="unlock-progress">
                             <div class="progress-label" data-translate="next_unlock">Next Unlock</div>
                             <div class="progress-bar">
-                                <div class="progress-fill" id="unlock-progress"></div>
+                                <div class="progress-fill" id="unlock-progress-fill" style="width: 0%;"></div>
                             </div>
+                            <div class="progress-text" id="unlock-progress-text">0 / 75 BP</div>
                         </div>
+
+                        <!-- Tasks Container -->
                         <div class="tasks-container" id="tasks-container">
                             <!-- Tasks will be dynamically generated -->
                         </div>
                     </div>
 
-                    <!-- Prestige Section -->
+                    <!-- Prestige Section - ZMODYFIKOWANA Z SOFT SKILL CAP WARNINGS -->
                     <div class="prestige-section">
-                        <button class="btn btn--primary btn--full-width" id="prestige-btn" data-translate="prestige" disabled>Prestiż</button>
-                        <p class="prestige-info" id="prestige-info">Requires 50,000 BP</p>
-                        <div class="prestige-break-info hidden" id="prestige-break-info">
-                            <div class="prestige-break-label" data-translate="prestige_break">Prestige Break!</div>
-                            <div class="prestige-break-desc">Multiple Soft Skills at once</div>
+                        <h3 data-translate="prestige">Prestiż</h3>
+                        <div class="prestige-requirements" id="prestige-requirements">
+                            <span data-translate="prestige_requirement_text">Requires 50,000 BP</span>
+                        </div>
+                        
+                        <!-- NOWE: Prestige Gain Info z komunikatami o limitach -->
+                        <div class="prestige-gain-info" id="prestige-gain-info">
+                            <div class="prestige-potential-gain" id="prestige-potential-gain"></div>
+                            <!-- NOWE: Soft Skill Cap Warning -->
+                            <div class="prestige-cap-warning" id="prestige-cap-warning" style="display: none;">
+                                <span class="warning-icon">⚠️</span>
+                                <span class="warning-text" data-translate="prestige_limit_warning">
+                                    Obecnie możesz zdobyć maksymalnie 1 Soft Skill za prestiż. Odblokuj achievement 'Mistrz prestiżu' lub kup 'Przełomowy kurs' na biurku, by zwiększyć limit.
+                                </span>
+                            </div>
+                            <!-- NOWE: Cap Unlocked Message -->
+                            <div class="prestige-cap-unlocked" id="prestige-cap-unlocked" style="display: none;">
+                                <span class="success-icon">✅</span>
+                                <span class="success-text" data-translate="prestige_limit_unlocked">
+                                    Limit Soft Skills za prestiż został odblokowany!
+                                </span>
+                            </div>
+                        </div>
+
+                        <button id="prestige-btn" class="btn btn--lg btn--primary btn--full-width disabled" data-translate="prestige_ready">
+                            Wykonaj prestiż
+                        </button>
+                        
+                        <div class="prestige-info" id="prestige-info">
+                            <span data-translate="prestige_warning">Uwaga. Prestiż resetuje grę</span>
+                        </div>
+
+                        <!-- Prestige Break Info -->
+                        <div id="prestige-break-info" class="prestige-break-info hidden">
+                            <div class="prestige-break-label" data-translate="prestige_break">Prestiż Break!</div>
+                            <div class="prestige-break-desc" data-translate="prestige_break_desc">Multiple Soft Skills at once</div>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            <!-- Desk Tab -->
-            <section class="tab-content" id="desk-tab">
+                </div>
+            </div>
+
+            <!-- Desk Tab - ZMODYFIKOWANA Z NOWYM DESK ITEM -->
+            <div id="desk-tab" class="tab-content">
                 <div class="desk-layout">
+                    
                     <!-- Desk Visualization -->
                     <div class="desk-container">
-                        <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
-                            <!-- Desk Base -->
-                            <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
-                            
-                            <!-- Hotspots for desk items -->
-                            <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
-                            <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
-                            <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
-                            <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
-                            <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
-                            <circle cx="350" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges"/>
-                            <circle cx="350" cy="180" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
-                            <rect x="250" y="120" width="20" height="35" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="phone" rx="3"/>
-                            <rect x="140" y="105" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="organizer" rx="2"/>
-                            <circle cx="195" cy="105" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="lamp"/>
-                            <circle cx="280" cy="230" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="multitool"/>
-                            <rect x="235" y="200" width="20" height="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="trophy" rx="2"/>
-                            <!-- Items will be added dynamically -->
-                            <g id="desk-items"></g>
-                        </svg>
-                    </div>
-                    
-                    <!-- Desk Shop -->
-                    <div class="desk-shop" id="desk-shop">
-                        <h3>Biuro Upgrade</h3>
-                        <div class="shop-items" id="shop-items">
-                            <!-- Shop items will be generated -->
+                        <h3 data-translate="desk_title">Biuro Upgrade</h3>
+                        <!-- Desk SVG will be dynamically populated -->
+                        <div id="desk-visualization">
+                            <!-- Desk items visualization here -->
                         </div>
                     </div>
+
+                    <!-- Desk Shop - ROZSZERZONA O NOWY PRZEDMIOT -->
+                    <div class="desk-shop">
+                        <h3 data-translate="desk_shop_title">Sklep biurkowy</h3>
+                        <div class="shop-items" id="shop-items">
+                            <!-- Shop items będą dynamicznie generowane, w tym nowy desk_skill_cap_breaker -->
+                        </div>
+                    </div>
+
                 </div>
-            </section>
+            </div>
 
             <!-- Achievements Tab -->
-            <section class="tab-content" id="achievements-tab">
+            <div id="achievements-tab" class="tab-content">
                 <div class="achievements-layout">
                     <h2 data-translate="tab_achievements">Achievementy</h2>
                     <div class="achievements-list" id="achievements-list">
-                        <!-- Achievements will be generated -->
+                        <!-- Achievements will be dynamically generated -->
                     </div>
                 </div>
-            </section>
+            </div>
 
             <!-- Challenges Tab -->
-            <section class="tab-content" id="challenges-tab">
+            <div id="challenges-tab" class="tab-content">
                 <div class="challenges-layout">
                     <h2 data-translate="tab_challenges">Wyzwania</h2>
                     <div class="challenges-list" id="challenges-list">
-                        <!-- Challenges will be generated -->
+                        <!-- Challenges will be dynamically generated -->
                     </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Settings Modal -->
-        <div class="modal hidden" id="settings-modal">
-            <div class="modal-backdrop"></div>
-            <div class="modal-content">
-                <h3 data-translate="settings">Ustawienia</h3>
-                <div class="settings-options">
-                    <div class="setting-group">
-                        <label class="form-label">Language / Język</label>
-                        <select class="form-control" id="language-select">
-                            <option value="pl">Polski</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                    <div class="setting-group">
-                        <label class="form-label">Theme / Motyw</label>
-                        <select class="form-control" id="theme-select">
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                        </select>
-                    </div>
-                    <div class="setting-group">
-                        <label class="form-label" data-translate="number_format">Format liczb / Number format</label>
-                        <select class="form-control" id="number-format-select">
-                            <option value="auto">K/M/B/T</option>
-                            <option value="scientific">Naukowa (1.23e+9)</option>
-                            <option value="engineering">Inżynieryjna (1.23E6, 4.5E6)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button class="btn btn--secondary" id="settings-close">Close</button>
-                    <button class="btn btn--outline" id="reset-save">Reset Save</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Help Modal -->
-<div id="help-modal" class="modal hidden">
-    <div class="modal-backdrop"></div>
-    <div class="modal-content help-modal-content">
-        <div class="modal-header">
-            <h2 data-translate="help">Pomoc</h2>
-            <button id="help-close" class="modal-close">×</button>
-        </div>
-        <div class="modal-body">
-            <div data-translate="help_content">
-                
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3 data-translate="settings">Ustawienia</h3>
+            
+            <div class="settings-options">
+                <div class="setting-group">
+                    <label class="form-label" data-translate="language_setting">Language / Język</label>
+                    <select id="language-select" class="form-control">
+                        <option value="pl">Polski</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label class="form-label" data-translate="theme_setting">Theme / Motyw</label>
+                    <select id="theme-select" class="form-control">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label class="form-label" data-translate="number_format">Format liczb / Number format</label>
+                    <select id="number-format-select" class="form-control">
+                        <option value="auto" data-translate="format_number_auto">K/M/B/T</option>
+                        <option value="scientific" data-translate="format_number_scientific">Naukowa (1.23e+9)</option>
+                        <option value="engineering" data-translate="format_number_engineering">Inżynieryjna (1.23E6, 4.5E6)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="settings-close" class="btn btn--primary" data-translate="close">Close</button>
+                <button id="reset-save" class="btn btn--secondary" data-translate="reset_save">Reset Save</button>
             </div>
         </div>
     </div>
-</div>
 
-    <script src="app.js"></script>
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3 data-translate="help">Pomoc</h3>
+            <div class="help-content">
+                <p data-translate="help_content">
+                    Rozwijaj karierę, zdobywaj <strong>Biuro-Punkty (BP)</strong> i odblokowuj zadania. 
+                    Wydawaj <strong>Soft Skills</strong> na ulepszenia.
+                    <br><br>
+                    <strong>NOWA FUNKCJA - Soft Skill Cap:</strong>
+                    <br>
+                    • Początkowo prestiż daje maksymalnie 1 Soft Skill
+                    <br>
+                    • Odblokuj achievement "Mistrz prestiżu" (10 prestiży) ALBO
+                    <br>
+                    • Kup "Przełomowy kurs" na biurku (12 SS) 
+                    <br>
+                    • Po odblokowaniu: otrzymasz pełną liczbę SS za prestiż!
+                    <br><br>
+                    Miłej gry! 🍀
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button id="help-close" class="btn btn--primary" data-translate="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app-modified.js"></script>
 </body>
 </html>
