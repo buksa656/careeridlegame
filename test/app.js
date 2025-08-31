@@ -181,7 +181,17 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
-                    "task_lunch": "Lunch firmowy",
+                    "onboarding_title": "Witaj w Korposzczur!",
+					"onboarding_body": `
+					"Rozwijaj swoją karierę w biurze, zdobywaj <b>Biuro-Punkty (BP)</b> i odblokowuj coraz trudniejsze zadania.<br><br>
+					<b>Nowość: Soft Skill Cap!</b><br>
+					• Na początku za prestiż otrzymasz maksymalnie <b>1 Soft Skill</b>.<br>
+					• Zwiększ limit, odblokowując achievement "Mistrz prestiżu" (10 prestiży) lub kupując "Przełomowy kurs" na biurku.<br>
+					• Po odblokowaniu limitu – możesz dostać nawet kilkanaście Soft Skills na raz!<br><br>
+					Powodzenia! 🍀
+					"`,
+					"onboarding_close": "Zaczynam!",
+					"task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
                     "task_motivation": "Motywacyjne spotkanie",
                     "rank_intern": "Stażysta",
@@ -707,7 +717,13 @@ class KorposzczurGame {
             this.updateTaskButtonStates();
             this.updateUnlockButtonStates();
         });
-
+		if (!localStorage.getItem('korposzczur-onboarded')) {
+			document.getElementById('onboarding-modal').classList.remove('hidden');
+			document.getElementById('onboarding-close').onclick = () => {
+			  document.getElementById('onboarding-modal').classList.add('hidden');
+			  localStorage.setItem('korposzczur-onboarded', '1');
+			};
+		}
         // Initialize debug commands
         window.debug = {
             addBP: (amount) => {
@@ -1735,48 +1751,68 @@ performPrestige() {
 }
 	
 	// Zmodyfikowana metoda renderowania prestiżu z komunikatami o limitach
-    renderPrestigeSection() {
-        const threshold = this.gameState.features.prestigeBreakUnlocked ? 
-            this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-        const canPrestige = this.gameState.totalBPEarned >= threshold;
+	renderPrestigeSection() {
+    const threshold = this.gameState.features.prestigeBreakUnlocked ? 
+        this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
+    const canPrestige = this.gameState.totalBPEarned >= threshold;
+    const prestigeBtn = document.getElementById('prestige-btn');
+    const prestigeInfo = document.querySelector('.prestige-info');
+
+    if (canPrestige) {
+        prestigeBtn.disabled = false;
+        prestigeBtn.classList.remove('disabled');
         
-        const prestigeBtn = document.getElementById('prestige-btn');
-        const prestigeInfo = document.querySelector('.prestige-info');
-        
-        if (canPrestige) {
-            prestigeBtn.disabled = false;
-            prestigeBtn.classList.remove('disabled');
-            
-            // Oblicz ile soft skills gracz otrzyma
-            const potentialGain = this.calculatePrestigeSoftSkillGain(this.gameState.totalBPEarned, threshold);
-            const isCapActive = !this.isSoftSkillCapUnlocked();
-            
-            // Komunikat o potencjalnym zysku
-            let gainMessage;
-            if (isCapActive) {
-                gainMessage = this.translations[this.currentLanguage].prestige_gain_capped || "You will earn 1 Soft Skill (cap active)";
-            } else {
-                gainMessage = (this.translations[this.currentLanguage].prestige_gain_unlimited || "You will earn {0} Soft Skill(s)")
-                    .replace("{0}", potentialGain);
-            }
-            
-            prestigeInfo.innerHTML = `
-                <div class="prestige-gain">${gainMessage}</div>
-                ${isCapActive ? `<div class="prestige-warning" style="color: #f39c12; margin-top: 8px; font-size: 0.9em;">
-                    ${this.translations[this.currentLanguage].prestige_limit_warning}
-                </div>` : ''}
-            `;
+        // Soft Skill Gain Calculation & Cap
+        const potentialGain = this.calculatePrestigeSoftSkillGain(this.gameState.totalBPEarned, threshold);
+        const isCapActive = !this.isSoftSkillCapUnlocked();
+
+        // Button style (gradient badges)
+        prestigeBtn.classList.toggle('cap-limited', isCapActive);
+        prestigeBtn.classList.toggle('cap-unlimited', !isCapActive);
+
+        // Gain message
+        let gainMessage;
+        if (isCapActive) {
+            gainMessage = this.translations[this.currentLanguage].prestige_gain_capped || "You will earn 1 Soft Skill (cap active)";
         } else {
-            prestigeBtn.disabled = true;
-            prestigeBtn.classList.add('disabled');
-            
-            const progress = (this.gameState.totalBPEarned / threshold * 100).toFixed(1);
-            prestigeInfo.innerHTML = `
-                <div class="prestige-progress">Progress: ${progress}%</div>
-                <div class="prestige-requirement">Requires ${this.formatNumber(threshold)} BP earned</div>
-            `;
+            gainMessage = (this.translations[this.currentLanguage].prestige_gain_unlimited || "You will earn {0} Soft Skill(s)")
+                .replace("{0}", potentialGain);
         }
+        
+        prestigeInfo.innerHTML = `
+            <div class="prestige-gain-info">
+                <div class="prestige-potential-gain">${gainMessage}</div>
+                ${isCapActive ? `
+                    <div class="prestige-cap-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <span class="warning-text">${this.translations[this.currentLanguage]?.prestige_limit_warning?.split('.')[0] || "You can currently earn at most 1 Soft Skill per prestige"}</span>
+                    </div>
+                ` : `
+                    <div class="prestige-cap-unlocked">
+                        <span class="success-icon">✨</span>
+                        <span class="success-text">${this.translations[this.currentLanguage]?.prestige_limit_unlocked || "Soft Skill cap per prestige has been unlocked!"}</span>
+                    </div>
+                `}
+            </div>
+        `;
+    } else {
+        prestigeBtn.disabled = true;
+        prestigeBtn.classList.add('disabled');
+        prestigeBtn.classList.remove('cap-limited', 'cap-unlimited');
+
+        const progress = (this.gameState.totalBPEarned / threshold * 100).toFixed(1);
+        prestigeInfo.innerHTML = `
+            <div class="prestige-gain-info">
+                <div class="prestige-progress">
+                    ${this.translations[this.currentLanguage]?.prestige_progress || "Prestige Progress"}: ${progress}%
+                </div>
+                <div class="prestige-requirement">
+                    ${this.translations[this.currentLanguage]?.prestige_reward || "Requires"} ${this.formatNumber(threshold)} BP
+                </div>
+            </div>
+        `;
     }
+}
 
     buyDeskItem(itemId) {
         const item = this.gameData.deskItems.find(d => d.id === itemId);
