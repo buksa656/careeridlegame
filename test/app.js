@@ -912,7 +912,6 @@ class KorposzczurGame {
                     "ach_future_update": "Future updates",
                     "ach_future_update_desc": "Wait for more content",
                     "bonusDesc_career_stats": "Unlocks career stats (ascensions, rankings)",
-                    
                     "game_title": "Corporate Rat",
                     "help_content": "**Corporate Rat** - Corporate idle/clicker game\n\nDevelop your career, earn **Office Points (BP)** and unlock tasks. Spend **Soft Skills** on upgrades.\n\n**NEW FEATURE - Soft Skill Cap:**\n\n• Initially prestige gives maximum 1 Soft Skill\n\n• Unlock the 'Prestige Master' achievement (10 prestiges) OR\n\n• Buy 'Breakthrough Course' desk item (12 SS)\n\n• After unlocking: receive full number of SS per prestige!\n\nEnjoy the game! 🍀"
                 }
@@ -927,10 +926,10 @@ class KorposzczurGame {
                     "Badania pokazują, że praca zdalna zwiększa produktywność o średnio 13%.",
                     "Prawie 40% pracowników korporacji twierdzi, że nigdy nie korzysta z firmowego chill roomu.",
                     "Najczęściej używane słowo na spotkaniach to „synergia".",
-                    "Statystyczny pracownik klika „Wyślij" w mailu służbowym około 30 razy dziennie.",
+                    "Statystyczny pracownik klika Wyślij w mailu służbowym około 30 razy dziennie",
                     "Zjedzenie ciastka z kuchni firmowej podnosi morale zespołu nawet o 5%.",
                     "Najczęściej kopiowany skrót w Excelu to Ctrl+C, a zaraz po nim Ctrl+V.",
-                    "Najpopularniejsza „wymówka" na spóźnienie? Spotkanie z klientem."
+                    "Najpopularniejsza wymówka na spóźnienie? Spotkanie z klientem."
                 ],
                 "en": [
                     "The average work email is read in less than 15 seconds.",
