@@ -155,11 +155,29 @@ class KorposzczurGame {
     "condition": { "type": "challenges_completed", "value": 5 },
     "reward": { "type": "global_mult", "value": 1.50 },
     "bonusDesc": "bonusDesc_challenge_master" },
-
+{
+    "id": "efficiency_expert",
+    "condition": { "type": "total_task_levels", "value": 200 },
+    "reward": { "type": "softcap_reduction", "value": 0.85 }, // 15% lepszy softcap
+    "bonusDesc": "All task softcaps 15% weaker"
+},
+{
+    "id": "ascension_master", 
+    "condition": { "type": "ascensions_per_task", "value": 5 },
+    "reward": { "type": "ascension_discount", "value": 0.7 }, // 30% tańsze ascensions
+    "bonusDesc": "Ascension costs 30% cheaper"
+},
+{
+    "id": "balance_keeper",
+    "condition": { "type": "task_balance_score", "value": 80 }, // Równomierne levelowanie
+    "reward": { "type": "global_mult", "value": 1.4 },
+    "bonusDesc": "40% boost for balanced task development"
+},
   { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
     "condition": { "type": "impossible", "value": 1 },
     "reward": { "type": "coming_soon", "value": 1 },
     "bonusDesc": "bonusDesc_coming_soon" }
+    
 ],
             "deskItems": [
                 { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "single_task_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_single_boost" },
@@ -167,7 +185,10 @@ class KorposzczurGame {
                 { "id": "organizer", "nameKey": "desk_organizer", "cost": 8, "bonus": { "type": "focus_slot", "value": 1 }, "bonusDesc": "bonusDesc_focus_slot" },
                 { "id": "lamp", "nameKey": "desk_lamp", "cost": 6, "bonus": { "type": "night_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_night_boost" },
                 { "id": "multitool", "nameKey": "desk_multitool", "cost": 12, "bonus": { "type": "focus_switch_discount", "value": 0.5 }, "bonusDesc": "bonusDesc_switch_discount" },
-                { "id": "trophy", "nameKey": "desk_trophy", "cost": 20, "bonus": { "type": "focus_slot", "value": 2 }, "prestige": 1, "bonusDesc": "bonusDesc_trophy" }
+                { "id": "trophy", "nameKey": "desk_trophy", "cost": 20, "bonus": { "type": "focus_slot", "value": 2 }, "prestige": 1, "bonusDesc": "bonusDesc_trophy" },
+                {"id": "upgrade_optimizer","nameKey": "desk_upgrade_optimizer", "cost": 15, // Soft Skills"bonus": { "type": "free_upgrades", "value": 5 },"bonusDesc": "bonusDesc_free_upgrades"},
+                {"id": "ascension_assistant","nameKey": "desk_ascension_assistant","cost": 25,"bonus": { "type": "auto_ascend_unlock", "value": 1 },"bonusDesc": "Automatically ascends tasks at level 25+"},
+                {"id": "cost_calculator","nameKey": "desk_cost_calculator","cost": 20,"bonus": { "type": "cost_reduction_post_ascend", "value": 0.8 },"bonusDesc": "Post-ascension upgrade costs 20% cheaper"}
             ],
             "challenges": [
                 {"id": "speed_run", "nameKey": "challenge_speed_run", "descKey": "challenge_speed_run_desc", "condition": {"type": "bp_in_time", "value": 10000, "time": 300000}, "reward": {"type": "idle_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_speed_bonus"},
@@ -181,6 +202,7 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
+                    "bonusDesc_free_upgrades": "Pierwsze 5 ulepszeń każdego zadania po prestiżu jest darmowe",
                     "task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
                     "task_motivation": "Motywacyjne spotkanie",
@@ -351,6 +373,7 @@ class KorposzczurGame {
                     "help_content": "<h2>Pomoc - Poradnik do Korposzczura</h2>\n<h3>[Cel Gry]</h3>\n<p>Rozwijaj karierę, zdobywaj <strong>Biuro-Punkty (BP)</strong> i odblokowuj zadania. Wydawaj <strong>Soft Skills</strong> na ulepszenia.</p>\n<h3>[Sterowanie]</h3>\n<ul>\n<li>Klikaj przyciski, aby odblokować, ulepszyć i awansować zadania.</li>\n<li>Wybierz <em>aktywne zadania</em> (Focus), które generują BP.</li>\n</ul>\n<h3>[Energia]</h3>\n<ul>\n<li>Regeneruje się automatycznie: 1 energia co 10 min (max 100).</li>\n<li>Specjalne umiejętności za energię: \nCoffee Break (25 energii): Podwaja (<strong>x2</strong>) produkcję Biuro-Punktów (BP) ze wszystkich zadań przez <strong>15 minut</strong>, \nFocus Mode (40 energii):+50% (<strong>x1.5</strong>) do produkcji BP ze wszystkich zadań przez <strong>20 minut</strong>, \nOvertime (60 energii):+1 dodatkowy slot Focus (możesz mieć więcej aktywnych zadań) przez <strong>30 minut</strong>\n</li>\n<li>Oglądaj reklamy, aby odzyskać energię (max 5 dziennie, min 10 min między reklamami).</li>\n<li>Energia nie resetuje się przy prestiżu — motywuje do oglądania reklam.</li>\n</ul>\n<h3>[Focus]</h3>\n<ul>\n<li>Tylko zadania aktywne w Focus generują BP.</li>\n<li>Startujesz z 4 slotami, które można zwiększyć (np. Organizer, Trofeum).</li>\n<li>Zmiana Focus może mieć koszt, zależnie od ustawień.</li>\n</ul>\n<h3>[Zadania]</h3>\n<ul>\n<li>Odkrywaj nowe zadania, ulepszaj i awansuj, by maksymalizować produkcję BP.</li>\n<li>Bonusy ze stopni, awansów, dóbr na biurku i umiejętności zwiększają efektywność.</li>\n</ul>\n<h3>[Soft Skills]</h3>\n<ul>\n<li>Zdobądź Soft Skills prestiżując i wykonując wyzwania.</li>\n<li>Wydawaj je, aby kupować przedmioty na biurko z bonusami.</li>\n<li>Przedmioty zwiększają produkcję BP oraz dają dodatkowe sloty Focus.</li>\n</ul>\n<h3>[Prestiż]</h3>\n<ul>\n<li>Reset postępu, zachowuje osiągnięcia i przedmioty.</li>\n<li>Wynagradza Soft Skills, które mają trwały wpływ.</li>\n<li>Daje dostęp do zaawansowanych funkcji i wyzwań.</li>\n</ul>\n<h3>[Wskazówki]</h3>\n<ul>\n<li>Stawiaj w Focus zadania z najlepszym BP.</li>\n<li>Ulepszaj głównie aktywne zadania.</li>\n<li>Rozszerzaj sloty Focus za pomocą biurka i umiejętności.</li>\n<li>Dostosuj grę pod siebie w ustawieniach.</li>\n</ul>\n<p>Miłej gry! 🍀</p>"
               },
                 "en": {
+                    "bonusDesc_free_upgrades": "First 5 upgrades per task are free after prestige",
                     "task_lunch": "Office lunch",
                     "task_report": "Report creation",
                     "task_motivation": "Motivational meet",
@@ -1109,7 +1132,18 @@ setupEventListeners() {
         if (cheapestUpgrade) {
             this.upgradeTask(cheapestUpgrade);
         }
-    }
+if (this.gameState.deskItems['ascension_assistant']) {
+   Object.keys(this.gameState.tasks).forEach(taskId => {
+      const taskState = this.gameState.tasks[taskId];
+      if (
+        taskState && taskState.unlocked &&
+        taskState.level >= 25 && // lub inny próg!
+        taskState.ascensions < (maxAscends) // limit rang jak w manualnym awansie
+      ) {
+          this.ascendTask(taskId);
+      }
+  });
+}
 
 updateLanguage() {
     const elements = document.querySelectorAll('[data-translate]');
@@ -1278,14 +1312,70 @@ showRewardedAd(onComplete) {
     }
 }      
 calculateTaskIdleRate(taskId) {
+    const SOFTCAP_TIERS = {
+      email: [
+        { cap: 1000, exp: 1 },
+        { cap: 6000, exp: 0.5 },
+        { cap: 20000, exp: 0.2 },
+        { cap: Infinity, exp: 0.07 }
+      ],
+      coffee: [
+        { cap: 2500, exp: 1 },
+        { cap: 12000, exp: 0.55 },
+        { cap: 40000, exp: 0.25 },
+        { cap: Infinity, exp: 0.09 }
+      ],
+      meeting: [
+        { cap: 5000, exp: 1 },
+        { cap: 25000, exp: 0.6 },
+        { cap: 80000, exp: 0.28 },
+        { cap: Infinity, exp: 0.1 }
+      ],
+      kpi: [
+        { cap: 12000, exp: 1 },
+        { cap: 60000, exp: 0.62 },
+        { cap: 180000, exp: 0.32 },
+        { cap: Infinity, exp: 0.13 }
+      ],
+      brainstorm: [
+        { cap: 35000, exp: 1 },
+        { cap: 140000, exp: 0.65 },
+        { cap: 400000, exp: 0.33 },
+        { cap: Infinity, exp: 0.17 }
+      ],
+      optimize: [
+        { cap: 90000, exp: 1 },
+        { cap: 260000, exp: 0.7 },
+        { cap: 600000, exp: 0.35 },
+        { cap: Infinity, exp: 0.20 }
+      ],
+      lunch: [
+        { cap: 200000, exp: 1 },
+        { cap: 500000, exp: 0.72 },
+        { cap: 1200000, exp: 0.4 },
+        { cap: Infinity, exp: 0.23 }
+      ],
+      report: [
+        { cap: 450000, exp: 1 },
+        { cap: 1500000, exp: 0.74 },
+        { cap: 3000000, exp: 0.44 },
+        { cap: Infinity, exp: 0.26 }
+      ],
+      motivation: [
+        { cap: 1000000, exp: 1 },
+        { cap: 3000000, exp: 0.75 },
+        { cap: 8000000, exp: 0.5 },
+        { cap: Infinity, exp: 0.3 }
+      ]
+    };
+
     const taskData = this.gameData.tasks.find(t => t.id === taskId);
     const taskState = this.gameState.tasks[taskId];
-    
     let rate = taskData.baseIdle * Math.pow(taskData.idleMultiplier, taskState.level - 1);
-    
+
     // Apply ascension multiplier
     rate *= Math.pow(2, taskState.ascensions);
-    
+
     // Apply global multipliers
     rate *= this.getGlobalMultiplier();
     const segment = Math.floor((taskState.level - 1) / 10);
@@ -1294,7 +1384,7 @@ calculateTaskIdleRate(taskId) {
     }
     const isActive = this.gameState.focus.includes(taskId);
 
-    // all_active_boost - np. telefon, działa na wszystkie aktywne
+    // all_active_boost
     if (isActive) {
         Object.keys(this.gameState.deskItems).forEach(id => {
             if (!this.gameState.deskItems[id]) return;
@@ -1304,8 +1394,7 @@ calculateTaskIdleRate(taskId) {
             }
         });
     }
-
-    // ---- KUBEK: +10% tylko do pierwszego aktywnego w focus ----
+    // KUBEK
     if (
         this.gameState.deskItems['mug'] &&
         this.gameState.focus.length > 0 &&
@@ -1314,8 +1403,7 @@ calculateTaskIdleRate(taskId) {
         const item = this.gameData.deskItems.find(d => d.id === 'mug');
         if (item) rate *= item.bonus.value;
     }
-    
-    // night_boost (np. lampka biurowa 22:00-6:00)
+    // night_boost
     const hour = new Date().getHours();
     if (hour >= 22 || hour < 6) {
         Object.keys(this.gameState.deskItems).forEach(id => {
@@ -1327,20 +1415,31 @@ calculateTaskIdleRate(taskId) {
         });
     }
 
-    // SOFTCAP — dwustopniowy
-    rate = this.softcap(rate, 30000, 0.7, 800000, 0.55);
-    const now = Date.now();
+    // -- MULTITIER SOFTCAP --
+    const baseTiers = SOFTCAP_TIERS[taskId] || [
+      { cap: 5000, exp: 1 },
+      { cap: 50000, exp: 0.6 },
+      { cap: 300000, exp: 0.3 },
+      { cap: Infinity, exp: 0.1 }
+    ];
+    // Tu możesz modyfikować progi na podstawie achievementów (opcjonalnie)
+    const tiers = baseTiers.map(tier => ({
+      ...tier,
+      exp: this.gameState.achievements['efficiency_expert'] ? Math.min(1, tier.exp + 0.15) : tier.exp
+    }));
+    rate = this.softcapMulti(rate, tiers);
 
-    // Coffee Break: 2x mnożnik przez 15 min
+    // Czasowe boosty
+    const now = Date.now();
     if (this.gameState.activeSkills.coffeeBreak && now < this.gameState.activeSkills.coffeeBreak) {
         rate *= 2;
     }
-    // Focus Mode: +50% przez 20 min
     if (this.gameState.activeSkills.focusMode && now < this.gameState.activeSkills.focusMode) {
         rate *= 1.5;
     }
     return rate;
 }
+
     getMaxFocusSlots() {
         let base = 4;
         
@@ -1469,6 +1568,21 @@ calculateTaskIdleRate(taskId) {
                 case 'total_ascensions':
                     unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
                     break;
+                    case 'total_task_levels':
+                const totalLevels = Object.values(this.gameState.tasks)
+                    .reduce((sum, task) => sum + (task.unlocked ? task.level : 0), 0);
+                    unlocked = totalLevels >= achievement.condition.value;
+                    break;
+                case 'task_balance_score':
+                    // Premiuj równomierne rozwijanie zadań
+                    const taskLevels = Object.values(this.gameState.tasks)
+                        .filter(task => task.unlocked)
+                        .map(task => task.level);
+                    const avg = taskLevels.reduce((a,b) => a+b, 0) / taskLevels.length;
+                    const variance = taskLevels.reduce((sum, level) => sum + Math.pow(level - avg, 2), 0) / taskLevels.length;
+                    const balanceScore = Math.max(0, 100 - Math.sqrt(variance));
+                    unlocked = balanceScore >= achievement.condition.value;
+                    break;
                 case 'idle_rate':
                     const totalIdleRate = Object.keys(this.gameState.tasks).reduce((sum, taskId) => {
                         const taskState = this.gameState.tasks[taskId];
@@ -1503,78 +1617,124 @@ calculateTaskIdleRate(taskId) {
         });
     }
 
-    calculateMultiBuyCost(taskId, amount) {
-        const taskData = this.gameData.tasks.find(t => t.id === taskId);
-        const taskState = this.gameState.tasks[taskId];
-        
-        let totalCost = 0;
-        let currentLevel = taskState.level;
-        
-        for (let i = 0; i < amount; i++) {
-            let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
-            const segment = Math.floor(currentLevel / 10);
-            if (segment > 0) {
-                cost *= (1 + 0.10 * segment);
-            }
-            
-            // Apply upgrade discount from desk items and achievements
-            Object.keys(this.gameState.deskItems).forEach(itemId => {
-                if (this.gameState.deskItems[itemId]) {
-                    const item = this.gameData.deskItems.find(d => d.id === itemId);
-                    if (item && item.bonus.type === 'upgrade_discount') {
-                        cost *= item.bonus.value;
-                    }
-                }
-            });
+calculateMultiBuyCost(taskId, amount) {
+    const taskData = this.gameData.tasks.find(t => t.id === taskId);
+    const taskState = this.gameState.tasks[taskId];
 
-            Object.keys(this.gameState.achievements).forEach(achId => {
-                if (this.gameState.achievements[achId]) {
-                    const achievement = this.gameData.achievements.find(a => a.id === achId);
-                    if (achievement && achievement.reward.type === 'upgrade_discount') {
-                        cost *= achievement.reward.value;
-                    }
-                }
-            });
-            
-            totalCost += cost;
+    let totalCost = 0;
+    let currentLevel = taskState.level;
+
+    // QoL: ile pierwszych za free?
+    const hasOptimizer = this.gameState.deskItems['upgrade_optimizer'];
+    let freeUpgrades = hasOptimizer ? 5 : 0;
+
+    for (let i = 0; i < amount; i++) {
+        // DARMOWE UPGRADE (QoL) – tylko jeśli jeszcze nie wykorzystane (na początku po prestiżu)
+        if (freeUpgrades > 0) {
+            freeUpgrades--;
             currentLevel++;
+            continue; // Pomijaj koszt całkiem
         }
         
-        return Math.floor(totalCost);
+        let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
+
+        const segment = Math.floor(currentLevel / 10);
+        if (segment > 0) {
+            cost *= Math.pow(1.5, taskState.ascensions);
+        }
+
+        // Ulepszenia z desk items (np. upgrade_discount)
+        Object.keys(this.gameState.deskItems).forEach(itemId => {
+            if (this.gameState.deskItems[itemId]) {
+                const item = this.gameData.deskItems.find(d => d.id === itemId);
+                if (item && item.bonus.type === 'upgrade_discount') {
+                    cost *= item.bonus.value;
+                }
+                // Tańsze upgrade po ascension (cost_calculator)
+                if (
+                  item && item.bonus.type === 'cost_reduction_post_ascend' &&
+                  taskState.ascensions > 0 // działa tylko jeśli był awans!
+                ) {
+                    cost *= item.bonus.value;
+                }
+            }
+        });
+
+        // Achievementy (jeśli coś daje zniżkę)
+        Object.keys(this.gameState.achievements).forEach(achId => {
+            if (this.gameState.achievements[achId]) {
+                const achievement = this.gameData.achievements.find(a => a.id === achId);
+                if (achievement && achievement.reward.type === 'upgrade_discount') {
+                    cost *= achievement.reward.value;
+                }
+            }
+        });
+
+        totalCost += cost;
+        currentLevel++;
     }
 
-    calculateMaxBuyAmount(taskId) {
-        const taskData = this.gameData.tasks.find(t => t.id === taskId);
-        const taskState = this.gameState.tasks[taskId];
-        
-        let amount = 0;
-        let totalCost = 0;
-        let currentLevel = taskState.level;
-        
-        while (totalCost <= this.gameState.bp && amount < 50) {
-            let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
-            
-            // Apply upgrade discount
-            Object.keys(this.gameState.deskItems).forEach(itemId => {
-                if (this.gameState.deskItems[itemId]) {
-                    const item = this.gameData.deskItems.find(d => d.id === itemId);
-                    if (item && item.bonus.type === 'upgrade_discount') {
-                        cost *= item.bonus.value;
-                    }
-                }
-            });
-            
-            if (totalCost + cost <= this.gameState.bp) {
-                totalCost += cost;
-                amount++;
-                currentLevel++;
-            } else {
-                break;
-            }
+    return Math.floor(totalCost);
+}
+
+calculateMaxBuyAmount(taskId) {
+    const taskData = this.gameData.tasks.find(t => t.id === taskId);
+    const taskState = this.gameState.tasks[taskId];
+    
+    let amount = 0;
+    let totalCost = 0;
+    let currentLevel = taskState.level;
+
+    const hasOptimizer = this.gameState.deskItems['upgrade_optimizer'];
+    let freeUpgrades = hasOptimizer ? 5 : 0;
+
+    while (totalCost <= this.gameState.bp && amount < 50) {
+        if (freeUpgrades > 0) {
+            freeUpgrades--;
+            amount++;
+            currentLevel++;
+            continue;
         }
-        
-        return amount;
+        let cost = taskData.baseCost * Math.pow(taskData.costMultiplier, currentLevel);
+
+        // segment, rabaty jak wyżej z desk items i achievements
+        const segment = Math.floor(currentLevel / 10);
+        if (segment > 0) {
+            cost *= Math.pow(1.5, taskState.ascensions);
+        }
+        Object.keys(this.gameState.deskItems).forEach(itemId => {
+            if (this.gameState.deskItems[itemId]) {
+                const item = this.gameData.deskItems.find(d => d.id === itemId);
+                if (item && item.bonus.type === 'upgrade_discount') {
+                    cost *= item.bonus.value;
+                }
+                if (
+                    item && item.bonus.type === 'cost_reduction_post_ascend'
+                    && taskState.ascensions > 0
+                ) {
+                    cost *= item.bonus.value;
+                }
+            }
+        });
+        Object.keys(this.gameState.achievements).forEach(achId => {
+            if (this.gameState.achievements[achId]) {
+                const achievement = this.gameData.achievements.find(a => a.id === achId);
+                if (achievement && achievement.reward.type === 'upgrade_discount') {
+                    cost *= achievement.reward.value;
+                }
+            }
+        });
+
+        if (totalCost + cost <= this.gameState.bp) {
+            totalCost += cost;
+            amount++;
+            currentLevel++;
+        } else {
+            break;
+        }
     }
+    return amount;
+}
 
     upgradeTask(taskId) {
         const amount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskId) : parseInt(this.multiBuyAmount);
@@ -2279,25 +2439,30 @@ updateDisplay() {
             return num.toExponential(2); // fallback na notację naukową jeśli za daleko
         }
     }
-    /**
-     * Funkcja softcapująca dowolną wartość.
-     * value — liczba do zmiękczenia,
-     * cap — próg od którego efekt rośnie wolniej,
-     * exp — wykładnik po przekroczeniu progu (np. 0.7),
-     * nextCap — opcjonalnie drugi prog dla jeszcze mocniejszego softcapu (np. >500k, exp2=0.5).
-     *
-     * Powraca zmiękczoną wartość.
-     */
-    softcap(value, cap, exp, nextCap = null, exp2 = null) {
-        if (value <= cap) return value;
-        if (nextCap && exp2 && value > nextCap) {
-            // Dwuetapowy softcap: po przekroczeniu nextCap miękczymy jeszcze mocniej
-            return cap
-                + Math.pow(nextCap - cap, exp)
-                + Math.pow(value - nextCap, exp2);
+softcapMulti(value, tiers) {
+    /*
+    tiers: tablica progów [{cap, exp}]
+    Przykład:
+      [
+        { cap: 5000, exp: 1 },     // do 5k BP/s liniowo
+        { cap: 50000, exp: 0.6 },  // do 50k BP/s, 60% tempa
+        { cap: 500000, exp: 0.3 }, // do 500k BP/s, 30%
+        { cap: Infinity, exp: 0.1 } // powyżej 500k BP/s tylko 10% tempa
+      ]
+    */
+    let result = value;
+    let prevCap = 0;
+    for (let i = 0; i < tiers.length; i++) {
+        const { cap, exp } = tiers[i];
+        if (result <= cap) {
+            return prevCap + Math.pow(result - prevCap, exp);
+        } else {
+            result = cap + Math.pow(result - cap, exp);
+            prevCap = cap;
         }
-        return cap + Math.pow(value - cap, exp);
     }
+    return result;
+}
 
     showNotification(message) {
         // Simple notification system
