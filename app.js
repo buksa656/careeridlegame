@@ -742,7 +742,11 @@ class KorposzczurGame {
             }
         };
     }
-
+softcap(value, cap1, exp1, cap2, exp2) {
+    if (value <= cap1) return value;
+    if (value <= cap2) return cap1 + Math.pow(value - cap1, exp1);
+    return cap2 + Math.pow(value - cap2, exp2);
+}
 setupEventListeners() {
     // Tab navigation - Fixed to handle challenges tab properly
     document.querySelectorAll('.tab-btn').forEach(btn => {
