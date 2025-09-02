@@ -55,6 +55,7 @@
                 <button class="tab-btn disabled" data-tab="desk" data-translate="tab_desk">Biurko</button>
                 <button class="tab-btn" data-tab="achievements" data-translate="tab_achievements">Achievementy</button>
                 <button class="tab-btn disabled" data-tab="challenges" data-translate="tab_challenges">Wyzwania</button>
+                <button class="tab-btn" data-tab="careerstats" id="careerstats-tab-btn" style="display:none;"><span data-translate="tab_career_stats">Statystyki kariery</span></button>
             </div>
         </nav>
 
@@ -83,7 +84,11 @@
                             </div>
                         </div>
                     </div>
-
+                    <!-- Statystyki kariery -->
+                    <div id="careerstats-tab" class="tab-content" style="display:none;">
+                        <h2>Statystyki kariery</h2>
+                        <div id="careerstats-content"></div>
+                    </div>
                     <!-- Auto-buyer Controls -->
                     <div class="autobuyer-controls hidden" id="autobuyer-controls">
                         <div class="autobuyer-toggle">
