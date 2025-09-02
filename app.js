@@ -322,8 +322,8 @@ class KorposzczurGame {
                     "challenge_prestige_rush_desc": "Wykonaj prestiż w 10 minut",
                     "challenge_marathon": "Maraton korporacyjny",
                     "challenge_marathon_desc": "Graj nieprzerwanie przez godzinę",
-                    "ach_first_unlock": "Pierwszy odblokuj",
-                    "ach_first_unlock_desc": "Odblokuj pierwsze zadanie",
+                    "ach_first_progress": "Pierwsze postępy",
+                    "ach_first_progress_desc": "Odblokuj pierwsze zadanie",
                     "ach_upgrade_novice": "Początkujący ulepszacz",
                     "ach_upgrade_novice_desc": "Kup 50 ulepszeń",
                     "ach_coffee_lover": "Miłośnik kawy",
@@ -1792,33 +1792,35 @@ calculateMaxBuyAmount(taskId) {
     }
 
 performPrestige() {
-    // Ustal threshold zależnie od trybu prestige break
-    const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-    if (this.gameState.totalBPEarned < threshold) return;
+    // Nowa logika: 1 SS za każde pełne 50,000 BP
+    const SS_BP_PRICE = 50000;
+    const earned = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
 
-    // Sprawdź, czy gracz zdobył osiągnięcie prestige_master
-    const hasPrestigeBreak = !!this.gameState.achievements["prestige_master"];
-
-    // Jeśli NIE ma prestige_master: cap na 1 SS (mimo wzoru)
+    // Hard cap przed zdobyciem prestige_master achievementa
+    const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
     let softSkillsGain;
-    if (!hasPrestigeBreak) {
-        softSkillsGain = 1;
+
+    // Hard cap: możesz zdobyć tylko 1 SS, nawet jeśli masz więcej BP
+    if (!hasPrestigeMaster) {
+        softSkillsGain = (earned > 0) ? 1 : 0;
     } else {
-        softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
+        softSkillsGain = earned;
     }
 
-    // ZAPISZ elementy, które zostają
+    // Brak BP -> nie możesz zrobić prestiżu (disable button gdy softSkillsGain < 1)
+    if (softSkillsGain < 1) return;
+
+    // ZAPISZ elementy, które zostają po prestiżu
     const achievementsToKeep = { ...this.gameState.achievements };
     const deskItemsToKeep = { ...this.gameState.deskItems };
     const settingsToKeep = { ...this.gameState.settings };
     const featuresState = { ...this.gameState.features };
     const challengesState = { ...this.gameState.challenges };
 
-    // TOTAL RESET: wszystko z wyjątkiem achievements, desk items, settings, features, challenges
-    // WAŻNE: Resetuj BP na zero oraz progres tasków (BP, levels, ascensions itd.)
+    // RESET wszystkiego poza zachowanymi danymi:
     this.gameState = this.loadGameState();
 
-    // Wszystkie zadania zostają zablokowane po prestige
+    // Wszystkie zadania zostają zablokowane po prestiżu
     this.gameData.tasks.forEach(task => {
         this.gameState.tasks[task.id] = {
             level: 1,
@@ -1842,11 +1844,11 @@ performPrestige() {
     // BP = 0 po prestiżu!
     this.gameState.bp = 0;
 
-    // Odśwież UI itd.
+    // Odśwież UI i powiadom
     this.checkAchievements();
     this.checkFeatureUnlocks();
     this.renderAll();
-    this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}!`);
+    this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain !== 1 ? "s" : ""}!`);
 }
 
     buyDeskItem(itemId) {
@@ -2299,27 +2301,23 @@ renderDesk() {
     }
 
 updateDisplay() {
-    // ✅ BEZPIECZNE sprawdzanie przed ustawieniem
+    // BEZPIECZNE sprawdzanie przed ustawieniem
     const energyDisplay = document.getElementById('energy-display');
     if (energyDisplay) {
         energyDisplay.textContent = this.gameState.energy;
     }
-
     const bpDisplay = document.getElementById('bp-display');
     if (bpDisplay) {
         bpDisplay.textContent = this.formatNumber(Math.floor(this.gameState.bp));
     }
-
     const ssDisplay = document.getElementById('ss-display');
     if (ssDisplay) {
         ssDisplay.textContent = Math.floor(this.gameState.softSkills);
     }
-
     const energyBtn = document.getElementById('energy-button');
     if (energyBtn) {
         energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
     }
-
     // Bezpieczne sprawdzenie przed disable/enable przycisków
     document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
         const skill = btn.getAttribute('data-skill');
@@ -2328,12 +2326,10 @@ updateDisplay() {
             focusMode: 40,
             overtime: 60
         };
-        
         if (skillCosts[skill]) {
             btn.disabled = this.gameState.energy < skillCosts[skill];
         }
     });
-
     // Bezpieczne sprawdzenie ad button
     const adButton = document.getElementById('watch-ad-option');
     if (adButton) {
@@ -2352,29 +2348,45 @@ updateDisplay() {
         }
     }
 
-    // Bezpieczne sprawdzenie prestige button
+    // PRESTIŻ – nowa logika
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
-    
     if (prestigeBtn && prestigeInfo) {
-        const threshold = this.gameState.features.prestigeBreakUnlocked ? this.gameData.prestigeBreakThreshold : this.gameData.prestigeThreshold;
-        const canPrestige = this.gameState.totalBPEarned >= threshold;
-        
-        prestigeBtn.disabled = !canPrestige;
-        if (canPrestige) {
-            const softSkillsGain = Math.floor(Math.sqrt(this.gameState.totalBPEarned / threshold));
-            prestigeInfo.textContent = `Gain ${softSkillsGain} Soft Skills`;
-            prestigeBtn.classList.remove('disabled');
+        const SS_BP_PRICE = 50000;
+        const earned = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
+        const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
+        let softSkillsGain;
+
+        if (!hasPrestigeMaster) {
+            softSkillsGain = earned > 0 ? 1 : 0;
         } else {
-            const earned = this.formatNumber(this.gameState.totalBPEarned);
-            const requirement = this.formatNumber(threshold);
-            prestigeInfo.innerHTML = `<span style="color:#888;">${earned} / ${requirement} BP</span>
+            softSkillsGain = earned;
+        }
+
+        prestigeBtn.disabled = softSkillsGain < 1;
+
+        if (softSkillsGain >= 1) {
+            prestigeInfo.textContent = hasPrestigeMaster
+                ? (this.currentLanguage === 'pl'
+                    ? `Zdobywasz ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}`
+                    : `Gain ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}`)
+                : (this.currentLanguage === 'pl'
+                    ? `Zdobywasz 1 Soft Skill`
+                    : `Gain 1 Soft Skill`);
+            prestigeBtn.classList.remove('disabled');
+            // (opcjonalnie) reset innerHTML jeśli poprzednio był .disabled:
+            prestigeBtn.innerHTML = this.translations[this.currentLanguage].prestige_ready;
+        } else {
+            const earnedBP = this.formatNumber(this.gameState.totalBPEarned);
+            const nextReq = this.formatNumber(SS_BP_PRICE);
+            prestigeInfo.innerHTML = `<span style="color:#888;">${earnedBP} / ${nextReq} BP</span>
                 <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
             prestigeBtn.classList.add('disabled');
             prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
         }
     }
 }
+
     updateTaskProgress() {
         document.querySelectorAll('.hex-fill').forEach((fill, index) => {
             const tasks = Object.keys(this.gameState.tasks).filter(taskId => 
