@@ -1144,7 +1144,7 @@ if (this.gameState.deskItems['ascension_assistant']) {
       }
   });
 }
-
+    }
 updateLanguage() {
     const elements = document.querySelectorAll('[data-translate]');
     elements.forEach(el => {
