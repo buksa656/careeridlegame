@@ -157,21 +157,27 @@ class KorposzczurGame {
     "bonusDesc": "bonusDesc_challenge_master" },
 {
     "id": "efficiency_expert",
+    "nameKey": "ach_efficiency_expert",
+    "descKey": "ach_efficiency_expert_desc",
     "condition": { "type": "total_task_levels", "value": 200 },
-    "reward": { "type": "softcap_reduction", "value": 0.85 }, // 15% lepszy softcap
-    "bonusDesc": "All task softcaps 15% weaker"
+    "reward": { "type": "softcap_reduction", "value": 0.85 },
+    "bonusDesc": "bonusDesc_efficiency_15"
 },
 {
-    "id": "ascension_master", 
+    "id": "ascension_master",
+    "nameKey": "ach_ascension_master",
+    "descKey": "ach_ascension_master_desc",
     "condition": { "type": "ascensions_per_task", "value": 5 },
-    "reward": { "type": "ascension_discount", "value": 0.7 }, // 30% tańsze ascensions
-    "bonusDesc": "Ascension costs 30% cheaper"
+    "reward": { "type": "ascension_discount", "value": 0.7 },
+    "bonusDesc": "bonusDesc_ascension_30"
 },
 {
     "id": "balance_keeper",
-    "condition": { "type": "task_balance_score", "value": 80 }, // Równomierne levelowanie
+    "nameKey": "ach_balance_keeper",
+    "descKey": "ach_balance_keeper_desc",
+    "condition": { "type": "task_balance_score", "value": 80 },
     "reward": { "type": "global_mult", "value": 1.4 },
-    "bonusDesc": "40% boost for balanced task development"
+    "bonusDesc": "bonusDesc_balance_40"
 },
   { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
     "condition": { "type": "impossible", "value": 1 },
@@ -202,7 +208,16 @@ class KorposzczurGame {
             "prestigeBreakThreshold": 50000,
             "translations": {
                 "pl": {
-                    "bonusDesc_free_upgrades": "Pierwsze 5 ulepszeń każdego zadania po prestiżu jest darmowe",
+                    "ach_efficiency_expert": "Ekspert efektywności",
+					"ach_efficiency_expert_desc": "Podnieś sumę poziomów wszystkich zadań do 200",
+					"bonusDesc_efficiency_15": "Wszystkie softcapy zadań słabsze o 15%",
+					"ach_ascension_master": "Mistrz awansów",
+					"ach_ascension_master_desc": "Awansuj każde zadanie co najmniej 5 razy",
+					"bonusDesc_ascension_30": "Koszt awansów zmniejszony o 30%",
+					"ach_balance_keeper": "Wzorcowy menedżer",
+					"ach_balance_keeper_desc": "Uzyskaj wysoki współczynnik zbalansowanego levelowania zadań (80/100)",
+					"bonusDesc_balance_40": "+40% do wszystkich przychodów za wydajne levelowanie zadań",
+					"bonusDesc_free_upgrades": "Pierwsze 5 ulepszeń każdego zadania po prestiżu jest darmowe",
                     "task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
                     "task_motivation": "Motywacyjne spotkanie",
@@ -373,7 +388,16 @@ class KorposzczurGame {
                     "help_content": "<h2>Pomoc - Poradnik do Korposzczura</h2>\n<h3>[Cel Gry]</h3>\n<p>Rozwijaj karierę, zdobywaj <strong>Biuro-Punkty (BP)</strong> i odblokowuj zadania. Wydawaj <strong>Soft Skills</strong> na ulepszenia.</p>\n<h3>[Sterowanie]</h3>\n<ul>\n<li>Klikaj przyciski, aby odblokować, ulepszyć i awansować zadania.</li>\n<li>Wybierz <em>aktywne zadania</em> (Focus), które generują BP.</li>\n</ul>\n<h3>[Energia]</h3>\n<ul>\n<li>Regeneruje się automatycznie: 1 energia co 10 min (max 100).</li>\n<li>Specjalne umiejętności za energię: \nCoffee Break (25 energii): Podwaja (<strong>x2</strong>) produkcję Biuro-Punktów (BP) ze wszystkich zadań przez <strong>15 minut</strong>, \nFocus Mode (40 energii):+50% (<strong>x1.5</strong>) do produkcji BP ze wszystkich zadań przez <strong>20 minut</strong>, \nOvertime (60 energii):+1 dodatkowy slot Focus (możesz mieć więcej aktywnych zadań) przez <strong>30 minut</strong>\n</li>\n<li>Oglądaj reklamy, aby odzyskać energię (max 5 dziennie, min 10 min między reklamami).</li>\n<li>Energia nie resetuje się przy prestiżu — motywuje do oglądania reklam.</li>\n</ul>\n<h3>[Focus]</h3>\n<ul>\n<li>Tylko zadania aktywne w Focus generują BP.</li>\n<li>Startujesz z 4 slotami, które można zwiększyć (np. Organizer, Trofeum).</li>\n<li>Zmiana Focus może mieć koszt, zależnie od ustawień.</li>\n</ul>\n<h3>[Zadania]</h3>\n<ul>\n<li>Odkrywaj nowe zadania, ulepszaj i awansuj, by maksymalizować produkcję BP.</li>\n<li>Bonusy ze stopni, awansów, dóbr na biurku i umiejętności zwiększają efektywność.</li>\n</ul>\n<h3>[Soft Skills]</h3>\n<ul>\n<li>Zdobądź Soft Skills prestiżując i wykonując wyzwania.</li>\n<li>Wydawaj je, aby kupować przedmioty na biurko z bonusami.</li>\n<li>Przedmioty zwiększają produkcję BP oraz dają dodatkowe sloty Focus.</li>\n</ul>\n<h3>[Prestiż]</h3>\n<ul>\n<li>Reset postępu, zachowuje osiągnięcia i przedmioty.</li>\n<li>Wynagradza Soft Skills, które mają trwały wpływ.</li>\n<li>Daje dostęp do zaawansowanych funkcji i wyzwań.</li>\n</ul>\n<h3>[Wskazówki]</h3>\n<ul>\n<li>Stawiaj w Focus zadania z najlepszym BP.</li>\n<li>Ulepszaj głównie aktywne zadania.</li>\n<li>Rozszerzaj sloty Focus za pomocą biurka i umiejętności.</li>\n<li>Dostosuj grę pod siebie w ustawieniach.</li>\n</ul>\n<p>Miłej gry! 🍀</p>"
               },
                 "en": {
-                    "bonusDesc_free_upgrades": "First 5 upgrades per task are free after prestige",
+                    "ach_efficiency_expert": "Efficiency Expert",
+					"ach_efficiency_expert_desc": "Raise the total sum of all task levels to 200",
+					"bonusDesc_efficiency_15": "All task softcaps 15% weaker",
+					"ach_ascension_master": "Ascension Master",
+					"ach_ascension_master_desc": "Ascend every task at least 5 times",
+					"bonusDesc_ascension_30": "Ascension costs 30% cheaper",
+					"ach_balance_keeper": "Balance Keeper",
+					"ach_balance_keeper_desc": "Reach a high balanced task leveling score (80/100)",
+					"bonusDesc_balance_40": "+40% to all income for balanced development",
+					"bonusDesc_free_upgrades": "First 5 upgrades per task are free after prestige",
                     "task_lunch": "Office lunch",
                     "task_report": "Report creation",
                     "task_motivation": "Motivational meet",
