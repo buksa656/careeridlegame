@@ -1549,6 +1549,13 @@ calculateTaskIdleRate(taskId) {
         if (!this.gameState.focus.includes(taskId) && this.gameState.focus.length < this.getMaxFocusSlots()) {
             this.gameState.focus.push(taskId);
         }
+		const unlockBtn = document.querySelector(`.unlock-task-btn[data-task-id="${taskId}"]`);
+		if (unlockBtn) {
+		  unlockBtn.classList.remove('unlock-anim');
+		  void unlockBtn.offsetWidth;
+		  unlockBtn.classList.add('unlock-anim');
+		  setTimeout(() => unlockBtn.classList.remove('unlock-anim'), 500);
+		}
         return true;
     }
 
@@ -1785,6 +1792,14 @@ calculateMaxBuyAmount(taskId) {
                 setTimeout(() => btn.classList.remove('btn-flash'), 300);
             }
         }
+		const card = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+		if (card) {
+		  card.classList.remove('tile-anim-pop');
+		  // Wymusi reflow, by animacja zawsze odpaliła (gdy kilkuklikasz)
+		  void card.offsetWidth;
+		  card.classList.add('tile-anim-pop');
+		  setTimeout(() => card.classList.remove('tile-anim-pop'), 400);
+}
     }
 
     calculateUpgradeCost(taskId) {
@@ -1805,7 +1820,14 @@ calculateMaxBuyAmount(taskId) {
         this.renderTasks();
         this.updateTaskButtonStates();
         this.showNotification(`Task ascended: ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}`);
-    }
+		const card = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+		if (card) {
+		  card.classList.remove('tile-anim-bounce');
+		  void card.offsetWidth;
+		  card.classList.add('tile-anim-bounce');
+		  setTimeout(() => card.classList.remove('tile-anim-bounce'), 500);
+		}
+	}
 
 performPrestige() {
     // Nowa logika: 1 SS za każde pełne 50,000 BP
@@ -2596,7 +2618,8 @@ softcapMulti(value, tiers) {
         user-select: none;
         `;
         notification.textContent = message;
-        
+        notification.classList.add('achievement-pop');
+		setTimeout(() => notification.classList.remove('achievement-pop'), 1100);
         document.body.appendChild(notification);
         
         setTimeout(() => {

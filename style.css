@@ -1950,3 +1950,37 @@ select.form-control {
         font-size: 1em;
     }
 }
+@keyframes tile-pop {
+  0% { transform: scale(1); box-shadow: 0 0 0 #ffd70000; }
+  50% { transform: scale(1.07); box-shadow: 0 0 18px #ffd70077; }
+  100% { transform: scale(1); box-shadow: 0 0 0 #ffd70000; }
+}
+.tile-anim-pop {
+  animation: tile-pop 0.35s cubic-bezier(.17,.67,.66,1.31);
+}
+@keyframes tile-bounce {
+  0%   { transform: scale(1);}
+  33% {transform: scale(1.11);}
+  66% {transform: scale(0.95);}
+  100% {transform: scale(1);}
+}
+.tile-anim-bounce {
+  animation: tile-bounce 0.44s cubic-bezier(.2,.92,.62,1.13);
+}
+@keyframes notif-gold-flash {
+  0% {background: #ffd700;}
+  30% {background: #ffe066;}
+  100% {background: #fffbe8;}
+}
+.achievement-pop {
+  animation: notif-gold-flash 0.99s ease;
+}
+@keyframes unlock-glow {
+  0% { box-shadow: 0 0 0 #79ffb0cc;}
+  33% { box-shadow: 0 0 24px #79ffb080;}
+  70% { box-shadow: 0 0 3px #fff;}
+  100% { box-shadow: 0 0 0 #79ffb000;}
+}
+.unlock-anim {
+  animation: unlock-glow 0.49s cubic-bezier(.7,1.5,.3,1.1);
+}
