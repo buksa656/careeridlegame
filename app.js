@@ -175,11 +175,14 @@ class KorposzczurGame {
     },
 
     // BALANS i CHALLENGE
-    { "id": "balance_keeper", "nameKey": "ach_balance_keeper", "descKey": "ach_balance_keeper_desc",
-      "condition": { "type": "task_balance_score", "value": 80 },
-      "reward": { "type": "global_mult", "value": 1.4 },
-      "bonusDesc": "bonusDesc_balance_40"
-    },
+{
+  "id": "balance_keeper",
+  "nameKey": "ach_balance_keeper",
+  "descKey": "ach_balance_keeper_desc",
+  "condition": { "type": "all_tasks_same_level", "value": 10 },
+  "reward": { "type": "global_mult", "value": 1.4 },
+  "bonusDesc": "bonusDesc_balance_40"
+},
     { "id": "challenge_master", "nameKey": "ach_challenge_master", "descKey": "ach_challenge_master_desc",
       "condition": { "type": "challenges_completed", "value": 5 },
       "reward": { "type": "global_mult", "value": 1.50 },
@@ -240,7 +243,10 @@ class KorposzczurGame {
                     "rank_director": "Dyrektor",
                     "rank_board_member": "Członek Zarządu",
                     "number_format": "Format liczb",
-                    "format_number_auto": "K/M/B/T",
+					"ach_balance_keeper": "Wzorcowy menedżer",
+					"ach_balance_keeper_desc": "Doprowadź wszystkie zadania do co najmniej poziomu 10",
+                    "bonusDesc_balance_40": "+40% do wszystkich przychodów za harmonijne rozwijanie zadań",
+					"format_number_auto": "K/M/B/T",
                     "format_number_scientific": "Naukowa (1.23e+9)",
                     "format_number_engineering": "Inżynieryjna (1.23E6, 4.5E6)",
                     "format_number_auto_desc": "Skróty tysięcy, milionów, miliardów itd.",
@@ -406,7 +412,10 @@ class KorposzczurGame {
 					"ach_balance_keeper_desc": "Reach a high balanced task leveling score (80/100)",
 					"bonusDesc_balance_40": "+40% to all income for balanced development",
 					"bonusDesc_free_upgrades": "First 5 upgrades per task are free after prestige",
-                    "task_lunch": "Office lunch",
+                    "ach_balance_keeper": "Balance Keeper",
+					"ach_balance_keeper_desc": "Level every task up to at least level 10",
+					"bonusDesc_balance_40": "+40% to all income for balanced development",
+					"task_lunch": "Office lunch",
                     "task_report": "Report creation",
                     "task_motivation": "Motivational meet",
                     "rank_intern": "Intern",
@@ -1639,7 +1648,13 @@ calculateTaskIdleRate(taskId) {
                     unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
                     break;
                     case 'total_task_levels':
-                const totalLevels = Object.values(this.gameState.tasks)
+                case 'all_tasks_same_level':
+					  const allLevels = Object.values(this.gameState.tasks)
+						.filter(task => task.unlocked)
+						.map(task => task.level);
+					  unlocked = allLevels.length > 0 && allLevels.every(lvl => lvl >= achievement.condition.value);
+					  break;
+				const totalLevels = Object.values(this.gameState.tasks)
                     .reduce((sum, task) => sum + (task.unlocked ? task.level : 0), 0);
                     unlocked = totalLevels >= achievement.condition.value;
                     break;
@@ -2431,7 +2446,6 @@ updateDisplay() {
     // zakladka statystyk
     if (this.gameState.achievements['first_ascend']) {
         document.getElementById('careerstats-tab-btn').style.display = 'inline-block';
-        document.getElementById('careerstats-tab').style.display = 'block';
     } else {
         document.getElementById('careerstats-tab-btn').style.display = 'none';
         document.getElementById('careerstats-tab').style.display = 'none';
