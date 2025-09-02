@@ -2359,6 +2359,32 @@ updateDisplay() {
         document.getElementById('careerstats-tab-btn').style.display = 'none';
         document.getElementById('careerstats-tab').style.display = 'none';
     }
+	
+	// Ukrywanie/pokazywanie zakładki "Biurko"
+	const deskBtn = document.querySelector('[data-tab="desk"]');
+	const deskTab = document.getElementById('desk-tab');
+	if (deskBtn && deskTab) {
+		if (this.gameState.features.deskUnlocked) {
+			deskBtn.style.display = 'inline-block';
+			deskTab.style.display = 'block';
+		} else {
+			deskBtn.style.display = 'none';
+			deskTab.style.display = 'none';
+		}
+	}
+
+	// Ukrywanie/pokazywanie zakładki "Wyzwania"
+	const challengesBtn = document.querySelector('[data-tab="challenges"]');
+	const challengesTab = document.getElementById('challenges-tab');
+	if (challengesBtn && challengesTab) {
+		if (this.gameState.features.challengesUnlocked) {
+			challengesBtn.style.display = 'inline-block';
+			challengesTab.style.display = 'block';
+		} else {
+			challengesBtn.style.display = 'none';
+			challengesTab.style.display = 'none';
+		}
+	}
     // PRESTIŻ – nowa logika
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
