@@ -2472,18 +2472,25 @@ softcapMulti(value, tiers) {
         // Simple notification system
         const notification = document.createElement('div');
         notification.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: var(--color-success);
-            color: var(--color-surface);
-            padding: var(--space-12) var(--space-16);
-            border-radius: var(--radius-base);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-            max-width: 300px;
-            font-size: var(--font-size-sm);
+        position: fixed;
+        top: 90px;
+        right: 30px;
+        min-width: 340px;
+        z-index: 9999;
+        background: linear-gradient(90deg,#ffe066,#ffd700);
+        color: #444;
+        padding: 28px 24px 20px 78px;
+        border-radius: 18px;
+        border:2px solid #ffb700;
+        box-shadow: 0 0 24px 0 #ffd70099;
+        font-size: 1.25em;
+        line-height: 1.2;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        animation: achievement-bounce-in 0.5s cubic-bezier(.2,1.5,.4,1);
+        pointer-events: none;
+        user-select: none;
         `;
         notification.textContent = message;
         
