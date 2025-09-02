@@ -186,7 +186,7 @@ class KorposzczurGame {
                 { "id": "lamp", "nameKey": "desk_lamp", "cost": 6, "bonus": { "type": "night_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_night_boost" },
                 { "id": "multitool", "nameKey": "desk_multitool", "cost": 12, "bonus": { "type": "focus_switch_discount", "value": 0.5 }, "bonusDesc": "bonusDesc_switch_discount" },
                 { "id": "trophy", "nameKey": "desk_trophy", "cost": 20, "bonus": { "type": "focus_slot", "value": 2 }, "prestige": 1, "bonusDesc": "bonusDesc_trophy" },
-                {"id": "upgrade_optimizer","nameKey": "desk_upgrade_optimizer", "cost": 15, // Soft Skills"bonus": { "type": "free_upgrades", "value": 5 },"bonusDesc": "bonusDesc_free_upgrades"},
+                {"id": "upgrade_optimizer","nameKey": "desk_upgrade_optimizer", "cost": 15, "bonus": { "type": "free_upgrades", "value": 5 },"bonusDesc": "bonusDesc_free_upgrades"},
                 {"id": "ascension_assistant","nameKey": "desk_ascension_assistant","cost": 25,"bonus": { "type": "auto_ascend_unlock", "value": 1 },"bonusDesc": "Automatically ascends tasks at level 25+"},
                 {"id": "cost_calculator","nameKey": "desk_cost_calculator","cost": 20,"bonus": { "type": "cost_reduction_post_ascend", "value": 0.8 },"bonusDesc": "Post-ascension upgrade costs 20% cheaper"}
             ],
