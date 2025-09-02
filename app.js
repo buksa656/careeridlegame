@@ -46,10 +46,10 @@ class KorposzczurGame {
                 { "id": "motivation", "nameKey": "task_motivation", "baseCost": 10000000, "baseIdle": 30000, "unlockCost": 37500000, "costMultiplier": 1.21, "idleMultiplier": 1.30, "cycleTime": 500 }
             ],
 "achievements": [
-  { "id": "first_unlock", "nameKey": "ach_first_unlock", "descKey": "ach_first_unlock_desc",
-    "condition": { "type": "tasks_unlocked", "value": 1 },
-    "reward": { "type": "bp_bonus", "value": 1.05 },
-    "bonusDesc": "bonusDesc_bp_5" },
+{ "id": "first_progress", "nameKey": "ach_first_progress", "descKey": "ach_first_progress_desc",
+  "condition": { "type": "totalBP", "value": 100 },
+  "reward": { "type": "bp_bonus", "value": 1.05 },
+  "bonusDesc": "bonusDesc_bp_5" },
 
   { "id": "upgrade_novice", "nameKey": "ach_upgrade_novice", "descKey": "ach_upgrade_novice_desc",
     "condition": { "type": "upgrades_bought", "value": 50 },
