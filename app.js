@@ -192,7 +192,7 @@ class KorposzczurGame {
       "reward": { "type": "coming_soon", "value": 1 },
       "bonusDesc": "bonusDesc_coming_soon"
     }
-]
+],
             "deskItems": [
                 { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "single_task_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_single_boost" },
                 { "id": "phone", "nameKey": "desk_phone", "cost": 3, "bonus": { "type": "all_active_boost", "value": 1.05 }, "bonusDesc": "bonusDesc_active_boost" },
