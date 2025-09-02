@@ -46,145 +46,153 @@ class KorposzczurGame {
                 { "id": "motivation", "nameKey": "task_motivation", "baseCost": 10000000, "baseIdle": 30000, "unlockCost": 37500000, "costMultiplier": 1.21, "idleMultiplier": 1.30, "cycleTime": 500 }
             ],
 "achievements": [
-{ "id": "first_progress", "nameKey": "ach_first_progress", "descKey": "ach_first_progress_desc",
-  "condition": { "type": "totalBP", "value": 100 },
-  "reward": { "type": "bp_bonus", "value": 1.05 },
-  "bonusDesc": "bonusDesc_bp_5" },
+    // START
+    { "id": "first_progress", "nameKey": "ach_first_progress", "descKey": "ach_first_progress_desc",
+      "condition": { "type": "totalBP", "value": 100 },
+      "reward": { "type": "bp_bonus", "value": 1.05 },
+      "bonusDesc": "bonusDesc_bp_5"
+    },
 
-  { "id": "upgrade_novice", "nameKey": "ach_upgrade_novice", "descKey": "ach_upgrade_novice_desc",
-    "condition": { "type": "upgrades_bought", "value": 50 },
-    "reward": { "type": "multibuy_unlock", "value": "upgrades" },
-    "bonusDesc": "bonusDesc_multibuy_upgrades" },
+    // ODPROJEKTOWANIE ZADAŃ
+    { "id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc",
+      "condition": { "type": "task_unlocked", "taskId": "coffee" },
+      "reward": { "type": "idle_bonus", "value": 1.10 },
+      "bonusDesc": "bonusDesc_idle_10"
+    },
+    { "id": "kpi_analyst", "nameKey": "ach_kpi_analyst", "descKey": "ach_kpi_analyst_desc",
+      "condition": { "type": "task_unlocked", "taskId": "kpi" },
+      "reward": { "type": "prestige_bonus", "value": 1.15 },
+      "bonusDesc": "bonusDesc_prestige_15"
+    },
+    { "id": "innovation_guru", "nameKey": "ach_innovation_guru", "descKey": "ach_innovation_guru_desc",
+      "condition": { "type": "task_unlocked", "taskId": "brainstorm" },
+      "reward": { "type": "ascend_bonus", "value": 1.20 },
+      "bonusDesc": "bonusDesc_ascend_20"
+    },
+    { "id": "optimizer", "nameKey": "ach_optimizer", "descKey": "ach_optimizer_desc",
+      "condition": { "type": "task_unlocked", "taskId": "optimize" },
+      "reward": { "type": "global_mult", "value": 1.30 },
+      "bonusDesc": "bonusDesc_global_30"
+    },
 
-  { "id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc",
-    "condition": { "type": "task_unlocked", "taskId": "coffee" },
-    "reward": { "type": "idle_bonus", "value": 1.10 },
-    "bonusDesc": "bonusDesc_idle_10" },
+    // KLUCZOWE PROGI ROZWOJU ZADAŃ
+    { "id": "meeting_master", "nameKey": "ach_meeting_master", "descKey": "ach_meeting_master_desc",
+      "condition": { "type": "task_level", "taskId": "meeting", "value": 15 },
+      "reward": { "type": "upgrade_discount", "value": 0.95 },
+      "bonusDesc": "bonusDesc_upgrade_discount_5"
+    },
+    { "id": "idle_master", "nameKey": "ach_idle_master", "descKey": "ach_idle_master_desc",
+      "condition": { "type": "idle_rate", "value": 1500 },
+      "reward": { "type": "idle_bonus", "value": 1.15 },
+      "bonusDesc": "bonusDesc_idle_20"
+    },
+    { "id": "efficiency_expert", "nameKey": "ach_efficiency_expert", "descKey": "ach_efficiency_expert_desc",
+      "condition": { "type": "total_task_levels", "value": 200 },
+      "reward": { "type": "softcap_reduction", "value": 0.85 },
+      "bonusDesc": "bonusDesc_efficiency_15"
+    },
 
-  { "id": "meeting_master", "nameKey": "ach_meeting_master", "descKey": "ach_meeting_master_desc",
-    "condition": { "type": "task_level", "taskId": "meeting", "value": 15 },
-    "reward": { "type": "upgrade_discount", "value": 0.95 },
-    "bonusDesc": "bonusDesc_upgrade_discount_5" },
+    // MULTIBUY, FEATURE UNLOCKI
+    { "id": "upgrade_novice", "nameKey": "ach_upgrade_novice", "descKey": "ach_upgrade_novice_desc",
+      "condition": { "type": "upgrades_bought", "value": 50 },
+      "reward": { "type": "multibuy_unlock", "value": "upgrades" },
+      "bonusDesc": "bonusDesc_multibuy_upgrades"
+    },
+    { "id": "multibuy_expert", "nameKey": "ach_multibuy_expert", "descKey": "ach_multibuy_expert_desc",
+      "condition": { "type": "multibuy_used", "value": 25 },
+      "reward": { "type": "max_buy_unlock", "value": 1 },
+      "bonusDesc": "bonusDesc_max_buy"
+    },
 
-  { "id": "first_ascend", "nameKey": "ach_first_ascend", "descKey": "ach_first_ascend_desc",
-    "condition": { "type": "ascensions", "value": 1 },
-    "reward": { "type": "career_stats_unlock", "value": 1 },
-    "bonusDesc": "bonusDesc_career_stats" },
+    // ASCENSION MILESTONES
+    { "id": "first_ascend", "nameKey": "ach_first_ascend", "descKey": "ach_first_ascend_desc",
+      "condition": { "type": "ascensions", "value": 1 },
+      "reward": { "type": "career_stats_unlock", "value": 1 },
+      "bonusDesc": "bonusDesc_career_stats"
+    },
+    { "id": "corporate_ladder", "nameKey": "ach_corporate_ladder", "descKey": "ach_corporate_ladder_desc",
+      "condition": { "type": "total_ascensions", "value": 10 },
+      "reward": { "type": "ascend_discount", "value": 0.90 },
+      "bonusDesc": "bonusDesc_ascend_discount_10"
+    },
+    { "id": "ascension_master", "nameKey": "ach_ascension_master", "descKey": "ach_ascension_master_desc",
+      "condition": { "type": "ascensions_per_task", "value": 5 },
+      "reward": { "type": "ascension_discount", "value": 0.7 },
+      "bonusDesc": "bonusDesc_ascension_30"
+    },
 
-  { "id": "kpi_analyst", "nameKey": "ach_kpi_analyst", "descKey": "ach_kpi_analyst_desc",
-    "condition": { "type": "task_unlocked", "taskId": "kpi" },
-    "reward": { "type": "prestige_bonus", "value": 1.15 },
-    "bonusDesc": "bonusDesc_prestige_15" },
+    // PRESTIŻ, SOFT SKILLS
+    { "id": "first_prestige", "nameKey": "ach_first_prestige", "descKey": "ach_first_prestige_desc",
+      "condition": { "type": "prestiges", "value": 1 },
+      "reward": { "type": "desk_unlock", "value": 1 },
+      "bonusDesc": "bonusDesc_desk_unlock"
+    },
+    { "id": "prestige_veteran", "nameKey": "ach_prestige_veteran", "descKey": "ach_prestige_veteran_desc",
+      "condition": { "type": "prestiges", "value": 5 },
+      "reward": { "type": "prestige_bonus", "value": 1.30 },
+      "bonusDesc": "bonusDesc_prestige_30"
+    },
+    { "id": "prestige_master", "nameKey": "ach_prestige_master", "descKey": "ach_prestige_master_desc",
+      "condition": { "type": "prestiges", "value": 10 },
+      "reward": { "type": "prestige_break", "value": 1 },
+      "bonusDesc": "bonusDesc_prestige_break"
+    },
 
-  { "id": "big_spender", "nameKey": "ach_big_spender", "descKey": "ach_big_spender_desc",
-    "condition": { "type": "bp_spent", "value": 25000 },
-    "reward": { "type": "bp_bonus", "value": 1.10 },
-    "bonusDesc": "bonusDesc_bp_10" },
+    // SOFT SKILLS
+    { "id": "soft_skills_beginner", "nameKey": "ach_soft_skills_beginner", "descKey": "ach_soft_skills_beginner_desc",
+      "condition": { "type": "soft_skills_earned", "value": 1 },
+      "reward": { "type": "desk_unlock", "value": 1 },
+      "bonusDesc": "bonusDesc_desk_unlock"
+    },
+    { "id": "soft_skills_expert", "nameKey": "ach_soft_skills_expert", "descKey": "ach_soft_skills_expert_desc",
+      "condition": { "type": "soft_skills_earned", "value": 10 },
+      "reward": { "type": "prestige_bonus", "value": 1.20 },
+      "bonusDesc": "bonusDesc_prestige_20"
+    },
+    { "id": "soft_skills_master", "nameKey": "ach_soft_skills_master", "descKey": "ach_soft_skills_master_desc",
+      "condition": { "type": "soft_skills_earned", "value": 50 },
+      "reward": { "type": "soft_skill_bonus", "value": 1.50 },
+      "bonusDesc": "bonusDesc_soft_skill_50"
+    },
 
-  { "id": "innovation_guru", "nameKey": "ach_innovation_guru", "descKey": "ach_innovation_guru_desc",
-    "condition": { "type": "task_unlocked", "taskId": "brainstorm" },
-    "reward": { "type": "ascend_bonus", "value": 1.20 },
-    "bonusDesc": "bonusDesc_ascend_20" },
+    // DESK – WAŻNE, ALE NIE ZA DUŻO
+    { "id": "office_decorator", "nameKey": "ach_office_decorator", "descKey": "ach_office_decorator_desc",
+      "condition": { "type": "desk_items_bought", "value": 3 },
+      "reward": { "type": "desk_discount", "value": 0.90 },
+      "bonusDesc": "bonusDesc_desk_discount_10"
+    },
+    { "id": "office_complete", "nameKey": "ach_office_complete", "descKey": "ach_office_complete_desc",
+      "condition": { "type": "desk_items_bought", "value": 6 },
+      "reward": { "type": "global_mult", "value": 1.25 },
+      "bonusDesc": "bonusDesc_global_25"
+    },
 
-  { "id": "first_prestige", "nameKey": "ach_first_prestige", "descKey": "ach_first_prestige_desc",
-    "condition": { "type": "prestiges", "value": 1 },
-    "reward": { "type": "desk_unlock", "value": 1 },
-    "bonusDesc": "bonusDesc_desk_unlock" },
+    // MILESTONE KASY
+    { "id": "big_spender", "nameKey": "ach_big_spender", "descKey": "ach_big_spender_desc",
+      "condition": { "type": "bp_spent", "value": 500000 },
+      "reward": { "type": "bp_bonus", "value": 1.10 },
+      "bonusDesc": "bonusDesc_bp_10"
+    },
 
-  { "id": "optimizer", "nameKey": "ach_optimizer", "descKey": "ach_optimizer_desc",
-    "condition": { "type": "task_unlocked", "taskId": "optimize" },
-    "reward": { "type": "global_mult", "value": 1.30 },
-    "bonusDesc": "bonusDesc_global_30" },
+    // BALANS i CHALLENGE
+    { "id": "balance_keeper", "nameKey": "ach_balance_keeper", "descKey": "ach_balance_keeper_desc",
+      "condition": { "type": "task_balance_score", "value": 80 },
+      "reward": { "type": "global_mult", "value": 1.4 },
+      "bonusDesc": "bonusDesc_balance_40"
+    },
+    { "id": "challenge_master", "nameKey": "ach_challenge_master", "descKey": "ach_challenge_master_desc",
+      "condition": { "type": "challenges_completed", "value": 5 },
+      "reward": { "type": "global_mult", "value": 1.50 },
+      "bonusDesc": "bonusDesc_challenge_master"
+    },
 
-  { "id": "multibuy_expert", "nameKey": "ach_multibuy_expert", "descKey": "ach_multibuy_expert_desc",
-    "condition": { "type": "multibuy_used", "value": 25 },
-    "reward": { "type": "max_buy_unlock", "value": 1 },
-    "bonusDesc": "bonusDesc_max_buy" },
-
-  { "id": "corporate_ladder", "nameKey": "ach_corporate_ladder", "descKey": "ach_corporate_ladder_desc",
-    "condition": { "type": "total_ascensions", "value": 10 },
-    "reward": { "type": "ascend_discount", "value": 0.90 },
-    "bonusDesc": "bonusDesc_ascend_discount_10" },
-
-  { "id": "idle_master", "nameKey": "ach_idle_master", "descKey": "ach_idle_master_desc",
-    "condition": { "type": "idle_rate", "value": 1500 },
-    "reward": { "type": "idle_bonus", "value": 1.15 },
-    "bonusDesc": "bonusDesc_idle_20" },
-
-  { "id": "soft_skills_beginner", "nameKey": "ach_soft_skills_beginner", "descKey": "ach_soft_skills_beginner_desc",
-    "condition": { "type": "soft_skills_earned", "value": 1 },
-    "reward": { "type": "desk_unlock", "value": 1 },
-    "bonusDesc": "bonusDesc_desk_unlock" },
-
-  { "id": "soft_skills_expert", "nameKey": "ach_soft_skills_expert", "descKey": "ach_soft_skills_expert_desc",
-    "condition": { "type": "soft_skills_earned", "value": 10 },
-    "reward": { "type": "prestige_bonus", "value": 1.20 },
-    "bonusDesc": "bonusDesc_prestige_20" },
-
-  { "id": "soft_skills_master", "nameKey": "ach_soft_skills_master", "descKey": "ach_soft_skills_master_desc",
-    "condition": { "type": "soft_skills_earned", "value": 50 },
-    "reward": { "type": "soft_skill_bonus", "value": 1.50 },
-    "bonusDesc": "bonusDesc_soft_skill_50" },
-
-  { "id": "first_desk_item", "nameKey": "ach_first_desk_item", "descKey": "ach_first_desk_item_desc",
-    "condition": { "type": "desk_items_bought", "value": 1 },
-    "reward": { "type": "soft_skill_bonus", "value": 1.10 },
-    "bonusDesc": "bonusDesc_soft_skill_10" },
-
-  { "id": "office_decorator", "nameKey": "ach_office_decorator", "descKey": "ach_office_decorator_desc",
-    "condition": { "type": "desk_items_bought", "value": 3 },
-    "reward": { "type": "desk_discount", "value": 0.90 },
-    "bonusDesc": "bonusDesc_desk_discount_10" },
-
-  { "id": "office_complete", "nameKey": "ach_office_complete", "descKey": "ach_office_complete_desc",
-    "condition": { "type": "desk_items_bought", "value": 6 },
-    "reward": { "type": "global_mult", "value": 1.25 },
-    "bonusDesc": "bonusDesc_global_25" },
-
-  { "id": "prestige_veteran", "nameKey": "ach_prestige_veteran", "descKey": "ach_prestige_veteran_desc",
-    "condition": { "type": "prestiges", "value": 5 },
-    "reward": { "type": "prestige_bonus", "value": 1.30 },
-    "bonusDesc": "bonusDesc_prestige_30" },
-
-  { "id": "prestige_master", "nameKey": "ach_prestige_master", "descKey": "ach_prestige_master_desc",
-    "condition": { "type": "prestiges", "value": 10 },
-    "reward": { "type": "prestige_break", "value": 1 },
-    "bonusDesc": "bonusDesc_prestige_break" },
-
-  { "id": "challenge_master", "nameKey": "ach_challenge_master", "descKey": "ach_challenge_master_desc",
-    "condition": { "type": "challenges_completed", "value": 5 },
-    "reward": { "type": "global_mult", "value": 1.50 },
-    "bonusDesc": "bonusDesc_challenge_master" },
-{
-    "id": "efficiency_expert",
-    "nameKey": "ach_efficiency_expert",
-    "descKey": "ach_efficiency_expert_desc",
-    "condition": { "type": "total_task_levels", "value": 200 },
-    "reward": { "type": "softcap_reduction", "value": 0.85 },
-    "bonusDesc": "bonusDesc_efficiency_15"
-},
-{
-    "id": "ascension_master",
-    "nameKey": "ach_ascension_master",
-    "descKey": "ach_ascension_master_desc",
-    "condition": { "type": "ascensions_per_task", "value": 5 },
-    "reward": { "type": "ascension_discount", "value": 0.7 },
-    "bonusDesc": "bonusDesc_ascension_30"
-},
-{
-    "id": "balance_keeper",
-    "nameKey": "ach_balance_keeper",
-    "descKey": "ach_balance_keeper_desc",
-    "condition": { "type": "task_balance_score", "value": 80 },
-    "reward": { "type": "global_mult", "value": 1.4 },
-    "bonusDesc": "bonusDesc_balance_40"
-},
-  { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
-    "condition": { "type": "impossible", "value": 1 },
-    "reward": { "type": "coming_soon", "value": 1 },
-    "bonusDesc": "bonusDesc_coming_soon" }
-    
-],
+    // KONIEC/WIĘCEJ W PRZYSZŁOŚCI
+    { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
+      "condition": { "type": "impossible", "value": 1 },
+      "reward": { "type": "coming_soon", "value": 1 },
+      "bonusDesc": "bonusDesc_coming_soon"
+    }
+]
             "deskItems": [
                 { "id": "mug", "nameKey": "desk_mug", "cost": 1, "bonus": { "type": "single_task_boost", "value": 1.10 }, "bonusDesc": "bonusDesc_single_boost" },
                 { "id": "phone", "nameKey": "desk_phone", "cost": 3, "bonus": { "type": "all_active_boost", "value": 1.05 }, "bonusDesc": "bonusDesc_active_boost" },
