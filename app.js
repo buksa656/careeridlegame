@@ -1232,7 +1232,11 @@ updateLanguage() {
             this.updateDisplay();
         }
 
-        // Update play time
+        if (!this.gameState.stats.maxBP || this.gameState.bp > this.gameState.stats.maxBP) {
+			this.gameState.stats.maxBP = this.gameState.bp;
+		}
+		
+		// Update play time
         this.gameState.stats.playTime += deltaTime;
         
         // Check achievements
@@ -2428,10 +2432,28 @@ renderCareerStats() {
     const content = document.getElementById('careerstats-content');
     if (!content) return;
 
-    // Przykładowe dane/statystyki
+    // Formatowanie czasu gry
+    const playTimeMs = this.gameState.stats.playTime || 0;
+    const playTimeSec = Math.floor(playTimeMs / 1000);
+    const hours = Math.floor(playTimeSec / 3600);
+    const minutes = Math.floor((playTimeSec % 3600) / 60);
+    const seconds = playTimeSec % 60;
+    const playTimeStr = `${hours}h ${minutes}m ${seconds}s`;
+
+    // Liczba odblokowanych osiągnięć
+    const achievementsUnlocked = Object.values(this.gameState.achievements).filter(Boolean).length;
+    const achievementsTotal = this.gameData.achievements.length;
+    // Najwyższy wynik, czyli max. BP kiedykolwiek posiadany
+    const maxScore = this.formatNumber(this.gameState.stats.maxBP || this.gameState.totalBPEarned);
+
+    // Liczba zdobytych prestiży
+    const prestigeTotal = this.gameState.prestigeCount || 0;
+
     content.innerHTML = `
         <ul>
-            <li><b>Łączna liczba awansowań (Total Ascensions):</b> ${this.gameState.stats.totalAscensions}</li>
+            <li><b>Maksymalny wynik BP:</b> ${maxScore}</li>
+            <li><b>Ilość wykonanych prestiży:</b> ${prestigeTotal}</li>
+            <li><b>Łączna liczba awansowań:</b> ${this.gameState.stats.totalAscensions}</li>
             <li><b>Liczba zdobytych Soft Skills:</b> ${this.gameState.stats.softSkillsEarned}</li>
             <li><b>Łączna liczba ulepszeń:</b> ${this.gameState.stats.totalUpgrades}</li>
             <li><b>Łączny zdobyty BP:</b> ${this.formatNumber(this.gameState.totalBPEarned)}</li>
@@ -2439,7 +2461,8 @@ renderCareerStats() {
             <li><b>Liczba odblokowanych zadań:</b> ${this.gameState.stats.tasksUnlocked}</li>
             <li><b>Liczba ukończonych wyzwań:</b> ${this.gameState.stats.challengesCompleted}</li>
             <li><b>Liczba przedmiotów na biurku:</b> ${this.gameState.stats.deskItemsBought}</li>
-            <!-- Dodaj inne statystyki jak chcesz -->
+            <li><b>Odblokowane achievementy:</b> ${achievementsUnlocked} / ${achievementsTotal}</li>
+            <li><b>Czas spędzony w grze:</b> ${playTimeStr}</li>
         </ul>
     `;
 }
