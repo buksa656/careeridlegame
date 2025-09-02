@@ -1947,7 +1947,6 @@ performPrestige() {
         this.updateDisplay();
         this.updateUnlockProgress();
         this.updateTaskButtonStates();
-        this.renderCareerStats()
     }
 
 renderTasks() {
