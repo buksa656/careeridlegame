@@ -2511,7 +2511,6 @@ renderCareerStats() {
         </ul>
     `;
 	this.renderBpHistoryChart();
-	this.renderBpHistoryChartJs();
 }
 renderBpHistoryChart() {
     const content = document.getElementById('bp-history-chart');
@@ -2544,60 +2543,6 @@ renderBpHistoryChart() {
         ${this.currentLanguage === "pl" ? "Twój postęp BP (ostatnie godziny)" : "Your BP trend (last hours)"}
       </div>
     `;
-}
-renderBpHistoryChartJs() {
-    const ctx = document.getElementById('bp-history-chartjs').getContext('2d');
-    // Czyści stary wykres jeśli był:
-    if (this.bpChart && typeof this.bpChart.destroy === 'function') this.bpChart.destroy();
-
-    const bpHistory = (this.gameState.stats.bpHistory || []).slice(-100);
-    if (bpHistory.length < 2) {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.font = "18px sans-serif";
-        ctx.fillStyle = "#888";
-        ctx.fillText(this.currentLanguage === "pl" ? "Za mało danych" : "Not enough data", 33, 70);
-        return;
-    }
-    // Przetwórz dane na wykres:
-    const firstTime = bpHistory[0].time;
-    const labels = bpHistory.map(p =>
-        // Minuty od pierwszego punktu
-        ((p.time - firstTime) / 60000).toFixed(1) + (this.currentLanguage === "pl" ? " min" : " min")
-    );
-    const data = bpHistory.map(p => p.bp);
-
-    // Twórz wykres:
-    this.bpChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: this.currentLanguage === "pl" ? 'BP w czasie' : 'BP over time',
-                data: data,
-                borderColor: '#1abc9c',
-                backgroundColor: 'rgba(41,200,180,0.2)',
-                borderWidth: 2,
-                pointRadius: 0,
-                tension: 0.25
-            }]
-        },
-        options: {
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => `BP: ${this.formatNumber(ctx.parsed.y)}`
-                    }
-                }
-            },
-            scales: {
-                x: { ticks:{ color:'#949', maxTicksLimit: 8}, title: {display:true, text: this.currentLanguage==="pl"?"Czas gry (min)":"Play time (min)"} },
-                y: { ticks: { color:'#567', callback: val=>this.formatNumber(val) }, title: {display:true, text:"BP"} }
-            },
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
 }
 getBestBpPerMinute() {
     const history = this.gameState.stats.bpHistory || [];
