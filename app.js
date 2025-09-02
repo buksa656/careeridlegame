@@ -625,6 +625,8 @@ class KorposzczurGame {
                 challengesCompleted: 0,
                 deskItemsBought: 0,
                 softSkillsEarned: 0
+				bpHistory: [], // <--- historia stanu BP do wykresu
+				lastBpLog: Date.now() // znacznik ostatniego wpisu
             },
             features: {
                 multiBuyUnlocked: false,
@@ -1209,6 +1211,15 @@ updateLanguage() {
     gameLoop() {
         this.updateEnergy();
         const now = Date.now();
+		if (!this.gameState.stats.lastBpLog || now - this.gameState.stats.lastBpLog > 60000) { // co 60s
+			this.gameState.stats.lastBpLog = now;
+			if (!this.gameState.stats.bpHistory) this.gameState.stats.bpHistory = [];
+			this.gameState.stats.bpHistory.push({ time: now, bp: this.gameState.bp });
+			// Ogranicz długość historii (np. 1440 -> max 24h jeśli co minutę)
+			if (this.gameState.stats.bpHistory.length > 1440) {
+				this.gameState.stats.bpHistory.shift();
+			}
+		}
         const deltaTime = now - this.lastUpdate;
         this.lastUpdate = now;
 
@@ -2494,8 +2505,118 @@ renderCareerStats() {
             <li><b>Liczba przedmiotów na biurku:</b> ${this.gameState.stats.deskItemsBought}</li>
             <li><b>Odblokowane achievementy:</b> ${achievementsUnlocked} / ${achievementsTotal}</li>
             <li><b>Czas spędzony w grze:</b> ${playTimeStr}</li>
+			<li><b>Najwięcej BP na minutę:</b> ${this.getBestBpPerMinute()}</li>
+			<li><b>Śr. BP na minutę:</b> ${this.getAverageBpPerMinute()}</li>
+			<li><b>Łączna liczba kliknięć upgrade:</b> ${this.gameState.stats.upgradeClicks || 0}</li>
         </ul>
     `;
+	this.renderBpHistoryChart();
+	this.renderBpHistoryChartJs();
+}
+renderBpHistoryChart() {
+    const content = document.getElementById('bp-history-chart');
+    if (!content || !this.gameState.stats.bpHistory) return;
+    const points = this.gameState.stats.bpHistory.slice(-100); // Ostatnie 100 punktów do czytelności
+    if (points.length < 2) {
+        content.textContent = this.currentLanguage === 'pl' ? "Za mało danych do wykresu" : "Not enough data";
+        return;
+    }
+    const maxBP = Math.max(...points.map(p => p.bp));
+    const minBP = Math.min(...points.map(p => p.bp));
+    const width = 340, height = 90, margin = 10;
+    const path = points.map((p, i) => {
+        const x = margin + (i / (points.length - 1)) * (width - 2 * margin);
+        const y = height - margin - ((p.bp - minBP) / Math.max(1, maxBP - minBP)) * (height - 2 * margin);
+        return `${i === 0 ? 'M' : 'L'}${x},${y}`;
+    }).join(' ');
+    content.innerHTML = `
+      <svg width="${width}" height="${height}" style="background:#fafcee;border-radius:8px">
+        <polyline fill="none" stroke="#019b78" stroke-width="2" points="${points.map((p, i) => {
+            const x = margin + (i / (points.length - 1)) * (width - 2 * margin);
+            const y = height - margin - ((p.bp - minBP) / Math.max(1, maxBP - minBP)) * (height - 2 * margin);
+            return `${x},${y}`;
+        }).join(' ')}"/>
+        <path d="${path}" fill="none" stroke="#029e89" stroke-width="2"/>
+        <circle cx="${margin}" cy="${height - margin - ((points[0].bp - minBP) / Math.max(1, maxBP - minBP)) * (height - 2 * margin)}" r="3" fill="#029e89"/>
+        <circle cx="${width - margin}" cy="${height - margin - ((points[points.length-1].bp - minBP) / Math.max(1, maxBP - minBP)) * (height - 2 * margin)}" r="3" fill="#b770f2"/>
+      </svg>
+      <div style="font-size:.91em;color:#666;padding-top:4px">
+        ${this.currentLanguage === "pl" ? "Twój postęp BP (ostatnie godziny)" : "Your BP trend (last hours)"}
+      </div>
+    `;
+}
+renderBpHistoryChartJs() {
+    const ctx = document.getElementById('bp-history-chartjs').getContext('2d');
+    // Czyści stary wykres jeśli był:
+    if (this.bpChart && typeof this.bpChart.destroy === 'function') this.bpChart.destroy();
+
+    const bpHistory = (this.gameState.stats.bpHistory || []).slice(-100);
+    if (bpHistory.length < 2) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.font = "18px sans-serif";
+        ctx.fillStyle = "#888";
+        ctx.fillText(this.currentLanguage === "pl" ? "Za mało danych" : "Not enough data", 33, 70);
+        return;
+    }
+    // Przetwórz dane na wykres:
+    const firstTime = bpHistory[0].time;
+    const labels = bpHistory.map(p =>
+        // Minuty od pierwszego punktu
+        ((p.time - firstTime) / 60000).toFixed(1) + (this.currentLanguage === "pl" ? " min" : " min")
+    );
+    const data = bpHistory.map(p => p.bp);
+
+    // Twórz wykres:
+    this.bpChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: this.currentLanguage === "pl" ? 'BP w czasie' : 'BP over time',
+                data: data,
+                borderColor: '#1abc9c',
+                backgroundColor: 'rgba(41,200,180,0.2)',
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.25
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `BP: ${this.formatNumber(ctx.parsed.y)}`
+                    }
+                }
+            },
+            scales: {
+                x: { ticks:{ color:'#949', maxTicksLimit: 8}, title: {display:true, text: this.currentLanguage==="pl"?"Czas gry (min)":"Play time (min)"} },
+                y: { ticks: { color:'#567', callback: val=>this.formatNumber(val) }, title: {display:true, text:"BP"} }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+getBestBpPerMinute() {
+    const history = this.gameState.stats.bpHistory || [];
+    if (history.length < 2) return 0;
+    let max = 0;
+    for (let i = 1; i < history.length; i++) {
+        const deltaBp = history[i].bp - history[i-1].bp;
+        const deltaTime = (history[i].time - history[i-1].time) / 60000; // minuty
+        const rate = deltaTime > 0 ? deltaBp / deltaTime : 0;
+        if (rate > max) max = rate;
+    }
+    return this.formatNumber(max);
+}
+getAverageBpPerMinute() {
+    const history = this.gameState.stats.bpHistory || [];
+    if (history.length < 2) return 0;
+    const totalBp = history[history.length-1].bp - history[0].bp;
+    const totalMin = (history[history.length-1].time - history[0].time) / 60000;
+    return this.formatNumber(totalMin > 0 ? totalBp / totalMin : 0);
 }
 getHighestTaskLevel() {
     return Math.max(...Object.values(this.gameState.tasks).map(t=>t.level||0));
