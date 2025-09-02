@@ -2416,7 +2416,7 @@ renderCareerStats() {
             <!-- Dodaj inne statystyki jak chcesz -->
         </ul>
     `;
-},
+}
 getHighestTaskLevel() {
     return Math.max(...Object.values(this.gameState.tasks).map(t=>t.level||0));
 }
