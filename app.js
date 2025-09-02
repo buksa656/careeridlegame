@@ -624,7 +624,7 @@ class KorposzczurGame {
                 upgradesBought: 0,
                 challengesCompleted: 0,
                 deskItemsBought: 0,
-                softSkillsEarned: 0
+                softSkillsEarned: 0,
 				bpHistory: [], // <--- historia stanu BP do wykresu
 				lastBpLog: Date.now() // znacznik ostatniego wpisu
             },
