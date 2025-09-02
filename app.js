@@ -718,7 +718,16 @@ class KorposzczurGame {
             this.updateTaskButtonStates();
             this.updateUnlockButtonStates();
         });
+		if (!localStorage.getItem('korposzczur-welcome-shown')) {
+			setTimeout(() => { // by mieć pewność, że DOM jest gotowy
+				document.getElementById('welcome-modal').style.display = 'flex';
+			}, 250);
 
+			document.getElementById('welcome-close').onclick = () => {
+				document.getElementById('welcome-modal').style.display = 'none';
+				localStorage.setItem('korposzczur-welcome-shown', '1');
+			};
+		}
         // Initialize debug commands
         window.debug = {
             addBP: (amount) => {
