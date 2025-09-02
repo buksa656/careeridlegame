@@ -14,6 +14,7 @@ class KorposzczurGame {
         this.lastUpdate = Date.now();
         this.lastBPValue = 0;
         this.adsAvailable = false;
+		this.careerStatsInterval = null;
         
         // Intervals for different update loops
         this.gameLoopInterval = null;
@@ -962,6 +963,7 @@ setupEventListeners() {
 
     // Fixed tab switching to properly handle all tabs including challenges
 switchTab(tabName) {
+    // Ukrywamy wszystkie zakładki i zdejmujemy aktywność
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
         tab.style.display = 'none';
@@ -970,6 +972,7 @@ switchTab(tabName) {
         btn.classList.remove('active');
     });
 
+    // Wyszukujemy docelową zakładkę i przycisk
     const targetTab = document.getElementById(`${tabName}-tab`);
     const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
 
@@ -978,11 +981,30 @@ switchTab(tabName) {
         targetTab.style.display = 'block';
         targetBtn.classList.add('active');
         this.currentTab = tabName;
-        if(tabName === 'careerstats'){
-          this.renderCareerStats(); // zawsze aktualizuj karierę!
+
+        // TYLKO dla Statystyk kariery
+        if (tabName === 'careerstats') {
+            this.renderCareerStats(); // Pierwszy render
+
+            // Start interwału jeśli nie działa
+            if (!this.careerStatsInterval) {
+                this.careerStatsInterval = setInterval(() => {
+                    // Odświeżaj tylko gdy nadal na tej zakładce!
+                    if (this.currentTab === "careerstats") {
+                        this.renderCareerStats();
+                    }
+                }, 1000); // co 1 sekunda
+            }
+        } else {
+            // Sprzątanie interwału gdy opuszczasz statystyki
+            if (this.careerStatsInterval) {
+                clearInterval(this.careerStatsInterval);
+                this.careerStatsInterval = null;
+            }
         }
     }
 }
+
 
     // Critical: Fast UI update loop at 50ms (20 FPS)
     startFastUIUpdates() {
