@@ -909,25 +909,28 @@ setupEventListeners() {
 }
 
     // Fixed tab switching to properly handle all tabs including challenges
-    switchTab(tabName) {
-        // Hide all tabs
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+        tab.style.display = 'none';
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
 
-        // Show selected tab
-        const targetTab = document.getElementById(`${tabName}-tab`);
-        const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
-        
-        if (targetTab && targetBtn) {
-            targetTab.classList.add('active');
-            targetBtn.classList.add('active');
-            this.currentTab = tabName;
+    const targetTab = document.getElementById(`${tabName}-tab`);
+    const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
+
+    if (targetTab && targetBtn) {
+        targetTab.classList.add('active');
+        targetTab.style.display = 'block';
+        targetBtn.classList.add('active');
+        this.currentTab = tabName;
+        if(tabName === 'careerstats'){
+          this.renderCareerStats(); // zawsze aktualizuj karierę!
         }
     }
+}
 
     // Critical: Fast UI update loop at 50ms (20 FPS)
     startFastUIUpdates() {
@@ -1874,6 +1877,7 @@ performPrestige() {
         this.updateDisplay();
         this.updateUnlockProgress();
         this.updateTaskButtonStates();
+        this.renderCareerStats()
     }
 
 renderTasks() {
@@ -2347,7 +2351,14 @@ updateDisplay() {
             adButton.title = '';
         }
     }
-
+    // zakladka statystyk
+    if (this.gameState.achievements['first_ascend']) {
+        document.getElementById('careerstats-tab-btn').style.display = 'inline-block';
+        document.getElementById('careerstats-tab').style.display = 'block';
+    } else {
+        document.getElementById('careerstats-tab-btn').style.display = 'none';
+        document.getElementById('careerstats-tab').style.display = 'none';
+    }
     // PRESTIŻ – nowa logika
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
@@ -2386,7 +2397,29 @@ updateDisplay() {
         }
     }
 }
+renderCareerStats() {
+    if (!this.gameState.achievements['first_ascend']) return; // Tylko po odblokowaniu
+    const content = document.getElementById('careerstats-content');
+    if (!content) return;
 
+    // Przykładowe dane/statystyki
+    content.innerHTML = `
+        <ul>
+            <li><b>Łączna liczba awansowań (Total Ascensions):</b> ${this.gameState.stats.totalAscensions}</li>
+            <li><b>Liczba zdobytych Soft Skills:</b> ${this.gameState.stats.softSkillsEarned}</li>
+            <li><b>Łączna liczba ulepszeń:</b> ${this.gameState.stats.totalUpgrades}</li>
+            <li><b>Łączny zdobyty BP:</b> ${this.formatNumber(this.gameState.totalBPEarned)}</li>
+            <li><b>Najwyższy poziom zadania:</b> ${this.getHighestTaskLevel()}</li>
+            <li><b>Liczba odblokowanych zadań:</b> ${this.gameState.stats.tasksUnlocked}</li>
+            <li><b>Liczba ukończonych wyzwań:</b> ${this.gameState.stats.challengesCompleted}</li>
+            <li><b>Liczba przedmiotów na biurku:</b> ${this.gameState.stats.deskItemsBought}</li>
+            <!-- Dodaj inne statystyki jak chcesz -->
+        </ul>
+    `;
+},
+getHighestTaskLevel() {
+    return Math.max(...Object.values(this.gameState.tasks).map(t=>t.level||0));
+}
     updateTaskProgress() {
         document.querySelectorAll('.hex-fill').forEach((fill, index) => {
             const tasks = Object.keys(this.gameState.tasks).filter(taskId => 
