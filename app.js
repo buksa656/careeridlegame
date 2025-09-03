@@ -743,6 +743,7 @@ class KorposzczurGame {
                 deskItemsBought: 0,
                 softSkillsEarned: 0,
 				bpEarned: 0,
+				bpSinceLastPrestige: 0,
 				bpHistory: [], // <--- historia stanu BP do wykresu
 				lastBpLog: Date.now() // znacznik ostatniego wpisu
             },
@@ -1550,13 +1551,16 @@ updateLanguage() {
             }
         });
 
-        if (totalBPGained > 0) {
-            const oldBP = this.gameState.bp;
-            this.updateBP(this.gameState.bp + totalBPGained);
-            this.gameState.totalBPEarned += totalBPGained;
+		if (totalBPGained > 0) {
+			const oldBP = this.gameState.bp;
+			this.updateBP(this.gameState.bp + totalBPGained);
+			this.gameState.totalBPEarned += totalBPGained;
 			this.gameState.stats.bpEarned += totalBPGained;
-            this.updateDisplay();
-        }
+			this.gameState.bpSinceLastPrestige =
+			  (this.gameState.bpSinceLastPrestige || 0) + totalBPGained;
+
+			this.updateDisplay();
+		}
 
         if (!this.gameState.stats.maxBP || this.gameState.bp > this.gameState.stats.maxBP) {
 			this.gameState.stats.maxBP = this.gameState.bp;
@@ -1910,6 +1914,9 @@ checkAchievements() {
             case 'bp_spent':
                 unlocked = this.gameState.totalBPSpent >= achievement.condition.value;
                 break;
+			case 'bp_earned':
+				unlocked = (this.gameState.totalBPEarned || 0) >= achievement.condition.value;
+				break;	
             case 'prestiges':
                 unlocked = this.gameState.prestigeCount >= achievement.condition.value;
                 break;
@@ -1969,6 +1976,12 @@ checkAchievements() {
             this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
             this.renderAchievements();
             this.checkFeatureUnlocks();
+			if (achievement.reward && achievement.reward.type === 'bp' && achievement.reward.value > 0) {
+			this.updateBP((this.gameState.bp || 0) + achievement.reward.value);
+			this.showNotification(
+			  `+${achievement.reward.value} BP!`
+			);
+			}
             this.showNotification(`🏆Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
         }
     });
@@ -2159,35 +2172,47 @@ ascendTask(taskId) {
 }
 
 performPrestige() {
-    // Nowa logika: 1 SS za każde pełne 50,000 BP
-    const SS_BP_PRICE = 50000;
-    const earned = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
-
-    // Hard cap przed zdobyciem prestige_master achievementa
+	const SS_BP_PRICE = 50000;
     const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
-    let softSkillsGain;
 
-    // Hard cap: możesz zdobyć tylko 1 SS, nawet jeśli masz więcej BP
+    // Oblicz liczbę SS do zdobycia za zgromadzone BP od ostatniego prestiżu
+    const earnedSoftSkills = Math.floor((this.gameState.bpSinceLastPrestige || 0) / SS_BP_PRICE);
+    let softSkillsGain = 0;
+
+    // Hardcap – bez prestiż mastera można zdobyć max 1 SS naraz
     if (!hasPrestigeMaster) {
-        softSkillsGain = (earned > 0) ? 1 : 0;
+        softSkillsGain = earnedSoftSkills > 0 ? 1 : 0;
     } else {
-        softSkillsGain = earned;
+        softSkillsGain = earnedSoftSkills;
     }
 
-    // Brak BP -> nie możesz zrobić prestiżu (disable button gdy softSkillsGain < 1)
-    if (softSkillsGain < 1) return;
+    // Nie pozwól zrobić prestiżu jeśli nie zgromadziłeś wymaganej ilości BP
+    if (softSkillsGain < 1) {
+        this.showNotification("Potrzebujesz minimum 50 000 BP, by wykonać Prestige!");
+        return;
+    }
 
-    // ZAPISZ elementy, które zostają po prestiżu
+
+    // Zapisz elementy które zostają
     const achievementsToKeep = { ...this.gameState.achievements };
     const deskItemsToKeep = { ...this.gameState.deskItems };
     const settingsToKeep = { ...this.gameState.settings };
     const featuresState = { ...this.gameState.features };
     const challengesState = { ...this.gameState.challenges };
 
-    // RESET wszystkiego poza zachowanymi danymi:
-    this.gameState = this.loadGameState();
+	this.gameState = this.loadGameState();
+    this.gameState.bpSinceLastPrestige = 0; 
+    this.gameState.softSkills += softSkillsGain;
+    this.gameState.stats.softSkillsEarned += softSkillsGain;
+    this.gameState.prestigeCount++;
 
-    // Wszystkie zadania zostają zablokowane po prestiżu
+    this.gameState.achievements = achievementsToKeep;
+    this.gameState.deskItems = deskItemsToKeep;
+    this.gameState.settings = settingsToKeep;
+    this.gameState.features = featuresState;
+    this.gameState.challenges = challengesState;
+    this.gameState.bp = 0;
+
     this.gameData.tasks.forEach(task => {
         this.gameState.tasks[task.id] = {
             level: 1,
@@ -2197,25 +2222,13 @@ performPrestige() {
             locked: true
         };
     });
-
-    // Dodaj SS oraz licz do statystyk
-    this.gameState.softSkills += softSkillsGain;
-    this.gameState.stats.softSkillsEarned += softSkillsGain;
-    this.gameState.prestigeCount++;
-    this.gameState.achievements = achievementsToKeep;
-    this.gameState.deskItems = deskItemsToKeep;
-    this.gameState.settings = settingsToKeep;
-    this.gameState.features = featuresState;
-    this.gameState.challenges = challengesState;
-
-    // BP = 0 po prestiżu!
-    this.gameState.bp = 0;
-
     // Odśwież UI i powiadom
     this.checkAchievements();
     this.checkFeatureUnlocks();
     this.renderAll();
-    this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain !== 1 ? "s" : ""}!`);
+    this.showNotification(
+        `Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain !== 1 ? "s" : ""}!`
+    );
 }
 
     buyDeskItem(itemId) {
@@ -2752,7 +2765,7 @@ renderDesk() {
     }
 
 updateDisplay() {
-    // BEZPIECZNE sprawdzanie przed ustawieniem
+    // Energetyczne i statystyki
     const energyDisplay = document.getElementById('energy-display');
     if (energyDisplay) {
         energyDisplay.textContent = this.gameState.energy;
@@ -2769,7 +2782,8 @@ updateDisplay() {
     if (energyBtn) {
         energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
     }
-    // Bezpieczne sprawdzenie przed disable/enable przycisków
+
+    // Energetyczne przyciski - disable jeśli za mało energii
     document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
         const skill = btn.getAttribute('data-skill');
         const skillCosts = {
@@ -2781,7 +2795,7 @@ updateDisplay() {
             btn.disabled = this.gameState.energy < skillCosts[skill];
         }
     });
-    // Bezpieczne sprawdzenie ad button
+    // Przycisk reklamy energii
     const adButton = document.getElementById('watch-ad-option');
     if (adButton) {
         if (!this.adsAvailable) {
@@ -2798,75 +2812,80 @@ updateDisplay() {
             adButton.title = '';
         }
     }
-    // zakladka statystyk
+
+    // Statystyki kariery
     if (this.gameState.achievements['first_ascend']) {
         document.getElementById('careerstats-tab-btn').style.display = 'inline-block';
     } else {
         document.getElementById('careerstats-tab-btn').style.display = 'none';
         document.getElementById('careerstats-tab').style.display = 'none';
     }
-	
-	// Ukrywanie/pokazywanie zakładki "Biurko"
-	const deskBtn = document.querySelector('[data-tab="desk"]');
-	const deskTab = document.getElementById('desk-tab');
-	if (deskBtn && deskTab) {
-		if (this.gameState.features.deskUnlocked) {
-			deskBtn.style.display = 'inline-block';
-		} else {
-			deskBtn.style.display = 'none';
-			deskTab.style.display = 'none';
-		}
-	}
+    // Zakładka "Biurko"
+    const deskBtn = document.querySelector('[data-tab="desk"]');
+    const deskTab = document.getElementById('desk-tab');
+    if (deskBtn && deskTab) {
+        if (this.gameState.features.deskUnlocked) {
+            deskBtn.style.display = 'inline-block';
+        } else {
+            deskBtn.style.display = 'none';
+            deskTab.style.display = 'none';
+        }
+    }
+    // Zakładka "Wyzwania"
+    const challengesBtn = document.querySelector('[data-tab="challenges"]');
+    const challengesTab = document.getElementById('challenges-tab');
+    if (challengesBtn && challengesTab) {
+        if (this.gameState.features.challengesUnlocked) {
+            challengesBtn.style.display = 'inline-block';
+        } else {
+            challengesBtn.style.display = 'none';
+            challengesTab.style.display = 'none';
+        }
+    }
 
-	// Ukrywanie/pokazywanie zakładki "Wyzwania"
-	const challengesBtn = document.querySelector('[data-tab="challenges"]');
-	const challengesTab = document.getElementById('challenges-tab');
-	if (challengesBtn && challengesTab) {
-		if (this.gameState.features.challengesUnlocked) {
-			challengesBtn.style.display = 'inline-block';
-		} else {
-			challengesBtn.style.display = 'none';
-			challengesTab.style.display = 'none';
-		}
-	}
-    // PRESTIŻ – nowa logika
+    // --------- PRESTIŻ / SOFT SKILL BUTTON ---------------
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
     if (prestigeBtn && prestigeInfo) {
         const SS_BP_PRICE = 50000;
-        const earned = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
+        const earnedSS = Math.floor((this.gameState.bpSinceLastPrestige || 0) / SS_BP_PRICE);
         const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
-        let softSkillsGain;
-
+        let softSkillsGain = 0;
         if (!hasPrestigeMaster) {
-            softSkillsGain = earned > 0 ? 1 : 0;
+            softSkillsGain = earnedSS > 0 ? 1 : 0;
         } else {
-            softSkillsGain = earned;
+            softSkillsGain = earnedSS;
         }
-
+        // UI: przycisk nieklikalny i szary jeśli zbyt mało BP
         prestigeBtn.disabled = softSkillsGain < 1;
 
         if (softSkillsGain >= 1) {
             prestigeInfo.textContent = hasPrestigeMaster
                 ? (this.currentLanguage === 'pl'
-                    ? `Zdobywasz ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}`
-                    : `Gain ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}`)
+                    ? `Zdobywasz ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "i" : ""}!`
+                    : `Gain ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}!`)
                 : (this.currentLanguage === 'pl'
-                    ? `Zdobywasz 1 Soft Skill`
-                    : `Gain 1 Soft Skill`);
+                    ? `Zdobywasz 1 Soft Skill!`
+                    : `Gain 1 Soft Skill!`);
             prestigeBtn.classList.remove('disabled');
-            // (opcjonalnie) reset innerHTML jeśli poprzednio był .disabled:
+            prestigeBtn.removeAttribute('title');
+            // przywróć zwykły napis
             prestigeBtn.innerHTML = this.translations[this.currentLanguage].prestige_ready;
         } else {
+            // Za mało BP – informacja i blokada
             const earnedBP = this.formatNumber(this.gameState.totalBPEarned);
             const nextReq = this.formatNumber(SS_BP_PRICE);
             prestigeInfo.innerHTML = `<span style="color:#888;">${earnedBP} / ${nextReq} BP</span>
                 <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
             prestigeBtn.classList.add('disabled');
             prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
+            prestigeBtn.title = this.currentLanguage === 'pl'
+                ? `Potrzebujesz minimum ${this.formatNumber(SS_BP_PRICE)} BP, by wykonać Prestige!`
+                : `You need at least ${this.formatNumber(SS_BP_PRICE)} BP to Prestige!`;
         }
     }
 }
+
 renderCareerStats() {
     if (!this.gameState.achievements['first_ascend']) return; // Tylko po odblokowaniu
 
