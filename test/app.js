@@ -989,11 +989,8 @@ document.getElementById('secret-code-btn').onclick = () => {
         let idx = 0;
         const animBarka = () => {
             if (idx < barkaLines.length) {
-                quote.innerHTML =
-                  `<span style="color: #bca405; font-size:1.18em; text-shadow: 0 2px 6px #ffe;">
-                    ${barkaLines[idx]}
-                  </span>`;
-                quote.style.animation = "barkaAnim 1.1s";
+				quote.innerHTML = `<span style="color: #bca405; font-size:1.18em; text-shadow: 0 2px 6px #ffe;">${barkaLines[idx]}</span>`;
+				quote.style.animation = "barkaAnim 1.1s";
                 idx++;
                 setTimeout(animBarka, 2000);
             }
