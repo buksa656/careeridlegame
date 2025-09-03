@@ -2172,11 +2172,11 @@ ascendTask(taskId) {
 }
 
 performPrestige() {
-    const SS_BP_PRICE = 50000;
+	const SS_BP_PRICE = 50000;
     const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
 
     // Oblicz liczbę SS do zdobycia za zgromadzone BP od ostatniego prestiżu
-    const earnedSoftSkills = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
+    const earnedSoftSkills = Math.floor((this.gameState.bpSinceLastPrestige || 0) / SS_BP_PRICE);
     let softSkillsGain = 0;
 
     // Hardcap – bez prestiż mastera można zdobyć max 1 SS naraz
@@ -2188,9 +2188,9 @@ performPrestige() {
 
     // Nie pozwól zrobić prestiżu jeśli nie zgromadziłeś wymaganej ilości BP
     if (softSkillsGain < 1) {
-    this.showNotification("Potrzebujesz minimum 50 000 BP, by wykonać Prestige!");
-    return;
-	}
+        this.showNotification("Potrzebujesz minimum 50 000 BP, by wykonać Prestige!");
+        return;
+    }
 
 
     // Zapisz elementy które zostają
@@ -2200,15 +2200,19 @@ performPrestige() {
     const featuresState = { ...this.gameState.features };
     const challengesState = { ...this.gameState.challenges };
 
-    // ODEJMIJ „wykorzystany” BP do prestiżu!
-	this.gameState.bpSinceLastPrestige -= softSkillsGain * SS_BP_PRICE;
-	if (this.gameState.bpSinceLastPrestige < 0) this.gameState.bpSinceLastPrestige = 0;
+	this.gameState = this.loadGameState();
+    this.gameState.bpSinceLastPrestige = 0; 
+    this.gameState.softSkills += softSkillsGain;
+    this.gameState.stats.softSkillsEarned += softSkillsGain;
+    this.gameState.prestigeCount++;
 
-    // RESET wszystkiego poza zachowanymi danymi:
-    this.gameState = this.loadGameState();
-	this.gameState.bpSinceLastPrestige = 0;
+    this.gameState.achievements = achievementsToKeep;
+    this.gameState.deskItems = deskItemsToKeep;
+    this.gameState.settings = settingsToKeep;
+    this.gameState.features = featuresState;
+    this.gameState.challenges = challengesState;
+    this.gameState.bp = 0;
 
-    // Wszystkie zadania są zablokowane po prestiżu
     this.gameData.tasks.forEach(task => {
         this.gameState.tasks[task.id] = {
             level: 1,
@@ -2218,22 +2222,13 @@ performPrestige() {
             locked: true
         };
     });
-    // Dodaj SS + aktualizacja statystyk
-    this.gameState.softSkills += softSkillsGain;
-    this.gameState.stats.softSkillsEarned += softSkillsGain;
-    this.gameState.prestigeCount++;
-    this.gameState.achievements = achievementsToKeep;
-    this.gameState.deskItems = deskItemsToKeep;
-    this.gameState.settings = settingsToKeep;
-    this.gameState.features = featuresState;
-    this.gameState.challenges = challengesState;
-    this.gameState.bp = 0;
-
     // Odśwież UI i powiadom
     this.checkAchievements();
     this.checkFeatureUnlocks();
     this.renderAll();
-    this.showNotification(`Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain !== 1 ? "s" : ""}!`);
+    this.showNotification(
+        `Prestige! Gained ${softSkillsGain} Soft Skill${softSkillsGain !== 1 ? "s" : ""}!`
+    );
 }
 
     buyDeskItem(itemId) {
