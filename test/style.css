@@ -2121,7 +2121,24 @@ select.form-control {
     grid-template-columns: 1fr;
   }
 }
-@keyframes barkaAnim {
-  from { opacity: 0; transform: translateY(18px);}
-  to   { opacity: 1; transform: translateY(0);}
+@keyframes popupFadeIn {
+    from { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.8); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1); 
+    }
+}
+
+@keyframes popupFadeOut {
+    from { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1); 
+    }
+    to { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.8); 
+    }
 }
