@@ -978,15 +978,19 @@ document.getElementById('secret-code-btn').onclick = () => {
         const logo = document.querySelector('.korpo-logo');
         const oldLogo = logo.src;
         logo.src = "jp2.jpg"; // zakładam, że masz taką grafikę!
-        const quote = document.getElementById('quote-text');
-        const oldQuote = quote.textContent;
-        const barkaLines = [
-            "Pan kiedyś stanął nad brzegiem,",
-            "Szukał ludzi gotowych pójść za Nim;",
-            "By łowić serca,",
-            "Słów Bożych prawdą.",
-            "JP na 100%!"
-        ];
+	    // ZMIANA TŁA:
+	    document.body.style.transition = 'background 0.8s';
+	    document.body.style.background = "#fff9a5";
+	    // ANIMACJA CYTATU:
+	    const quote = document.getElementById('quote-text');
+	    const oldQuote = quote.textContent;
+	    const barkaLines = [
+	        "Pan kiedyś stanął nad brzegiem,",
+	        "Szukał ludzi gotowych pójść za Nim;",
+	        "By łowić serca,",
+	        "Słów Bożych prawdą.",
+	        "JP na 100%!"
+	    ];
         let idx = 0;
         const animBarka = () => {
             if (idx < barkaLines.length) {
@@ -1004,6 +1008,7 @@ document.getElementById('secret-code-btn').onclick = () => {
             logo.src = oldLogo;
             quote.textContent = oldQuote;
             quote.style.animation = '';
+			document.body.style.background = "";
         }, 60000);
     }
     // KOD: cokolwiek innego
