@@ -50,12 +50,14 @@ class KorposzczurGame {
             ],
 "achievements": [
     // START
-    { "id": "first_progress", "nameKey": "ach_first_progress", "descKey": "ach_first_progress_desc",
-      "condition": { "type": "totalBP", "value": 100 },
-      "reward": { "type": "bp_bonus", "value": 1.05 },
-      "bonusDesc": "bonusDesc_bp_5"
-    },
-
+	{
+	  "id": "first_progress",
+	  "nameKey": "ach_first_progress",
+	  "descKey": "ach_first_progress_desc",
+	  "condition": { "type": "bp_earned", "value": 50 },
+	  "reward": { "type": "none" },
+	  "bonusDesc": ""
+	},
     // ODPROJEKTOWANIE ZADAŃ
     { "id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc",
       "condition": { "type": "task_unlocked", "taskId": "coffee" },
@@ -679,6 +681,7 @@ class KorposzczurGame {
                 challengesCompleted: 0,
                 deskItemsBought: 0,
                 softSkillsEarned: 0,
+				bpEarned: 0,
 				bpHistory: [], // <--- historia stanu BP do wykresu
 				lastBpLog: Date.now() // znacznik ostatniego wpisu
             },
@@ -1324,6 +1327,7 @@ updateLanguage() {
             const oldBP = this.gameState.bp;
             this.updateBP(this.gameState.bp + totalBPGained);
             this.gameState.totalBPEarned += totalBPGained;
+			this.gameState.stats.bpEarned += totalBPGained;
             this.updateDisplay();
         }
 
