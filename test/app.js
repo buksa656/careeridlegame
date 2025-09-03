@@ -353,7 +353,7 @@ class KorposzczurGame {
                     "challenge_marathon": "Maraton korporacyjny",
                     "challenge_marathon_desc": "Graj nieprzerwanie przez godzinę",
                     "ach_first_progress": "Pierwsze postępy",
-                    "ach_first_progress_desc": "Odblokuj pierwsze zadanie",
+                    "ach_first_progress_desc": "Twoje pierwsze 50 BP!",
                     "ach_upgrade_novice": "Początkujący ulepszacz",
                     "ach_upgrade_novice_desc": "Kup 50 ulepszeń",
                     "ach_coffee_lover": "Miłośnik kawy",
