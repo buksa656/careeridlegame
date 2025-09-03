@@ -2045,3 +2045,59 @@ select.form-control {
 .unlock-anim {
   animation: unlock-glow 0.49s cubic-bezier(.7,1.5,.3,1.1);
 }
+.career-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: #fff;
+  border-radius: 17px;
+  box-shadow: 0 2px 16px 0 #cfcfcf20;
+  padding: 18px 22px 18px 22px;
+  min-height: 96px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1.2px solid #e6ecf6;
+  transition: box-shadow 0.18s, border-color 0.18s;
+}
+.kpi-card:hover {
+  box-shadow: 0 6px 24px 0 #badcfa80;
+  border-color: #61c47a82;
+}
+.kpi-icon {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 1.45em;
+  opacity: 0.22;
+  pointer-events: none;
+}
+.kpi-label {
+  font-size: 1.09em;
+  color: #5a6778;
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+  margin-top: 11px;
+}
+.kpi-value {
+  font-size: 2.02em;
+  color: #192c46;
+  font-weight: bold;
+  line-height: 1.22;
+  margin-bottom: 6px;
+}
+@media (max-width: 670px) {
+  .career-dashboard {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 440px) {
+  .career-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
