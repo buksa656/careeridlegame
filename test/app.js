@@ -809,6 +809,65 @@ class KorposzczurGame {
                 location.reload();
             }
         };
+window.debug = {
+    addBP: (amount) => {
+        this.updateBP(this.gameState.bp + amount);
+        this.updateDisplay();
+    },
+    addSS: (amount) => {
+        this.gameState.softSkills += amount;
+        this.updateDisplay();
+    },
+    unlockAll: () => {
+        this.gameData.tasks.forEach(task => {
+            this.manualUnlockTask(task.id, true);
+        });
+        this.renderTasks();
+        this.updateTaskButtonStates();
+    },
+    reset: () => {
+        localStorage.removeItem('korposzczur-save');
+        location.reload();
+    },
+    unlockAllDev: () => {
+        this.gameData.tasks.forEach(task => {
+            this.gameState.tasks[task.id] = { 
+                level: 25,
+                progress: 0,
+                unlocked: true,
+                ascensions: 3,
+                locked: false
+            };
+        });
+        this.gameData.deskItems.forEach(item => {
+            this.gameState.deskItems[item.id] = true;
+        });
+        this.gameState.stats.deskItemsBought = this.gameData.deskItems.length;
+        this.gameState.bp = 1e8;
+        this.gameState.totalBPEarned = 1e8;
+        this.gameState.softSkills = 99;
+        this.gameState.prestigeCount = 10;
+        this.gameState.stats.softSkillsEarned = 99;
+        this.gameState.stats.totalAscensions = 20;
+        this.gameState.stats.totalUpgrades = 90;
+        this.gameState.stats.tasksUnlocked = this.gameData.tasks.length;
+        this.gameData.achievements.forEach(ach => {
+            this.gameState.achievements[ach.id] = true;
+        });
+        this.gameData.challenges.forEach(chal => {
+            this.gameState.challenges[chal.id] = true;
+        });
+        this.gameState.stats.challengesCompleted = this.gameData.challenges.length;
+        Object.keys(this.gameState.features).forEach(key => {
+            this.gameState.features[key] = true;
+        });
+        this.checkFeatureUnlocks();
+        this.renderAll();
+        this.updateDisplay();
+        alert('TRYB DEV: Wszystko odblokowane!');
+    }
+};
+
     }
 softcap(value, cap1, exp1, cap2, exp2) {
     if (value <= cap1) return value;
