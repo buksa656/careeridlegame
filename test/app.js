@@ -223,6 +223,11 @@ class KorposzczurGame {
             "translations": {
                 "pl": {
                     "ach_efficiency_expert": "Ekspert efektywności",
+					"desk_upgrade_optimizer": "Optymalizator ulepszeń",
+					"desk_ascension_assistant": "Asystent awansów",
+					"desk_cost_calculator": "Kalkulator kosztów",
+					"bonusDesc_auto_ascend": "Automatycznie awansuje zadania na 25+ poziomie",
+					"bonusDesc_cost_calculator": "Ulepszenia po awansie tańsze o 20%",
 					"ach_efficiency_expert_desc": "Podnieś sumę poziomów wszystkich zadań do 200",
 					"bonusDesc_efficiency_15": "Wszystkie softcapy zadań słabsze o 15%",
 					"ach_ascension_master": "Mistrz awansów",
@@ -406,6 +411,11 @@ class KorposzczurGame {
               },
                 "en": {
                     "ach_efficiency_expert": "Efficiency Expert",
+					"desk_upgrade_optimizer": "Upgrade Optimizer",
+					"desk_ascension_assistant": "Ascension Assistant",
+					"desk_cost_calculator": "Cost Calculator",
+					"bonusDesc_auto_ascend": "Automatically ascends tasks at level 25+",
+					"bonusDesc_cost_calculator": "Post-ascension upgrade costs 20% cheaper",
 					"ach_efficiency_expert_desc": "Raise the total sum of all task levels to 200",
 					"bonusDesc_efficiency_15": "All task softcaps 15% weaker",
 					"ach_ascension_master": "Ascension Master",
@@ -2483,7 +2493,6 @@ updateDisplay() {
 	if (deskBtn && deskTab) {
 		if (this.gameState.features.deskUnlocked) {
 			deskBtn.style.display = 'inline-block';
-			deskTab.style.display = 'block';
 		} else {
 			deskBtn.style.display = 'none';
 			deskTab.style.display = 'none';
