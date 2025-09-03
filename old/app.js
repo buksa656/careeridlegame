@@ -15,8 +15,6 @@ class KorposzczurGame {
         this.lastBPValue = 0;
         this.adsAvailable = false;
 		this.careerStatsInterval = null;
-		this.lastAnimatedTaskUpgrade = null;
-		this.lastAnimatedTaskAscend = null;
         
         // Intervals for different update loops
         this.gameLoopInterval = null;
@@ -50,14 +48,12 @@ class KorposzczurGame {
             ],
 "achievements": [
     // START
-	{
-	  "id": "first_progress",
-	  "nameKey": "ach_first_progress",
-	  "descKey": "ach_first_progress_desc",
-	  "condition": { "type": "bp_earned", "value": 50 },
-	  "reward": { "type": "bp", "value": 50 },
-	  "bonusDesc": "bonusDesc_first_progress"
-	},
+    { "id": "first_progress", "nameKey": "ach_first_progress", "descKey": "ach_first_progress_desc",
+      "condition": { "type": "totalBP", "value": 100 },
+      "reward": { "type": "bp_bonus", "value": 1.05 },
+      "bonusDesc": "bonusDesc_bp_5"
+    },
+
     // ODPROJEKTOWANIE ZADAŃ
     { "id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc",
       "condition": { "type": "task_unlocked", "taskId": "coffee" },
@@ -184,7 +180,7 @@ class KorposzczurGame {
   "id": "balance_keeper",
   "nameKey": "ach_balance_keeper",
   "descKey": "ach_balance_keeper_desc",
-  "condition": { "type": "task_level", "taskId": "motivation", "value": 10 },
+  "condition": { "type": "all_tasks_same_level", "value": 10 },
   "reward": { "type": "global_mult", "value": 1.4 },
   "bonusDesc": "bonusDesc_balance_40"
 },
@@ -193,38 +189,7 @@ class KorposzczurGame {
       "reward": { "type": "global_mult", "value": 1.50 },
       "bonusDesc": "bonusDesc_challenge_master"
     },
-{
-  "id": "mem_2137",
-  "nameKey": "ach_2137",
-  "descKey": "ach_2137_desc",
-  "condition": { "type": "bp_earned", "value": 2137 },
-  "reward": { "type": "none" },
-  "bonusDesc": "bonusDesc_2137"
-},
-	{
-  "id": "mem_420",
-  "nameKey": "ach_420",
-  "descKey": "ach_420_desc",
-  "condition": { "type": "bp_earned", "value": 420 },
-  "reward": { "type": "none" },
-  "bonusDesc": "bonusDesc_420"
-},
-	{
-  "id": "mem_123456",
-  "nameKey": "ach_123456",
-  "descKey": "ach_123456_desc",
-  "condition": { "type": "bp_earned", "value": 123456 },
-  "reward": { "type": "none" },
-  "bonusDesc": "bonusDesc_123456"
-},
-	{
-  "id": "mem_milioner",
-  "nameKey": "ach_milioner",
-  "descKey": "ach_milioner_desc",
-  "condition": { "type": "bp_earned", "value": 1000000 },
-  "reward": { "type": "none" },
-  "bonusDesc": "bonusDesc_milioner"
-},
+
     // KONIEC/WIĘCEJ W PRZYSZŁOŚCI
     { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
       "condition": { "type": "impossible", "value": 1 },
@@ -240,8 +205,8 @@ class KorposzczurGame {
                 { "id": "multitool", "nameKey": "desk_multitool", "cost": 12, "bonus": { "type": "focus_switch_discount", "value": 0.5 }, "bonusDesc": "bonusDesc_switch_discount" },
                 { "id": "trophy", "nameKey": "desk_trophy", "cost": 20, "bonus": { "type": "focus_slot", "value": 2 }, "prestige": 1, "bonusDesc": "bonusDesc_trophy" },
                 {"id": "upgrade_optimizer","nameKey": "desk_upgrade_optimizer", "cost": 15, "bonus": { "type": "free_upgrades", "value": 5 },"bonusDesc": "bonusDesc_free_upgrades"},
-                {"id": "ascension_assistant","nameKey": "desk_ascension_assistant","cost": 25,"bonus": { "type": "auto_ascend_unlock", "value": 1 },"bonusDesc": "bonusDesc_auto_ascend"},
-                {"id": "cost_calculator","nameKey": "desk_cost_calculator","cost": 20,"bonus": { "type": "cost_reduction_post_ascend", "value": 0.8 },"bonusDesc": "bonusDesc_cost_calculator"}
+                {"id": "ascension_assistant","nameKey": "desk_ascension_assistant","cost": 25,"bonus": { "type": "auto_ascend_unlock", "value": 1 },"bonusDesc": "Automatically ascends tasks at level 25+"},
+                {"id": "cost_calculator","nameKey": "desk_cost_calculator","cost": 20,"bonus": { "type": "cost_reduction_post_ascend", "value": 0.8 },"bonusDesc": "Post-ascension upgrade costs 20% cheaper"}
             ],
             "challenges": [
                 {"id": "speed_run", "nameKey": "challenge_speed_run", "descKey": "challenge_speed_run_desc", "condition": {"type": "bp_in_time", "value": 10000, "time": 300000}, "reward": {"type": "idle_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_speed_bonus"},
@@ -256,34 +221,14 @@ class KorposzczurGame {
             "translations": {
                 "pl": {
                     "ach_efficiency_expert": "Ekspert efektywności",
-					"ach_milioner": "Milioner z przypadku",
-					"ach_milioner_desc": "Wpadł milion BP. CZEK ABSURDU!",
-					"bonusDesc_milioner": "Możesz już kupić bardzo drogą kawę ☕️",
-					"ach_123456": "Hasło: 123456",
-					"ach_123456_desc": "Wpadło 123456 BP. To twoje domyślne hasło?",
-					"bonusDesc_123456": "Adminie, zmień hasło!",
-					"ach_420": "🔥 420 Blaze It",
-					"ach_420_desc": "Wbij dokładnie 420 BP. Memy Office/Weed poziom: senior.",
-					"bonusDesc_420": "Nice. ( ͡° ͜ʖ ͡°)",
-					"ach_2137": "21:37",
-					"ach_2137_desc": "Zdobywasz dokładnie 2137 BP! JP na 100%.",
-					"bonusDesc_2137": "To nie jest przypadek... 😉",
-					"bonusDesc_first_progress": "Otrzymujesz jednorazowo +50 BP za postęp!",
-					"bonusDesc_auto_ascend": "Automatycznie awansuje zadania na 25+ poziomie",
-  					"bonusDesc_cost_calculator": "Ulepszenia po awansie tańsze o 20%",
-					"desk_upgrade_optimizer": "Optymalizator ulepszeń",
-					"desk_ascension_assistant": "Asystent awansów",
-					"desk_cost_calculator": "Kalkulator kosztów",
-					"bonusDesc_auto_ascend": "Automatycznie awansuje zadania na 25+ poziomie",
-					"bonusDesc_cost_calculator": "Ulepszenia po awansie tańsze o 20%",
 					"ach_efficiency_expert_desc": "Podnieś sumę poziomów wszystkich zadań do 200",
 					"bonusDesc_efficiency_15": "Wszystkie softcapy zadań słabsze o 15%",
 					"ach_ascension_master": "Mistrz awansów",
 					"ach_ascension_master_desc": "Awansuj każde zadanie co najmniej 5 razy",
 					"bonusDesc_ascension_30": "Koszt awansów zmniejszony o 30%",
 					"ach_balance_keeper": "Wzorcowy menedżer",
-					"ach_balance_keeper_desc": "Osiągnij poziom 10 w zadaniu Motywacyjne spotkanie",
-					"bonusDesc_balance_40": "+40% do wszystkich przychodów za rozwój zespołu",
+					"ach_balance_keeper_desc": "Uzyskaj wysoki współczynnik zbalansowanego levelowania zadań (80/100)",
+					"bonusDesc_balance_40": "+40% do wszystkich przychodów za wydajne levelowanie zadań",
 					"bonusDesc_free_upgrades": "Pierwsze 5 ulepszeń każdego zadania po prestiżu jest darmowe",
                     "task_lunch": "Lunch firmowy",
                     "task_report": "Tworzenie raportów",
@@ -408,7 +353,7 @@ class KorposzczurGame {
                     "challenge_marathon": "Maraton korporacyjny",
                     "challenge_marathon_desc": "Graj nieprzerwanie przez godzinę",
                     "ach_first_progress": "Pierwsze postępy",
-                    "ach_first_progress_desc": "Twoje pierwsze 50 BP!",
+                    "ach_first_progress_desc": "Odblokuj pierwsze zadanie",
                     "ach_upgrade_novice": "Początkujący ulepszacz",
                     "ach_upgrade_novice_desc": "Kup 50 ulepszeń",
                     "ach_coffee_lover": "Miłośnik kawy",
@@ -459,34 +404,14 @@ class KorposzczurGame {
               },
                 "en": {
                     "ach_efficiency_expert": "Efficiency Expert",
-					"ach_milioner": "Accidental Millionaire",
-					"ach_milioner_desc": "You hit one million BP. The check of absurdity!",
-					"bonusDesc_milioner": "You can finally afford a ridiculously expensive coffee ☕️",
-					"ach_123456": "Password: 123456",
-					"ach_123456_desc": "123456 BP. Is this your default password?",
-					"bonusDesc_123456": "Admin! Change your password!",
-					"ach_420": "🔥 420 Blaze It",
-					"ach_420_desc": "Get exactly 420 Office Points. Very pro.",
-					"bonusDesc_420": "Nice. ( ͡° ͜ʖ ͡°)",
-					"ach_2137": "The 2137 Meme",
-					"ach_2137_desc": "Reach exactly 2137 Office Points! JP 100%.",
-					"bonusDesc_2137": "Not a coincidence... 😉",
-					"bonusDesc_first_progress": "You receive a one-time +50 BP for progress!",
-					"bonusDesc_auto_ascend": "Automatically ascends tasks at level 25+",
-  					"bonusDesc_cost_calculator": "Post-ascension upgrade costs 20% cheaper",
-					"desk_upgrade_optimizer": "Upgrade Optimizer",
-					"desk_ascension_assistant": "Ascension Assistant",
-					"desk_cost_calculator": "Cost Calculator",
-					"bonusDesc_auto_ascend": "Automatically ascends tasks at level 25+",
-					"bonusDesc_cost_calculator": "Post-ascension upgrade costs 20% cheaper",
 					"ach_efficiency_expert_desc": "Raise the total sum of all task levels to 200",
 					"bonusDesc_efficiency_15": "All task softcaps 15% weaker",
 					"ach_ascension_master": "Ascension Master",
 					"ach_ascension_master_desc": "Ascend every task at least 5 times",
 					"bonusDesc_ascension_30": "Ascension costs 30% cheaper",
 					"ach_balance_keeper": "Balance Keeper",
-					"ach_balance_keeper_desc": "Reach level 10 in the Motivation task",
-					"bonusDesc_balance_40": "+40% to all income for team development",
+					"ach_balance_keeper_desc": "Reach a high balanced task leveling score (80/100)",
+					"bonusDesc_balance_40": "+40% to all income for balanced development",
 					"bonusDesc_free_upgrades": "First 5 upgrades per task are free after prestige",
                     "ach_balance_keeper": "Balance Keeper",
 					"ach_balance_keeper_desc": "Level every task up to at least level 10",
@@ -742,7 +667,6 @@ class KorposzczurGame {
                 challengesCompleted: 0,
                 deskItemsBought: 0,
                 softSkillsEarned: 0,
-				bpEarned: 0,
 				bpHistory: [], // <--- historia stanu BP do wykresu
 				lastBpLog: Date.now() // znacznik ostatniego wpisu
             },
@@ -870,152 +794,12 @@ class KorposzczurGame {
                 location.reload();
             }
         };
-window.debug = {
-    addBP: (amount) => {
-        this.updateBP(this.gameState.bp + amount);
-        this.updateDisplay();
-    },
-    addSS: (amount) => {
-        this.gameState.softSkills += amount;
-        this.updateDisplay();
-    },
-    unlockAll: () => {
-        this.gameData.tasks.forEach(task => {
-            this.manualUnlockTask(task.id, true);
-        });
-        this.renderTasks();
-        this.updateTaskButtonStates();
-    },
-    reset: () => {
-        localStorage.removeItem('korposzczur-save');
-        location.reload();
-    },
-    unlockAllDev: () => {
-        this.gameData.tasks.forEach(task => {
-            this.gameState.tasks[task.id] = { 
-                level: 25,
-                progress: 0,
-                unlocked: true,
-                ascensions: 3,
-                locked: false
-            };
-        });
-        this.gameData.deskItems.forEach(item => {
-            this.gameState.deskItems[item.id] = true;
-        });
-        this.gameState.stats.deskItemsBought = this.gameData.deskItems.length;
-        this.gameState.bp = 1e8;
-        this.gameState.totalBPEarned = 1e8;
-        this.gameState.softSkills = 99;
-        this.gameState.prestigeCount = 10;
-        this.gameState.stats.softSkillsEarned = 99;
-        this.gameState.stats.totalAscensions = 20;
-        this.gameState.stats.totalUpgrades = 90;
-        this.gameState.stats.tasksUnlocked = this.gameData.tasks.length;
-        this.gameData.achievements.forEach(ach => {
-            this.gameState.achievements[ach.id] = true;
-        });
-        this.gameData.challenges.forEach(chal => {
-            this.gameState.challenges[chal.id] = true;
-        });
-        this.gameState.stats.challengesCompleted = this.gameData.challenges.length;
-        Object.keys(this.gameState.features).forEach(key => {
-            this.gameState.features[key] = true;
-        });
-        this.checkFeatureUnlocks();
-        this.renderAll();
-        this.updateDisplay();
-        alert('TRYB DEV: Wszystko odblokowane!');
-    }
-};
-
     }
 softcap(value, cap1, exp1, cap2, exp2) {
     if (value <= cap1) return value;
     if (value <= cap2) return cap1 + Math.pow(value - cap1, exp1);
     return cap2 + Math.pow(value - cap2, exp2);
 }
-// Funkcja do JP2 Popup
-showBarkaSwitchPopup() {
-    // Usuń istniejący popup jeśli jest
-    const existingPopup = document.getElementById('barka-popup');
-    if (existingPopup) existingPopup.remove();
-
-    const popup = document.createElement('div');
-    popup.id = 'barka-popup';
-    popup.style.position = 'fixed';
-    popup.style.top = '50%';
-    popup.style.left = '50%';
-    popup.style.transform = 'translate(-50%, -50%)';
-    popup.style.background = '#fffbe5';
-    popup.style.border = '3px solid #bca405';
-    popup.style.borderRadius = '15px';
-    popup.style.padding = '30px 40px';
-    popup.style.boxShadow = '0 0 20px #bca40580';
-    popup.style.zIndex = '99999';
-    popup.style.fontSize = '1.3em';
-    popup.style.color = '#8B4513';
-    popup.style.textAlign = 'center';
-    popup.style.fontWeight = 'bold';
-    popup.style.maxWidth = '500px';
-    popup.style.animation = 'popupFadeIn 0.5s ease-out';
-
-    const barkaLines = [
-        "Pan kiedyś stanął nad brzegiem,",
-        "Szukał ludzi gotowych pójść za Nim;",
-        "By łowić serca,",
-        "Słów Bożych prawdą.",
-        "JP na 100%! 🙏"
-    ];
-
-    let currentLine = 0;
-    const lineElement = document.createElement('div');
-    lineElement.style.minHeight = '60px';
-    lineElement.style.display = 'flex';
-    lineElement.style.alignItems = 'center';
-    lineElement.style.justifyContent = 'center';
-    popup.appendChild(lineElement);
-
-    // Przycisk zamknięcia
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '×';
-    closeBtn.style.position = 'absolute';
-    closeBtn.style.top = '10px';
-    closeBtn.style.right = '15px';
-    closeBtn.style.background = 'none';
-    closeBtn.style.border = 'none';
-    closeBtn.style.fontSize = '24px';
-    closeBtn.style.cursor = 'pointer';
-    closeBtn.style.color = '#bca405';
-    closeBtn.onclick = () => popup.remove();
-    popup.appendChild(closeBtn);
-
-    // Animacja linijek Barki
-    const showNextLine = () => {
-        if (currentLine < barkaLines.length) {
-            lineElement.style.opacity = '0';
-            setTimeout(() => {
-                lineElement.textContent = barkaLines[currentLine];
-                lineElement.style.opacity = '1';
-                lineElement.style.transition = 'opacity 0.8s ease-in-out';
-                currentLine++;
-                setTimeout(showNextLine, 2500);
-            }, 300);
-        }
-    };
-
-    document.body.appendChild(popup);
-    showNextLine();
-
-    // Auto-zamknięcie po 15 sekundach
-    setTimeout(() => {
-        if (document.getElementById('barka-popup')) {
-            popup.style.animation = 'popupFadeOut 0.5s ease-in';
-            setTimeout(() => popup.remove(), 500);
-        }
-    }, 15000);
-}
-	
 setupEventListeners() {
     // Tab navigation - Fixed to handle challenges tab properly
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1044,33 +828,7 @@ setupEventListeners() {
     const closeSettingsModal = () => {
         settingsModal.classList.add('hidden');
     };
-document.getElementById('secret-code-btn').onclick = () => {
-    const code = document.getElementById('secret-code-input').value.trim();
-    const feedback = document.getElementById('secret-code-feedback');
-    
-    if (code === "123456") {
-        feedback.textContent = "Hasło przyjęte! Twoja produkcja BP zmieniła się o... 0%. Ale duma ogromna. 👏";
-    }
-    else if (code === "2137") {
-        feedback.textContent = "JP na 100%! Papieska moc aktywowana! 🙏";
-        
-        // Zmień logo
-        const logo = document.querySelector('.korpo-logo');
-        const oldLogo = logo.src;
-        logo.src = "jp2.jpg";
-        
-        // Pokaż popup z Barką
-        this.showBarkaSwitchPopup();
-        
-        // Przywróć logo po minucie
-        setTimeout(() => {
-            logo.src = oldLogo;
-        }, 60000);
-    }
-    else {
-        feedback.textContent = "Niepoprawny kod / Invalid code";
-    }
-};
+
     settingsClose.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -1235,7 +993,7 @@ switchTab(tabName) {
                     if (this.currentTab === "careerstats") {
                         this.renderCareerStats();
                     }
-                }, 100); // co 1 sekunda
+                }, 1000); // co 1 sekunda
             }
         } else {
             // Sprzątanie interwału gdy opuszczasz statystyki
@@ -1554,7 +1312,6 @@ updateLanguage() {
             const oldBP = this.gameState.bp;
             this.updateBP(this.gameState.bp + totalBPGained);
             this.gameState.totalBPEarned += totalBPGained;
-			this.gameState.stats.bpEarned += totalBPGained;
             this.updateDisplay();
         }
 
@@ -1875,109 +1632,97 @@ calculateTaskIdleRate(taskId) {
 		}
         return true;
     }
-earnSecretAchievement(id) {
-    if (!this.gameState.achievements[id]) {
-        this.gameState.achievements[id] = true;
-        this.renderAchievements();
-        this.showNotification("🎉 Sekretny achievement odblokowany!");
-    }
-}
-checkAchievements() {
-    // Blokada: tylko jedna notyfikacja na achievement na cykl!
-    if (!this.justUnlockedAchievements) this.justUnlockedAchievements = new Set();
 
-    this.gameData.achievements.forEach(achievement => {
-        if (this.gameState.achievements[achievement.id]) return;
-        let unlocked = false;
-        switch (achievement.condition.type) {
-            case 'tasks_unlocked':
-                unlocked = this.gameState.stats.tasksUnlocked >= achievement.condition.value;
-                break;
-            case 'upgrades_bought':
-                unlocked = this.gameState.stats.upgradesBought >= achievement.condition.value;
-                break;
-            case 'task_unlocked':
-                const taskState = this.gameState.tasks[achievement.condition.taskId];
-                unlocked = taskState && taskState.unlocked;
-                break;
-            case 'task_level':
-                const taskLevel = this.gameState.tasks[achievement.condition.taskId];
-                unlocked = taskLevel && taskLevel.level >= achievement.condition.value;
-                break;
-            case 'ascensions':
-                unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
-                break;
-            case 'bp_spent':
-                unlocked = this.gameState.totalBPSpent >= achievement.condition.value;
-                break;
-            case 'prestiges':
-                unlocked = this.gameState.prestigeCount >= achievement.condition.value;
-                break;
-            case 'multibuy_used':
-                unlocked = this.gameState.stats.totalMultiBuys >= achievement.condition.value;
-                break;
-            case 'total_ascensions':
-                unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
-                break;
-            case 'all_tasks_same_level':
-                const allLevels = Object.values(this.gameState.tasks)
-                    .filter(task => task.unlocked)
-                    .map(task => task.level);
-                unlocked = allLevels.length > 0 && allLevels.every(lvl => lvl >= achievement.condition.value);
-                break;
-            case 'total_task_levels':
-                const totalLevels = Object.values(this.gameState.tasks)
+    checkAchievements() {
+        this.gameData.achievements.forEach(achievement => {
+            if (this.gameState.achievements[achievement.id]) return;
+
+            let unlocked = false;
+
+            switch (achievement.condition.type) {
+                case 'tasks_unlocked':
+                    unlocked = this.gameState.stats.tasksUnlocked >= achievement.condition.value;
+                    break;
+                case 'upgrades_bought':
+                    unlocked = this.gameState.stats.upgradesBought >= achievement.condition.value;
+                    break;
+                case 'task_unlocked':
+                    const taskState = this.gameState.tasks[achievement.condition.taskId];
+                    unlocked = taskState && taskState.unlocked;
+                    break;
+                case 'task_level':
+                    const taskLevel = this.gameState.tasks[achievement.condition.taskId];
+                    unlocked = taskLevel && taskLevel.level >= achievement.condition.value;
+                    break;
+                case 'ascensions':
+                    unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
+                    break;
+                case 'bp_spent':
+                    unlocked = this.gameState.totalBPSpent >= achievement.condition.value;
+                    break;
+                case 'prestiges':
+                    unlocked = this.gameState.prestigeCount >= achievement.condition.value;
+                    break;
+                case 'multibuy_used':
+                    unlocked = this.gameState.stats.totalMultiBuys >= achievement.condition.value;
+                    break;
+                case 'total_ascensions':
+                    unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
+                    break;
+                    case 'total_task_levels':
+                case 'all_tasks_same_level':
+					  const allLevels = Object.values(this.gameState.tasks)
+						.filter(task => task.unlocked)
+						.map(task => task.level);
+					  unlocked = allLevels.length > 0 && allLevels.every(lvl => lvl >= achievement.condition.value);
+					  break;
+				const totalLevels = Object.values(this.gameState.tasks)
                     .reduce((sum, task) => sum + (task.unlocked ? task.level : 0), 0);
-                unlocked = totalLevels >= achievement.condition.value;
-                break;
-            case 'task_balance_score':
-                const taskLevels = Object.values(this.gameState.tasks)
-                    .filter(task => task.unlocked)
-                    .map(task => task.level);
-                const avg = taskLevels.reduce((a, b) => a + b, 0) / taskLevels.length;
-                const variance = taskLevels.reduce((sum, level) => sum + Math.pow(level - avg, 2), 0) / taskLevels.length;
-                const balanceScore = Math.max(0, 100 - Math.sqrt(variance));
-                unlocked = balanceScore >= achievement.condition.value;
-                break;
-            case 'idle_rate':
-                const totalIdleRate = Object.keys(this.gameState.tasks).reduce((sum, taskId) => {
-                    const taskState = this.gameState.tasks[taskId];
-                    if (taskState && taskState.unlocked) {
-                        return sum + this.calculateTaskIdleRate(taskId);
-                    }
-                    return sum;
-                }, 0);
-                unlocked = totalIdleRate >= achievement.condition.value;
-                break;
-            case 'play_time':
-                unlocked = this.gameState.stats.playTime >= achievement.condition.value;
-                break;
-            case 'soft_skills_earned':
-                unlocked = this.gameState.stats.softSkillsEarned >= achievement.condition.value;
-                break;
-            case 'desk_items_bought':
-                unlocked = this.gameState.stats.deskItemsBought >= achievement.condition.value;
-                break;
-            case 'challenges_completed':
-                unlocked = this.gameState.stats.challengesCompleted >= achievement.condition.value;
-                break;
-        }
-        // BLOKADA TUTAJ:
-        if (unlocked && !this.justUnlockedAchievements.has(achievement.id)) {
-            this.gameState.achievements[achievement.id] = true;
-            this.justUnlockedAchievements.add(achievement.id);
-            this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
-            this.renderAchievements();
-            this.checkFeatureUnlocks();
-            this.showNotification(`🏆Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
-        }
-    });
+                    unlocked = totalLevels >= achievement.condition.value;
+                    break;
+                case 'task_balance_score':
+                    // Premiuj równomierne rozwijanie zadań
+                    const taskLevels = Object.values(this.gameState.tasks)
+                        .filter(task => task.unlocked)
+                        .map(task => task.level);
+                    const avg = taskLevels.reduce((a,b) => a+b, 0) / taskLevels.length;
+                    const variance = taskLevels.reduce((sum, level) => sum + Math.pow(level - avg, 2), 0) / taskLevels.length;
+                    const balanceScore = Math.max(0, 100 - Math.sqrt(variance));
+                    unlocked = balanceScore >= achievement.condition.value;
+                    break;
+                case 'idle_rate':
+                    const totalIdleRate = Object.keys(this.gameState.tasks).reduce((sum, taskId) => {
+                        const taskState = this.gameState.tasks[taskId];
+                        if (taskState && taskState.unlocked) {
+                            return sum + this.calculateTaskIdleRate(taskId);
+                        }
+                        return sum;
+                    }, 0);
+                    unlocked = totalIdleRate >= achievement.condition.value;
+                    break;
+                case 'play_time':
+                    unlocked = this.gameState.stats.playTime >= achievement.condition.value;
+                    break;
+                case 'soft_skills_earned':
+                    unlocked = this.gameState.stats.softSkillsEarned >= achievement.condition.value;
+                    break;
+                case 'desk_items_bought':
+                    unlocked = this.gameState.stats.deskItemsBought >= achievement.condition.value;
+                    break;
+                case 'challenges_completed':
+                    unlocked = this.gameState.stats.challengesCompleted >= achievement.condition.value;
+                    break;
+            }
 
-    // Czyść listę "już odblokowanych" po cyklu
-    setTimeout(() => {
-        this.justUnlockedAchievements.clear();
-    }, 0);
-}
+            if (unlocked) {
+                this.gameState.achievements[achievement.id] = true;
+                this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
+                this.renderAchievements();
+                this.checkFeatureUnlocks();
+                this.showNotification(`Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
+            }
+        });
+    }
 
 calculateMultiBuyCost(taskId, amount) {
     const taskData = this.gameData.tasks.find(t => t.id === taskId);
@@ -2099,64 +1844,70 @@ calculateMaxBuyAmount(taskId) {
 }
 
     upgradeTask(taskId) {
-    const amount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskId) : parseInt(this.multiBuyAmount);
-    if (amount === 0) return;
-    const cost = this.calculateMultiBuyCost(taskId, amount);
+        const amount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskId) : parseInt(this.multiBuyAmount);
+        if (amount === 0) return;
 
-    if (this.gameState.bp >= cost) {
-        this.updateBP(this.gameState.bp - cost);
-        this.gameState.totalBPSpent += cost;
-        this.gameState.tasks[taskId].level += amount;
-        this.gameState.stats.totalUpgrades += amount;
-        this.gameState.stats.upgradesBought += amount;
-
-        if (amount >= 25) {
-            this.gameState.stats.totalMultiBuys += amount;
+        const cost = this.calculateMultiBuyCost(taskId, amount);
+        
+        if (this.gameState.bp >= cost) {
+            this.updateBP(this.gameState.bp - cost);
+            this.gameState.totalBPSpent += cost;
+            this.gameState.tasks[taskId].level += amount;
+            this.gameState.stats.totalUpgrades += amount;
+            this.gameState.stats.upgradesBought += amount;
+            
+            if (amount >= 25) {
+                this.gameState.stats.totalMultiBuys += amount;
+            }
+            
+            this.checkAchievements();
+            this.renderTasks();
+            this.updateTaskButtonStates();
+            this.updateDisplay();
+            
+            // Visual feedback
+            const btn = document.querySelector(`[data-task-id="${taskId}"][data-action="upgrade"]`);
+            if (btn) {
+                btn.classList.add('btn-flash');
+                setTimeout(() => btn.classList.remove('btn-flash'), 300);
+            }
         }
-
-        this.checkAchievements();
-        this.updateTaskButtonStates();
-        this.updateDisplay();
-
-        // USTAWIAMY *NAJPIERW* flagę animacji!
-        this.lastAnimatedTaskUpgrade = taskId;
-        // Następnie wykonujemy pojedynczy render
-        this.renderTasks();
-
-        // Visual feedback na przycisku (to możesz zostawić)
-        const btn = document.querySelector(`[data-task-id="${taskId}"][data-action="upgrade"]`);
-        if (btn) {
-            btn.classList.add('btn-flash');
-            setTimeout(() => btn.classList.remove('btn-flash'), 300);
-        }
-    }
+		const card = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+		if (card) {
+		  card.classList.remove('tile-anim-pop');
+		  // Wymusi reflow, by animacja zawsze odpaliła (gdy kilkuklikasz)
+		  void card.offsetWidth;
+		  card.classList.add('tile-anim-pop');
+		  setTimeout(() => card.classList.remove('tile-anim-pop'), 400);
 }
+    }
+
     calculateUpgradeCost(taskId) {
         return this.calculateMultiBuyCost(taskId, 1);
     }
 
-ascendTask(taskId) {
-    const taskState = this.gameState.tasks[taskId];
-    const maxAscends = this.gameData.rankKeys.length;
-    if (taskState.level < 10) return;
-    if (taskState.ascensions >= maxAscends) return;
+    ascendTask(taskId) {
+        const taskState = this.gameState.tasks[taskId];
+        const maxAscends = this.gameData.rankKeys.length;
+        if (taskState.level < 10) return;
+        if (taskState.ascensions >= maxAscends) return;
 
-    taskState.level = 1;
-    taskState.ascensions++;
-    taskState.progress = 0;
-    this.gameState.stats.totalAscensions++;
-
-    this.checkAchievements();
-    this.updateTaskButtonStates();
-
-    // Flaga do późniejszego zaznaczenia animacji
-    this.lastAnimatedTaskAscend = taskId;
-
-    this.renderTasks(); // po ustawieniu flagi
-
-    this.showNotification(`🏆 ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}: ${this.translations[this.currentLanguage].ascend}`);
-
-}
+        taskState.level = 1;
+        taskState.ascensions++;
+        taskState.progress = 0;
+        this.gameState.stats.totalAscensions++;
+        this.checkAchievements();
+        this.renderTasks();
+        this.updateTaskButtonStates();
+        this.showNotification(`Task ascended: ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}`);
+		const card = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+		if (card) {
+		  card.classList.remove('tile-anim-bounce');
+		  void card.offsetWidth;
+		  card.classList.add('tile-anim-bounce');
+		  setTimeout(() => card.classList.remove('tile-anim-bounce'), 500);
+		}
+	}
 
 performPrestige() {
     // Nowa logika: 1 SS za każde pełne 50,000 BP
@@ -2271,70 +2022,63 @@ renderTasks() {
         const isActive = this.gameState.focus.includes(taskData.id);
         const taskCard = this.createTaskCard(taskData, taskState);
 
-        // PODŚWIETLENIE kafelka aktywnego
-        if (isActive) {
-            taskCard.classList.add('active-task');
-        } else {
-            taskCard.classList.remove('active-task');
-        }
+        // Checkbox "Aktywne"
+        const focusCheckbox = document.createElement('input');
+        focusCheckbox.type = 'checkbox';
+        focusCheckbox.setAttribute('data-task-id', taskData.id);
+        focusCheckbox.checked = isActive;
+        focusCheckbox.disabled = !isActive && this.gameState.focus.length >= this.getMaxFocusSlots();
 
-        // Dodanie animacji upgrade/ascend
-        if (this.lastAnimatedTaskUpgrade === taskData.id) {
-            taskCard.classList.add('tile-anim-pop');
-            setTimeout(() => taskCard.classList.remove('tile-anim-pop'), 400);
-            this.lastAnimatedTaskUpgrade = null;
-        }
-        if (this.lastAnimatedTaskAscend === taskData.id) {
-            taskCard.classList.add('tile-anim-bounce');
-            setTimeout(() => taskCard.classList.remove('tile-anim-bounce'), 500);
-            this.lastAnimatedTaskAscend = null;
-        }
+        const label = document.createElement('label');
+        label.style.marginLeft = '10px';
+        label.appendChild(focusCheckbox);
+        label.appendChild(document.createTextNode(this.currentLanguage === 'pl' ? 'Aktywne' : 'Active'));
 
-        // KLIKALNY cały kafelek taska do focusowania/odfocusowania!
-        taskCard.style.cursor = 'pointer';
-        taskCard.addEventListener('click', (e) => {
-            // Blokuj klik gdy user kliknął przyciski
-            if (e.target.closest('.btn,.task-actions')) return;
+        const focusHost = taskCard.querySelector('.task-header');
+        focusHost && focusHost.appendChild(label);
 
-            const taskId = taskData.id;
-            if (isActive) {
-                // Wyłącz fokus na tym tasku
-                this.gameState.focus = this.gameState.focus.filter(id => id !== taskId);
-            } else {
-                // Limit slotów focus
+        // Handler zmiany focusu + blokada przepełnienia + (opcjonalny) koszt przełączania
+        focusCheckbox.addEventListener('change', (e) => {
+            const taskId = e.target.getAttribute('data-task-id');
+
+            if (e.target.checked) {
+                // limit slotów
                 if (this.gameState.focus.length >= this.getMaxFocusSlots()) {
-                    // Notyfikacja + animacja shake
-                    this.showNotification(
-                        this.currentLanguage === 'pl'
-                            ? 'Osiągnąłeś maksymalną liczbę aktywnych zadań!'
-                            : 'You have reached the maximum number of active tasks!'
-                    );
-                    taskCard.classList.add('shake-card');
-                    setTimeout(() => taskCard.classList.remove('shake-card'), 600);
+                    this.showNotification(this.currentLanguage === 'pl'
+                        ? 'Brak wolnych slotów focus!'
+                        : 'No free focus slots left!');
+                    e.target.checked = false;
                     return;
                 }
-                // Koszt przełączania (opcjonalnie)
+
+                // opcjonalny koszt przełączania (gdy flaga włączona)
                 if (this.gameState.settings?.focusSwitchCostEnabled) {
-                    let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005));
+                    let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005)); // 0.5% BP, min 1000
                     if (this.gameState.deskItems['multitool']) {
                         const mt = this.gameData.deskItems.find(d => d.id === 'multitool');
                         if (mt && mt.bonus.type === 'focus_switch_discount') {
-                            switchCost = Math.floor(switchCost * mt.bonus.value);
+                            switchCost = Math.floor(switchCost * mt.bonus.value); // np. 0.5
                         }
                     }
                     if (this.gameState.bp < switchCost) {
                         this.showNotification(this.currentLanguage === 'pl'
                             ? 'Za mało BP na zmianę focus!'
                             : 'Not enough BP to switch focus!');
+                        e.target.checked = false;
                         return;
                     }
                     this.updateBP(this.gameState.bp - switchCost);
                 }
+
                 if (!this.gameState.focus.includes(taskId)) {
                     this.gameState.focus.push(taskId);
                 }
+            } else {
+                // Odznaczanie nie wymaga kosztu
+                this.gameState.focus = this.gameState.focus.filter(id => id !== taskId);
             }
-            this.saveGameState();
+
+            this.saveGameState(); // zapisz wybór od razu
             this.renderTasks();
         });
 
@@ -2343,7 +2087,6 @@ renderTasks() {
 
     this.updateTaskButtonStates();
 }
-
 createTaskCard(taskData, taskState) {
     const card = document.createElement('div');
     card.className = 'task-card';
@@ -2475,223 +2218,147 @@ createTaskCard(taskData, taskState) {
     });
 }
 
+
 renderDesk() {
     const svgNS = 'http://www.w3.org/2000/svg';
-    const placeholdersList = [
-        ["mug",        240, 100, "☕", "Kubek"],
-        ["phone",      860, 96,  "📱", "Telefon"],
-        ["organizer",  525, 105, "🗂", "Organizer"],
-        ["lamp",       390, 90,  "💡", "Lampka"],
-        ["multitool",  320, 180, "🛠", "Multitool"],
-        ["trophy",     965, 170, "🏆", "Trofeum"],
-        ["upgrade_optimizer", 350, 210, "⚡️", "Optymalizator ulepszeń"],
-        ["ascension_assistant", 480, 200, "🤖", "Asystent awansów"],
-        ["cost_calculator", 1080, 120, "🧮", "Kalkulator kosztów"]
-    ];
-
-    // Placeholdery na brakujące itemy
-    let phGroup = document.getElementById('desk-placeholders');
-    if (!phGroup) {
-        phGroup = document.createElementNS(svgNS, 'g');
-        phGroup.setAttribute('id', 'desk-placeholders');
-        document.getElementById('desk-svg').insertBefore(phGroup, document.getElementById('desk-items'));
-    }
-    phGroup.innerHTML = '';
-    placeholdersList.forEach(([id, cx, cy, icon, label]) => {
-        if (this.gameState.deskItems && this.gameState.deskItems[id]) return;
-        const circle = document.createElementNS(svgNS, "circle");
-        circle.setAttribute("cx", cx);
-        circle.setAttribute("cy", cy);
-        circle.setAttribute("r", 32);
-        circle.setAttribute("fill", "#444");
-        circle.setAttribute("class", "desk-placeholder");
-        circle.setAttribute("opacity", "0.09");
-        phGroup.appendChild(circle);
-        const text = document.createElementNS(svgNS, "text");
-        text.setAttribute("x", cx);
-        text.setAttribute("y", cy + 10);
-        text.setAttribute("class", "desk-placeholder-text");
-        text.textContent = icon;
-        phGroup.appendChild(text);
-        circle.setAttribute("title", `Kup w sklepie: ${label}`);
-        text.setAttribute("title", `Kup w sklepie: ${label}`);
-    });
-
-    // Render itemów na biurku
     const itemsGroup = document.getElementById('desk-items');
     if (!itemsGroup) return;
     itemsGroup.innerHTML = '';
 
     Object.keys(this.gameState.deskItems).forEach(itemId => {
         if (!this.gameState.deskItems[itemId]) return;
+
         const g = document.createElementNS(svgNS, 'g');
         g.setAttribute('class', 'desk-item');
-        g.setAttribute('data-item-id', itemId);
 
-        // Tooltip – wyciągnij dane z gameData
-        const itemObj = this.gameData.deskItems.find(d => d.id === itemId);
-        const label = itemObj
-            ? (this.translations?.[this.currentLanguage]?.[itemObj.nameKey] || itemObj.nameKey)
-            : itemId;
-        const bonus = itemObj
-            ? (this.translations?.[this.currentLanguage]?.[itemObj.bonusDesc] || itemObj.bonusDesc || "")
-            : "";
-
-        g.setAttribute('data-tooltip-title', label);
-        g.setAttribute('data-tooltip-bonus', bonus);
-
-        // (SVG do każdego przedmiotu – te same jak wcześniej)
         const append = (el) => g.appendChild(el);
+
         switch (itemId) {
             case 'mug': {
                 const cup = document.createElementNS(svgNS, 'circle');
-                cup.setAttribute('cx','240'); cup.setAttribute('cy','100'); cup.setAttribute('r','22');
+                cup.setAttribute('cx','120'); cup.setAttribute('cy','160'); cup.setAttribute('r','12');
                 cup.setAttribute('fill','#8B4513'); append(cup);
                 const base = document.createElementNS(svgNS, 'rect');
-                base.setAttribute('x','228'); base.setAttribute('y','120');
-                base.setAttribute('width','24'); base.setAttribute('height','6');
+                base.setAttribute('x','115'); base.setAttribute('y','165');
+                base.setAttribute('width','10'); base.setAttribute('height','3');
                 base.setAttribute('fill','#654321'); append(base);
                 break;
             }
+            case 'monitor': {
+                const body = document.createElementNS(svgNS, 'rect');
+                body.setAttribute('x','210'); body.setAttribute('y','125');
+                body.setAttribute('width','50'); body.setAttribute('height','35');
+                body.setAttribute('fill','#2c3e50'); body.setAttribute('rx','3'); append(body);
+                const screen = document.createElementNS(svgNS, 'rect');
+                screen.setAttribute('x','213'); screen.setAttribute('y','128');
+                screen.setAttribute('width','44'); screen.setAttribute('height','29');
+                screen.setAttribute('fill','#3498db'); screen.setAttribute('rx','2'); append(screen);
+                break;
+            }
+            case 'plant': {
+                const pot = document.createElementNS(svgNS, 'circle');
+                pot.setAttribute('cx','320'); pot.setAttribute('cy','168'); pot.setAttribute('r','8');
+                pot.setAttribute('fill','#8B4513'); append(pot);
+                const leaves = document.createElementNS(svgNS, 'circle');
+                leaves.setAttribute('cx','320'); leaves.setAttribute('cy','155'); leaves.setAttribute('r','12');
+                leaves.setAttribute('fill','#228B22'); append(leaves);
+                break;
+            }
+            case 'mousepad': {
+                const pad = document.createElementNS(svgNS, 'ellipse');
+                pad.setAttribute('cx','200'); pad.setAttribute('cy','240');
+                pad.setAttribute('rx','40'); pad.setAttribute('ry','15');
+                pad.setAttribute('fill','#1a1a1a'); append(pad);
+                break;
+            }
+            case 'laptop': {
+                const base = document.createElementNS(svgNS, 'rect');
+                base.setAttribute('x','70'); base.setAttribute('y','130');
+                base.setAttribute('width','20'); base.setAttribute('height','15');
+                base.setAttribute('fill','#2c3e50'); base.setAttribute('rx','2'); append(base);
+                const scr = document.createElementNS(svgNS, 'rect');
+                scr.setAttribute('x','72'); scr.setAttribute('y','132');
+                scr.setAttribute('width','16'); scr.setAttribute('height','11');
+                scr.setAttribute('fill','#3498db'); scr.setAttribute('rx','1'); append(scr);
+                break;
+            }
+            case 'challenges': {
+                const box = document.createElementNS(svgNS, 'rect');
+                box.setAttribute('x','340'); box.setAttribute('y','130');
+                box.setAttribute('width','20'); box.setAttribute('height','15');
+                box.setAttribute('fill','#FFD700'); box.setAttribute('rx','2'); append(box);
+                const mark = document.createElementNS(svgNS, 'text');
+                mark.setAttribute('x','350'); mark.setAttribute('y','142');
+                mark.setAttribute('text-anchor','middle'); mark.setAttribute('font-size','8');
+                mark.setAttribute('fill','#000'); mark.textContent = '!'; append(mark);
+                break;
+            }
+            case 'autobuyer': {
+                const a = document.createElementNS(svgNS, 'circle');
+                a.setAttribute('cx','350'); a.setAttribute('cy','180'); a.setAttribute('r','10');
+                a.setAttribute('fill','#FFD700'); append(a);
+                const b = document.createElementNS(svgNS, 'circle');
+                b.setAttribute('cx','350'); b.setAttribute('cy','180'); b.setAttribute('r','6');
+                b.setAttribute('fill','#FFA500'); append(b);
+                break;
+            }
+
+            // Nowe wizualizacje dla itemów ze sklepu
             case 'phone': {
                 const body = document.createElementNS(svgNS, 'rect');
-                body.setAttribute('x','860'); body.setAttribute('y','80');
-                body.setAttribute('width','28'); body.setAttribute('height','42');
-                body.setAttribute('rx','5'); body.setAttribute('fill','#444'); append(body);
+                body.setAttribute('x','260'); body.setAttribute('y','125');
+                body.setAttribute('width','14'); body.setAttribute('height','28');
+                body.setAttribute('rx','3'); body.setAttribute('fill','#444'); append(body);
                 const scr = document.createElementNS(svgNS, 'rect');
-                scr.setAttribute('x','864'); scr.setAttribute('y','86');
-                scr.setAttribute('width','20'); scr.setAttribute('height','29');
-                scr.setAttribute('rx','3'); scr.setAttribute('fill','#9ad'); append(scr);
+                scr.setAttribute('x','262'); scr.setAttribute('y','129');
+                scr.setAttribute('width','10'); scr.setAttribute('height','20');
+                scr.setAttribute('rx','2'); scr.setAttribute('fill','#9ad'); append(scr);
                 break;
             }
             case 'organizer': {
                 const org = document.createElementNS(svgNS, 'rect');
-                org.setAttribute('x','505'); org.setAttribute('y','92');
-                org.setAttribute('width','40'); org.setAttribute('height','22');
-                org.setAttribute('rx','3'); org.setAttribute('fill','#b5651d'); append(org);
-                const docs = document.createElementNS(svgNS, 'rect');
-                docs.setAttribute('x','510'); docs.setAttribute('y','97');
-                docs.setAttribute('width','10'); docs.setAttribute('height','13');
-                docs.setAttribute('fill','#fff'); append(docs);
+                org.setAttribute('x','150'); org.setAttribute('y','110');
+                org.setAttribute('width','24'); org.setAttribute('height','16');
+                org.setAttribute('rx','2'); org.setAttribute('fill','#8b5e3c'); append(org);
+                const line = document.createElementNS(svgNS, 'line');
+                line.setAttribute('x1','152'); line.setAttribute('y1','114');
+                line.setAttribute('x2','172'); line.setAttribute('y2','114');
+                line.setAttribute('stroke','#fff'); line.setAttribute('stroke-width','1'); append(line);
                 break;
             }
             case 'lamp': {
                 const arm = document.createElementNS(svgNS, 'line');
-                arm.setAttribute('x1','395'); arm.setAttribute('y1','120');
-                arm.setAttribute('x2','417'); arm.setAttribute('y2','85');
-                arm.setAttribute('stroke','#daaf29'); arm.setAttribute('stroke-width','9'); append(arm);
+                arm.setAttribute('x1','185'); arm.setAttribute('y1','115');
+                arm.setAttribute('x2','195'); arm.setAttribute('y2','105');
+                arm.setAttribute('stroke','#888'); arm.setAttribute('stroke-width','2'); append(arm);
                 const bulb = document.createElementNS(svgNS, 'circle');
-                bulb.setAttribute('cx','428'); bulb.setAttribute('cy','75'); bulb.setAttribute('r','16');
-                bulb.setAttribute('fill','#ffe066'); bulb.setAttribute('stroke','#fff9b3'); bulb.setAttribute('stroke-width','3'); append(bulb);
+                bulb.setAttribute('cx','198'); bulb.setAttribute('cy','102'); bulb.setAttribute('r','6');
+                bulb.setAttribute('fill','#ffd54f'); append(bulb);
                 break;
             }
             case 'multitool': {
-                const ring = document.createElementNS(svgNS, 'ellipse');
-                ring.setAttribute('cx','320'); ring.setAttribute('cy','180');
-                ring.setAttribute('rx','17'); ring.setAttribute('ry','10');
-                ring.setAttribute('fill','#aaa'); append(ring);
-                const blade = document.createElementNS(svgNS, 'rect');
-                blade.setAttribute('x','339'); blade.setAttribute('y','167'); blade.setAttribute('width','22'); blade.setAttribute('height','6'); 
-                blade.setAttribute('fill','#d5e7ef'); blade.setAttribute('rx','3'); append(blade);
+                const ring = document.createElementNS(svgNS, 'circle');
+                ring.setAttribute('cx','280'); ring.setAttribute('cy','230'); ring.setAttribute('r','8');
+                ring.setAttribute('fill','#888'); append(ring);
+                const blade = document.createElementNS(svgNS, 'path');
+                blade.setAttribute('d','M276 226 L284 234');
+                blade.setAttribute('stroke','#ccc'); blade.setAttribute('stroke-width','2'); append(blade);
                 break;
             }
             case 'trophy': {
                 const base = document.createElementNS(svgNS, 'rect');
-                base.setAttribute('x','960'); base.setAttribute('y','185');
-                base.setAttribute('width','30'); base.setAttribute('height','18');
+                base.setAttribute('x','240'); base.setAttribute('y','210');
+                base.setAttribute('width','16'); base.setAttribute('height','8');
                 base.setAttribute('fill','#996515'); append(base);
-                const cup = document.createElementNS(svgNS, 'ellipse');
-                cup.setAttribute('cx','975'); cup.setAttribute('cy','177');
-                cup.setAttribute('rx','19'); cup.setAttribute('ry','17');
+                const cup = document.createElementNS(svgNS, 'circle');
+                cup.setAttribute('cx','248'); cup.setAttribute('cy','202'); cup.setAttribute('r','10');
                 cup.setAttribute('fill','#FFD700'); append(cup);
                 break;
             }
-            case 'upgrade_optimizer': {
-                const rect1 = document.createElementNS(svgNS, 'rect');
-                rect1.setAttribute('x','350'); rect1.setAttribute('y','210');
-                rect1.setAttribute('width','44'); rect1.setAttribute('height','16');
-                rect1.setAttribute('fill','#97c5ed'); rect1.setAttribute('rx','7'); append(rect1);
-                const bolt = document.createElementNS(svgNS, 'polygon');
-                bolt.setAttribute('points','372,210 378,217 365,217 380,226 374,218 385,218');
-                bolt.setAttribute('fill','#ffd700'); append(bolt);
-                break;
-            }
-            case 'ascension_assistant': {
-                const ai = document.createElementNS(svgNS, 'circle');
-                ai.setAttribute('cx', '480'); ai.setAttribute('cy', '200'); ai.setAttribute('r', '15');
-                ai.setAttribute('fill', '#ede1ff'); ai.setAttribute('stroke',"#ab9aff"); ai.setAttribute('stroke-width','4'); append(ai);
-                const smile = document.createElementNS(svgNS, 'path');
-                smile.setAttribute('d', "M473 208 Q480 215 487 208");
-                smile.setAttribute('stroke','#998ddd'); smile.setAttribute('stroke-width','2'); smile.setAttribute('fill','none');
-                append(smile);
-                break;
-            }
-            case 'cost_calculator': {
-                const rect = document.createElementNS(svgNS, 'rect');
-                rect.setAttribute('x','1080'); rect.setAttribute('y','120');
-                rect.setAttribute('width','25'); rect.setAttribute('height','24');
-                rect.setAttribute('rx','4'); rect.setAttribute('fill','#eddc74'); append(rect);
-                const scr = document.createElementNS(svgNS, 'rect');
-                scr.setAttribute('x','1085'); scr.setAttribute('y','124');
-                scr.setAttribute('width','15'); scr.setAttribute('height','6');
-                scr.setAttribute('fill','#fff'); append(scr);
-                break;
-            }
-            default: {
-                const defC = document.createElementNS(svgNS, 'circle');
-                defC.setAttribute('cx','600'); defC.setAttribute('cy','175'); defC.setAttribute('r','12');
-                defC.setAttribute('fill','#e86'); defC.setAttribute('opacity','0.14'); append(defC);
-                break;
-            }
         }
+
         itemsGroup.appendChild(g);
     });
-
-    // TOOLTIP logic - dodać TYLKO raz!
-    if (!window._deskTooltipInit) {
-        window._deskTooltipInit = true;
-        let tooltip = document.getElementById('desk-tooltip');
-        if (!tooltip) {
-            tooltip = document.createElement('div');
-            tooltip.id = 'desk-tooltip';
-            tooltip.style.position = 'fixed';
-            tooltip.style.pointerEvents = 'none';
-            tooltip.style.zIndex = 99999;
-            tooltip.style.background = '#fffbe5';
-            tooltip.style.color = '#223a33';
-            tooltip.style.fontSize = '1em';
-            tooltip.style.borderRadius = '9px';
-            tooltip.style.boxShadow = '0 2px 10px #aac8';
-            tooltip.style.padding = '12px 18px';
-            tooltip.style.border = '1.5px solid #f0eebb';
-            tooltip.style.display = 'none';
-            tooltip.style.minWidth = '120px';
-            tooltip.style.maxWidth = '320px';
-            tooltip.style.whiteSpace = 'pre-line';
-            document.body.appendChild(tooltip);
-        }
-        const svg = document.getElementById('desk-svg');
-        svg.addEventListener('mousemove', e => {
-            let node = e.target;
-            let parent = node;
-            while (parent && parent !== svg && !parent.classList.contains('desk-item')) {
-                parent = parent.parentNode;
-            }
-            if (parent && parent.classList && parent.classList.contains('desk-item')) {
-                const label = parent.getAttribute('data-tooltip-title');
-                const bonus = parent.getAttribute('data-tooltip-bonus');
-                tooltip.innerHTML = `<b>${label}</b><br><span style="color:#69843b;font-size:0.98em;">${bonus}</span>`;
-                tooltip.style.display = 'block';
-                tooltip.style.left = (e.clientX+18) + 'px';
-                tooltip.style.top = (e.clientY+14) + 'px';
-            } else {
-                tooltip.style.display = 'none';
-            }
-        });
-        svg.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
-        });
-    }
 }
 
     renderAchievements() {
@@ -2812,6 +2479,7 @@ updateDisplay() {
 	if (deskBtn && deskTab) {
 		if (this.gameState.features.deskUnlocked) {
 			deskBtn.style.display = 'inline-block';
+			deskTab.style.display = 'block';
 		} else {
 			deskBtn.style.display = 'none';
 			deskTab.style.display = 'none';
@@ -2824,6 +2492,7 @@ updateDisplay() {
 	if (challengesBtn && challengesTab) {
 		if (this.gameState.features.challengesUnlocked) {
 			challengesBtn.style.display = 'inline-block';
+			challengesTab.style.display = 'block';
 		} else {
 			challengesBtn.style.display = 'none';
 			challengesTab.style.display = 'none';
@@ -2869,7 +2538,6 @@ updateDisplay() {
 }
 renderCareerStats() {
     if (!this.gameState.achievements['first_ascend']) return; // Tylko po odblokowaniu
-
     const content = document.getElementById('careerstats-content');
     if (!content) return;
 
@@ -2881,48 +2549,36 @@ renderCareerStats() {
     const seconds = playTimeSec % 60;
     const playTimeStr = `${hours}h ${minutes}m ${seconds}s`;
 
-    // Zbierz statsy
+    // Liczba odblokowanych osiągnięć
     const achievementsUnlocked = Object.values(this.gameState.achievements).filter(Boolean).length;
     const achievementsTotal = this.gameData.achievements.length;
+    // Najwyższy wynik, czyli max. BP kiedykolwiek posiadany
     const maxScore = this.formatNumber(this.gameState.stats.maxBP || this.gameState.totalBPEarned);
 
-    // Zadania, prestiże, wyzwania itp.
-    const stats = [
-        { icon: '🏆', label: 'Maksymalny wynik BP', value: maxScore },
-        { icon: '⏱️', label: 'Czas w grze', value: playTimeStr },
-        { icon: '🔼', label: 'Liczba prestiży', value: this.gameState.prestigeCount || 0 },
-        { icon: '🧠', label: 'Liczba Soft Skills', value: this.gameState.stats.softSkillsEarned || 0 },
-        { icon: '🚀', label: 'Łączna liczba awansowań', value: this.gameState.stats.totalAscensions || 0 },
-        { icon: '⚒️', label: "Łączna liczba ulepszeń", value: this.gameState.stats.totalUpgrades || 0 },
-        { icon: '📈', label: "Łączny zdobyty BP", value: this.formatNumber(this.gameState.totalBPEarned || 0) },
-        { icon: '🧩', label: "Odblokowane achievementy", value: `${achievementsUnlocked} / ${achievementsTotal}` },
-        { icon: '📊', label: "Liczba odblokowanych zadań", value: this.gameState.stats.tasksUnlocked || 0 },
-        { icon: '✅', label: "Liczba ukończonych wyzwań", value: this.gameState.stats.challengesCompleted || 0 },
-        { icon: '🖥️', label: "Przedmioty na biurku", value: this.gameState.stats.deskItemsBought || 0 },
-        { icon: '⭐', label: "Najwyższy poziom zadania", value: this.getHighestTaskLevel() || 0 },
-        { icon: '💡', label: "Najwięcej BP na minutę", value: this.getBestBpPerMinute() },
-        { icon: '⚡', label: "Śr. BP na minutę", value: this.getAverageBpPerMinute() },
-        { icon: '🖱️', label: "Łączna liczba kliknięć upgrade", value: this.gameState.stats.upgradeClicks || 0 }
-    ];
+    // Liczba zdobytych prestiży
+    const prestigeTotal = this.gameState.prestigeCount || 0;
 
-    // Stwórz dashboard
-    content.innerHTML = `<div class="career-dashboard"></div>`;
-    const dash = content.firstChild;
-    stats.forEach(stat => {
-        const card = document.createElement('div');
-        card.className = 'kpi-card';
-        card.innerHTML = `
-            <div class="kpi-icon">${stat.icon}</div>
-            <div class="kpi-label">${stat.label}</div>
-            <div class="kpi-value">${stat.value}</div>
-        `;
-        dash.appendChild(card);
-    });
-
-    // Wykres BP
-    this.renderBpHistoryChart();
+    content.innerHTML = `
+        <ul>
+            <li><b>Maksymalny wynik BP:</b> ${maxScore}</li>
+            <li><b>Ilość wykonanych prestiży:</b> ${prestigeTotal}</li>
+            <li><b>Łączna liczba awansowań:</b> ${this.gameState.stats.totalAscensions}</li>
+            <li><b>Liczba zdobytych Soft Skills:</b> ${this.gameState.stats.softSkillsEarned}</li>
+            <li><b>Łączna liczba ulepszeń:</b> ${this.gameState.stats.totalUpgrades}</li>
+            <li><b>Łączny zdobyty BP:</b> ${this.formatNumber(this.gameState.totalBPEarned)}</li>
+            <li><b>Najwyższy poziom zadania:</b> ${this.getHighestTaskLevel()}</li>
+            <li><b>Liczba odblokowanych zadań:</b> ${this.gameState.stats.tasksUnlocked}</li>
+            <li><b>Liczba ukończonych wyzwań:</b> ${this.gameState.stats.challengesCompleted}</li>
+            <li><b>Liczba przedmiotów na biurku:</b> ${this.gameState.stats.deskItemsBought}</li>
+            <li><b>Odblokowane achievementy:</b> ${achievementsUnlocked} / ${achievementsTotal}</li>
+            <li><b>Czas spędzony w grze:</b> ${playTimeStr}</li>
+			<li><b>Najwięcej BP na minutę:</b> ${this.getBestBpPerMinute()}</li>
+			<li><b>Śr. BP na minutę:</b> ${this.getAverageBpPerMinute()}</li>
+			<li><b>Łączna liczba kliknięć upgrade:</b> ${this.gameState.stats.upgradeClicks || 0}</li>
+        </ul>
+    `;
+	this.renderBpHistoryChart();
 }
-
 renderBpHistoryChart() {
     const content = document.getElementById('bp-history-chart');
     if (!content || !this.gameState.stats.bpHistory) return;
@@ -3072,19 +2728,37 @@ softcapMulti(value, tiers) {
 
     showNotification(message) {
         // Simple notification system
-		const notification = document.createElement('div');
-		notification.textContent = message;
-		notification.className = 'achievement-pop';
-		const stack = document.getElementById('notification-stack');
-		if (stack) {
-		    stack.appendChild(notification);
-		} else {
-		    document.body.appendChild(notification); // fallback, gdyby stack nie istniał
-		}
-		setTimeout(() => {
-		    notification.style.animation = 'slideOut 0.3s ease-in forwards';
-		    setTimeout(() => notification.remove(), 300);
-		}, 3000);
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+        position: fixed;
+        top: 90px;
+        right: 30px;
+        min-width: 340px;
+        z-index: 9999;
+        background: linear-gradient(90deg,#ffe066,#ffd700);
+        color: #444;
+        padding: 28px 24px 20px 78px;
+        border-radius: 18px;
+        border:2px solid #ffb700;
+        box-shadow: 0 0 24px 0 #ffd70099;
+        font-size: 1.25em;
+        line-height: 1.2;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        animation: achievement-bounce-in 0.5s cubic-bezier(.2,1.5,.4,1);
+        pointer-events: none;
+        user-select: none;
+        `;
+        notification.textContent = message;
+        notification.classList.add('achievement-pop');
+		setTimeout(() => notification.classList.remove('achievement-pop'), 1100);
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 
     destroy() {

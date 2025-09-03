@@ -827,7 +827,7 @@ select.form-control {
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .header-content {
@@ -1209,26 +1209,12 @@ select.form-control {
   transition: all var(--duration-normal) var(--ease-standard);
   width: 100%;
   box-sizing: border-box;
-  cursor: pointer;
 }
-.task-card.active-task {
-    box-shadow: 0 0 32px 0 #b5e7ba88, 0 0 0 3px #61c47a;
-    border-color: #61c47a;
-    background: #f8fff7;
-    transition: box-shadow 0.19s, border-color 0.18s, background 0.22s;
-}
+
 .task-card:hover {
   box-shadow: var(--shadow-md);
 }
-@keyframes shake {
-  0%, 100% { transform: translateX(0);}
-  20% { transform: translateX(-4px);}
-  70% { transform: translateX(5px);}
-  90% { transform: translateX(-2px);}
-}
-.shake-card {
-  animation: shake 0.55s;
-}
+
 .task-header {
   display: flex;
   justify-content: space-between;
@@ -1389,51 +1375,23 @@ select.form-control {
 
 /* Desk Tab Layout */
 .desk-layout {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-24);
 }
 .desk-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 0;
-  position: relative;
-  z-index: 1 !important; 
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
 }
 .desk-svg {
-    width: 100% !important;
-    height: 300px !important;
-    min-height: 300px !important;
-    display: block !important;
-    background: #f7f6ee !important; /* jasny kolor — szybko zobaczysz, czy SVG bierze miejsce */
-    z-index: 10 !important;
-    position: relative !important;
-}
-.desk-placeholder {
-  opacity: 0.18;
-  transition: opacity 0.2s, filter 0.2s;
-  pointer-events: all;
-  cursor: pointer;
-}
-.desk-placeholder:hover {
-  opacity: 0.36;
-  filter: brightness(1.12);
-}
-#desk-items g.unlocked {
-  opacity: 1;
-  transform: scale(1);
-}
-.desk-placeholder-text {
-  font-size: 21px;
-  fill: #333;
-  opacity: 0.6;
-  font-family: sans-serif;
-  text-anchor: middle;
-  dominant-baseline: middle;
-  pointer-events: none;
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
 }
 .desk-hotspot {
   cursor: pointer;
@@ -1447,13 +1405,11 @@ select.form-control {
   filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 .desk-shop {
-  width: 100%;
-  max-width: 1200px; /* Taka sama jak desk-container! */
-  margin: 40px auto 0 auto;
-  background: #fcfef8;
-  border-radius: 18px;
-  box-shadow: 0 4px 18px #dbebc580;
-  padding: 32px 35px 28px 35px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-sm);
 }
 .desk-shop h3 {
   margin-bottom: var(--space-16);
@@ -1461,37 +1417,19 @@ select.form-control {
   font-size: var(--font-size-xl);
 }
 .shop-items {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px 18px;  /* rzadsze rozstawienie w gridzie */
-  margin-top: 22px;
-}
-@media (max-width: 900px) {
-  .desk-container, .desk-shop {
-    max-width: 99vw;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  .shop-items { grid-template-columns: repeat(2, 1fr);}
-}
-@media (max-width: 600px) {
-  .desk-shop {
-    padding: 16px 6px 14px 6px;
-    font-size: 0.99em;
-  }
-  .shop-items { grid-template-columns: 1fr; }
-}
-.shop-item {
-  background: #f6fff9;
-  border-radius: 14px;
-  box-shadow: 0 2px 12px #e8ffd280;
-  padding: 18px 15px 12px 16px;
-  transition: box-shadow .17s;
-  border: 1.2px solid #e6ecf6;
   display: flex;
   flex-direction: column;
+  gap: var(--space-12);
+}
+.shop-item {
+  display: flex;
   justify-content: space-between;
-  min-height: 104px;
+  align-items: center;
+  padding: var(--space-12);
+  background: var(--color-bg-5);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 .shop-item-info {
   flex: 1;
@@ -2019,7 +1957,6 @@ select.form-control {
 }
 .tile-anim-pop {
   animation: tile-pop 0.35s cubic-bezier(.17,.67,.66,1.31);
-  box-shadow: 0 0 14px 0 #fbd60655;
 }
 @keyframes tile-bounce {
   0%   { transform: scale(1);}
@@ -2036,25 +1973,7 @@ select.form-control {
   100% {background: #fffbe8;}
 }
 .achievement-pop {
-    min-width: 280px;           /* mniejsze minimum */
-    max-width: 450px;
-    z-index: 9999;
-    background: linear-gradient(90deg,#ffe066,#ffd700);
-    color: #444;
-    padding: 24px 32px 20px 32px; /* mniejszy lewy padding - nie trzeba pustego miejsca przed 🏆 */
-    border-radius: 18px;
-    border:2px solid #ffb700;
-    box-shadow: 0 0 24px 0 #ffd70099;
-    font-size: 1.45em;         /* POWIĘKSZONA CZCIONKA */
-    font-weight: 600;          /* trochę grubszy font */
-    display: flex;
-    align-items: center;
-    justify-content: center;   /* wyśrodkowanie całej treści */
-    letter-spacing: 0.02em;
-    animation: achievement-bounce-in 0.5s cubic-bezier(.2,1.5,.4,1);
-    pointer-events: none;
-    user-select: none;
-    gap: 0.75em;                /* odstęp między ikoną a tekstem */
+  animation: notif-gold-flash 0.99s ease;
 }
 @keyframes unlock-glow {
   0% { box-shadow: 0 0 0 #79ffb0cc;}
@@ -2064,81 +1983,4 @@ select.form-control {
 }
 .unlock-anim {
   animation: unlock-glow 0.49s cubic-bezier(.7,1.5,.3,1.1);
-}
-.career-dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 20px;
-  margin-top: 24px;
-  margin-bottom: 24px;
-}
-.kpi-card {
-  background: #fff;
-  border-radius: 17px;
-  box-shadow: 0 2px 16px 0 #cfcfcf20;
-  padding: 18px 22px 18px 22px;
-  min-height: 96px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1.2px solid #e6ecf6;
-  transition: box-shadow 0.18s, border-color 0.18s;
-}
-.kpi-card:hover {
-  box-shadow: 0 6px 24px 0 #badcfa80;
-  border-color: #61c47a82;
-}
-.kpi-icon {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  font-size: 1.45em;
-  opacity: 0.22;
-  pointer-events: none;
-}
-.kpi-label {
-  font-size: 1.09em;
-  color: #5a6778;
-  letter-spacing: 0.01em;
-  margin-bottom: 8px;
-  margin-top: 11px;
-}
-.kpi-value {
-  font-size: 2.02em;
-  color: #192c46;
-  font-weight: bold;
-  line-height: 1.22;
-  margin-bottom: 6px;
-}
-@media (max-width: 670px) {
-  .career-dashboard {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (max-width: 440px) {
-  .career-dashboard {
-    grid-template-columns: 1fr;
-  }
-}
-@keyframes popupFadeIn {
-    from { 
-        opacity: 0; 
-        transform: translate(-50%, -50%) scale(0.8); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translate(-50%, -50%) scale(1); 
-    }
-}
-
-@keyframes popupFadeOut {
-    from { 
-        opacity: 1; 
-        transform: translate(-50%, -50%) scale(1); 
-    }
-    to { 
-        opacity: 0; 
-        transform: translate(-50%, -50%) scale(0.8); 
-    }
 }

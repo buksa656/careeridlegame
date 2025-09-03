@@ -121,32 +121,29 @@
 
             <!-- Desk Tab -->
             <section class="tab-content" id="desk-tab">
-                <div class="desk-layout desk-layout--vertical">
+                <div class="desk-layout">
                     <!-- Desk Visualization -->
                     <div class="desk-container">
-  						<svg id="desk-svg" class="desk-svg" viewBox="0 0 1200 300" style="width:100%;height:auto;">
-						  <rect x="0" y="0" width="1200" height="300" fill="#eee" />
-							<!-- Cień pod biurkiem -->
-						  <ellipse cx="600" cy="295" rx="470" ry="28" fill="#c5b898" opacity="0.23"/>
-						  <!-- Nogi -->
-						  <rect x="200" y="150" width="60" height="120" rx="24" fill="#7a6850"/>
-						  <rect x="940" y="150" width="60" height="120" rx="24" fill="#7a6850"/>
-						  <!-- Krawędź/przód biurka -->
-						  <rect x="130" y="120" width="940" height="58" rx="28" fill="#5a4d3a"/>
-						  <!-- Blat -->
-						  <rect x="100" y="60" width="1000" height="70" rx="38" fill="url(#blat-gradient)" stroke="#715f43" stroke-width="4"/>
-						  <defs>
-						    <linearGradient id="blat-gradient" x1="100" x2="1100" y1="60" y2="130" gradientUnits="userSpaceOnUse">
-						      <stop offset="0%" stop-color="#836b4b"/>
-						      <stop offset="50%" stop-color="#6e5b3d"/>
-						      <stop offset="100%" stop-color="#836b4b"/>
-						    </linearGradient>
-						  </defs>
-						  <!-- TYLKO to zostaw -->
-						  <g id="desk-placeholders"></g>
-						  <g id="desk-items"></g>
-						</svg>
-
+                        <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
+                            <!-- Desk Base -->
+                            <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
+                            
+                            <!-- Hotspots for desk items -->
+                            <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
+                            <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
+                            <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
+                            <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
+                            <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
+                            <circle cx="350" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges"/>
+                            <circle cx="350" cy="180" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
+                            <rect x="250" y="120" width="20" height="35" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="phone" rx="3"/>
+                            <rect x="140" y="105" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="organizer" rx="2"/>
+                            <circle cx="195" cy="105" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="lamp"/>
+                            <circle cx="280" cy="230" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="multitool"/>
+                            <rect x="235" y="200" width="20" height="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="trophy" rx="2"/>
+                            <!-- Items will be added dynamically -->
+                            <g id="desk-items"></g>
+                        </svg>
                     </div>
                     
                     <!-- Desk Shop -->
@@ -201,12 +198,6 @@
                             <option value="en">English</option>
                         </select>
                     </div>
-					<div class="setting-group">
-					  <label class="form-label">Sekretny kod / Secret code</label>
-					  <input class="form-control" id="secret-code-input" placeholder="..." maxlength="24">
-					  <button class="btn btn--sm btn--secondary" id="secret-code-btn">Aktywuj</button>
-					</div>
-					<div id="secret-code-feedback" style="font-size:0.99em;color:#986;padding,margin-top:4px;"></div>
                     <div class="setting-group">
                         <label class="form-label">Theme / Motyw</label>
                         <select class="form-control" id="theme-select">
@@ -259,33 +250,6 @@
     <button id="welcome-close" style="margin-top:10px; padding:10px 20px; border-radius:12px; background:#ffd700; border:none; font-weight:bold; font-size:1.12em; cursor:pointer;">Start!</button>
   </div>
 </div>
-		<div id="notification-stack" style="
-		  position: fixed;
-		  top: 88px;
-		  right: 36px;
-		  z-index: 99999;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: flex-end;
-		  gap: 14px;
-		  pointer-events: none;">
-		</div>
-		<div id="desk-tooltip" style="
-		  position: fixed;
-		  pointer-events: none;
-		  z-index: 999999;
-		  background: #fffff7;
-		  color: #232d2b;
-		  font-size: 1em;
-		  border-radius: 9px;
-		  box-shadow: 0 2px 12px #aaa7;
-		  padding: 10px 16px;
-		  border: 1.5px solid #f0eebb;
-		  display: none;
-		  min-width: 140px;
-		  max-width: 330px;
-		  white-space: pre-line;">
-		</div>
     <script src="app.js"></script>
 </body>
 </html>
