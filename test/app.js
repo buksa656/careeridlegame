@@ -55,8 +55,8 @@ class KorposzczurGame {
 	  "nameKey": "ach_first_progress",
 	  "descKey": "ach_first_progress_desc",
 	  "condition": { "type": "bp_earned", "value": 50 },
-	  "reward": { "type": "none" },
-	  "bonusDesc": ""
+	  "reward": { "type": "bp", "value": 50 },
+	  "bonusDesc": "bonusDesc_first_progress"
 	},
     // ODPROJEKTOWANIE ZADAŃ
     { "id": "coffee_lover", "nameKey": "ach_coffee_lover", "descKey": "ach_coffee_lover_desc",
@@ -193,7 +193,38 @@ class KorposzczurGame {
       "reward": { "type": "global_mult", "value": 1.50 },
       "bonusDesc": "bonusDesc_challenge_master"
     },
-
+{
+  "id": "mem_2137",
+  "nameKey": "ach_2137",
+  "descKey": "ach_2137_desc",
+  "condition": { "type": "bp_earned", "value": 2137 },
+  "reward": { "type": "none" },
+  "bonusDesc": "bonusDesc_2137"
+},
+	{
+  "id": "mem_420",
+  "nameKey": "ach_420",
+  "descKey": "ach_420_desc",
+  "condition": { "type": "bp_earned", "value": 420 },
+  "reward": { "type": "none" },
+  "bonusDesc": "bonusDesc_420"
+},
+	{
+  "id": "mem_123456",
+  "nameKey": "ach_123456",
+  "descKey": "ach_123456_desc",
+  "condition": { "type": "bp_earned", "value": 123456 },
+  "reward": { "type": "none" },
+  "bonusDesc": "bonusDesc_123456"
+},
+	{
+  "id": "mem_milioner",
+  "nameKey": "ach_milioner",
+  "descKey": "ach_milioner_desc",
+  "condition": { "type": "bp_earned", "value": 1000000 },
+  "reward": { "type": "none" },
+  "bonusDesc": "bonusDesc_milioner"
+},
     // KONIEC/WIĘCEJ W PRZYSZŁOŚCI
     { "id": "future_update", "nameKey": "ach_future_update", "descKey": "ach_future_update_desc",
       "condition": { "type": "impossible", "value": 1 },
@@ -209,8 +240,8 @@ class KorposzczurGame {
                 { "id": "multitool", "nameKey": "desk_multitool", "cost": 12, "bonus": { "type": "focus_switch_discount", "value": 0.5 }, "bonusDesc": "bonusDesc_switch_discount" },
                 { "id": "trophy", "nameKey": "desk_trophy", "cost": 20, "bonus": { "type": "focus_slot", "value": 2 }, "prestige": 1, "bonusDesc": "bonusDesc_trophy" },
                 {"id": "upgrade_optimizer","nameKey": "desk_upgrade_optimizer", "cost": 15, "bonus": { "type": "free_upgrades", "value": 5 },"bonusDesc": "bonusDesc_free_upgrades"},
-                {"id": "ascension_assistant","nameKey": "desk_ascension_assistant","cost": 25,"bonus": { "type": "auto_ascend_unlock", "value": 1 },"bonusDesc": "Automatically ascends tasks at level 25+"},
-                {"id": "cost_calculator","nameKey": "desk_cost_calculator","cost": 20,"bonus": { "type": "cost_reduction_post_ascend", "value": 0.8 },"bonusDesc": "Post-ascension upgrade costs 20% cheaper"}
+                {"id": "ascension_assistant","nameKey": "desk_ascension_assistant","cost": 25,"bonus": { "type": "auto_ascend_unlock", "value": 1 },"bonusDesc": "bonusDesc_auto_ascend"},
+                {"id": "cost_calculator","nameKey": "desk_cost_calculator","cost": 20,"bonus": { "type": "cost_reduction_post_ascend", "value": 0.8 },"bonusDesc": "bonusDesc_cost_calculator"}
             ],
             "challenges": [
                 {"id": "speed_run", "nameKey": "challenge_speed_run", "descKey": "challenge_speed_run_desc", "condition": {"type": "bp_in_time", "value": 10000, "time": 300000}, "reward": {"type": "idle_bonus", "value": 1.25}, "bonusDesc": "bonusDesc_speed_bonus"},
@@ -225,6 +256,21 @@ class KorposzczurGame {
             "translations": {
                 "pl": {
                     "ach_efficiency_expert": "Ekspert efektywności",
+					"ach_milioner": "Milioner z przypadku",
+					"ach_milioner_desc": "Wpadł milion BP. CZEK ABSURDU!",
+					"bonusDesc_milioner": "Możesz już kupić bardzo drogą kawę ☕️",
+					"ach_123456": "Hasło: 123456",
+					"ach_123456_desc": "Wpadło 123456 BP. To twoje domyślne hasło?",
+					"bonusDesc_123456": "Adminie, zmień hasło!",
+					"ach_420": "🔥 420 Blaze It",
+					"ach_420_desc": "Wbij dokładnie 420 BP. Memy Office/Weed poziom: senior.",
+					"bonusDesc_420": "Nice. ( ͡° ͜ʖ ͡°)",
+					"ach_2137": "21:37",
+					"ach_2137_desc": "Zdobywasz dokładnie 2137 BP! JP na 100%.",
+					"bonusDesc_2137": "To nie jest przypadek... 😉",
+					"bonusDesc_first_progress": "Otrzymujesz jednorazowo +50 BP za postęp!",
+					"bonusDesc_auto_ascend": "Automatycznie awansuje zadania na 25+ poziomie",
+  					"bonusDesc_cost_calculator": "Ulepszenia po awansie tańsze o 20%",
 					"desk_upgrade_optimizer": "Optymalizator ulepszeń",
 					"desk_ascension_assistant": "Asystent awansów",
 					"desk_cost_calculator": "Kalkulator kosztów",
@@ -413,6 +459,21 @@ class KorposzczurGame {
               },
                 "en": {
                     "ach_efficiency_expert": "Efficiency Expert",
+					"ach_milioner": "Accidental Millionaire",
+					"ach_milioner_desc": "You hit one million BP. The check of absurdity!",
+					"bonusDesc_milioner": "You can finally afford a ridiculously expensive coffee ☕️",
+					"ach_123456": "Password: 123456",
+					"ach_123456_desc": "123456 BP. Is this your default password?",
+					"bonusDesc_123456": "Admin! Change your password!",
+					"ach_420": "🔥 420 Blaze It",
+					"ach_420_desc": "Get exactly 420 Office Points. Very pro.",
+					"bonusDesc_420": "Nice. ( ͡° ͜ʖ ͡°)",
+					"ach_2137": "The 2137 Meme",
+					"ach_2137_desc": "Reach exactly 2137 Office Points! JP 100%.",
+					"bonusDesc_2137": "Not a coincidence... 😉",
+					"bonusDesc_first_progress": "You receive a one-time +50 BP for progress!",
+					"bonusDesc_auto_ascend": "Automatically ascends tasks at level 25+",
+  					"bonusDesc_cost_calculator": "Post-ascension upgrade costs 20% cheaper",
 					"desk_upgrade_optimizer": "Upgrade Optimizer",
 					"desk_ascension_assistant": "Ascension Assistant",
 					"desk_cost_calculator": "Cost Calculator",
@@ -902,7 +963,24 @@ setupEventListeners() {
     const closeSettingsModal = () => {
         settingsModal.classList.add('hidden');
     };
-
+	document.getElementById('secret-code-btn').onclick = () => {
+	    const code = document.getElementById('secret-code-input').value.trim();
+	    const feedback = document.getElementById('secret-code-feedback');
+	    if (code === "123456") {
+	        feedback.textContent = "Hasło przyjęte! Odblokowano unikalny achievement (Hasło: 123456).";
+	        // Minievent - nagroda lub efekt:
+	        game.earnSecretAchievement("mem_123456"); // dodaj helper lub aktywuj standardowe
+	    } else if (code === "JP2137") {
+	        feedback.textContent = "JP na 100%! Tło zmienia kolor 🟨";
+	        document.body.style.transition = 'background 0.8s';
+	        document.body.style.background = "#fff9a5";
+	        setTimeout(() => {
+	            document.body.style.background = "";
+	        }, 13000);
+	    } else {
+	        feedback.textContent = "Niepoprawny kod / Invalid code";
+	    }
+	};
     settingsClose.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
