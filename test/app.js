@@ -1645,96 +1645,102 @@ calculateTaskIdleRate(taskId) {
         return true;
     }
 
-    checkAchievements() {
-        this.gameData.achievements.forEach(achievement => {
-            if (this.gameState.achievements[achievement.id]) return;
+checkAchievements() {
+    // Blokada: tylko jedna notyfikacja na achievement na cykl!
+    if (!this.justUnlockedAchievements) this.justUnlockedAchievements = new Set();
 
-            let unlocked = false;
-
-            switch (achievement.condition.type) {
-                case 'tasks_unlocked':
-                    unlocked = this.gameState.stats.tasksUnlocked >= achievement.condition.value;
-                    break;
-                case 'upgrades_bought':
-                    unlocked = this.gameState.stats.upgradesBought >= achievement.condition.value;
-                    break;
-                case 'task_unlocked':
-                    const taskState = this.gameState.tasks[achievement.condition.taskId];
-                    unlocked = taskState && taskState.unlocked;
-                    break;
-                case 'task_level':
-                    const taskLevel = this.gameState.tasks[achievement.condition.taskId];
-                    unlocked = taskLevel && taskLevel.level >= achievement.condition.value;
-                    break;
-                case 'ascensions':
-                    unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
-                    break;
-                case 'bp_spent':
-                    unlocked = this.gameState.totalBPSpent >= achievement.condition.value;
-                    break;
-                case 'prestiges':
-                    unlocked = this.gameState.prestigeCount >= achievement.condition.value;
-                    break;
-                case 'multibuy_used':
-                    unlocked = this.gameState.stats.totalMultiBuys >= achievement.condition.value;
-                    break;
-                case 'total_ascensions':
-                    unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
-                    break;
-                    case 'total_task_levels':
-                case 'all_tasks_same_level':
-					  const allLevels = Object.values(this.gameState.tasks)
-						.filter(task => task.unlocked)
-						.map(task => task.level);
-					  unlocked = allLevels.length > 0 && allLevels.every(lvl => lvl >= achievement.condition.value);
-					  break;
-				const totalLevels = Object.values(this.gameState.tasks)
+    this.gameData.achievements.forEach(achievement => {
+        if (this.gameState.achievements[achievement.id]) return;
+        let unlocked = false;
+        switch (achievement.condition.type) {
+            case 'tasks_unlocked':
+                unlocked = this.gameState.stats.tasksUnlocked >= achievement.condition.value;
+                break;
+            case 'upgrades_bought':
+                unlocked = this.gameState.stats.upgradesBought >= achievement.condition.value;
+                break;
+            case 'task_unlocked':
+                const taskState = this.gameState.tasks[achievement.condition.taskId];
+                unlocked = taskState && taskState.unlocked;
+                break;
+            case 'task_level':
+                const taskLevel = this.gameState.tasks[achievement.condition.taskId];
+                unlocked = taskLevel && taskLevel.level >= achievement.condition.value;
+                break;
+            case 'ascensions':
+                unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
+                break;
+            case 'bp_spent':
+                unlocked = this.gameState.totalBPSpent >= achievement.condition.value;
+                break;
+            case 'prestiges':
+                unlocked = this.gameState.prestigeCount >= achievement.condition.value;
+                break;
+            case 'multibuy_used':
+                unlocked = this.gameState.stats.totalMultiBuys >= achievement.condition.value;
+                break;
+            case 'total_ascensions':
+                unlocked = this.gameState.stats.totalAscensions >= achievement.condition.value;
+                break;
+            case 'all_tasks_same_level':
+                const allLevels = Object.values(this.gameState.tasks)
+                    .filter(task => task.unlocked)
+                    .map(task => task.level);
+                unlocked = allLevels.length > 0 && allLevels.every(lvl => lvl >= achievement.condition.value);
+                break;
+            case 'total_task_levels':
+                const totalLevels = Object.values(this.gameState.tasks)
                     .reduce((sum, task) => sum + (task.unlocked ? task.level : 0), 0);
-                    unlocked = totalLevels >= achievement.condition.value;
-                    break;
-                case 'task_balance_score':
-                    // Premiuj równomierne rozwijanie zadań
-                    const taskLevels = Object.values(this.gameState.tasks)
-                        .filter(task => task.unlocked)
-                        .map(task => task.level);
-                    const avg = taskLevels.reduce((a,b) => a+b, 0) / taskLevels.length;
-                    const variance = taskLevels.reduce((sum, level) => sum + Math.pow(level - avg, 2), 0) / taskLevels.length;
-                    const balanceScore = Math.max(0, 100 - Math.sqrt(variance));
-                    unlocked = balanceScore >= achievement.condition.value;
-                    break;
-                case 'idle_rate':
-                    const totalIdleRate = Object.keys(this.gameState.tasks).reduce((sum, taskId) => {
-                        const taskState = this.gameState.tasks[taskId];
-                        if (taskState && taskState.unlocked) {
-                            return sum + this.calculateTaskIdleRate(taskId);
-                        }
-                        return sum;
-                    }, 0);
-                    unlocked = totalIdleRate >= achievement.condition.value;
-                    break;
-                case 'play_time':
-                    unlocked = this.gameState.stats.playTime >= achievement.condition.value;
-                    break;
-                case 'soft_skills_earned':
-                    unlocked = this.gameState.stats.softSkillsEarned >= achievement.condition.value;
-                    break;
-                case 'desk_items_bought':
-                    unlocked = this.gameState.stats.deskItemsBought >= achievement.condition.value;
-                    break;
-                case 'challenges_completed':
-                    unlocked = this.gameState.stats.challengesCompleted >= achievement.condition.value;
-                    break;
-            }
+                unlocked = totalLevels >= achievement.condition.value;
+                break;
+            case 'task_balance_score':
+                const taskLevels = Object.values(this.gameState.tasks)
+                    .filter(task => task.unlocked)
+                    .map(task => task.level);
+                const avg = taskLevels.reduce((a, b) => a + b, 0) / taskLevels.length;
+                const variance = taskLevels.reduce((sum, level) => sum + Math.pow(level - avg, 2), 0) / taskLevels.length;
+                const balanceScore = Math.max(0, 100 - Math.sqrt(variance));
+                unlocked = balanceScore >= achievement.condition.value;
+                break;
+            case 'idle_rate':
+                const totalIdleRate = Object.keys(this.gameState.tasks).reduce((sum, taskId) => {
+                    const taskState = this.gameState.tasks[taskId];
+                    if (taskState && taskState.unlocked) {
+                        return sum + this.calculateTaskIdleRate(taskId);
+                    }
+                    return sum;
+                }, 0);
+                unlocked = totalIdleRate >= achievement.condition.value;
+                break;
+            case 'play_time':
+                unlocked = this.gameState.stats.playTime >= achievement.condition.value;
+                break;
+            case 'soft_skills_earned':
+                unlocked = this.gameState.stats.softSkillsEarned >= achievement.condition.value;
+                break;
+            case 'desk_items_bought':
+                unlocked = this.gameState.stats.deskItemsBought >= achievement.condition.value;
+                break;
+            case 'challenges_completed':
+                unlocked = this.gameState.stats.challengesCompleted >= achievement.condition.value;
+                break;
+        }
+        // BLOKADA TUTAJ:
+        if (unlocked && !this.justUnlockedAchievements.has(achievement.id)) {
+            this.gameState.achievements[achievement.id] = true;
+            this.justUnlockedAchievements.add(achievement.id);
+            this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
+            this.renderAchievements();
+            this.checkFeatureUnlocks();
+            this.showNotification(`🏆Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
+        }
+    });
 
-            if (unlocked) {
-                this.gameState.achievements[achievement.id] = true;
-                this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
-                this.renderAchievements();
-                this.checkFeatureUnlocks();
-                this.showNotification(`🏆Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
-            }
-        });
-    }
+    // Czyść listę "już odblokowanych" po cyklu
+    setTimeout(() => {
+        this.justUnlockedAchievements.clear();
+    }, 0);
+}
 
 calculateMultiBuyCost(taskId, amount) {
     const taskData = this.gameData.tasks.find(t => t.id === taskId);
