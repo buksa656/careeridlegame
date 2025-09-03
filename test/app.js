@@ -743,6 +743,7 @@ class KorposzczurGame {
                 deskItemsBought: 0,
                 softSkillsEarned: 0,
 				bpEarned: 0,
+				bpSinceLastPrestige: 0,
 				bpHistory: [], // <--- historia stanu BP do wykresu
 				lastBpLog: Date.now() // znacznik ostatniego wpisu
             },
@@ -2197,8 +2198,8 @@ performPrestige() {
     const challengesState = { ...this.gameState.challenges };
 
     // ODEJMIJ „wykorzystany” BP do prestiżu!
-    this.gameState.totalBPEarned -= softSkillsGain * SS_BP_PRICE;
-    if (this.gameState.totalBPEarned < 0) this.gameState.totalBPEarned = 0; // safety
+	this.gameState.bpSinceLastPrestige -= softSkillsGain * SS_BP_PRICE;
+	if (this.gameState.bpSinceLastPrestige < 0) this.gameState.bpSinceLastPrestige = 0;
 
     // RESET wszystkiego poza zachowanymi danymi:
     this.gameState = this.loadGameState();
@@ -2848,7 +2849,7 @@ updateDisplay() {
     const prestigeInfo = document.getElementById('prestige-info');
     if (prestigeBtn && prestigeInfo) {
         const SS_BP_PRICE = 50000;
-        const earnedSS = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
+        const earnedSS = Math.floor((this.gameState.bpSinceLastPrestige || 0) / SS_BP_PRICE);
         const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
         let softSkillsGain = 0;
         if (!hasPrestigeMaster) {
