@@ -2206,6 +2206,7 @@ performPrestige() {
 
     // RESET wszystkiego poza zachowanymi danymi:
     this.gameState = this.loadGameState();
+	this.gameState.bpSinceLastPrestige = 0;
 
     // Wszystkie zadania są zablokowane po prestiżu
     this.gameData.tasks.forEach(task => {
