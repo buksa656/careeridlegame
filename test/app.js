@@ -15,6 +15,8 @@ class KorposzczurGame {
         this.lastBPValue = 0;
         this.adsAvailable = false;
 		this.careerStatsInterval = null;
+		this.lastAnimatedTaskUpgrade = null;
+		this.lastAnimatedTaskAscend = null;
         
         // Intervals for different update loops
         this.gameLoopInterval = null;
@@ -1844,70 +1846,64 @@ calculateMaxBuyAmount(taskId) {
 }
 
     upgradeTask(taskId) {
-        const amount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskId) : parseInt(this.multiBuyAmount);
-        if (amount === 0) return;
+    const amount = this.multiBuyAmount === 'max' ? this.calculateMaxBuyAmount(taskId) : parseInt(this.multiBuyAmount);
+    if (amount === 0) return;
+    const cost = this.calculateMultiBuyCost(taskId, amount);
 
-        const cost = this.calculateMultiBuyCost(taskId, amount);
-        
-        if (this.gameState.bp >= cost) {
-            this.updateBP(this.gameState.bp - cost);
-            this.gameState.totalBPSpent += cost;
-            this.gameState.tasks[taskId].level += amount;
-            this.gameState.stats.totalUpgrades += amount;
-            this.gameState.stats.upgradesBought += amount;
-            
-            if (amount >= 25) {
-                this.gameState.stats.totalMultiBuys += amount;
-            }
-            
-            this.checkAchievements();
-            this.renderTasks();
-            this.updateTaskButtonStates();
-            this.updateDisplay();
-            
-            // Visual feedback
-            const btn = document.querySelector(`[data-task-id="${taskId}"][data-action="upgrade"]`);
-            if (btn) {
-                btn.classList.add('btn-flash');
-                setTimeout(() => btn.classList.remove('btn-flash'), 300);
-            }
+    if (this.gameState.bp >= cost) {
+        this.updateBP(this.gameState.bp - cost);
+        this.gameState.totalBPSpent += cost;
+        this.gameState.tasks[taskId].level += amount;
+        this.gameState.stats.totalUpgrades += amount;
+        this.gameState.stats.upgradesBought += amount;
+
+        if (amount >= 25) {
+            this.gameState.stats.totalMultiBuys += amount;
         }
-		const card = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
-		if (card) {
-		  card.classList.remove('tile-anim-pop');
-		  // Wymusi reflow, by animacja zawsze odpaliła (gdy kilkuklikasz)
-		  void card.offsetWidth;
-		  card.classList.add('tile-anim-pop');
-		  setTimeout(() => card.classList.remove('tile-anim-pop'), 400);
-}
-    }
 
+        this.checkAchievements();
+        this.updateTaskButtonStates();
+        this.updateDisplay();
+
+        // USTAWIAMY *NAJPIERW* flagę animacji!
+        this.lastAnimatedTaskUpgrade = taskId;
+        // Następnie wykonujemy pojedynczy render
+        this.renderTasks();
+
+        // Visual feedback na przycisku (to możesz zostawić)
+        const btn = document.querySelector(`[data-task-id="${taskId}"][data-action="upgrade"]`);
+        if (btn) {
+            btn.classList.add('btn-flash');
+            setTimeout(() => btn.classList.remove('btn-flash'), 300);
+        }
+    }
+}
     calculateUpgradeCost(taskId) {
         return this.calculateMultiBuyCost(taskId, 1);
     }
 
-    ascendTask(taskId) {
-        const taskState = this.gameState.tasks[taskId];
-        const maxAscends = this.gameData.rankKeys.length;
-        if (taskState.level < 10) return;
-        if (taskState.ascensions >= maxAscends) return;
+ascendTask(taskId) {
+    const taskState = this.gameState.tasks[taskId];
+    const maxAscends = this.gameData.rankKeys.length;
+    if (taskState.level < 10) return;
+    if (taskState.ascensions >= maxAscends) return;
 
-        taskState.level = 1;
-        taskState.ascensions++;
-        taskState.progress = 0;
-        this.gameState.stats.totalAscensions++;
-        this.checkAchievements();
-        this.renderTasks();
-        this.updateTaskButtonStates();
-        this.showNotification(`Task ascended: ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}`);
-		const card = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
-		if (card) {
-		  card.classList.remove('tile-anim-bounce');
-		  void card.offsetWidth;
-		  card.classList.add('tile-anim-bounce');
-		  setTimeout(() => card.classList.remove('tile-anim-bounce'), 500);
-		}
-	}
+    taskState.level = 1;
+    taskState.ascensions++;
+    taskState.progress = 0;
+    this.gameState.stats.totalAscensions++;
+
+    this.checkAchievements();
+    this.updateTaskButtonStates();
+
+    // Flaga do późniejszego zaznaczenia animacji
+    this.lastAnimatedTaskAscend = taskId;
+
+    this.renderTasks(); // po ustawieniu flagi
+
+    this.showNotification(`🏆 ${this.translations[this.currentLanguage][this.gameData.tasks.find(t => t.id === taskId).nameKey]}: ${this.translations[this.currentLanguage].ascend}`);
+
+}
 
 performPrestige() {
     // Nowa logika: 1 SS za każde pełne 50,000 BP
@@ -2021,7 +2017,16 @@ renderTasks() {
 
         const isActive = this.gameState.focus.includes(taskData.id);
         const taskCard = this.createTaskCard(taskData, taskState);
-
+		if (this.lastAnimatedTaskUpgrade === taskData.id) {
+		    taskCard.classList.add('tile-anim-pop');
+		    setTimeout(() => taskCard.classList.remove('tile-anim-pop'), 400);
+		    this.lastAnimatedTaskUpgrade = null;
+		}
+		if (this.lastAnimatedTaskAscend === taskData.id) {
+		    taskCard.classList.add('tile-anim-bounce');
+		    setTimeout(() => taskCard.classList.remove('tile-anim-bounce'), 500);
+		    this.lastAnimatedTaskAscend = null;
+		}
         // Checkbox "Aktywne"
         const focusCheckbox = document.createElement('input');
         focusCheckbox.type = 'checkbox';
