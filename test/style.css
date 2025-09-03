@@ -1220,7 +1220,15 @@ select.form-control {
 .task-card:hover {
   box-shadow: var(--shadow-md);
 }
-
+@keyframes shake {
+  0%, 100% { transform: translateX(0);}
+  20% { transform: translateX(-4px);}
+  70% { transform: translateX(5px);}
+  90% { transform: translateX(-2px);}
+}
+.shake-card {
+  animation: shake 0.55s;
+}
 .task-header {
   display: flex;
   justify-content: space-between;
