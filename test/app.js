@@ -936,7 +936,7 @@ softcap(value, cap1, exp1, cap2, exp2) {
     return cap2 + Math.pow(value - cap2, exp2);
 }
 // Funkcja do JP2 Popup
-function showBarkaSwitchPopup() {
+showBarkaSwitchPopup() {
     // Usuń istniejący popup jeśli jest
     const existingPopup = document.getElementById('barka-popup');
     if (existingPopup) existingPopup.remove();
