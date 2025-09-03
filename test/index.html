@@ -124,26 +124,60 @@
                 <div class="desk-layout">
                     <!-- Desk Visualization -->
                     <div class="desk-container">
-                        <svg class="desk-svg" viewBox="0 0 400 300" id="desk-svg">
-                            <!-- Desk Base -->
-                            <rect x="50" y="200" width="300" height="80" fill="var(--color-brown-600)" rx="10"/>
-                            
-                            <!-- Hotspots for desk items -->
-                            <circle cx="120" cy="160" r="25" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mug"/>
-                            <rect x="200" y="120" width="60" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="monitor" rx="5"/>
-                            <circle cx="320" cy="160" r="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="plant"/>
-                            <rect x="150" y="220" width="100" height="40" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="mousepad" rx="20"/>
-                            <circle cx="80" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="laptop"/>
-                            <circle cx="350" cy="140" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="challenges"/>
-                            <circle cx="350" cy="180" r="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="autobuyer"/>
-                            <rect x="250" y="120" width="20" height="35" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="phone" rx="3"/>
-                            <rect x="140" y="105" width="30" height="20" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="organizer" rx="2"/>
-                            <circle cx="195" cy="105" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="lamp"/>
-                            <circle cx="280" cy="230" r="12" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="multitool"/>
-                            <rect x="235" y="200" width="20" height="15" fill="var(--color-secondary)" opacity="0.3" class="desk-hotspot" data-item="trophy" rx="2"/>
-                            <!-- Items will be added dynamically -->
-                            <g id="desk-items"></g>
-                        </svg>
+						<svg width="400" height="250" viewBox="0 0 400 250">
+						  <!-- Cień pod biurkiem -->
+						  <ellipse cx="200" cy="220" rx="110" ry="16" fill="#c5b898" opacity="0.19" />
+						  
+						  <!-- Nogi -->
+						  <rect x="80" y="155" width="20" height="60" rx="8" fill="#7a6850" />
+						  <rect x="300" y="155" width="20" height="60" rx="8" fill="#7a6850" />
+						  
+						  <!-- Krawędź biurka (przód cienia) -->
+						  <rect x="70" y="133" width="260" height="28" rx="12" fill="#5a4d3a" />
+						  
+						  <!-- Blat biurka, delikatna perspektywa -->
+						  <rect x="60" y="100" width="280" height="40" rx="18"
+						        fill="url(#blat-gradient)" stroke="#715f43" stroke-width="2"/>
+						
+						  <defs>
+						    <linearGradient id="blat-gradient" x1="60" x2="340" y1="100" y2="140" gradientUnits="userSpaceOnUse">
+						      <stop offset="0%" stop-color="#836b4b"/>
+						      <stop offset="50%" stop-color="#6e5b3d"/>
+						      <stop offset="100%" stop-color="#836b4b"/>
+						    </linearGradient>
+						  </defs>
+						  
+						  <!-- PRZYKŁADOWE ITEMY, dynamicznie dodawane — stylizowane flat, z własnym cieniem: -->
+						
+						  <!-- Kubek -->
+						  <g>
+						    <ellipse cx="110" cy="120" rx="16" ry="7" fill="#eee" opacity="0.25"/> <!-- cień pod kubkiem -->
+						    <ellipse cx="110" cy="113" rx="10" ry="8" fill="#d8e2ee" />
+						    <rect x="103" y="113" width="14" height="13" rx="4" fill="#c2d2ec" />
+						    <ellipse cx="110" cy="113" rx="8" ry="6" fill="#f8fafc" />
+						    <rect x="115" y="117" width="5" height="5" rx="2" fill="#b7c7e7" /> <!-- uszko -->
+						  </g>
+						  
+						  <!-- Lampka -->
+						  <g>
+						    <ellipse cx="160" cy="120" rx="12" ry="5" fill="#eee" opacity="0.22"/>
+						    <rect x="157" y="100" width="6" height="18" rx="3" fill="#aabdf1"/>
+						    <circle cx="160" cy="97" r="5" fill="#fff9b3" stroke="#ffe066" stroke-width="2"/>
+						    <rect x="155" y="115" width="10" height="4" rx="2" fill="#ebe5d3"/>
+						  </g>
+						  
+						  <!-- Monitor -->
+						  <g>
+						    <ellipse cx="278" cy="118" rx="18" ry="8" fill="#444" opacity="0.07"/>
+						    <rect x="263" y="101" width="30" height="18" rx="4" fill="#1f313a"/>
+						    <rect x="266" y="106" width="24" height="11" rx="2" fill="#83d7ff"/>
+						    <rect x="274" y="119" width="9" height="4" rx="2" fill="#a2aeb5"/>
+						  </g>
+						
+						  <!-- Tutaj JS dokłada <g id="desk-items"> kolejne SVG przedmioty -->
+						  <g id="desk-items"></g>
+						</svg>
+
                     </div>
                     
                     <!-- Desk Shop -->
