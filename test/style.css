@@ -1409,10 +1409,31 @@ select.form-control {
   opacity: 0;
   transform: scale(0.7);
   transition: opacity 0.45s, transform 0.38s cubic-bezier(.22,1.8,.4,1);
+  user-select: none;
+  pointer-events: none;
+}
+.desk-placeholder {
+  opacity: 0.18;
+  transition: opacity 0.2s, filter 0.2s;
+  pointer-events: all;
+  cursor: pointer;
+}
+.desk-placeholder:hover {
+  opacity: 0.36;
+  filter: brightness(1.12);
 }
 #desk-items g.unlocked {
   opacity: 1;
   transform: scale(1);
+}
+.desk-placeholder-text {
+  font-size: 21px;
+  fill: #333;
+  opacity: 0.6;
+  font-family: sans-serif;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
 }
 .desk-hotspot {
   cursor: pointer;
