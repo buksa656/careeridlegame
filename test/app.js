@@ -979,18 +979,27 @@ document.getElementById('secret-code-btn').onclick = () => {
         const oldLogo = logo.src;
         logo.src = "jp2.jpg"; // zakładam, że masz taką grafikę!
 	    // ZMIANA TŁA:
-	    document.body.style.transition = 'background 0.8s';
-	    document.body.style.background = "#fff9a5";
-	    // ANIMACJA CYTATU:
-	    const quote = document.getElementById('quote-text');
-	    const oldQuote = quote.textContent;
-	    const barkaLines = [
-	        "Pan kiedyś stanął nad brzegiem,",
-	        "Szukał ludzi gotowych pójść za Nim;",
-	        "By łowić serca,",
-	        "Słów Bożych prawdą.",
-	        "JP na 100%!"
-	    ];
+	    const mainBg = document.querySelector('.main-content') || document.body;
+		mainBg.style.transition = 'background 0.8s';
+		mainBg.style.background = "#fff9a5";
+		// Cytat Barka i logo
+		const logo = document.querySelector('.korpo-logo');
+		const oldLogo = logo.src;
+		logo.src = "jp2.jpg";
+		const quote = document.getElementById('quote-text');
+		const oldQuote = quote.textContent;
+		
+		// ZATRZYMAJ ROTACJĘ CYTATÓW!
+		clearInterval(game.quoteInterval);
+		game.quoteInterval = null;
+		
+		const barkaLines = [
+		    "Pan kiedyś stanął nad brzegiem,",
+		    "Szukał ludzi gotowych pójść za Nim;",
+		    "By łowić serca,",
+		    "Słów Bożych prawdą.",
+		    "JP na 100%!"
+		];
         let idx = 0;
         const animBarka = () => {
             if (idx < barkaLines.length) {
