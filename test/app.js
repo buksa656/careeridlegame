@@ -2301,25 +2301,21 @@ createTaskCard(taskData, taskState) {
     });
 }
 
-
 renderDesk() {
-    console.log("deskItems:", this.gameState.deskItems);
     const svgNS = 'http://www.w3.org/2000/svg';
-
-    // Placeholdery pod desk items (zmień ikonki/label jak chcesz)
     const placeholdersList = [
         ["mug",        240, 100, "☕", "Kubek"],
         ["phone",      860, 96,  "📱", "Telefon"],
         ["organizer",  525, 105, "🗂", "Organizer"],
         ["lamp",       390, 90,  "💡", "Lampka"],
-        ["multitool",  320, 180,  "🛠", "Multitool"],
+        ["multitool",  320, 180, "🛠", "Multitool"],
         ["trophy",     965, 170, "🏆", "Trofeum"],
         ["upgrade_optimizer", 350, 210, "⚡️", "Optymalizator ulepszeń"],
         ["ascension_assistant", 480, 200, "🤖", "Asystent awansów"],
         ["cost_calculator", 1080, 120, "🧮", "Kalkulator kosztów"]
     ];
 
-    // Placeholdery
+    // Placeholdery na brakujące itemy
     let phGroup = document.getElementById('desk-placeholders');
     if (!phGroup) {
         phGroup = document.createElementNS(svgNS, 'g');
@@ -2328,7 +2324,7 @@ renderDesk() {
     }
     phGroup.innerHTML = '';
     placeholdersList.forEach(([id, cx, cy, icon, label]) => {
-        if (this.gameState.deskItems && this.gameState.deskItems[id]) return; // już kupiony
+        if (this.gameState.deskItems && this.gameState.deskItems[id]) return;
         const circle = document.createElementNS(svgNS, "circle");
         circle.setAttribute("cx", cx);
         circle.setAttribute("cy", cy);
@@ -2347,23 +2343,31 @@ renderDesk() {
         text.setAttribute("title", `Kup w sklepie: ${label}`);
     });
 
-    // Desk items SVG
+    // Render itemów na biurku
     const itemsGroup = document.getElementById('desk-items');
     if (!itemsGroup) return;
     itemsGroup.innerHTML = '';
-	const debugCirc = document.createElementNS(svgNS, "circle");
-	debugCirc.setAttribute("cx", 600);
-	debugCirc.setAttribute("cy", 150);
-	debugCirc.setAttribute("r", 70);
-	debugCirc.setAttribute("fill", "#ff000088");
-	itemsGroup.appendChild(debugCirc);
+
     Object.keys(this.gameState.deskItems).forEach(itemId => {
         if (!this.gameState.deskItems[itemId]) return;
         const g = document.createElementNS(svgNS, 'g');
         g.setAttribute('class', 'desk-item');
-        const append = (el) => g.appendChild(el);
-        console.log("Rysuję:", itemId);
+        g.setAttribute('data-item-id', itemId);
 
+        // Tooltip – wyciągnij dane z gameData
+        const itemObj = this.gameData.deskItems.find(d => d.id === itemId);
+        const label = itemObj
+            ? (this.translations?.[this.currentLanguage]?.[itemObj.nameKey] || itemObj.nameKey)
+            : itemId;
+        const bonus = itemObj
+            ? (this.translations?.[this.currentLanguage]?.[itemObj.bonusDesc] || itemObj.bonusDesc || "")
+            : "";
+
+        g.setAttribute('data-tooltip-title', label);
+        g.setAttribute('data-tooltip-bonus', bonus);
+
+        // (SVG do każdego przedmiotu – te same jak wcześniej)
+        const append = (el) => g.appendChild(el);
         switch (itemId) {
             case 'mug': {
                 const cup = document.createElementNS(svgNS, 'circle');
@@ -2429,7 +2433,6 @@ renderDesk() {
                 break;
             }
             case 'upgrade_optimizer': {
-                // Symboliczny "błyskawica coach"
                 const rect1 = document.createElementNS(svgNS, 'rect');
                 rect1.setAttribute('x','350'); rect1.setAttribute('y','210');
                 rect1.setAttribute('width','44'); rect1.setAttribute('height','16');
@@ -2440,7 +2443,6 @@ renderDesk() {
                 break;
             }
             case 'ascension_assistant': {
-                // Symboliczna "kulka AI"
                 const ai = document.createElementNS(svgNS, 'circle');
                 ai.setAttribute('cx', '480'); ai.setAttribute('cy', '200'); ai.setAttribute('r', '15');
                 ai.setAttribute('fill', '#ede1ff'); ai.setAttribute('stroke',"#ab9aff"); ai.setAttribute('stroke-width','4'); append(ai);
@@ -2451,7 +2453,6 @@ renderDesk() {
                 break;
             }
             case 'cost_calculator': {
-                // Prosty kalkulator
                 const rect = document.createElementNS(svgNS, 'rect');
                 rect.setAttribute('x','1080'); rect.setAttribute('y','120');
                 rect.setAttribute('width','25'); rect.setAttribute('height','24');
@@ -2463,7 +2464,6 @@ renderDesk() {
                 break;
             }
             default: {
-                // Awaryjny placeholder na wypadek nowych itemów:
                 const defC = document.createElementNS(svgNS, 'circle');
                 defC.setAttribute('cx','600'); defC.setAttribute('cy','175'); defC.setAttribute('r','12');
                 defC.setAttribute('fill','#e86'); defC.setAttribute('opacity','0.14'); append(defC);
@@ -2472,8 +2472,53 @@ renderDesk() {
         }
         itemsGroup.appendChild(g);
     });
-}
 
+    // TOOLTIP logic - dodać TYLKO raz!
+    if (!window._deskTooltipInit) {
+        window._deskTooltipInit = true;
+        let tooltip = document.getElementById('desk-tooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'desk-tooltip';
+            tooltip.style.position = 'fixed';
+            tooltip.style.pointerEvents = 'none';
+            tooltip.style.zIndex = 99999;
+            tooltip.style.background = '#fffbe5';
+            tooltip.style.color = '#223a33';
+            tooltip.style.fontSize = '1em';
+            tooltip.style.borderRadius = '9px';
+            tooltip.style.boxShadow = '0 2px 10px #aac8';
+            tooltip.style.padding = '12px 18px';
+            tooltip.style.border = '1.5px solid #f0eebb';
+            tooltip.style.display = 'none';
+            tooltip.style.minWidth = '120px';
+            tooltip.style.maxWidth = '320px';
+            tooltip.style.whiteSpace = 'pre-line';
+            document.body.appendChild(tooltip);
+        }
+        const svg = document.getElementById('desk-svg');
+        svg.addEventListener('mousemove', e => {
+            let node = e.target;
+            let parent = node;
+            while (parent && parent !== svg && !parent.classList.contains('desk-item')) {
+                parent = parent.parentNode;
+            }
+            if (parent && parent.classList && parent.classList.contains('desk-item')) {
+                const label = parent.getAttribute('data-tooltip-title');
+                const bonus = parent.getAttribute('data-tooltip-bonus');
+                tooltip.innerHTML = `<b>${label}</b><br><span style="color:#69843b;font-size:0.98em;">${bonus}</span>`;
+                tooltip.style.display = 'block';
+                tooltip.style.left = (e.clientX+18) + 'px';
+                tooltip.style.top = (e.clientY+14) + 'px';
+            } else {
+                tooltip.style.display = 'none';
+            }
+        });
+        svg.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+        });
+    }
+}
 
     renderAchievements() {
         const container = document.getElementById('achievements-list');
