@@ -1721,7 +1721,7 @@ calculateTaskIdleRate(taskId) {
                 this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
                 this.renderAchievements();
                 this.checkFeatureUnlocks();
-                this.showNotification(`🏆 Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
+                this.showNotification(`<span style="font-size:1.4em;">🏆</span> Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
             }
         });
     }
@@ -2734,30 +2734,8 @@ softcapMulti(value, tiers) {
     showNotification(message) {
         // Simple notification system
         const notification = document.createElement('div');
-        notification.style.cssText = `
-        position: fixed;
-        top: 90px;
-        right: 30px;
-        min-width: 340px;
-        z-index: 9999;
-        background: linear-gradient(90deg,#ffe066,#ffd700);
-        color: #444;
-        padding: 28px 24px 20px 78px;
-        border-radius: 18px;
-        border:2px solid #ffb700;
-        box-shadow: 0 0 24px 0 #ffd70099;
-        font-size: 1.25em;
-        line-height: 1.2;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        animation: achievement-bounce-in 0.5s cubic-bezier(.2,1.5,.4,1);
-        pointer-events: none;
-        user-select: none;
-        `;
         notification.textContent = message;
-        notification.classList.add('achievement-pop');
-		setTimeout(() => notification.classList.remove('achievement-pop'), 1100);
+        notification.className = 'achievement-pop';
         document.body.appendChild(notification);
         
         setTimeout(() => {
