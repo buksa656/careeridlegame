@@ -1995,9 +1995,6 @@ select.form-control {
   100% {background: #fffbe8;}
 }
 .achievement-pop {
-    position: fixed;
-    top: 90px;
-    right: 30px;
     min-width: 280px;           /* mniejsze minimum */
     max-width: 450px;
     z-index: 9999;
