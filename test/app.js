@@ -2733,6 +2733,7 @@ softcapMulti(value, tiers) {
     showNotification(message) {
         // Simple notification system
         const notification = document.createElement('div');
+		notification.textContent = message;
         notification.className = 'achievement-pop';
         document.body.appendChild(notification);
         
