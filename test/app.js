@@ -1972,6 +1972,12 @@ checkAchievements() {
             this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
             this.renderAchievements();
             this.checkFeatureUnlocks();
+			if (achievement.reward && achievement.reward.type === 'bp' && achievement.reward.value > 0) {
+			this.updateBP((this.gameState.bp || 0) + achievement.reward.value);
+			this.showNotification(
+			  `+${achievement.reward.value} BP!`
+			);
+			}
             this.showNotification(`🏆Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
         }
     });
