@@ -1446,7 +1446,7 @@ select.form-control {
 }
 .desk-shop {
   width: 100%;
-  max-width: 700px;
+  max-width: 1200px; /* Taka sama jak desk-container! */
   margin: 40px auto 0 auto;
   background: #fcfef8;
   border-radius: 18px;
@@ -1459,9 +1459,10 @@ select.form-control {
   font-size: var(--font-size-xl);
 }
 .shop-items {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px 18px;  /* rzadsze rozstawienie w gridzie */
+  margin-top: 22px;
 }
 @media (max-width: 900px) {
   .desk-container, .desk-shop {
@@ -1469,22 +1470,26 @@ select.form-control {
     padding-left: 8px;
     padding-right: 8px;
   }
+  .shop-items { grid-template-columns: repeat(2, 1fr);}
 }
 @media (max-width: 600px) {
   .desk-shop {
     padding: 16px 6px 14px 6px;
     font-size: 0.99em;
   }
+  .shop-items { grid-template-columns: 1fr; }
 }
 .shop-item {
+  background: #f6fff9;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #e8ffd280;
+  padding: 18px 15px 12px 16px;
+  transition: box-shadow .17s;
+  border: 1.2px solid #e6ecf6;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  padding: var(--space-12);
-  background: var(--color-bg-5);
-  border-radius: var(--radius-base);
-  border: 1px solid var(--color-border);
-  transition: all var(--duration-fast) var(--ease-standard);
+  min-height: 104px;
 }
 .shop-item-info {
   flex: 1;
