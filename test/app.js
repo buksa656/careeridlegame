@@ -1996,6 +1996,7 @@ renderTasks() {
 
     this.gameData.tasks.forEach(taskData => {
         const taskState = this.gameState.tasks[taskData.id];
+
         // Locked -> przycisk odblokowania
         if (!taskState || !taskState.unlocked || taskState.locked) {
             const unlockBtn = document.createElement('div');
@@ -2024,7 +2025,7 @@ renderTasks() {
             taskCard.classList.remove('active-task');
         }
 
-        // Dodanie animacji upgrade/ascend (jak dotychczas)
+        // Dodanie animacji upgrade/ascend
         if (this.lastAnimatedTaskUpgrade === taskData.id) {
             taskCard.classList.add('tile-anim-pop');
             setTimeout(() => taskCard.classList.remove('tile-anim-pop'), 400);
@@ -2039,7 +2040,7 @@ renderTasks() {
         // KLIKALNY cały kafelek taska do focusowania/odfocusowania!
         taskCard.style.cursor = 'pointer';
         taskCard.addEventListener('click', (e) => {
-            // Blokuj klik gdy user kliknął przyciski lub checkboxy "ulepsz/awansuj" (nie chcesz wywołać clicka 2x)
+            // Blokuj klik gdy user kliknął przyciski
             if (e.target.closest('.btn,.task-actions')) return;
 
             const taskId = taskData.id;
@@ -2049,12 +2050,17 @@ renderTasks() {
             } else {
                 // Limit slotów focus
                 if (this.gameState.focus.length >= this.getMaxFocusSlots()) {
-                    this.showNotification(this.currentLanguage === 'pl'
-                        ? 'Brak wolnych slotów focus!'
-                        : 'No free focus slots left!');
+                    // Notyfikacja + animacja shake
+                    this.showNotification(
+                        this.currentLanguage === 'pl'
+                            ? 'Osiągnąłeś maksymalną liczbę aktywnych zadań!'
+                            : 'You have reached the maximum number of active tasks!'
+                    );
+                    taskCard.classList.add('shake-card');
+                    setTimeout(() => taskCard.classList.remove('shake-card'), 600);
                     return;
                 }
-                // Ewentualnie koszt przełączania (tu możesz wkleić tę samą logikę co dawniej z checkboxa)
+                // Koszt przełączania (opcjonalnie)
                 if (this.gameState.settings?.focusSwitchCostEnabled) {
                     let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005));
                     if (this.gameState.deskItems['multitool']) {
@@ -2078,8 +2084,6 @@ renderTasks() {
             this.saveGameState();
             this.renderTasks();
         });
-
-        // DO NOT DODAWAJ CHECKBOXA/LABELEK "Aktywne"!!!
 
         container.appendChild(taskCard);
     });
