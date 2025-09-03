@@ -963,24 +963,54 @@ setupEventListeners() {
     const closeSettingsModal = () => {
         settingsModal.classList.add('hidden');
     };
-	document.getElementById('secret-code-btn').onclick = () => {
-	    const code = document.getElementById('secret-code-input').value.trim();
-	    const feedback = document.getElementById('secret-code-feedback');
-	    if (code === "123456") {
-	        feedback.textContent = "Hasło przyjęte! Odblokowano unikalny achievement (Hasło: 123456).";
-	        // Minievent - nagroda lub efekt:
-	        game.earnSecretAchievement("mem_123456"); // dodaj helper lub aktywuj standardowe
-	    } else if (code === "JP2137") {
-	        feedback.textContent = "JP na 100%! Tło zmienia kolor 🟨";
-	        document.body.style.transition = 'background 0.8s';
-	        document.body.style.background = "#fff9a5";
-	        setTimeout(() => {
-	            document.body.style.background = "";
-	        }, 13000);
-	    } else {
-	        feedback.textContent = "Niepoprawny kod / Invalid code";
-	    }
-	};
+document.getElementById('secret-code-btn').onclick = () => {
+    const code = document.getElementById('secret-code-input').value.trim();
+    const feedback = document.getElementById('secret-code-feedback');
+    
+    // KOD: 123456
+    if (code === "123456") {
+        feedback.textContent = "Hasło przyjęte! Twoja produkcja BP zmieniła się o... 0%. Ale duma ogromna. 👏";
+        // Tu możesz dorzucić np. miganie, shake, czy gifka, ale nie zmieniaj stanu gry!
+    }
+    // KOD: 2137
+    else if (code === "2137") {
+        feedback.textContent = "JP na 100%! Papieska moc aktywowana na minutkę!";
+        const logo = document.querySelector('.korpo-logo');
+        const oldLogo = logo.src;
+        logo.src = "img/jp2.png"; // zakładam, że masz taką grafikę!
+        const quote = document.getElementById('quote-text');
+        const oldQuote = quote.textContent;
+        const barkaLines = [
+            "Pan kiedyś stanął nad brzegiem,",
+            "Szukał ludzi gotowych pójść za Nim;",
+            "By łowić serca,",
+            "Słów Bożych prawdą.",
+            "JP na 100%!"
+        ];
+        let idx = 0;
+        const animBarka = () => {
+            if (idx < barkaLines.length) {
+                quote.innerHTML =
+                  `<span style="color: #bca405; font-size:1.18em; text-shadow: 0 2px 6px #ffe;">
+                    ${barkaLines[idx]}
+                  </span>`;
+                quote.style.animation = "barkaAnim 1.1s";
+                idx++;
+                setTimeout(animBarka, 2000);
+            }
+        };
+        animBarka();
+        setTimeout(() => {
+            logo.src = oldLogo;
+            quote.textContent = oldQuote;
+            quote.style.animation = '';
+        }, 60000);
+    }
+    // KOD: cokolwiek innego
+    else {
+        feedback.textContent = "Niepoprawny kod / Invalid code";
+    }
+};
     settingsClose.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -1785,7 +1815,13 @@ calculateTaskIdleRate(taskId) {
 		}
         return true;
     }
-
+earnSecretAchievement(id) {
+    if (!this.gameState.achievements[id]) {
+        this.gameState.achievements[id] = true;
+        this.renderAchievements();
+        this.showNotification("🎉 Sekretny achievement odblokowany!");
+    }
+}
 checkAchievements() {
     // Blokada: tylko jedna notyfikacja na achievement na cykl!
     if (!this.justUnlockedAchievements) this.justUnlockedAchievements = new Set();
