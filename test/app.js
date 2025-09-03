@@ -2177,7 +2177,11 @@ performPrestige() {
     }
 
     // Nie pozwól zrobić prestiżu jeśli nie zgromadziłeś wymaganej ilości BP
-    if (softSkillsGain < 1) return;
+    if (softSkillsGain < 1) {
+    this.showNotification("Potrzebujesz minimum 50 000 BP, by wykonać Prestige!");
+    return;
+	}
+
 
     // Zapisz elementy które zostają
     const achievementsToKeep = { ...this.gameState.achievements };
@@ -2755,7 +2759,7 @@ renderDesk() {
     }
 
 updateDisplay() {
-    // BEZPIECZNE sprawdzanie przed ustawieniem
+    // Energetyczne i statystyki
     const energyDisplay = document.getElementById('energy-display');
     if (energyDisplay) {
         energyDisplay.textContent = this.gameState.energy;
@@ -2772,7 +2776,8 @@ updateDisplay() {
     if (energyBtn) {
         energyBtn.innerHTML = `⚡ ${this.gameState.energy}/${this.gameState.maxEnergy} ▼`;
     }
-    // Bezpieczne sprawdzenie przed disable/enable przycisków
+
+    // Energetyczne przyciski - disable jeśli za mało energii
     document.querySelectorAll('.energy-option[data-skill]').forEach(btn => {
         const skill = btn.getAttribute('data-skill');
         const skillCosts = {
@@ -2784,7 +2789,7 @@ updateDisplay() {
             btn.disabled = this.gameState.energy < skillCosts[skill];
         }
     });
-    // Bezpieczne sprawdzenie ad button
+    // Przycisk reklamy energii
     const adButton = document.getElementById('watch-ad-option');
     if (adButton) {
         if (!this.adsAvailable) {
@@ -2801,75 +2806,80 @@ updateDisplay() {
             adButton.title = '';
         }
     }
-    // zakladka statystyk
+
+    // Statystyki kariery
     if (this.gameState.achievements['first_ascend']) {
         document.getElementById('careerstats-tab-btn').style.display = 'inline-block';
     } else {
         document.getElementById('careerstats-tab-btn').style.display = 'none';
         document.getElementById('careerstats-tab').style.display = 'none';
     }
-	
-	// Ukrywanie/pokazywanie zakładki "Biurko"
-	const deskBtn = document.querySelector('[data-tab="desk"]');
-	const deskTab = document.getElementById('desk-tab');
-	if (deskBtn && deskTab) {
-		if (this.gameState.features.deskUnlocked) {
-			deskBtn.style.display = 'inline-block';
-		} else {
-			deskBtn.style.display = 'none';
-			deskTab.style.display = 'none';
-		}
-	}
+    // Zakładka "Biurko"
+    const deskBtn = document.querySelector('[data-tab="desk"]');
+    const deskTab = document.getElementById('desk-tab');
+    if (deskBtn && deskTab) {
+        if (this.gameState.features.deskUnlocked) {
+            deskBtn.style.display = 'inline-block';
+        } else {
+            deskBtn.style.display = 'none';
+            deskTab.style.display = 'none';
+        }
+    }
+    // Zakładka "Wyzwania"
+    const challengesBtn = document.querySelector('[data-tab="challenges"]');
+    const challengesTab = document.getElementById('challenges-tab');
+    if (challengesBtn && challengesTab) {
+        if (this.gameState.features.challengesUnlocked) {
+            challengesBtn.style.display = 'inline-block';
+        } else {
+            challengesBtn.style.display = 'none';
+            challengesTab.style.display = 'none';
+        }
+    }
 
-	// Ukrywanie/pokazywanie zakładki "Wyzwania"
-	const challengesBtn = document.querySelector('[data-tab="challenges"]');
-	const challengesTab = document.getElementById('challenges-tab');
-	if (challengesBtn && challengesTab) {
-		if (this.gameState.features.challengesUnlocked) {
-			challengesBtn.style.display = 'inline-block';
-		} else {
-			challengesBtn.style.display = 'none';
-			challengesTab.style.display = 'none';
-		}
-	}
-    // PRESTIŻ – nowa logika
+    // --------- PRESTIŻ / SOFT SKILL BUTTON ---------------
     const prestigeBtn = document.getElementById('prestige-btn');
     const prestigeInfo = document.getElementById('prestige-info');
     if (prestigeBtn && prestigeInfo) {
         const SS_BP_PRICE = 50000;
-        const earned = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
+        const earnedSS = Math.floor(this.gameState.totalBPEarned / SS_BP_PRICE);
         const hasPrestigeMaster = !!this.gameState.achievements["prestige_master"];
-        let softSkillsGain;
-
+        let softSkillsGain = 0;
         if (!hasPrestigeMaster) {
-            softSkillsGain = earned > 0 ? 1 : 0;
+            softSkillsGain = earnedSS > 0 ? 1 : 0;
         } else {
-            softSkillsGain = earned;
+            softSkillsGain = earnedSS;
         }
-
+        // UI: przycisk nieklikalny i szary jeśli zbyt mało BP
         prestigeBtn.disabled = softSkillsGain < 1;
 
         if (softSkillsGain >= 1) {
             prestigeInfo.textContent = hasPrestigeMaster
                 ? (this.currentLanguage === 'pl'
-                    ? `Zdobywasz ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}`
-                    : `Gain ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}`)
+                    ? `Zdobywasz ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "i" : ""}!`
+                    : `Gain ${softSkillsGain} Soft Skill${softSkillsGain > 1 ? "s" : ""}!`)
                 : (this.currentLanguage === 'pl'
-                    ? `Zdobywasz 1 Soft Skill`
-                    : `Gain 1 Soft Skill`);
+                    ? `Zdobywasz 1 Soft Skill!`
+                    : `Gain 1 Soft Skill!`);
             prestigeBtn.classList.remove('disabled');
-            // (opcjonalnie) reset innerHTML jeśli poprzednio był .disabled:
+            prestigeBtn.removeAttribute('title');
+            // przywróć zwykły napis
             prestigeBtn.innerHTML = this.translations[this.currentLanguage].prestige_ready;
         } else {
+            // Za mało BP – informacja i blokada
             const earnedBP = this.formatNumber(this.gameState.totalBPEarned);
             const nextReq = this.formatNumber(SS_BP_PRICE);
             prestigeInfo.innerHTML = `<span style="color:#888;">${earnedBP} / ${nextReq} BP</span>
                 <span style="margin-left:8px; color:#b44;"><i class="fa fa-lock"></i></span>`;
             prestigeBtn.classList.add('disabled');
             prestigeBtn.innerHTML = `<span style="opacity:.7">${this.translations[this.currentLanguage].prestige_ready}</span> <i class="fa fa-lock"></i>`;
+            prestigeBtn.title = this.currentLanguage === 'pl'
+                ? `Potrzebujesz minimum ${this.formatNumber(SS_BP_PRICE)} BP, by wykonać Prestige!`
+                : `You need at least ${this.formatNumber(SS_BP_PRICE)} BP to Prestige!`;
         }
     }
 }
+
 renderCareerStats() {
     if (!this.gameState.achievements['first_ascend']) return; // Tylko po odblokowaniu
 
