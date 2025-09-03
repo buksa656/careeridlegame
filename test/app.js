@@ -1719,7 +1719,7 @@ calculateTaskIdleRate(taskId) {
                 this.triggerEvent('achievementUnlock', { achievementId: achievement.id });
                 this.renderAchievements();
                 this.checkFeatureUnlocks();
-                this.showNotification(`Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
+                this.showNotification(`🏆 Achievement: ${this.translations[this.currentLanguage][achievement.nameKey] || achievement.nameKey}`);
             }
         });
     }
