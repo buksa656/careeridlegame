@@ -982,10 +982,6 @@ document.getElementById('secret-code-btn').onclick = () => {
 	    const mainBg = document.querySelector('.main-content') || document.body;
 		mainBg.style.transition = 'background 0.8s';
 		mainBg.style.background = "#fff9a5";
-		// Cytat Barka i logo
-		const logo = document.querySelector('.korpo-logo');
-		const oldLogo = logo.src;
-		logo.src = "jp2.jpg";
 		const quote = document.getElementById('quote-text');
 		const oldQuote = quote.textContent;
 		
