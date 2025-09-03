@@ -1957,6 +1957,7 @@ select.form-control {
 }
 .tile-anim-pop {
   animation: tile-pop 0.35s cubic-bezier(.17,.67,.66,1.31);
+  box-shadow: 0 0 14px 0 #fbd60655;
 }
 @keyframes tile-bounce {
   0%   { transform: scale(1);}
