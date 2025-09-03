@@ -2556,6 +2556,7 @@ updateDisplay() {
 }
 renderCareerStats() {
     if (!this.gameState.achievements['first_ascend']) return; // Tylko po odblokowaniu
+
     const content = document.getElementById('careerstats-content');
     if (!content) return;
 
@@ -2567,36 +2568,48 @@ renderCareerStats() {
     const seconds = playTimeSec % 60;
     const playTimeStr = `${hours}h ${minutes}m ${seconds}s`;
 
-    // Liczba odblokowanych osiągnięć
+    // Zbierz statsy
     const achievementsUnlocked = Object.values(this.gameState.achievements).filter(Boolean).length;
     const achievementsTotal = this.gameData.achievements.length;
-    // Najwyższy wynik, czyli max. BP kiedykolwiek posiadany
     const maxScore = this.formatNumber(this.gameState.stats.maxBP || this.gameState.totalBPEarned);
 
-    // Liczba zdobytych prestiży
-    const prestigeTotal = this.gameState.prestigeCount || 0;
+    // Zadania, prestiże, wyzwania itp.
+    const stats = [
+        { icon: '🏆', label: 'Maksymalny wynik BP', value: maxScore },
+        { icon: '⏱️', label: 'Czas w grze', value: playTimeStr },
+        { icon: '🔼', label: 'Liczba prestiży', value: this.gameState.prestigeCount || 0 },
+        { icon: '🧠', label: 'Liczba Soft Skills', value: this.gameState.stats.softSkillsEarned || 0 },
+        { icon: '🚀', label: 'Łączna liczba awansowań', value: this.gameState.stats.totalAscensions || 0 },
+        { icon: '⚒️', label: "Łączna liczba ulepszeń", value: this.gameState.stats.totalUpgrades || 0 },
+        { icon: '📈', label: "Łączny zdobyty BP", value: this.formatNumber(this.gameState.totalBPEarned || 0) },
+        { icon: '🧩', label: "Odblokowane achievementy", value: `${achievementsUnlocked} / ${achievementsTotal}` },
+        { icon: '📊', label: "Liczba odblokowanych zadań", value: this.gameState.stats.tasksUnlocked || 0 },
+        { icon: '✅', label: "Liczba ukończonych wyzwań", value: this.gameState.stats.challengesCompleted || 0 },
+        { icon: '🖥️', label: "Przedmioty na biurku", value: this.gameState.stats.deskItemsBought || 0 },
+        { icon: '⭐', label: "Najwyższy poziom zadania", value: this.getHighestTaskLevel() || 0 },
+        { icon: '💡', label: "Najwięcej BP na minutę", value: this.getBestBpPerMinute() },
+        { icon: '⚡', label: "Śr. BP na minutę", value: this.getAverageBpPerMinute() },
+        { icon: '🖱️', label: "Łączna liczba kliknięć upgrade", value: this.gameState.stats.upgradeClicks || 0 }
+    ];
 
-    content.innerHTML = `
-        <ul>
-            <li><b>Maksymalny wynik BP:</b> ${maxScore}</li>
-            <li><b>Ilość wykonanych prestiży:</b> ${prestigeTotal}</li>
-            <li><b>Łączna liczba awansowań:</b> ${this.gameState.stats.totalAscensions}</li>
-            <li><b>Liczba zdobytych Soft Skills:</b> ${this.gameState.stats.softSkillsEarned}</li>
-            <li><b>Łączna liczba ulepszeń:</b> ${this.gameState.stats.totalUpgrades}</li>
-            <li><b>Łączny zdobyty BP:</b> ${this.formatNumber(this.gameState.totalBPEarned)}</li>
-            <li><b>Najwyższy poziom zadania:</b> ${this.getHighestTaskLevel()}</li>
-            <li><b>Liczba odblokowanych zadań:</b> ${this.gameState.stats.tasksUnlocked}</li>
-            <li><b>Liczba ukończonych wyzwań:</b> ${this.gameState.stats.challengesCompleted}</li>
-            <li><b>Liczba przedmiotów na biurku:</b> ${this.gameState.stats.deskItemsBought}</li>
-            <li><b>Odblokowane achievementy:</b> ${achievementsUnlocked} / ${achievementsTotal}</li>
-            <li><b>Czas spędzony w grze:</b> ${playTimeStr}</li>
-			<li><b>Najwięcej BP na minutę:</b> ${this.getBestBpPerMinute()}</li>
-			<li><b>Śr. BP na minutę:</b> ${this.getAverageBpPerMinute()}</li>
-			<li><b>Łączna liczba kliknięć upgrade:</b> ${this.gameState.stats.upgradeClicks || 0}</li>
-        </ul>
-    `;
-	this.renderBpHistoryChart();
+    // Stwórz dashboard
+    content.innerHTML = `<div class="career-dashboard"></div>`;
+    const dash = content.firstChild;
+    stats.forEach(stat => {
+        const card = document.createElement('div');
+        card.className = 'kpi-card';
+        card.innerHTML = `
+            <div class="kpi-icon">${stat.icon}</div>
+            <div class="kpi-label">${stat.label}</div>
+            <div class="kpi-value">${stat.value}</div>
+        `;
+        dash.appendChild(card);
+    });
+
+    // Wykres BP
+    this.renderBpHistoryChart();
 }
+
 renderBpHistoryChart() {
     const content = document.getElementById('bp-history-chart');
     if (!content || !this.gameState.stats.bpHistory) return;
