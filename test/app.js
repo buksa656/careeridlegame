@@ -2304,24 +2304,22 @@ createTaskCard(taskData, taskState) {
 
 renderDesk() {
     console.log("deskItems:", this.gameState.deskItems);
-	console.log("desk-placeholders:", document.getElementById("desk-placeholders"));
-	console.log("desk-items:", document.getElementById("desk-items"));
-	
-	const svgNS = 'http://www.w3.org/2000/svg';
+    const svgNS = 'http://www.w3.org/2000/svg';
 
-    // 1. Placeholdery pod desk items (kółka z ikonką) tylko jeśli NIE są kupione
+    // Placeholdery pod desk items (zmień ikonki/label jak chcesz)
     const placeholdersList = [
-        // id           cx   cy   emoji  label
         ["mug",        240, 100, "☕", "Kubek"],
-        ["lamp",       390, 90,  "💡", "Lampka"],
-        ["monitor",    730, 88,  "🖥", "Monitor"],
-        ["organizer",  525, 105, "🗂", "Organizer"],
         ["phone",      860, 96,  "📱", "Telefon"],
-        ["plant",     1020, 92,  "🪴", "Kwiatek"],
-        ["trophy",     965, 170, "🏆", "Trofeum"]
+        ["organizer",  525, 105, "🗂", "Organizer"],
+        ["lamp",       390, 90,  "💡", "Lampka"],
+        ["multitool",  320, 180,  "🛠", "Multitool"],
+        ["trophy",     965, 170, "🏆", "Trofeum"],
+        ["upgrade_optimizer", 350, 210, "⚡️", "Optymalizator ulepszeń"],
+        ["ascension_assistant", 480, 200, "🤖", "Asystent awansów"],
+        ["cost_calculator", 1080, 120, "🧮", "Kalkulator kosztów"]
     ];
 
-    // Wyczyszcz placeholdery
+    // Placeholdery
     let phGroup = document.getElementById('desk-placeholders');
     if (!phGroup) {
         phGroup = document.createElementNS(svgNS, 'g');
@@ -2329,10 +2327,8 @@ renderDesk() {
         document.getElementById('desk-svg').insertBefore(phGroup, document.getElementById('desk-items'));
     }
     phGroup.innerHTML = '';
-
     placeholdersList.forEach(([id, cx, cy, icon, label]) => {
-        if (this.gameState.deskItems && this.gameState.deskItems[id]) return; // pomiń, jeśli item już kupiony
-
+        if (this.gameState.deskItems && this.gameState.deskItems[id]) return; // już kupiony
         const circle = document.createElementNS(svgNS, "circle");
         circle.setAttribute("cx", cx);
         circle.setAttribute("cy", cy);
@@ -2341,31 +2337,29 @@ renderDesk() {
         circle.setAttribute("class", "desk-placeholder");
         circle.setAttribute("opacity", "0.09");
         phGroup.appendChild(circle);
-
         const text = document.createElementNS(svgNS, "text");
         text.setAttribute("x", cx);
         text.setAttribute("y", cy + 10);
         text.setAttribute("class", "desk-placeholder-text");
         text.textContent = icon;
         phGroup.appendChild(text);
-
-        // Tooltip
         circle.setAttribute("title", `Kup w sklepie: ${label}`);
         text.setAttribute("title", `Kup w sklepie: ${label}`);
     });
 
-    // 2. Elementy przedmiotów desk items - DUŻE POZYCJE NA NOWE BIURKO
+    // Desk items SVG
     const itemsGroup = document.getElementById('desk-items');
     if (!itemsGroup) return;
     itemsGroup.innerHTML = '';
-	
+
     Object.keys(this.gameState.deskItems).forEach(itemId => {
         if (!this.gameState.deskItems[itemId]) return;
         const g = document.createElementNS(svgNS, 'g');
         g.setAttribute('class', 'desk-item');
         const append = (el) => g.appendChild(el);
         console.log("Rysuję:", itemId);
-		switch (itemId) {
+
+        switch (itemId) {
             case 'mug': {
                 const cup = document.createElementNS(svgNS, 'circle');
                 cup.setAttribute('cx','240'); cup.setAttribute('cy','100'); cup.setAttribute('r','22');
@@ -2374,48 +2368,6 @@ renderDesk() {
                 base.setAttribute('x','228'); base.setAttribute('y','120');
                 base.setAttribute('width','24'); base.setAttribute('height','6');
                 base.setAttribute('fill','#654321'); append(base);
-                break;
-            }
-            case 'monitor': {
-                const body = document.createElementNS(svgNS, 'rect');
-                body.setAttribute('x','700'); body.setAttribute('y','76');
-                body.setAttribute('width','60'); body.setAttribute('height','38');
-                body.setAttribute('fill','#2c3e50'); body.setAttribute('rx','7'); append(body);
-                const screen = document.createElementNS(svgNS, 'rect');
-                screen.setAttribute('x','705'); screen.setAttribute('y','82');
-                screen.setAttribute('width','50'); screen.setAttribute('height','30');
-                screen.setAttribute('fill','#3498db'); screen.setAttribute('rx','5'); append(screen);
-                break;
-            }
-            case 'plant': {
-                const pot = document.createElementNS(svgNS, 'circle');
-                pot.setAttribute('cx','1020'); pot.setAttribute('cy','115'); pot.setAttribute('r','16');
-                pot.setAttribute('fill','#8B4513'); append(pot);
-                const leaves = document.createElementNS(svgNS, 'ellipse');
-                leaves.setAttribute('cx','1020'); leaves.setAttribute('cy','93');
-                leaves.setAttribute('rx','26'); leaves.setAttribute('ry','18');
-                leaves.setAttribute('fill','#228B22'); append(leaves);
-                break;
-            }
-            case 'organizer': {
-                const org = document.createElementNS(svgNS, 'rect');
-                org.setAttribute('x','500'); org.setAttribute('y','90');
-                org.setAttribute('width','45'); org.setAttribute('height','28');
-                org.setAttribute('rx','4'); org.setAttribute('fill','#8b5e3c'); append(org);
-                const line = document.createElementNS(svgNS, 'line');
-                line.setAttribute('x1','505'); line.setAttribute('y1','97');
-                line.setAttribute('x2','540'); line.setAttribute('y2','97');
-                line.setAttribute('stroke','#fff'); line.setAttribute('stroke-width','3'); append(line);
-                break;
-            }
-            case 'lamp': {
-                const arm = document.createElementNS(svgNS, 'line');
-                arm.setAttribute('x1','380'); arm.setAttribute('y1','115');
-                arm.setAttribute('x2','420'); arm.setAttribute('y2','84');
-                arm.setAttribute('stroke','#888'); arm.setAttribute('stroke-width','8'); append(arm);
-                const bulb = document.createElementNS(svgNS, 'circle');
-                bulb.setAttribute('cx','433'); bulb.setAttribute('cy','76'); bulb.setAttribute('r','18');
-                bulb.setAttribute('fill','#ffd54f'); append(bulb);
                 break;
             }
             case 'phone': {
@@ -2429,20 +2381,94 @@ renderDesk() {
                 scr.setAttribute('rx','3'); scr.setAttribute('fill','#9ad'); append(scr);
                 break;
             }
+            case 'organizer': {
+                const org = document.createElementNS(svgNS, 'rect');
+                org.setAttribute('x','505'); org.setAttribute('y','92');
+                org.setAttribute('width','40'); org.setAttribute('height','22');
+                org.setAttribute('rx','3'); org.setAttribute('fill','#b5651d'); append(org);
+                const docs = document.createElementNS(svgNS, 'rect');
+                docs.setAttribute('x','510'); docs.setAttribute('y','97');
+                docs.setAttribute('width','10'); docs.setAttribute('height','13');
+                docs.setAttribute('fill','#fff'); append(docs);
+                break;
+            }
+            case 'lamp': {
+                const arm = document.createElementNS(svgNS, 'line');
+                arm.setAttribute('x1','395'); arm.setAttribute('y1','120');
+                arm.setAttribute('x2','417'); arm.setAttribute('y2','85');
+                arm.setAttribute('stroke','#daaf29'); arm.setAttribute('stroke-width','9'); append(arm);
+                const bulb = document.createElementNS(svgNS, 'circle');
+                bulb.setAttribute('cx','428'); bulb.setAttribute('cy','75'); bulb.setAttribute('r','16');
+                bulb.setAttribute('fill','#ffe066'); bulb.setAttribute('stroke','#fff9b3'); bulb.setAttribute('stroke-width','3'); append(bulb);
+                break;
+            }
+            case 'multitool': {
+                const ring = document.createElementNS(svgNS, 'ellipse');
+                ring.setAttribute('cx','320'); ring.setAttribute('cy','180');
+                ring.setAttribute('rx','17'); ring.setAttribute('ry','10');
+                ring.setAttribute('fill','#aaa'); append(ring);
+                const blade = document.createElementNS(svgNS, 'rect');
+                blade.setAttribute('x','339'); blade.setAttribute('y','167'); blade.setAttribute('width','22'); blade.setAttribute('height','6'); 
+                blade.setAttribute('fill','#d5e7ef'); blade.setAttribute('rx','3'); append(blade);
+                break;
+            }
             case 'trophy': {
                 const base = document.createElementNS(svgNS, 'rect');
                 base.setAttribute('x','960'); base.setAttribute('y','185');
                 base.setAttribute('width','30'); base.setAttribute('height','18');
                 base.setAttribute('fill','#996515'); append(base);
-                const cup = document.createElementNS(svgNS, 'circle');
-                cup.setAttribute('cx','975'); cup.setAttribute('cy','177'); cup.setAttribute('r','19');
+                const cup = document.createElementNS(svgNS, 'ellipse');
+                cup.setAttribute('cx','975'); cup.setAttribute('cy','177');
+                cup.setAttribute('rx','19'); cup.setAttribute('ry','17');
                 cup.setAttribute('fill','#FFD700'); append(cup);
+                break;
+            }
+            case 'upgrade_optimizer': {
+                // Symboliczny "błyskawica coach"
+                const rect1 = document.createElementNS(svgNS, 'rect');
+                rect1.setAttribute('x','350'); rect1.setAttribute('y','210');
+                rect1.setAttribute('width','44'); rect1.setAttribute('height','16');
+                rect1.setAttribute('fill','#97c5ed'); rect1.setAttribute('rx','7'); append(rect1);
+                const bolt = document.createElementNS(svgNS, 'polygon');
+                bolt.setAttribute('points','372,210 378,217 365,217 380,226 374,218 385,218');
+                bolt.setAttribute('fill','#ffd700'); append(bolt);
+                break;
+            }
+            case 'ascension_assistant': {
+                // Symboliczna "kulka AI"
+                const ai = document.createElementNS(svgNS, 'circle');
+                ai.setAttribute('cx', '480'); ai.setAttribute('cy', '200'); ai.setAttribute('r', '15');
+                ai.setAttribute('fill', '#ede1ff'); ai.setAttribute('stroke',"#ab9aff"); ai.setAttribute('stroke-width','4'); append(ai);
+                const smile = document.createElementNS(svgNS, 'path');
+                smile.setAttribute('d', "M473 208 Q480 215 487 208");
+                smile.setAttribute('stroke','#998ddd'); smile.setAttribute('stroke-width','2'); smile.setAttribute('fill','none');
+                append(smile);
+                break;
+            }
+            case 'cost_calculator': {
+                // Prosty kalkulator
+                const rect = document.createElementNS(svgNS, 'rect');
+                rect.setAttribute('x','1080'); rect.setAttribute('y','120');
+                rect.setAttribute('width','25'); rect.setAttribute('height','24');
+                rect.setAttribute('rx','4'); rect.setAttribute('fill','#eddc74'); append(rect);
+                const scr = document.createElementNS(svgNS, 'rect');
+                scr.setAttribute('x','1085'); scr.setAttribute('y','124');
+                scr.setAttribute('width','15'); scr.setAttribute('height','6');
+                scr.setAttribute('fill','#fff'); append(scr);
+                break;
+            }
+            default: {
+                // Awaryjny placeholder na wypadek nowych itemów:
+                const defC = document.createElementNS(svgNS, 'circle');
+                defC.setAttribute('cx','600'); defC.setAttribute('cy','175'); defC.setAttribute('r','12');
+                defC.setAttribute('fill','#e86'); defC.setAttribute('opacity','0.14'); append(defC);
                 break;
             }
         }
         itemsGroup.appendChild(g);
     });
 }
+
 
     renderAchievements() {
         const container = document.getElementById('achievements-list');
