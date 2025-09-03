@@ -1551,13 +1551,16 @@ updateLanguage() {
             }
         });
 
-        if (totalBPGained > 0) {
-            const oldBP = this.gameState.bp;
-            this.updateBP(this.gameState.bp + totalBPGained);
-            this.gameState.totalBPEarned += totalBPGained;
+		if (totalBPGained > 0) {
+			const oldBP = this.gameState.bp;
+			this.updateBP(this.gameState.bp + totalBPGained);
+			this.gameState.totalBPEarned += totalBPGained;
 			this.gameState.stats.bpEarned += totalBPGained;
-            this.updateDisplay();
-        }
+			this.gameState.bpSinceLastPrestige =
+			  (this.gameState.bpSinceLastPrestige || 0) + totalBPGained;
+
+			this.updateDisplay();
+		}
 
         if (!this.gameState.stats.maxBP || this.gameState.bp > this.gameState.stats.maxBP) {
 			this.gameState.stats.maxBP = this.gameState.bp;
