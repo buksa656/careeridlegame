@@ -1389,13 +1389,17 @@ select.form-control {
 
 /* Desk Tab Layout */
 .desk-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-24);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 32px;
 }
 .desk-container {
-    min-height: 350px !important;
-    display: block !important;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 0;
 }
 .desk-svg {
     width: 100% !important;
@@ -1441,11 +1445,13 @@ select.form-control {
   filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 .desk-shop {
-  background: var(--color-surface);
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-16);
-  box-shadow: var(--shadow-sm);
+  width: 100%;
+  max-width: 700px;
+  margin: 40px auto 0 auto;
+  background: #fcfef8;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px #dbebc580;
+  padding: 32px 35px 28px 35px;
 }
 .desk-shop h3 {
   margin-bottom: var(--space-16);
@@ -1455,7 +1461,20 @@ select.form-control {
 .shop-items {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .desk-container, .desk-shop {
+    max-width: 99vw;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .desk-shop {
+    padding: 16px 6px 14px 6px;
+    font-size: 0.99em;
+  }
 }
 .shop-item {
   display: flex;
