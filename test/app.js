@@ -935,6 +935,87 @@ softcap(value, cap1, exp1, cap2, exp2) {
     if (value <= cap2) return cap1 + Math.pow(value - cap1, exp1);
     return cap2 + Math.pow(value - cap2, exp2);
 }
+// Funkcja do JP2 Popup
+function showBarkaSwitchPopup() {
+    // Usuń istniejący popup jeśli jest
+    const existingPopup = document.getElementById('barka-popup');
+    if (existingPopup) existingPopup.remove();
+
+    const popup = document.createElement('div');
+    popup.id = 'barka-popup';
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.background = '#fffbe5';
+    popup.style.border = '3px solid #bca405';
+    popup.style.borderRadius = '15px';
+    popup.style.padding = '30px 40px';
+    popup.style.boxShadow = '0 0 20px #bca40580';
+    popup.style.zIndex = '99999';
+    popup.style.fontSize = '1.3em';
+    popup.style.color = '#8B4513';
+    popup.style.textAlign = 'center';
+    popup.style.fontWeight = 'bold';
+    popup.style.maxWidth = '500px';
+    popup.style.animation = 'popupFadeIn 0.5s ease-out';
+
+    const barkaLines = [
+        "Pan kiedyś stanął nad brzegiem,",
+        "Szukał ludzi gotowych pójść za Nim;",
+        "By łowić serca,",
+        "Słów Bożych prawdą.",
+        "JP na 100%! 🙏"
+    ];
+
+    let currentLine = 0;
+    const lineElement = document.createElement('div');
+    lineElement.style.minHeight = '60px';
+    lineElement.style.display = 'flex';
+    lineElement.style.alignItems = 'center';
+    lineElement.style.justifyContent = 'center';
+    popup.appendChild(lineElement);
+
+    // Przycisk zamknięcia
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '10px';
+    closeBtn.style.right = '15px';
+    closeBtn.style.background = 'none';
+    closeBtn.style.border = 'none';
+    closeBtn.style.fontSize = '24px';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.color = '#bca405';
+    closeBtn.onclick = () => popup.remove();
+    popup.appendChild(closeBtn);
+
+    // Animacja linijek Barki
+    const showNextLine = () => {
+        if (currentLine < barkaLines.length) {
+            lineElement.style.opacity = '0';
+            setTimeout(() => {
+                lineElement.textContent = barkaLines[currentLine];
+                lineElement.style.opacity = '1';
+                lineElement.style.transition = 'opacity 0.8s ease-in-out';
+                currentLine++;
+                setTimeout(showNextLine, 2500);
+            }, 300);
+        }
+    };
+
+    document.body.appendChild(popup);
+    showNextLine();
+
+    // Auto-zamknięcie po 15 sekundach
+    setTimeout(() => {
+        if (document.getElementById('barka-popup')) {
+            popup.style.animation = 'popupFadeOut 0.5s ease-in';
+            setTimeout(() => popup.remove(), 500);
+        }
+    }, 15000);
+}
+	
 setupEventListeners() {
     // Tab navigation - Fixed to handle challenges tab properly
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -967,43 +1048,25 @@ document.getElementById('secret-code-btn').onclick = () => {
     const code = document.getElementById('secret-code-input').value.trim();
     const feedback = document.getElementById('secret-code-feedback');
     
-    // KOD: 123456
     if (code === "123456") {
         feedback.textContent = "Hasło przyjęte! Twoja produkcja BP zmieniła się o... 0%. Ale duma ogromna. 👏";
-        // Tu możesz dorzucić np. miganie, shake, czy gifka, ale nie zmieniaj stanu gry!
     }
-    // KOD: 2137
     else if (code === "2137") {
-        feedback.textContent = "JP na 100%! Papieska moc aktywowana na minutkę!";
+        feedback.textContent = "JP na 100%! Papieska moc aktywowana! 🙏";
+        
+        // Zmień logo
         const logo = document.querySelector('.korpo-logo');
         const oldLogo = logo.src;
-        logo.src = "jp2.jpg"; // zakładam, że masz taką grafikę!
-	    
-		const quote = document.getElementById('quote-text');
-		const oldQuote = quote.textContent;
-		clearInterval(game.quoteInterval);
-
-		const barkaLines = [
-		    "Pan kiedyś stanął nad brzegiem... Szukał ludzi gotowych pójść za Nim...By łowić serca...Słów Bożych prawdą...",
-		];
-        let idx = 0;
-        const animBarka = () => {
-            if (idx < barkaLines.length) {
-				quote.innerHTML = `<span style="color: #bca405; font-size:1.18em; text-shadow: 0 2px 6px #ffe;">${barkaLines[idx]}</span>`;
-				quote.style.animation = "barkaAnim 1.1s";
-                idx++;
-                setTimeout(animBarka, 2000);
-            }
-        };
-        animBarka();
+        logo.src = "jp2.jpg";
+        
+        // Pokaż popup z Barką
+        showBarkaSwitchPopup();
+        
+        // Przywróć logo po minucie
         setTimeout(() => {
             logo.src = oldLogo;
-            quote.textContent = oldQuote;
-            quote.style.animation = '';
-			
         }, 60000);
     }
-    // KOD: cokolwiek innego
     else {
         feedback.textContent = "Niepoprawny kod / Invalid code";
     }
