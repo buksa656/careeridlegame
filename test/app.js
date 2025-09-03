@@ -977,7 +977,7 @@ document.getElementById('secret-code-btn').onclick = () => {
         feedback.textContent = "JP na 100%! Papieska moc aktywowana na minutkę!";
         const logo = document.querySelector('.korpo-logo');
         const oldLogo = logo.src;
-        logo.src = "img/jp2.png"; // zakładam, że masz taką grafikę!
+        logo.src = "jp2.jpg"; // zakładam, że masz taką grafikę!
         const quote = document.getElementById('quote-text');
         const oldQuote = quote.textContent;
         const barkaLines = [
