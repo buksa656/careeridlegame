@@ -1996,7 +1996,6 @@ renderTasks() {
 
     this.gameData.tasks.forEach(taskData => {
         const taskState = this.gameState.tasks[taskData.id];
-
         // Locked -> przycisk odblokowania
         if (!taskState || !taskState.unlocked || taskState.locked) {
             const unlockBtn = document.createElement('div');
@@ -2017,81 +2016,77 @@ renderTasks() {
 
         const isActive = this.gameState.focus.includes(taskData.id);
         const taskCard = this.createTaskCard(taskData, taskState);
-		if (this.lastAnimatedTaskUpgrade === taskData.id) {
-		    taskCard.classList.add('tile-anim-pop');
-		    setTimeout(() => taskCard.classList.remove('tile-anim-pop'), 400);
-		    this.lastAnimatedTaskUpgrade = null;
-		}
-		if (this.lastAnimatedTaskAscend === taskData.id) {
-		    taskCard.classList.add('tile-anim-bounce');
-		    setTimeout(() => taskCard.classList.remove('tile-anim-bounce'), 500);
-		    this.lastAnimatedTaskAscend = null;
-		}
-        // Checkbox "Aktywne"
-        const focusCheckbox = document.createElement('input');
-        focusCheckbox.type = 'checkbox';
-        focusCheckbox.setAttribute('data-task-id', taskData.id);
-        focusCheckbox.checked = isActive;
-        focusCheckbox.disabled = !isActive && this.gameState.focus.length >= this.getMaxFocusSlots();
 
-        const label = document.createElement('label');
-        label.style.marginLeft = '10px';
-        label.appendChild(focusCheckbox);
-        label.appendChild(document.createTextNode(this.currentLanguage === 'pl' ? 'Aktywne' : 'Active'));
+        // PODŚWIETLENIE kafelka aktywnego
+        if (isActive) {
+            taskCard.classList.add('active-task');
+        } else {
+            taskCard.classList.remove('active-task');
+        }
 
-        const focusHost = taskCard.querySelector('.task-header');
-        focusHost && focusHost.appendChild(label);
+        // Dodanie animacji upgrade/ascend (jak dotychczas)
+        if (this.lastAnimatedTaskUpgrade === taskData.id) {
+            taskCard.classList.add('tile-anim-pop');
+            setTimeout(() => taskCard.classList.remove('tile-anim-pop'), 400);
+            this.lastAnimatedTaskUpgrade = null;
+        }
+        if (this.lastAnimatedTaskAscend === taskData.id) {
+            taskCard.classList.add('tile-anim-bounce');
+            setTimeout(() => taskCard.classList.remove('tile-anim-bounce'), 500);
+            this.lastAnimatedTaskAscend = null;
+        }
 
-        // Handler zmiany focusu + blokada przepełnienia + (opcjonalny) koszt przełączania
-        focusCheckbox.addEventListener('change', (e) => {
-            const taskId = e.target.getAttribute('data-task-id');
+        // KLIKALNY cały kafelek taska do focusowania/odfocusowania!
+        taskCard.style.cursor = 'pointer';
+        taskCard.addEventListener('click', (e) => {
+            // Blokuj klik gdy user kliknął przyciski lub checkboxy "ulepsz/awansuj" (nie chcesz wywołać clicka 2x)
+            if (e.target.closest('.btn,.task-actions')) return;
 
-            if (e.target.checked) {
-                // limit slotów
+            const taskId = taskData.id;
+            if (isActive) {
+                // Wyłącz fokus na tym tasku
+                this.gameState.focus = this.gameState.focus.filter(id => id !== taskId);
+            } else {
+                // Limit slotów focus
                 if (this.gameState.focus.length >= this.getMaxFocusSlots()) {
                     this.showNotification(this.currentLanguage === 'pl'
                         ? 'Brak wolnych slotów focus!'
                         : 'No free focus slots left!');
-                    e.target.checked = false;
                     return;
                 }
-
-                // opcjonalny koszt przełączania (gdy flaga włączona)
+                // Ewentualnie koszt przełączania (tu możesz wkleić tę samą logikę co dawniej z checkboxa)
                 if (this.gameState.settings?.focusSwitchCostEnabled) {
-                    let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005)); // 0.5% BP, min 1000
+                    let switchCost = Math.max(1000, Math.floor(this.gameState.bp * 0.005));
                     if (this.gameState.deskItems['multitool']) {
                         const mt = this.gameData.deskItems.find(d => d.id === 'multitool');
                         if (mt && mt.bonus.type === 'focus_switch_discount') {
-                            switchCost = Math.floor(switchCost * mt.bonus.value); // np. 0.5
+                            switchCost = Math.floor(switchCost * mt.bonus.value);
                         }
                     }
                     if (this.gameState.bp < switchCost) {
                         this.showNotification(this.currentLanguage === 'pl'
                             ? 'Za mało BP na zmianę focus!'
                             : 'Not enough BP to switch focus!');
-                        e.target.checked = false;
                         return;
                     }
                     this.updateBP(this.gameState.bp - switchCost);
                 }
-
                 if (!this.gameState.focus.includes(taskId)) {
                     this.gameState.focus.push(taskId);
                 }
-            } else {
-                // Odznaczanie nie wymaga kosztu
-                this.gameState.focus = this.gameState.focus.filter(id => id !== taskId);
             }
-
-            this.saveGameState(); // zapisz wybór od razu
+            this.saveGameState();
             this.renderTasks();
         });
+
+        // DO NOT DODAWAJ CHECKBOXA/LABELEK "Aktywne"!!!
 
         container.appendChild(taskCard);
     });
 
     this.updateTaskButtonStates();
 }
+
 createTaskCard(taskData, taskState) {
     const card = document.createElement('div');
     card.className = 'task-card';
@@ -2734,7 +2729,6 @@ softcapMulti(value, tiers) {
     showNotification(message) {
         // Simple notification system
         const notification = document.createElement('div');
-        notification.textContent = message;
         notification.className = 'achievement-pop';
         document.body.appendChild(notification);
         
