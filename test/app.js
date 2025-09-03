@@ -2303,7 +2303,11 @@ createTaskCard(taskData, taskState) {
 
 
 renderDesk() {
-    const svgNS = 'http://www.w3.org/2000/svg';
+    console.log("deskItems:", this.gameState.deskItems);
+	console.log("desk-placeholders:", document.getElementById("desk-placeholders"));
+	console.log("desk-items:", document.getElementById("desk-items"));
+	
+	const svgNS = 'http://www.w3.org/2000/svg';
 
     // 1. Placeholdery pod desk items (kółka z ikonką) tylko jeśli NIE są kupione
     const placeholdersList = [
@@ -2354,13 +2358,14 @@ renderDesk() {
     const itemsGroup = document.getElementById('desk-items');
     if (!itemsGroup) return;
     itemsGroup.innerHTML = '';
-
+	
     Object.keys(this.gameState.deskItems).forEach(itemId => {
         if (!this.gameState.deskItems[itemId]) return;
         const g = document.createElementNS(svgNS, 'g');
         g.setAttribute('class', 'desk-item');
         const append = (el) => g.appendChild(el);
-        switch (itemId) {
+        console.log("Rysuję:", itemId);
+		switch (itemId) {
             case 'mug': {
                 const cup = document.createElementNS(svgNS, 'circle');
                 cup.setAttribute('cx','240'); cup.setAttribute('cy','100'); cup.setAttribute('r','22');
