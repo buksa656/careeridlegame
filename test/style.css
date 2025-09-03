@@ -1401,16 +1401,13 @@ select.form-control {
   box-shadow: var(--shadow-sm);
 }
 .desk-svg {
-  width: 100%;
-  height: auto;
-  max-width: 400px;
-  margin: 0 auto;
-  display: block;
-  opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 0.45s, transform 0.38s cubic-bezier(.22,1.8,.4,1);
-  user-select: none;
-  pointer-events: none;
+    width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    display: block !important;
+    background: #f7f6ee !important; /* jasny kolor — szybko zobaczysz, czy SVG bierze miejsce */
+    z-index: 10 !important;
+    position: relative !important;
 }
 .desk-placeholder {
   opacity: 0.18;
