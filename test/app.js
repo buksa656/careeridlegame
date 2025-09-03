@@ -1060,7 +1060,7 @@ document.getElementById('secret-code-btn').onclick = () => {
         logo.src = "jp2.jpg";
         
         // Pokaż popup z Barką
-        showBarkaSwitchPopup();
+        this.showBarkaSwitchPopup();
         
         // Przywróć logo po minucie
         setTimeout(() => {
