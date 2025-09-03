@@ -2351,7 +2351,12 @@ renderDesk() {
     const itemsGroup = document.getElementById('desk-items');
     if (!itemsGroup) return;
     itemsGroup.innerHTML = '';
-
+	const debugCirc = document.createElementNS(svgNS, "circle");
+	debugCirc.setAttribute("cx", 600);
+	debugCirc.setAttribute("cy", 150);
+	debugCirc.setAttribute("r", 70);
+	debugCirc.setAttribute("fill", "#ff000088");
+	itemsGroup.appendChild(debugCirc);
     Object.keys(this.gameState.deskItems).forEach(itemId => {
         if (!this.gameState.deskItems[itemId]) return;
         const g = document.createElementNS(svgNS, 'g');
