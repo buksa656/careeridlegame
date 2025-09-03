@@ -1974,7 +1974,28 @@ select.form-control {
   100% {background: #fffbe8;}
 }
 .achievement-pop {
-  animation: notif-gold-flash 0.99s ease;
+    position: fixed;
+    top: 90px;
+    right: 30px;
+    min-width: 280px;           /* mniejsze minimum */
+    max-width: 450px;
+    z-index: 9999;
+    background: linear-gradient(90deg,#ffe066,#ffd700);
+    color: #444;
+    padding: 24px 32px 20px 32px; /* mniejszy lewy padding - nie trzeba pustego miejsca przed 🏆 */
+    border-radius: 18px;
+    border:2px solid #ffb700;
+    box-shadow: 0 0 24px 0 #ffd70099;
+    font-size: 1.45em;         /* POWIĘKSZONA CZCIONKA */
+    font-weight: 600;          /* trochę grubszy font */
+    display: flex;
+    align-items: center;
+    justify-content: center;   /* wyśrodkowanie całej treści */
+    letter-spacing: 0.02em;
+    animation: achievement-bounce-in 0.5s cubic-bezier(.2,1.5,.4,1);
+    pointer-events: none;
+    user-select: none;
+    gap: 0.75em;                /* odstęp między ikoną a tekstem */
 }
 @keyframes unlock-glow {
   0% { box-shadow: 0 0 0 #79ffb0cc;}
