@@ -1209,8 +1209,14 @@ select.form-control {
   transition: all var(--duration-normal) var(--ease-standard);
   width: 100%;
   box-sizing: border-box;
+  cursor: pointer;
 }
-
+.task-card.active-task {
+    box-shadow: 0 0 32px 0 #b5e7ba88, 0 0 0 3px #61c47a;
+    border-color: #61c47a;
+    background: #f8fff7;
+    transition: box-shadow 0.19s, border-color 0.18s, background 0.22s;
+}
 .task-card:hover {
   box-shadow: var(--shadow-md);
 }
