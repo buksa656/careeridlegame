@@ -1067,7 +1067,7 @@ switchTab(tabName) {
                     if (this.currentTab === "careerstats") {
                         this.renderCareerStats();
                     }
-                }, 1000); // co 1 sekunda
+                }, 100); // co 1 sekunda
             }
         } else {
             // Sprzątanie interwału gdy opuszczasz statystyki
@@ -2650,7 +2650,6 @@ updateDisplay() {
 	if (challengesBtn && challengesTab) {
 		if (this.gameState.features.challengesUnlocked) {
 			challengesBtn.style.display = 'inline-block';
-			challengesTab.style.display = 'block';
 		} else {
 			challengesBtn.style.display = 'none';
 			challengesTab.style.display = 'none';
