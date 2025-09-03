@@ -185,7 +185,7 @@ class KorposzczurGame {
   "condition": { "type": "task_level", "taskId": "motivation", "value": 10 },
   "reward": { "type": "global_mult", "value": 1.4 },
   "bonusDesc": "bonusDesc_balance_40"
-}
+},
     { "id": "challenge_master", "nameKey": "ach_challenge_master", "descKey": "ach_challenge_master_desc",
       "condition": { "type": "challenges_completed", "value": 5 },
       "reward": { "type": "global_mult", "value": 1.50 },
