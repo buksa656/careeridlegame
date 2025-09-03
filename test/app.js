@@ -2751,15 +2751,19 @@ softcapMulti(value, tiers) {
 
     showNotification(message) {
         // Simple notification system
-        const notification = document.createElement('div');
+		const notification = document.createElement('div');
 		notification.textContent = message;
-        notification.className = 'achievement-pop';
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-in forwards';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+		notification.className = 'achievement-pop';
+		const stack = document.getElementById('notification-stack');
+		if (stack) {
+		    stack.appendChild(notification);
+		} else {
+		    document.body.appendChild(notification); // fallback, gdyby stack nie istniał
+		}
+		setTimeout(() => {
+		    notification.style.animation = 'slideOut 0.3s ease-in forwards';
+		    setTimeout(() => notification.remove(), 300);
+		}, 3000);
     }
 
     destroy() {
