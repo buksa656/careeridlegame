@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpoClicker Enhanced v3.0 - Symulator Korporacyjny</title>
+    <link rel="manifest" href="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/5b91d112ae9917802a8a901c0003d6a3/8feb011d-f303-4d37-8842-b64797e104fc/ffa5b716.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/5b91d112ae9917802a8a901c0003d6a3/66278123-2c50-43b7-b747-b81b90e5d475/8ace0ff7.css">
+</head>
+<body>
+    <!-- Tutorial Overlay -->
+    <div id="tutorialOverlay" class="tutorial-overlay hidden">
+        <div class="overlay-spotlight"></div>
+        <div class="tutorial-arrow"></div>
+        <div class="tutorial-box">
+            <h3 class="tutorial-title"></h3>
+            <div class="tutorial-desc"></div>
+            <div class="tutorial-progress"></div>
+            <button class="btn btn--secondary tutorial-skip">Pomiń tutorial</button>
+        </div>
+    </div>
 
+    <div class="game-container">
+        <!-- Header z zasobami -->
+        <header class="resource-header">
+            <div class="container">
+                <div class="resource-panel">
+                    <div class="resource-item"><span class="resource-icon">💰</span><span class="resource-label">Budżet</span><span class="resource-value" id="budget">100</span></div>
+                    <div class="resource-item"><span class="resource-icon">📄</span><span class="resource-label">Dokumenty</span><span class="resource-value" id="documents">0</span></div>
+                    <div class="resource-item"><span class="resource-icon">☕</span><span class="resource-label">Kawa</span><span class="resource-value" id="coffee">0</span></div>
+                    <div class="resource-item"><span class="resource-icon">🎖️</span><span class="resource-label">Prestiż</span><span class="resource-value" id="prestige">0</span></div>
+                    <div class="resource-item work-time"><span class="resource-icon">🕘</span><span class="resource-label">Czas pracy</span><span class="resource-value" id="workTime">9:00</span></div>
+                </div>
+                <div class="progress-bars">
+                    <div class="progress-bar-container"><label>😰 Stres</label><div class="progress-bar stress-bar"><div class="progress-fill" id="stressBar"></div><span class="progress-text" id="stressText">0/200</span></div></div>
+                    <div class="progress-bar-container"><label>💪 Motywacja</label><div class="progress-bar motivation-bar"><div class="progress-fill" id="motivationBar"></div><span class="progress-text" id="motivationText">50/100</span></div></div>
+                </div>
+            </div>
+        </header>
+        <main class="container">
+            <div class="click-section">
+                <button class="main-click-btn" id="mainClickBtn"><div class="click-btn-content"><span class="click-icon">🏢</span><span class="click-text">Pracuj za Budżet</span><small>+1 💰 za klik</small></div></button>
+            </div>
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="overview">Przegląd</button>
+                <button class="tab-btn" data-tab="departments">Działy</button>
+                <button class="tab-btn" data-tab="minigames">Mini-Gry</button>
+                <button class="tab-btn" data-tab="achievements">Osiągnięcia</button>
+                <button class="tab-btn" data-tab="events">Wydarzenia</button>
+                <button class="tab-btn" data-tab="statistics">Statystyki</button>
+                <button class="tab-btn" data-tab="settings">Ustawienia</button>
+            </nav>
+            <div class="tab-content">
+                <div class="tab-panel active" id="overview">
+                    <div class="overview-grid">
+                        <div class="card"><div class="card__body"><h3>Status Firmy</h3><div class="company-stats"><div class="stat"><span class="stat-label">Działy zatrudnione:</span><span class="stat-value" id="totalDepartments">0</span></div><div class="stat"><span class="stat-label">Produkcja/s:</span><span class="stat-value" id="totalProduction">0 💰</span></div><div class="stat"><span class="stat-label">Efektywność:</span><span class="stat-value" id="efficiency">100%</span></div></div></div></div>
+                        <div class="card"><div class="card__body"><h3>Losowa Wiedza Korporacyjna</h3><p class="corporate-quote" id="corporateQuote">Ładowanie...</p></div></div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="departments"><div class="departments-grid" id="departmentsGrid"></div></div>
+                <div class="tab-panel" id="minigames"><div class="minigames-grid" id="minigamesGrid"></div></div>
+                <div class="tab-panel" id="achievements"><div class="achievements-grid" id="achievementsGrid"></div></div>
+                <div class="tab-panel" id="events"><div class="events-container"><h3>Historia Wydarzeń</h3><div class="events-log" id="eventsLog"><p class="events-empty">Brak wydarzeń do wyświetlenia</p></div></div></div>
+                <div class="tab-panel" id="statistics"><div class="stats-grid"><div class="card"><div class="card__body"><h3>Statystyki Produkcji</h3><div class="stat-list"><div class="stat"><span class="stat-label">Łącznie wyprodukowane dokumenty:</span><span class="stat-value" id="totalDocumentsProduced">0</span></div><div class="stat"><span class="stat-label">Łącznie wypita kawa:</span><span class="stat-value" id="totalCoffeeConsumed">0</span></div><div class="stat"><span class="stat-label">Maksymalny poziom stresu:</span><span class="stat-value" id="maxStressReached">0</span></div></div></div></div><div class="card"><div class="card__body"><h3>Statystyki Czasowe</h3><div class="stat-list"><div class="stat"><span class="stat-label">Czas gry:</span><span class="stat-value" id="totalPlayTime">0s</span></div><div class="stat"><span class="stat-label">Łączne kliki:</span><span class="stat-value" id="totalClicks">0</span></div><div class="stat"><span class="stat-label">Wydarzenia wywołane:</span><span class="stat-value" id="eventsTriggered">0</span></div></div></div></div></div></div>
+                <div class="tab-panel" id="settings"><div class="settings-modal-container"><div class="settings-tabs"><button class="settings-tab active" data-settings-tab="audio">Audio</button><button class="settings-tab" data-settings-tab="game">Gra</button><button class="settings-tab" data-settings-tab="stats">Statystyki</button><button class="settings-tab" data-settings-tab="about">O grze</button></div><div class="settings-content" id="settingsContent"></div></div></div>
+            </div>
+        </main>
+    </div>
+    <!-- Notifications/Particles/Audio/Performance Monitoring -->
+    <div class="notifications-container" id="notifications"></div>
+    <div class="performance-indicator" id="performanceIndicator"></div>
+    <!-- Mini-Game Modal -->
+    <div class="modal hidden" id="minigameModal"><div class="modal-content"><div class="modal-header"><h3 id="minigameTitle">Mini-Gra</h3><button class="modal-close" id="closeModal">&times;</button></div><div class="modal-body" id="minigameContent"></div></div></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/5b91d112ae9917802a8a901c0003d6a3/6eb00758-0cb3-4f5b-adf9-f496ce8f1535/2e093ea5.js');
+        });
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/5b91d112ae9917802a8a901c0003d6a3/b8d85b25-0200-4148-af64-2115392732c7/481d598d.js"></script>
+</body>
+</html>

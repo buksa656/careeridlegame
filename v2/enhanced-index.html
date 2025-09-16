@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pl" data-color-scheme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpoClicker Enhanced - Advanced Corporate Idle Game</title>
+    <link rel="stylesheet" href="enhanced-style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Enhanced Header with Resource Panel -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-title-section">
+                    <img src="https://via.placeholder.com/48x48/32a0b2/ffffff?text=🏢" alt="CorpoClicker" class="korpo-logo">
+                    <h1 class="game-title" data-translate="game_title">CorpoClicker Enhanced</h1>
+                </div>
+                
+                <!-- Main Resource Panel -->
+                <div class="resources-panel">
+                    <div class="resource-group primary-resources">
+                        <div class="resource-item budget">
+                            <span class="resource-icon">💰</span>
+                            <div class="resource-info">
+                                <span class="resource-label" data-translate="resource_budget">Budget</span>
+                                <span class="resource-value" id="resource-budget">100</span>
+                            </div>
+                        </div>
+                        <div class="resource-item documents">
+                            <span class="resource-icon">📄</span>
+                            <div class="resource-info">
+                                <span class="resource-label" data-translate="resource_documents">Documents</span>
+                                <span class="resource-value" id="resource-documents">0</span>
+                            </div>
+                        </div>
+                        <div class="resource-item coffee">
+                            <span class="resource-icon">☕</span>
+                            <div class="resource-info">
+                                <span class="resource-label" data-translate="resource_coffee">Coffee</span>
+                                <span class="resource-value" id="resource-coffee">0</span>
+                            </div>
+                        </div>
+                        <div class="resource-item prestige">
+                            <span class="resource-icon">🎖️</span>
+                            <div class="resource-info">
+                                <span class="resource-label" data-translate="resource_prestige">Prestige</span>
+                                <span class="resource-value" id="resource-prestige">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-group status-resources">
+                        <div class="resource-item stress">
+                            <span class="resource-icon">😰</span>
+                            <div class="resource-info">
+                                <span class="resource-label" data-translate="resource_stress">Stress</span>
+                                <div class="resource-bar">
+                                    <div class="resource-bar-fill" id="stress-bar" style="width: 0%"></div>
+                                    <span class="resource-bar-text" id="resource-stress">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resource-item motivation">
+                            <span class="resource-icon">💪</span>
+                            <div class="resource-info">
+                                <span class="resource-label" data-translate="resource_motivation">Motivation</span>
+                                <div class="resource-bar motivation-bar">
+                                    <div class="resource-bar-fill" id="motivation-bar" style="width: 50%"></div>
+                                    <span class="resource-bar-text" id="resource-motivation">50</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work Time Display -->
+                <div class="work-time-display">
+                    <div class="time-info">
+                        <span class="time-label" data-translate="current_time">Current Time</span>
+                        <span class="time-value" id="work-time">09:00</span>
+                    </div>
+                    <div class="work-status" id="work-hours-indicator">✓ Work Hours</div>
+                </div>
+
+                <!-- Header Controls -->
+                <div class="header-buttons">
+                    <button class="btn btn--secondary help-btn" id="help-toggle" title="Help">
+                        <span>❓</span>
+                    </button>
+                    <button class="btn btn--secondary settings-btn" id="settings-toggle" title="Settings">
+                        <span>⚙️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Tab Navigation -->
+        <nav class="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="overview" data-translate="tab_overview">Overview</button>
+                <button class="tab-btn" data-tab="departments" data-translate="departments">Departments</button>
+                <button class="tab-btn" data-tab="minigames" data-translate="minigames">Mini-Games</button>
+                <button class="tab-btn" data-tab="achievements" data-translate="tab_achievements">Achievements</button>
+                <button class="tab-btn" data-tab="events" data-translate="events_log">Events</button>
+                <button class="tab-btn" data-tab="statistics" data-translate="tab_statistics">Statistics</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Overview Tab -->
+            <section id="overview-tab" class="tab-content active">
+                <div class="overview-layout">
+                    <!-- Main Action Panel -->
+                    <div class="main-action-panel">
+                        <button class="main-click-btn" id="main-click-btn">
+                            <div class="btn-content">
+                                <span class="btn-icon">🖱️</span>
+                                <span class="btn-text" data-translate="work_action">Work!</span>
+                                <span class="btn-subtext">+1 Budget per click</span>
+                            </div>
+                        </button>
+                        
+                        <div class="action-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Clicks:</span>
+                                <span class="stat-value" id="total-clicks">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Budget per Second:</span>
+                                <span class="stat-value" id="budget-per-second">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Department Overview -->
+                    <div class="quick-departments">
+                        <h3 data-translate="departments_overview">Departments Overview</h3>
+                        <div class="dept-quick-grid" id="dept-quick-overview">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Mini-Games Preview -->
+                    <div class="minigames-preview">
+                        <h3 data-translate="available_minigames">Available Mini-Games</h3>
+                        <div class="minigame-quick-grid" id="minigames-preview">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Departments Tab -->
+            <section id="departments-tab" class="tab-content">
+                <div class="departments-layout">
+                    <div class="departments-header">
+                        <h2 data-translate="departments">Corporate Departments</h2>
+                        <p class="departments-desc">Build and manage your corporate empire by hiring different departments.</p>
+                    </div>
+                    
+                    <div class="departments-grid" id="departments-container">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mini-Games Tab -->
+            <section id="minigames-tab" class="tab-content">
+                <div class="minigames-layout">
+                    <div class="minigames-header">
+                        <h2 data-translate="minigames">Corporate Mini-Games</h2>
+                        <p class="minigames-desc">Complete challenges to earn bonuses and unlock new features.</p>
+                    </div>
+                    
+                    <div class="minigames-grid" id="minigames-container">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Tab -->
+            <section id="achievements-tab" class="tab-content">
+                <div class="achievements-layout">
+                    <div class="achievements-header">
+                        <h2 data-translate="tab_achievements">Achievements</h2>
+                        <div class="achievement-progress">
+                            <span>Progress: </span>
+                            <span id="achievement-progress">0/20</span>
+                        </div>
+                    </div>
+                    
+                    <div class="achievements-grid" id="achievements-container">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Tab -->
+            <section id="events-tab" class="tab-content">
+                <div class="events-layout">
+                    <div class="events-header">
+                        <h2 data-translate="events_log">Corporate Events</h2>
+                        <p class="events-desc">Random corporate events that affect your company.</p>
+                    </div>
+                    
+                    <div class="events-content">
+                        <div class="current-effects" id="current-effects">
+                            <h3>Active Effects</h3>
+                            <!-- Populated by JavaScript -->
+                        </div>
+                        
+                        <div class="events-history" id="events-log">
+                            <h3>Recent Events</h3>
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Tab -->
+            <section id="statistics-tab" class="tab-content">
+                <div class="statistics-layout">
+                    <div class="stats-header">
+                        <h2 data-translate="tab_statistics">Statistics</h2>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Production Stats</h3>
+                            <div class="stat-items">
+                                <div class="stat-row">
+                                    <span>Total Budget Earned:</span>
+                                    <span id="total-budget-earned">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Total Documents Created:</span>
+                                    <span id="total-documents-created">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Total Coffee Consumed:</span>
+                                    <span id="total-coffee-consumed">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>Corporate Stats</h3>
+                            <div class="stat-items">
+                                <div class="stat-row">
+                                    <span>Departments Owned:</span>
+                                    <span id="departments-owned">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Events Experienced:</span>
+                                    <span id="events-experienced">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Mini-Games Played:</span>
+                                    <span id="minigames-played">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>Stress & Motivation</h3>
+                            <div class="stat-items">
+                                <div class="stat-row">
+                                    <span>Peak Stress Level:</span>
+                                    <span id="peak-stress">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Peak Motivation:</span>
+                                    <span id="peak-motivation">50</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Work Hours Completed:</span>
+                                    <span id="work-hours-completed">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Quote Marquee -->
+        <div class="quote-marquee">
+            <div class="quote-text" id="quote-text">Welcome to the corporate world!</div>
+        </div>
+    </div>
+
+    <!-- Mini-Game Modal -->
+    <div id="minigame-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content minigame-modal-content">
+            <div class="minigame-header">
+                <h3 id="minigame-title">Mini-Game</h3>
+                <button class="btn btn--secondary" id="minigame-close">✕</button>
+            </div>
+            <div class="minigame-content" id="minigame-content">
+                <!-- Dynamic content based on mini-game type -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3 data-translate="settings">Settings</h3>
+            
+            <div class="settings-options">
+                <div class="setting-group">
+                    <label class="form-label" data-translate="language">Language / Język</label>
+                    <select class="form-control" id="language-select">
+                        <option value="pl">Polski</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="form-label" data-translate="theme">Theme / Motyw</label>
+                    <select class="form-control" id="theme-select">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="form-label" data-translate="sound">Sound Effects</label>
+                    <input type="checkbox" id="sound-toggle" class="toggle-switch" checked>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="form-label" data-translate="autosave">Auto-Save</label>
+                    <input type="checkbox" id="autosave-toggle" class="toggle-switch" checked>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="form-label">Secret Code</label>
+                    <input type="text" class="form-control" id="secret-code-input" placeholder="Enter code...">
+                    <button class="btn btn--primary" id="secret-code-btn">Activate</button>
+                    <div id="secret-code-feedback"></div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn--secondary" id="settings-close" data-translate="close">Close</button>
+                <button class="btn btn--outline" id="reset-save">Reset Save</button>
+                <button class="btn btn--primary" id="save-game">Save Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3 data-translate="help">Help</h3>
+            
+            <div class="help-content">
+                <h4>Welcome to CorpoClicker Enhanced!</h4>
+                
+                <h5>📋 Resources</h5>
+                <ul>
+                    <li><strong>Budget</strong> - Main currency for hiring departments</li>
+                    <li><strong>Documents</strong> - Generated by departments, needed for unlocks</li>
+                    <li><strong>Coffee</strong> - Reduces stress and provides temporary boosts</li>
+                    <li><strong>Stress</strong> - Reduces productivity when too high</li>
+                    <li><strong>Motivation</strong> - Increases productivity when high</li>
+                    <li><strong>Prestige</strong> - Unlocks advanced features</li>
+                </ul>
+                
+                <h5>🏢 Departments</h5>
+                <ul>
+                    <li><strong>HR</strong> - Generates documents but increases stress</li>
+                    <li><strong>IT</strong> - Produces coffee but may cause system issues</li>
+                    <li><strong>Marketing</strong> - Generates budget and prestige</li>
+                    <li><strong>Accounting</strong> - Generates budget but embezzles some</li>
+                    <li><strong>Management</strong> - Boosts motivation but consumes documents</li>
+                    <li><strong>R&D</strong> - Unlocks random upgrades periodically</li>
+                    <li><strong>Call Center</strong> - High budget generation but stresses employees</li>
+                </ul>
+                
+                <h5>🎮 Mini-Games</h5>
+                <p>Complete mini-games to earn instant bonuses and temporary effects!</p>
+                
+                <h5>📈 Work Hours</h5>
+                <p>Your company operates 9 AM to 5 PM. Production is reduced outside work hours.</p>
+                
+                <h5>⚡ Random Events</h5>
+                <p>Corporate events will randomly occur based on your company state.</p>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn--primary" id="help-close" data-translate="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Container -->
+    <div id="notifications-container" class="notifications-container"></div>
+
+    <!-- Scripts -->
+    <script src="enhanced-app.js"></script>
+</body>
+</html>
