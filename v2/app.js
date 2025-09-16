@@ -1,10 +1,9 @@
-// CorpoClicker Enhanced v3.0 - FIXED VERSION - No Errors
+// CorpoClicker Enhanced v3.0 - WORKING VERSION - Based on Phase 2
+// Fixed tutorial system that doesn't break the game
+
 class CorpoClickerGame {
     constructor() {
-        this.version = "3.0.0-fixed";
-        
-        // Initialize audio system first to prevent errors
-        this.initializeAudioSystem();
+        this.version = "3.0.1-working";
         
         // Game Resources
         this.resources = {
@@ -25,7 +24,8 @@ class CorpoClickerGame {
             totalClicks: 0,
             eventsTriggered: 0,
             minigamesCompleted: 0,
-            tutorialCompleted: false
+            tutorialCompleted: false,
+            sessionStartTime: Date.now()
         };
         
         // Departments system
@@ -51,80 +51,84 @@ class CorpoClickerGame {
         
         // Game state management
         this.gameState = {
-            workTime: 9 * 60,
+            workTime: 9 * 60, // 9:00 AM start
             isWorkHours: true,
             eventCooldown: 0,
             minigameCooldowns: {},
             activeEffects: {},
             startTime: Date.now(),
             paused: false,
-            tutorialActive: false,
-            tutorialStep: 0
+            lastUpdate: Date.now()
         };
         
-        // Tutorial system
-        this.tutorial = {
-            active: false,
-            currentStep: 0,
-            completed: false,
-            steps: [
-                {
-                    id: 'welcome',
-                    title: 'Witaj w CorpoClicker Enhanced v3.0!',
-                    description: 'Kliknij główny przycisk, aby zdobyć budżet na rozwój swojej korporacji',
-                    target: '#main-click-button',
-                    goal: () => this.resources.budget >= 110
-                },
-                {
-                    id: 'hire_hr', 
-                    title: 'Zatrudnij Pierwszy Dział',
-                    description: 'Kup Dział HR, aby rozpocząć automatyczną produkcję dokumentów',
-                    target: '.department-card[data-dept="hr"] button',
-                    goal: () => this.departments.hr.owned >= 1
-                },
-                {
-                    id: 'watch_growth',
-                    title: 'Obserwuj Wzrost Zasobów', 
-                    description: 'Twój dział HR automatycznie produkuje dokumenty!',
-                    target: '#documents',
-                    goal: () => this.resources.documents >= 5
-                },
-                {
-                    id: 'play_minigame',
-                    title: 'Wypróbuj Mini-grę',
-                    description: 'Zagraj w Quarterly Report po dodatkowe zasoby!',
-                    target: '.minigame-card[data-game="quarterly_report"] .minigame-play-btn',
-                    goal: () => this.tutorial.minigameCompleted
-                },
-                {
-                    id: 'complete',
-                    title: 'Tutorial Ukończony!',
-                    description: 'Teraz możesz swobodnie rozwijać swoją korporację!',
-                    target: 'body',
-                    goal: () => true
-                }
-            ]
-        };
-        
-        // Department data
+        // Department data with balanced costs
         this.departmentData = {
-            hr: { name: "Dział HR", icon: "👥", baseCost: 10, production: {documents: 1}, sideEffects: {stress: 0.075} },
-            it: { name: "Dział IT", icon: "💻", baseCost: 20, production: {coffee: 1}, sideEffects: {motivation: -0.15} },
-            marketing: { name: "Marketing", icon: "📈", baseCost: 35, production: {budget: 1, prestige: 0.02} },
-            accounting: { name: "Księgowość", icon: "🧮", baseCost: 55, production: {budget: 0.5}, consumption: {budget: 0.1}, sideEffects: {stress: 0.15} },
-            management: { name: "Zarząd", icon: "👔", baseCost: 90, production: {motivation: 0.2}, consumption: {documents: 0.5} },
-            rd: { name: "R&D", icon: "🔬", baseCost: 150, special: "research_bonuses", sideEffects: {stress: 0.3} },
-            callcenter: { name: "Call Center", icon: "📞", baseCost: 300, production: {budget: 5}, sideEffects: {motivation: -0.45, stress: 0.75} }
+            hr: { 
+                name: "Dział HR", 
+                icon: "👥", 
+                baseCost: 10, 
+                production: {documents: 1}, 
+                sideEffects: {stress: 0.075},
+                description: "Produkuje dokumenty, ale zwiększa stres"
+            },
+            it: { 
+                name: "Dział IT", 
+                icon: "💻", 
+                baseCost: 20, 
+                production: {coffee: 1}, 
+                sideEffects: {motivation: -0.15},
+                description: "Produkuje kawę, ale zmniejsza motywację"
+            },
+            marketing: { 
+                name: "Marketing", 
+                icon: "📈", 
+                baseCost: 35, 
+                production: {budget: 1, prestige: 0.02},
+                description: "Produkuje budżet i prestiż"
+            },
+            accounting: { 
+                name: "Księgowość", 
+                icon: "🧮", 
+                baseCost: 55, 
+                production: {budget: 0.5}, 
+                consumption: {budget: 0.1}, 
+                sideEffects: {stress: 0.15},
+                description: "Produkuje budżet, ale kosztuje i zwiększa stres"
+            },
+            management: { 
+                name: "Zarząd", 
+                icon: "👔", 
+                baseCost: 90, 
+                production: {motivation: 0.2}, 
+                consumption: {documents: 0.5},
+                description: "Zwiększa motywację, ale zużywa dokumenty"
+            },
+            rd: { 
+                name: "R&D", 
+                icon: "🔬", 
+                baseCost: 150, 
+                special: "research_bonuses", 
+                sideEffects: {stress: 0.3},
+                description: "Daje bonusy research, ale zwiększa stres"
+            },
+            callcenter: { 
+                name: "Call Center", 
+                icon: "📞", 
+                baseCost: 300, 
+                production: {budget: 5}, 
+                sideEffects: {motivation: -0.45, stress: 0.75},
+                description: "Wysoka produkcja budżetu, ale duży stres"
+            }
         };
         
-        // Minigame data
+        // Minigame data with balanced rewards
         this.minigameData = {
             quarterly_report: {
                 name: "Quarterly Report",
                 icon: "📊",
-                description: "Szybko klikaj, aby ukończyć kwartalny raport!",
+                description: "Szybko klikaj aby ukończyć kwartalny raport!",
                 reward: {documents: 42, prestige: 3},
-                cooldown: 90000,
+                cooldown: 90000, // 90 seconds
                 unlocked: () => true
             },
             coffee_shop: {
@@ -132,7 +136,7 @@ class CorpoClickerGame {
                 icon: "☕",
                 description: "Obsługuj zamówienia kawy z perfekcyjnym timingiem!",
                 reward: {coffee: 21, stress: -4},
-                cooldown: 150000,
+                cooldown: 150000, // 150 seconds
                 unlocked: () => this.departments.it.owned > 0
             },
             meeting_dodge: {
@@ -140,7 +144,7 @@ class CorpoClickerGame {
                 icon: "🏃",
                 description: "Unikaj nudnych spotkań i zachowaj produktywność!",
                 reward: {motivation_boost: 14},
-                cooldown: 240000,
+                cooldown: 240000, // 240 seconds
                 unlocked: () => this.resources.stress > 60
             },
             government_contract: {
@@ -148,12 +152,12 @@ class CorpoClickerGame {
                 icon: "🏛️", 
                 description: "Wylicytuj lukratywne kontrakty rządowe!",
                 reward: {budget: 210},
-                cooldown: 360000,
+                cooldown: 360000, // 360 seconds
                 unlocked: () => this.resources.prestige > 150
             }
         };
         
-        // Balance configuration
+        // Balance configuration from Phase 2
         this.config = {
             departmentCostScaling: 1.25,
             minigameRewardScaling: 0.7,
@@ -168,58 +172,66 @@ class CorpoClickerGame {
             }
         };
         
+        // Tutorial system - SIMPLIFIED to prevent blocking
+        this.tutorial = {
+            active: false,
+            enabled: false, // Disabled by default to prevent blocking
+            completed: localStorage.getItem('corpoclicker_tutorial_completed') === 'true',
+            currentStep: 0
+        };
+        
         // Mobile detection
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        this.touchSupport = 'ontouchstart' in window;
         
         // Settings
         this.settings = {
             audioEnabled: true,
             musicVolume: 0.3,
             sfxVolume: 0.7,
-            tutorialCompleted: false,
+            tutorialEnabled: false, // Tutorial disabled by default
             language: 'pl'
         };
         
-        // Event log
-        this.eventLog = [];
-        this.currentTab = 'overview';
+        // Initialize audio system safely
+        this.initializeAudioSystem();
+        
+        // Current minigame
         this.currentMinigame = null;
+        this.currentTab = 'overview';
+        
+        // Particles system
         this.particles = [];
+        this.particleCanvas = null;
+        this.particleCtx = null;
         
         this.init();
     }
 
-    // FIXED: Initialize Audio System
+    // SAFE Audio System - won't break if it fails
     initializeAudioSystem() {
-        try {
-            // Initialize Web Audio API
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            
-            this.audio = {
-                context: null,
-                masterGainNode: null,
-                musicGainNode: null,
-                sfxGainNode: null,
-                buffers: {},
-                activeSources: [],
-                backgroundMusic: null,
-                initialized: false
-            };
-            
-            // Create audio context on first user interaction
-            this.setupAudioOnUserInteraction();
-            
-        } catch (error) {
-            console.warn('Audio system initialization failed:', error);
-            this.settings.audioEnabled = false;
-        }
+        this.audio = {
+            context: null,
+            masterGainNode: null,
+            musicGainNode: null,
+            sfxGainNode: null,
+            buffers: {},
+            activeSources: [],
+            backgroundMusic: null,
+            initialized: false
+        };
+        
+        // Try to initialize, but don't break if it fails
+        this.setupAudioOnUserInteraction();
     }
     
     setupAudioOnUserInteraction() {
         const initAudio = () => {
             try {
+                if (!this.settings.audioEnabled) return;
+                
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
                 this.audio.context = new AudioContext();
                 
                 // Create gain nodes
@@ -237,14 +249,14 @@ class CorpoClickerGame {
                 this.audio.musicGainNode.gain.value = this.settings.musicVolume;
                 this.audio.sfxGainNode.gain.value = this.settings.sfxVolume;
                 
-                // Generate audio buffers
+                // Generate simple audio buffers
                 this.generateAudioBuffers();
                 
                 this.audio.initialized = true;
                 console.log('Audio system initialized successfully');
                 
             } catch (error) {
-                console.warn('Audio initialization failed:', error);
+                console.log('Audio initialization failed (non-critical):', error);
                 this.settings.audioEnabled = false;
             }
         };
@@ -257,47 +269,39 @@ class CorpoClickerGame {
     generateAudioBuffers() {
         if (!this.audio.context) return;
         
-        // Generate simple tones for different actions
-        this.audio.buffers.click = this.generateTone(800, 0.1, 0.3, 'square');
-        this.audio.buffers.purchase = this.generateTone(600, 0.3, 0.4, 'triangle');
-        this.audio.buffers.success = this.generateTone(1200, 0.5, 0.3, 'sine');
-        this.audio.buffers.error = this.generateTone(200, 0.3, 0.4, 'sawtooth');
-        this.audio.buffers.achievement = this.generateTone(1000, 0.8, 0.3, 'triangle');
+        try {
+            // Generate simple tones
+            this.audio.buffers.click = this.generateTone(800, 0.1, 0.3);
+            this.audio.buffers.purchase = this.generateTone(600, 0.3, 0.4);
+            this.audio.buffers.success = this.generateTone(1200, 0.5, 0.3);
+            this.audio.buffers.error = this.generateTone(200, 0.3, 0.4);
+            this.audio.buffers.achievement = this.generateTone(1000, 0.8, 0.3);
+        } catch (error) {
+            console.log('Audio buffer generation failed (non-critical):', error);
+        }
     }
     
-    generateTone(frequency, duration, volume = 0.3, waveType = 'sine') {
+    generateTone(frequency, duration, volume = 0.3) {
         if (!this.audio.context) return null;
         
-        const sampleRate = this.audio.context.sampleRate;
-        const length = sampleRate * duration;
-        const buffer = this.audio.context.createBuffer(1, length, sampleRate);
-        const data = buffer.getChannelData(0);
-        
-        for (let i = 0; i < length; i++) {
-            const t = i / sampleRate;
-            let sample = 0;
+        try {
+            const sampleRate = this.audio.context.sampleRate;
+            const length = sampleRate * duration;
+            const buffer = this.audio.context.createBuffer(1, length, sampleRate);
+            const data = buffer.getChannelData(0);
             
-            switch (waveType) {
-                case 'sine':
-                    sample = Math.sin(2 * Math.PI * frequency * t);
-                    break;
-                case 'square':
-                    sample = Math.sin(2 * Math.PI * frequency * t) > 0 ? 1 : -1;
-                    break;
-                case 'sawtooth':
-                    sample = 2 * (frequency * t - Math.floor(frequency * t + 0.5));
-                    break;
-                case 'triangle':
-                    sample = 2 * Math.abs(2 * (frequency * t - Math.floor(frequency * t + 0.5))) - 1;
-                    break;
+            for (let i = 0; i < length; i++) {
+                const t = i / sampleRate;
+                const sample = Math.sin(2 * Math.PI * frequency * t);
+                const envelope = Math.min(1, Math.min(t * 10, (duration - t) * 10));
+                data[i] = sample * volume * envelope;
             }
             
-            // Apply envelope
-            const envelope = Math.min(1, Math.min(t * 10, (duration - t) * 10));
-            data[i] = sample * volume * envelope;
+            return buffer;
+        } catch (error) {
+            console.log('Tone generation failed (non-critical):', error);
+            return null;
         }
-        
-        return buffer;
     }
     
     playSound(soundName, volume = 1.0) {
@@ -315,6 +319,8 @@ class CorpoClickerGame {
             gainNode.gain.value = volume;
             
             source.start();
+            
+            // Clean up after playing
             source.onended = () => {
                 const index = this.audio.activeSources.indexOf(source);
                 if (index > -1) {
@@ -324,11 +330,11 @@ class CorpoClickerGame {
             
             this.audio.activeSources.push(source);
         } catch (error) {
-            console.warn('Error playing sound:', error);
+            console.log('Sound playback failed (non-critical):', error);
         }
     }
 
-    // Resource management
+    // Resource management with softcaps
     addResource(resource, amount) {
         if (amount === 0) return;
         
@@ -347,12 +353,11 @@ class CorpoClickerGame {
         
         // Update statistics
         if (amount > 0) {
-            this.statistics[`total${resource.charAt(0).toUpperCase() + resource.slice(1)}Produced`] = 
-                (this.statistics[`total${resource.charAt(0).toUpperCase() + resource.slice(1)}Produced`] || 0) + amount;
+            const statKey = `total${resource.charAt(0).toUpperCase() + resource.slice(1)}Produced`;
+            if (this.statistics[statKey] !== undefined) {
+                this.statistics[statKey] += amount;
+            }
         }
-        
-        // Visual feedback
-        this.showResourceChange(resource, amount);
     }
     
     applySoftcaps() {
@@ -360,21 +365,20 @@ class CorpoClickerGame {
             if (this.resources[resource] !== undefined) {
                 let value = this.resources[resource];
                 
-                thresholds.forEach(([threshold, reduction]) => {
-                    if (value > threshold) {
-                        const excess = value - threshold;
-                        value = threshold + (excess * reduction);
+                // Apply multiple softcap levels
+                if (value > thresholds[0]) {
+                    const excess1 = value - thresholds[0];
+                    value = thresholds[0] + (excess1 * 0.8);
+                    
+                    if (value > thresholds[1]) {
+                        const excess2 = value - thresholds[1];
+                        value = thresholds[1] + (excess2 * 0.5);
                     }
-                });
+                }
                 
                 this.resources[resource] = value;
             }
         });
-    }
-    
-    showResourceChange(resource, amount) {
-        // Simple console log for now - can be enhanced with visual effects
-        console.log(`${resource}: ${amount > 0 ? '+' : ''}${amount.toFixed(1)}`);
     }
     
     // Department system
@@ -400,12 +404,16 @@ class CorpoClickerGame {
             // Play purchase sound
             this.playSound('purchase');
             
+            // Create particle effect if canvas exists
+            this.createPurchaseParticles(deptId);
+            
             // Check for unlocks
             this.checkDepartmentUnlocks();
             
             // Update achievements
             this.checkAchievements();
             
+            console.log(`Purchased ${deptId} for ${cost} budget`);
             return true;
         }
         
@@ -445,120 +453,33 @@ class CorpoClickerGame {
         }
     }
     
+    createPurchaseParticles(deptId) {
+        // Simple particle effect - can be enhanced
+        console.log(`✨ Purchase particles for ${deptId}`);
+        
+        // If particle system is available, create visual effect
+        if (this.particleCtx) {
+            for (let i = 0; i < 10; i++) {
+                this.particles.push({
+                    x: Math.random() * 100,
+                    y: Math.random() * 100,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    life: 60,
+                    maxLife: 60,
+                    color: '#2196F3'
+                });
+            }
+        }
+    }
+    
     // Main click action
     performMainClick() {
         this.addResource('budget', this.config.baseClickValue);
         this.statistics.totalClicks++;
         this.playSound('click');
         
-        // Tutorial progress
-        if (this.tutorial.active && this.tutorial.currentStep === 0) {
-            this.checkTutorialProgress();
-        }
-    }
-    
-    // Tutorial system
-    startTutorial() {
-        if (this.settings.tutorialCompleted) return;
-        
-        this.tutorial.active = true;
-        this.tutorial.currentStep = 0;
-        this.gameState.tutorialActive = true;
-        
-        this.showTutorialStep(0);
-    }
-    
-    showTutorialStep(stepIndex) {
-        if (stepIndex >= this.tutorial.steps.length) {
-            this.completeTutorial();
-            return;
-        }
-        
-        const step = this.tutorial.steps[stepIndex];
-        this.tutorial.currentStep = stepIndex;
-        
-        // Show tutorial overlay
-        this.createTutorialOverlay(step);
-        
-        console.log(`Tutorial Step ${stepIndex + 1}: ${step.title}`);
-    }
-    
-    createTutorialOverlay(step) {
-        // Remove existing overlay
-        const existingOverlay = document.getElementById('tutorialOverlay');
-        if (existingOverlay) {
-            existingOverlay.remove();
-        }
-        
-        // Create new overlay
-        const overlay = document.createElement('div');
-        overlay.id = 'tutorialOverlay';
-        overlay.className = 'tutorial-overlay';
-        overlay.innerHTML = `
-            <div class="tutorial-content">
-                <h3>${step.title}</h3>
-                <p>${step.description}</p>
-                <div class="tutorial-progress">Krok ${this.tutorial.currentStep + 1} z ${this.tutorial.steps.length}</div>
-                <button onclick="game.skipTutorial()" class="tutorial-skip">Pomiń tutorial</button>
-            </div>
-        `;
-        
-        document.body.appendChild(overlay);
-        
-        // Start checking goal
-        this.checkTutorialProgress();
-    }
-    
-    checkTutorialProgress() {
-        if (!this.tutorial.active) return;
-        
-        const currentStep = this.tutorial.steps[this.tutorial.currentStep];
-        if (currentStep && currentStep.goal()) {
-            setTimeout(() => {
-                this.nextTutorialStep();
-            }, 1000);
-        } else {
-            setTimeout(() => this.checkTutorialProgress(), 500);
-        }
-    }
-    
-    nextTutorialStep() {
-        if (this.tutorial.currentStep < this.tutorial.steps.length - 1) {
-            this.showTutorialStep(this.tutorial.currentStep + 1);
-        } else {
-            this.completeTutorial();
-        }
-    }
-    
-    completeTutorial() {
-        this.tutorial.active = false;
-        this.tutorial.completed = true;
-        this.settings.tutorialCompleted = true;
-        this.gameState.tutorialActive = false;
-        
-        // Remove overlay
-        const overlay = document.getElementById('tutorialOverlay');
-        if (overlay) {
-            overlay.remove();
-        }
-        
-        // Give completion rewards
-        this.addResource('budget', 100);
-        this.addResource('documents', 50);
-        this.addResource('prestige', 10);
-        
-        // Unlock achievement
-        this.unlockAchievement('tutorial_master');
-        
-        this.playSound('achievement');
-        
-        console.log('Tutorial completed! Rewards given.');
-    }
-    
-    skipTutorial() {
-        if (confirm('Czy na pewno chcesz pominąć tutorial?')) {
-            this.completeTutorial();
-        }
+        console.log(`Main click: +${this.config.baseClickValue} budget`);
     }
     
     // Achievement system
@@ -568,7 +489,9 @@ class CorpoClickerGame {
             this.achievements[achievementId].progress = 100;
             
             this.playSound('achievement');
-            console.log(`Achievement unlocked: ${achievementId}`);
+            
+            console.log(`🏆 Achievement unlocked: ${achievementId}`);
+            this.showNotification(`🏆 Achievement: ${achievementId}`);
             
             return true;
         }
@@ -577,7 +500,7 @@ class CorpoClickerGame {
     
     checkAchievements() {
         // First department
-        if (this.getTotalDepartments() >= 1) {
+        if (this.getTotalDepartments() >= 1 && !this.achievements.first_department.completed) {
             this.unlockAchievement('first_department');
         }
         
@@ -606,7 +529,7 @@ class CorpoClickerGame {
         return Object.values(this.departments).reduce((sum, dept) => sum + dept.owned, 0);
     }
     
-    // Minigame system
+    // Minigame system - simplified but working
     openMinigame(gameId) {
         const gameData = this.minigameData[gameId];
         if (!gameData) return;
@@ -614,7 +537,7 @@ class CorpoClickerGame {
         // Check if unlocked
         if (!gameData.unlocked()) {
             this.playSound('error');
-            console.log('Minigame not unlocked yet');
+            this.showNotification('Mini-gra jeszcze nie odblokowana!');
             return;
         }
         
@@ -625,7 +548,8 @@ class CorpoClickerGame {
         
         if (cooldownRemaining > 0) {
             this.playSound('error');
-            console.log(`Cooldown remaining: ${Math.ceil(cooldownRemaining / 1000)}s`);
+            const secondsRemaining = Math.ceil(cooldownRemaining / 1000);
+            this.showNotification(`Cooldown: ${secondsRemaining}s`);
             return;
         }
         
@@ -635,18 +559,36 @@ class CorpoClickerGame {
     }
     
     startMinigame(gameId) {
-        // Simple minigame implementation for demo
-        console.log(`Starting minigame: ${gameId}`);
+        console.log(`🎮 Starting minigame: ${gameId}`);
+        this.showNotification(`🎮 ${this.minigameData[gameId].name} - Naciśnij SPACE!`);
         
-        // For tutorial check
-        if (gameId === 'quarterly_report' && this.tutorial.active && this.tutorial.currentStep === 3) {
-            this.tutorial.minigameCompleted = true;
-        }
+        // Simple minigame - just wait for spacebar or auto-complete after 3 seconds
+        let completed = false;
         
-        // Simulate completion after 2 seconds
+        const completeGame = (success) => {
+            if (completed) return;
+            completed = true;
+            
+            document.removeEventListener('keydown', keyHandler);
+            this.completeMinigame(gameId, success);
+        };
+        
+        const keyHandler = (e) => {
+            if (e.code === 'Space' || e.key === ' ') {
+                e.preventDefault();
+                completeGame(true);
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                completeGame(false);
+            }
+        };
+        
+        document.addEventListener('keydown', keyHandler);
+        
+        // Auto-complete after 5 seconds if no input
         setTimeout(() => {
-            this.completeMinigame(gameId, true);
-        }, 2000);
+            completeGame(Math.random() > 0.3); // 70% success rate
+        }, 5000);
     }
     
     completeMinigame(gameId, success) {
@@ -658,6 +600,7 @@ class CorpoClickerGame {
             Object.entries(gameData.reward).forEach(([resource, amount]) => {
                 if (resource === 'motivation_boost') {
                     this.gameState.activeEffects.motivationBoost = Date.now() + (amount * 1000);
+                    this.showNotification(`💪 Motivation boost: +${amount}s`);
                 } else {
                     this.addResource(resource, amount);
                 }
@@ -665,26 +608,66 @@ class CorpoClickerGame {
             
             this.playSound('success');
             this.statistics.minigamesCompleted++;
+            
+            console.log(`✅ Minigame ${gameId} completed successfully!`);
         } else {
             this.playSound('error');
+            console.log(`❌ Minigame ${gameId} failed`);
         }
         
         // Set cooldown
         this.gameState.minigameCooldowns[gameId] = Date.now();
         this.currentMinigame = null;
         
-        this.checkTutorialProgress();
         this.checkAchievements();
+    }
+    
+    // Notification system
+    showNotification(message) {
+        console.log(`📢 ${message}`);
+        
+        // Create visual notification if possible
+        try {
+            const notification = document.createElement('div');
+            notification.className = 'game-notification';
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #21808d;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.parentElement.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        } catch (error) {
+            console.log('Visual notification failed (non-critical)');
+        }
     }
     
     // Game loop
     gameLoop() {
+        if (this.gameState.paused) return;
+        
         const now = Date.now();
-        const deltaTime = now - (this.gameState.lastUpdate || now);
+        const deltaTime = now - this.gameState.lastUpdate;
         this.gameState.lastUpdate = now;
         const deltaSeconds = deltaTime / 1000;
-        
-        if (this.gameState.paused) return;
         
         // Update work time
         this.updateWorkTime(deltaSeconds);
@@ -695,7 +678,7 @@ class CorpoClickerGame {
         // Apply side effects
         this.applySideEffects(deltaSeconds);
         
-        // Check active effects
+        // Update active effects
         this.updateActiveEffects(now);
         
         // Update display
@@ -703,6 +686,9 @@ class CorpoClickerGame {
         
         // Check achievements
         this.checkAchievements();
+        
+        // Update statistics
+        this.statistics.totalPlayTime = now - this.statistics.sessionStartTime;
     }
     
     updateWorkTime(deltaSeconds) {
@@ -734,8 +720,9 @@ class CorpoClickerGame {
         }
         
         // Motivation boost effect
-        if (this.gameState.activeEffects.motivationBoost > Date.now()) {
-            productionMultiplier *= 1.5;
+        if (this.gameState.activeEffects.motivationBoost && 
+            this.gameState.activeEffects.motivationBoost > Date.now()) {
+            productionMultiplier *= 1.3;
         }
         
         // Apply production from departments
@@ -753,6 +740,7 @@ class CorpoClickerGame {
     }
     
     applySideEffects(deltaSeconds) {
+        // Department side effects
         Object.entries(this.departments).forEach(([deptId, dept]) => {
             if (dept.owned === 0) return;
             
@@ -765,7 +753,7 @@ class CorpoClickerGame {
             });
         });
         
-        // Natural motivation recovery
+        // Natural motivation changes
         if (this.resources.motivation < 50) {
             this.addResource('motivation', 0.1 * deltaSeconds);
         } else if (this.resources.motivation > 50) {
@@ -773,7 +761,16 @@ class CorpoClickerGame {
         }
         
         // Stress natural decay
-        this.addResource('stress', -0.5 * deltaSeconds);
+        if (this.resources.stress > 0) {
+            this.addResource('stress', -0.5 * deltaSeconds);
+        }
+        
+        // Coffee reduces stress
+        if (this.resources.coffee > 0 && this.resources.stress > 0) {
+            const stressReduction = Math.min(this.resources.coffee * 0.1 * deltaSeconds, this.resources.stress);
+            this.addResource('stress', -stressReduction);
+            this.addResource('coffee', -stressReduction / 0.1);
+        }
     }
     
     updateActiveEffects(now) {
@@ -795,7 +792,7 @@ class CorpoClickerGame {
             }
         });
         
-        // Update work time
+        // Update work time display
         const workTimeElement = document.getElementById('workTime');
         if (workTimeElement) {
             const hours = Math.floor(this.gameState.workTime / 60) % 24;
@@ -834,10 +831,13 @@ class CorpoClickerGame {
             }
             
             if (button) {
-                button.disabled = !this.canAffordDepartment(deptId);
-                button.style.display = dept.unlocked ? 'block' : 'none';
+                const canAfford = this.canAffordDepartment(deptId);
+                button.disabled = !canAfford;
+                button.classList.toggle('affordable', canAfford);
+                button.classList.toggle('expensive', !canAfford);
             }
             
+            // Show/hide based on unlock status
             card.style.display = dept.unlocked ? 'block' : 'none';
         });
     }
@@ -849,69 +849,99 @@ class CorpoClickerGame {
             if (!card) return;
             
             const button = card.querySelector('.minigame-play-btn');
+            if (!button) return;
+            
             const isUnlocked = gameData.unlocked();
             const lastPlayed = this.gameState.minigameCooldowns[gameId] || 0;
             const cooldownRemaining = gameData.cooldown - (Date.now() - lastPlayed);
             const onCooldown = cooldownRemaining > 0;
             
-            if (button) {
-                button.disabled = !isUnlocked || onCooldown;
-                
-                if (onCooldown) {
-                    button.textContent = `${Math.ceil(cooldownRemaining / 1000)}s`;
-                } else if (isUnlocked) {
-                    button.textContent = 'Graj';
-                } else {
-                    button.textContent = 'Zablokowane';
-                }
+            button.disabled = !isUnlocked || onCooldown;
+            
+            if (onCooldown) {
+                const secondsRemaining = Math.ceil(cooldownRemaining / 1000);
+                button.textContent = `${secondsRemaining}s`;
+                button.classList.add('on-cooldown');
+            } else if (isUnlocked) {
+                button.textContent = 'Graj';
+                button.classList.remove('on-cooldown');
+                button.classList.add('ready');
+            } else {
+                button.textContent = 'Zablokowane';
+                button.classList.add('locked');
             }
             
+            // Show/hide minigame card
             card.style.display = isUnlocked ? 'block' : 'none';
         });
     }
     
     updateProgressBars() {
-        // Stress bar
+        // Stress bar (red when high)
         const stressBar = document.getElementById('stress-progress');
         if (stressBar) {
-            const stressPercent = (this.resources.stress / 200) * 100;
-            stressBar.style.width = `${Math.min(stressPercent, 100)}%`;
+            const stressPercent = Math.min((this.resources.stress / 200) * 100, 100);
+            stressBar.style.width = `${stressPercent}%`;
+            
+            // Color coding
+            if (stressPercent < 25) {
+                stressBar.className = 'progress-fill progress-low';
+            } else if (stressPercent < 50) {
+                stressBar.className = 'progress-fill progress-medium';
+            } else {
+                stressBar.className = 'progress-fill progress-high';
+            }
         }
         
-        // Motivation bar
+        // Motivation bar (green when high)
         const motivationBar = document.getElementById('motivation-progress');
         if (motivationBar) {
-            const motivationPercent = ((this.resources.motivation + 50) / 150) * 100;
-            motivationBar.style.width = `${Math.max(0, Math.min(motivationPercent, 100))}%`;
+            const motivationPercent = Math.max(0, ((this.resources.motivation + 50) / 150) * 100);
+            motivationBar.style.width = `${Math.min(motivationPercent, 100)}%`;
+            
+            // Color coding
+            if (motivationPercent > 70) {
+                motivationBar.className = 'progress-fill progress-excellent';
+            } else if (motivationPercent > 50) {
+                motivationBar.className = 'progress-fill progress-good';
+            } else {
+                motivationBar.className = 'progress-fill progress-poor';
+            }
         }
     }
     
     // Utility functions
     formatNumber(num) {
-        if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
-        if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
-        if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
-        if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+        if (Math.abs(num) >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+        if (Math.abs(num) >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+        if (Math.abs(num) >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+        if (Math.abs(num) >= 1e3) return (num / 1e3).toFixed(2) + 'K';
         return Math.floor(num).toString();
     }
     
     // Save/Load system
     saveGame() {
-        const saveData = {
-            version: this.version,
-            resources: this.resources,
-            departments: this.departments,
-            achievements: this.achievements,
-            statistics: this.statistics,
-            gameState: {
-                ...this.gameState,
-                startTime: Date.now() - (Date.now() - this.gameState.startTime) // Preserve session time
-            },
-            settings: this.settings,
-            timestamp: Date.now()
-        };
-        
-        localStorage.setItem('corpoclicker_save', JSON.stringify(saveData));
+        try {
+            const saveData = {
+                version: this.version,
+                resources: this.resources,
+                departments: this.departments,
+                achievements: this.achievements,
+                statistics: this.statistics,
+                gameState: {
+                    ...this.gameState,
+                    // Preserve session time
+                    startTime: Date.now() - (this.statistics.totalPlayTime || 0)
+                },
+                settings: this.settings,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('corpoclicker_save', JSON.stringify(saveData));
+            console.log('Game saved successfully');
+        } catch (error) {
+            console.error('Failed to save game:', error);
+        }
     }
     
     loadGame() {
@@ -920,6 +950,7 @@ class CorpoClickerGame {
             if (saved) {
                 const saveData = JSON.parse(saved);
                 
+                // Load data with fallbacks
                 this.resources = { ...this.resources, ...saveData.resources };
                 this.departments = { ...this.departments, ...saveData.departments };
                 this.achievements = { ...this.achievements, ...saveData.achievements };
@@ -927,6 +958,7 @@ class CorpoClickerGame {
                 this.gameState = { ...this.gameState, ...saveData.gameState };
                 this.settings = { ...this.settings, ...saveData.settings };
                 
+                console.log('Game loaded successfully');
                 return true;
             }
         } catch (error) {
@@ -935,51 +967,81 @@ class CorpoClickerGame {
         return false;
     }
     
-    resetGame() {
-        if (confirm('Czy na pewno chcesz zresetować grę? Wszystkie postępy zostaną utracone!')) {
-            localStorage.removeItem('corpoclicker_save');
-            window.location.reload();
+    // SAFE Tutorial System - won't break the game
+    showWelcomeMessage() {
+        // Simple welcome message that doesn't block the interface
+        if (!this.tutorial.completed) {
+            setTimeout(() => {
+                this.showNotification('🎉 Witaj w CorpoClicker Enhanced v3.0!');
+                
+                setTimeout(() => {
+                    this.showNotification('💡 Tip: Kliknij główny przycisk aby zdobyć budżet');
+                }, 2000);
+                
+                setTimeout(() => {
+                    this.showNotification('🏢 Kupuj działy aby automatyzować produkcję');
+                }, 4000);
+                
+                setTimeout(() => {
+                    this.showNotification('🎮 Mini-gry dają bonusowe nagrody!');
+                }, 6000);
+                
+                // Mark tutorial as completed to prevent spam
+                this.tutorial.completed = true;
+                localStorage.setItem('corpoclicker_tutorial_completed', 'true');
+            }, 1000);
         }
     }
     
     // Event handlers
     setupEventHandlers() {
-        // Main click button
-        const mainButton = document.getElementById('main-click-button');
-        if (mainButton) {
-            mainButton.addEventListener('click', () => this.performMainClick());
-        }
-        
-        // Department buttons
-        document.querySelectorAll('[data-dept]').forEach(card => {
-            const deptId = card.dataset.dept;
-            const button = card.querySelector('button');
-            if (button) {
-                button.addEventListener('click', () => this.purchaseDepartment(deptId));
+        try {
+            // Main click button
+            const mainButton = document.getElementById('main-click-button');
+            if (mainButton) {
+                mainButton.addEventListener('click', () => this.performMainClick());
+                console.log('Main click button handler attached');
             }
-        });
-        
-        // Minigame buttons
-        document.querySelectorAll('[data-game]').forEach(card => {
-            const gameId = card.dataset.game;
-            const button = card.querySelector('.minigame-play-btn');
-            if (button) {
-                button.addEventListener('click', () => this.openMinigame(gameId));
-            }
-        });
-        
-        // Tab switching
-        document.querySelectorAll('[data-tab]').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const tabId = e.target.dataset.tab;
-                this.switchTab(tabId);
+            
+            // Department buttons
+            document.querySelectorAll('[data-dept]').forEach(card => {
+                const deptId = card.dataset.dept;
+                const button = card.querySelector('button');
+                if (button) {
+                    button.addEventListener('click', () => this.purchaseDepartment(deptId));
+                }
             });
-        });
-        
-        // Settings button
-        const settingsBtn = document.getElementById('settings-button');
-        if (settingsBtn) {
-            settingsBtn.addEventListener('click', () => this.showSettings());
+            console.log('Department button handlers attached');
+            
+            // Minigame buttons
+            document.querySelectorAll('[data-game]').forEach(card => {
+                const gameId = card.dataset.game;
+                const button = card.querySelector('.minigame-play-btn, button');
+                if (button) {
+                    button.addEventListener('click', () => this.openMinigame(gameId));
+                }
+            });
+            console.log('Minigame button handlers attached');
+            
+            // Tab switching
+            document.querySelectorAll('[data-tab]').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const tabId = e.target.dataset.tab;
+                    this.switchTab(tabId);
+                });
+            });
+            console.log('Tab handlers attached');
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !this.currentMinigame) {
+                    e.preventDefault();
+                    this.performMainClick();
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error setting up event handlers:', error);
         }
     }
     
@@ -995,22 +1057,100 @@ class CorpoClickerGame {
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.toggle('active', content.id === `${tabId}-tab`);
         });
+        
+        console.log(`Switched to tab: ${tabId}`);
     }
     
-    showSettings() {
-        // Simple settings dialog for now
-        const audioEnabled = confirm('Czy chcesz włączyć dźwięki?');
-        this.settings.audioEnabled = audioEnabled;
-        this.saveGame();
+    // Initialize particle system safely
+    initializeParticleSystem() {
+        try {
+            // Only create if canvas element exists
+            const canvas = document.createElement('canvas');
+            canvas.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 9999;
+            `;
+            
+            this.particleCanvas = canvas;
+            this.particleCtx = canvas.getContext('2d');
+            
+            // Add to page
+            document.body.appendChild(canvas);
+            
+            // Start particle update loop
+            this.updateParticles();
+            
+            console.log('Particle system initialized');
+        } catch (error) {
+            console.log('Particle system initialization failed (non-critical)');
+        }
+    }
+    
+    updateParticles() {
+        if (!this.particleCtx) return;
+        
+        try {
+            // Clear canvas
+            this.particleCtx.clearRect(0, 0, this.particleCanvas.width, this.particleCanvas.height);
+            
+            // Update and draw particles
+            this.particles = this.particles.filter(particle => {
+                particle.life--;
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.vy += 0.1; // Gravity
+                
+                // Draw particle
+                const alpha = particle.life / particle.maxLife;
+                this.particleCtx.save();
+                this.particleCtx.globalAlpha = alpha;
+                this.particleCtx.fillStyle = particle.color;
+                this.particleCtx.beginPath();
+                this.particleCtx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+                this.particleCtx.fill();
+                this.particleCtx.restore();
+                
+                return particle.life > 0;
+            });
+            
+            // Continue animation loop
+            requestAnimationFrame(() => this.updateParticles());
+        } catch (error) {
+            console.log('Particle update error (non-critical)');
+        }
+    }
+    
+    // Reset game
+    resetGame() {
+        if (confirm('Czy na pewno chcesz zresetować grę? Wszystkie postępy zostaną utracone!')) {
+            try {
+                localStorage.removeItem('corpoclicker_save');
+                localStorage.removeItem('corpoclicker_tutorial_completed');
+                console.log('Game reset');
+                window.location.reload();
+            } catch (error) {
+                console.error('Reset failed:', error);
+            }
+        }
     }
     
     // Initialization
     init() {
+        console.log('Initializing CorpoClicker Enhanced v3.0.1-working...');
+        
         // Load saved game
         this.loadGame();
         
         // Setup event handlers
         this.setupEventHandlers();
+        
+        // Initialize particle system
+        this.initializeParticleSystem();
         
         // Start game loop
         setInterval(() => this.gameLoop(), 100);
@@ -1018,16 +1158,24 @@ class CorpoClickerGame {
         // Auto-save every 30 seconds
         setInterval(() => this.saveGame(), 30000);
         
-        // Start tutorial for new players
-        if (!this.settings.tutorialCompleted) {
-            setTimeout(() => this.startTutorial(), 1000);
-        }
+        // Show welcome messages (non-blocking)
+        this.showWelcomeMessage();
         
-        console.log('CorpoClicker Enhanced v3.0 initialized successfully!');
+        // Force initial display update
+        setTimeout(() => this.updateDisplay(), 100);
+        
+        console.log('✅ CorpoClicker Enhanced v3.0.1-working initialized successfully!');
+        console.log('🎮 Game is ready to play - no tutorial blocking!');
     }
 }
 
 // Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.game = new CorpoClickerGame();
+    console.log('DOM loaded, starting game...');
+    try {
+        window.game = new CorpoClickerGame();
+    } catch (error) {
+        console.error('Game initialization failed:', error);
+        alert('Błąd podczas inicjalizacji gry. Sprawdź konsolę developera.');
+    }
 });
