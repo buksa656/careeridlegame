@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpoClicker - Working Version</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .resource-panel { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 30px;
+        }
+        
+        .resource-item { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .resource-value { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #21808d; 
+        }
+        
+        #main-click-button {
+            background: linear-gradient(135deg, #21808d, #2d9aa8);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            min-height: 60px;
+        }
+        
+        #main-click-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(33, 128, 141, 0.3);
+        }
+        
+        #main-click-button:active {
+            transform: scale(0.95);
+        }
+        
+        .departments-grid, .minigames-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .department-card, .minigame-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .department-card h3, .minigame-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .department-card button, .minigame-card button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .department-card button:disabled, .minigame-card button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #21808d, #2d9aa8);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .progress-fill.stress {
+            background: linear-gradient(90deg, #F44336, #EF5350);
+        }
+        
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #21808d;
+            border-bottom: 2px solid #21808d;
+            padding-bottom: 10px;
+        }
+        
+        .department-info {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1 style="text-align: center; color: #21808d;">🏢 CorpoClicker - Working Version</h1>
+        
+        <!-- Resources -->
+        <div class="resource-panel">
+            <div class="resource-item">
+                <div>💰 Budżet</div>
+                <div class="resource-value" id="budget">100</div>
+            </div>
+            <div class="resource-item">
+                <div>📄 Dokumenty</div>
+                <div class="resource-value" id="documents">0</div>
+            </div>
+            <div class="resource-item">
+                <div>☕ Kawa</div>
+                <div class="resource-value" id="coffee">0</div>
+            </div>
+            <div class="resource-item">
+                <div>😰 Stres</div>
+                <div class="resource-value" id="stress">0</div>
+            </div>
+            <div class="resource-item">
+                <div>💪 Motywacja</div>
+                <div class="resource-value" id="motivation">50</div>
+            </div>
+            <div class="resource-item">
+                <div>🎖️ Prestiż</div>
+                <div class="resource-value" id="prestige">0</div>
+            </div>
+        </div>
+        
+        <!-- Main Click Button -->
+        <button id="main-click-button">
+            🖱️ Pracuj za Budżet (+2 💰)
+        </button>
+        
+        <!-- Progress Bars -->
+        <div class="section">
+            <h3>📊 Status Korporacji</h3>
+            <div>
+                <label>Stres (0-200):</label>
+                <div class="progress-container">
+                    <div class="progress-fill stress" id="stress-progress" style="width: 0%"></div>
+                </div>
+            </div>
+            <div>
+                <label>Motywacja (-50 do 100):</label>
+                <div class="progress-container">
+                    <div class="progress-fill" id="motivation-progress" style="width: 67%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Departments -->
+        <div class="section">
+            <h2>🏢 Działy Korporacji</h2>
+            <div class="departments-grid">
+                
+                <div class="department-card" data-dept="hr">
+                    <h3>👥 Dział HR</h3>
+                    <div class="department-info">Produkuje: 📄 Dokumenty</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">10</span> 💰</div>
+                    <button>Zatrudnij HR</button>
+                </div>
+                
+                <div class="department-card" data-dept="it" style="display: none;">
+                    <h3>💻 Dział IT</h3>
+                    <div class="department-info">Produkuje: ☕ Kawa</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">20</span> 💰</div>
+                    <button>Zatrudnij IT</button>
+                </div>
+                
+                <div class="department-card" data-dept="marketing" style="display: none;">
+                    <h3>📈 Marketing</h3>
+                    <div class="department-info">Produkuje: 💰 Budżet + 🎖️ Prestiż</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">35</span> 💰</div>
+                    <button>Zatrudnij Marketing</button>
+                </div>
+                
+                <div class="department-card" data-dept="accounting" style="display: none;">
+                    <h3>🧮 Księgowość</h3>
+                    <div class="department-info">Produkuje: 💰 Budżet</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">55</span> 💰</div>
+                    <button>Zatrudnij Księgowość</button>
+                </div>
+                
+                <div class="department-card" data-dept="management" style="display: none;">
+                    <h3>👔 Zarząd</h3>
+                    <div class="department-info">Produkuje: 💪 Motywacja</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">90</span> 💰</div>
+                    <button>Zatrudnij Zarząd</button>
+                </div>
+                
+                <div class="department-card" data-dept="rd" style="display: none;">
+                    <h3>🔬 R&D</h3>
+                    <div class="department-info">Produkuje: 🎖️ Prestiż</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">150</span> 💰</div>
+                    <button>Zatrudnij R&D</button>
+                </div>
+                
+                <div class="department-card" data-dept="callcenter" style="display: none;">
+                    <h3>📞 Call Center</h3>
+                    <div class="department-info">Produkuje: 💰💰 Dużo budżetu</div>
+                    <div>Posiadane: <span class="department-count">0</span></div>
+                    <div>Koszt: <span class="department-cost">300</span> 💰</div>
+                    <button>Zatrudnij Call Center</button>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Mini-games -->
+        <div class="section">
+            <h2>🎮 Mini-gry</h2>
+            <div class="minigames-grid">
+                
+                <div class="minigame-card" data-game="quarterly_report">
+                    <h3>📊 Quarterly Report</h3>
+                    <div class="department-info">Nagroda: +42 📄 +3 🎖️</div>
+                    <button>Zagraj (SPACE)</button>
+                </div>
+                
+                <div class="minigame-card" data-game="coffee_shop" style="display: none;">
+                    <h3>☕ Coffee Shop</h3>
+                    <div class="department-info">Nagroda: +21 ☕ -4 😰</div>
+                    <button>Zagraj (SPACE)</button>
+                </div>
+                
+                <div class="minigame-card" data-game="meeting_dodge" style="display: none;">
+                    <h3>🏃 Meeting Dodge</h3>
+                    <div class="department-info">Nagroda: +14 💪</div>
+                    <button>Zagraj (SPACE)</button>
+                </div>
+                
+                <div class="minigame-card" data-game="government_contract" style="display: none;">
+                    <h3>🏛️ Government Contract</h3>
+                    <div class="department-info">Nagroda: +210 💰</div>
+                    <button>Zagraj (SPACE)</button>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // CorpoClicker ULTRA-SIMPLE - All in one file
+        class SimpleCorpoClicker {
+            constructor() {
+                console.log('🎮 Starting SimpleCorpoClicker...');
+                
+                this.resources = {
+                    budget: 100,
+                    documents: 0,
+                    coffee: 0,
+                    stress: 0,
+                    motivation: 50,
+                    prestige: 0
+                };
+                
+                this.departments = {
+                    hr: { owned: 0, unlocked: true },
+                    it: { owned: 0, unlocked: false },
+                    marketing: { owned: 0, unlocked: false },
+                    accounting: { owned: 0, unlocked: false },
+                    management: { owned: 0, unlocked: false },
+                    rd: { owned: 0, unlocked: false },
+                    callcenter: { owned: 0, unlocked: false }
+                };
+                
+                this.departmentData = {
+                    hr: { baseCost: 10, production: {documents: 1} },
+                    it: { baseCost: 20, production: {coffee: 1} },
+                    marketing: { baseCost: 35, production: {budget: 1, prestige: 0.02} },
+                    accounting: { baseCost: 55, production: {budget: 0.5} },
+                    management: { baseCost: 90, production: {motivation: 0.2} },
+                    rd: { baseCost: 150, production: {prestige: 0.1} },
+                    callcenter: { baseCost: 300, production: {budget: 5} }
+                };
+                
+                this.lastUpdate = Date.now();
+                this.init();
+            }
+            
+            performMainClick() {
+                this.resources.budget += 2;
+                console.log('Main click: +2 budget, total:', this.resources.budget);
+                this.updateDisplay();
+                
+                // Simple visual feedback
+                const button = document.getElementById('main-click-button');
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => button.style.transform = 'scale(1)', 100);
+            }
+            
+            purchaseDepartment(deptId) {
+                const cost = this.getDepartmentCost(deptId);
+                
+                if (this.resources.budget >= cost) {
+                    this.resources.budget -= cost;
+                    this.departments[deptId].owned++;
+                    
+                    console.log(`✅ Bought ${deptId} for ${cost}, owned: ${this.departments[deptId].owned}`);
+                    
+                    this.checkUnlocks();
+                    this.updateDisplay();
+                    return true;
+                }
+                
+                console.log(`❌ Cannot afford ${deptId}, need ${cost}, have ${this.resources.budget}`);
+                return false;
+            }
+            
+            getDepartmentCost(deptId) {
+                const baseData = this.departmentData[deptId];
+                if (!baseData) return 999999;
+                
+                const owned = this.departments[deptId].owned;
+                return Math.floor(baseData.baseCost * Math.pow(1.25, owned));
+            }
+            
+            checkUnlocks() {
+                if (this.resources.documents >= 5) this.departments.it.unlocked = true;
+                if (this.resources.documents >= 10) this.departments.marketing.unlocked = true;
+                if (this.resources.documents >= 15) this.departments.accounting.unlocked = true;
+                if (this.resources.prestige >= 20) this.departments.management.unlocked = true;
+                if (this.resources.prestige >= 30) this.departments.rd.unlocked = true;
+                if (this.resources.documents >= 50) this.departments.callcenter.unlocked = true;
+            }
+            
+            openMinigame(gameId) {
+                console.log('🎮 Opening minigame:', gameId);
+                
+                const rewards = {
+                    'quarterly_report': {documents: 42, prestige: 3},
+                    'coffee_shop': {coffee: 21, stress: -4},
+                    'meeting_dodge': {motivation: 14},
+                    'government_contract': {budget: 210}
+                };
+                
+                const reward = rewards[gameId];
+                if (reward) {
+                    Object.entries(reward).forEach(([resource, amount]) => {
+                        if (resource === 'stress') {
+                            this.resources[resource] = Math.max(0, this.resources[resource] + amount);
+                        } else if (resource === 'motivation') {
+                            this.resources[resource] = Math.min(100, this.resources[resource] + amount);
+                        } else {
+                            this.resources[resource] = (this.resources[resource] || 0) + amount;
+                        }
+                    });
+                }
+                
+                console.log('🎉 Minigame completed:', gameId, reward);
+                this.updateDisplay();
+                
+                // Show simple notification
+                this.showNotification(`🎮 ${gameId} completed! Rewards received!`);
+            }
+            
+            showNotification(message) {
+                const notification = document.createElement('div');
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #21808d;
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    z-index: 10000;
+                    font-weight: bold;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.parentElement.removeChild(notification);
+                    }
+                }, 3000);
+            }
+            
+            gameLoop() {
+                const now = Date.now();
+                const deltaTime = now - this.lastUpdate;
+                this.lastUpdate = now;
+                const deltaSeconds = deltaTime / 1000;
+                
+                // Department production
+                Object.entries(this.departments).forEach(([deptId, dept]) => {
+                    if (dept.owned === 0) return;
+                    
+                    const deptData = this.departmentData[deptId];
+                    if (!deptData || !deptData.production) return;
+                    
+                    Object.entries(deptData.production).forEach(([resource, rate]) => {
+                        const production = rate * dept.owned * deltaSeconds;
+                        this.resources[resource] = (this.resources[resource] || 0) + production;
+                    });
+                });
+                
+                // Natural changes
+                this.resources.stress = Math.max(0, this.resources.stress - 0.5 * deltaSeconds);
+                
+                if (this.resources.motivation > 50) {
+                    this.resources.motivation -= 0.3 * deltaSeconds;
+                } else if (this.resources.motivation < 50) {
+                    this.resources.motivation += 0.1 * deltaSeconds;
+                }
+                
+                // Constrain values
+                this.resources.stress = Math.max(0, Math.min(200, this.resources.stress));
+                this.resources.motivation = Math.max(-50, Math.min(100, this.resources.motivation));
+                
+                this.checkUnlocks();
+                this.updateDisplay();
+            }
+            
+            updateDisplay() {
+                // Update resources
+                Object.keys(this.resources).forEach(resource => {
+                    const element = document.getElementById(resource);
+                    if (element) {
+                        element.textContent = Math.floor(this.resources[resource]).toString();
+                    }
+                });
+                
+                // Update departments
+                Object.keys(this.departments).forEach(deptId => {
+                    const dept = this.departments[deptId];
+                    const card = document.querySelector(`[data-dept="${deptId}"]`);
+                    if (!card) return;
+                    
+                    const button = card.querySelector('button');
+                    const countElement = card.querySelector('.department-count');
+                    const costElement = card.querySelector('.department-cost');
+                    
+                    if (countElement) countElement.textContent = dept.owned.toString();
+                    if (costElement) costElement.textContent = this.getDepartmentCost(deptId).toString();
+                    
+                    if (button) {
+                        const canAfford = this.resources.budget >= this.getDepartmentCost(deptId);
+                        button.disabled = !canAfford;
+                    }
+                    
+                    card.style.display = dept.unlocked ? 'block' : 'none';
+                });
+                
+                // Update minigames
+                const minigames = {
+                    coffee_shop: () => this.departments.it.owned > 0,
+                    meeting_dodge: () => this.resources.stress > 60,
+                    government_contract: () => this.resources.prestige > 150
+                };
+                
+                Object.entries(minigames).forEach(([gameId, unlocked]) => {
+                    const card = document.querySelector(`[data-game="${gameId}"]`);
+                    if (card) {
+                        card.style.display = unlocked() ? 'block' : 'none';
+                    }
+                });
+                
+                // Update progress bars
+                const stressBar = document.getElementById('stress-progress');
+                if (stressBar) {
+                    const stressPercent = (this.resources.stress / 200) * 100;
+                    stressBar.style.width = Math.min(stressPercent, 100) + '%';
+                }
+                
+                const motivationBar = document.getElementById('motivation-progress');
+                if (motivationBar) {
+                    const motivationPercent = ((this.resources.motivation + 50) / 150) * 100;
+                    motivationBar.style.width = Math.max(0, Math.min(motivationPercent, 100)) + '%';
+                }
+            }
+            
+            setupEventHandlers() {
+                console.log('🔧 Setting up event handlers...');
+                
+                // Main button
+                const mainButton = document.getElementById('main-click-button');
+                if (mainButton) {
+                    mainButton.addEventListener('click', () => this.performMainClick());
+                    console.log('✅ Main button handler attached');
+                }
+                
+                // Department buttons
+                document.querySelectorAll('[data-dept]').forEach(card => {
+                    const deptId = card.dataset.dept;
+                    const button = card.querySelector('button');
+                    if (button) {
+                        button.addEventListener('click', () => this.purchaseDepartment(deptId));
+                        console.log(`✅ Department ${deptId} handler attached`);
+                    }
+                });
+                
+                // Minigame buttons
+                document.querySelectorAll('[data-game]').forEach(card => {
+                    const gameId = card.dataset.game;
+                    const button = card.querySelector('button');
+                    if (button) {
+                        button.addEventListener('click', () => this.openMinigame(gameId));
+                        console.log(`✅ Minigame ${gameId} handler attached`);
+                    }
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.performMainClick();
+                    }
+                });
+                
+                console.log('✅ All event handlers attached successfully');
+            }
+            
+            init() {
+                console.log('🚀 Initializing SimpleCorpoClicker...');
+                
+                this.setupEventHandlers();
+                
+                // Start game loop
+                setInterval(() => this.gameLoop(), 100);
+                
+                this.updateDisplay();
+                
+                console.log('✅ SimpleCorpoClicker initialized successfully!');
+                console.log('🎮 Game is ready! Try clicking the main button or press SPACE');
+                
+                // Welcome message
+                setTimeout(() => {
+                    this.showNotification('🎉 Witaj w CorpoClicker! Kliknij główny przycisk aby rozpocząć!');
+                }, 1000);
+            }
+        }
+        
+        // Start game when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM loaded, starting game...');
+            
+            try {
+                window.game = new SimpleCorpoClicker();
+                console.log('🎯 Game instance created successfully');
+            } catch (error) {
+                console.error('💥 CRITICAL ERROR:', error);
+                alert('Critical error during game initialization. Check console.');
+            }
+        });
+    </script>
+</body>
+</html>
