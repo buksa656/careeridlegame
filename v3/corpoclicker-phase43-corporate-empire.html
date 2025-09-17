@@ -131,8 +131,31 @@
             border-bottom: 1px solid #e0e0e0;
             padding: var(--space-3) var(--space-4);
             box-shadow: var(--shadow-light);
+			display: flex;
+			align-items: center;
+			gap: 16px;
         }
+		.resource-grid-main {
+			flex: 1;
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 16px;
+		}
 
+		.resource-bar-more {
+			align-self: stretch;
+			height: 55px;           /* wysokość zgodna z kafelkami */
+			min-width: 120px;
+			background: var(--primary-light, #2d9aa8);
+			color: #fff;
+			border: none;
+			border-radius: 10px;
+			font-weight: 600;
+			cursor: pointer;
+			font-size: 1.1rem;
+			margin-left: 8px;
+		}
+		
         .resource-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -293,13 +316,60 @@
             text-transform: none;
             letter-spacing: normal;
         }
+		
+		/*Tooltip na karcie */
+		.tooltip-icon {
+		  display: inline-block;
+		  background: #e0ecff;
+		  color: #444;
+		  border-radius: 50%;
+		  width: 22px;
+		  height: 22px;
+		  text-align: center;
+		  line-height: 22px;
+		  cursor: pointer;
+		  margin-left: 8px;
+		  position: relative;
+		  font-size: 15px;
+		  border: 1.5px solid #b7d2fa;
+		  transition: background .2s;
+		}
+		.tooltip-icon:hover, .tooltip-icon:focus {
+		  background: #c8e3ff;
+		  outline: none;
+		}
+		.tooltip-text {
+		  visibility: hidden;
+		  opacity: 0;
+		  width: 320px;
+		  background-color: #fff;
+		  color: #365;
+		  font-size: 13px;
+		  text-align: left;
+		  border-radius: 9px;
+		  border: 1px solid #ddd;
+		  padding: 14px;
+		  position: absolute;
+		  z-index: 20;
+		  left: 28px;
+		  top: 50%;
+		  transform: translateY(-50%);
+		  box-shadow: 0 2px 16px rgba(60,86,112,.18);
+		  transition: .18s opacity;
+		  z-index: 9999 !important;
+		}
+		.tooltip-icon:hover .tooltip-text,
+		.tooltip-icon:focus .tooltip-text {
+		  visibility: visible;
+		  opacity: 1;
+		}
 
         /* MODERN CARD SYSTEM */
         .card {
             background: var(--surface);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-light);
-            overflow: hidden;
+            overflow: visible !important;
             transition: all 0.3s ease;
         }
 
@@ -395,7 +465,7 @@
 
         .stat-item {
             text-align: center;
-            padding: var(--space-3);
+            padding: var(--space-1);
             background: var(--surface-alt);
             border-radius: var(--radius-md);
         }
@@ -416,7 +486,33 @@
             margin-top: var(--space-1);
         }
 
-        /* FX TRADING SYSTEM */
+        /* COFFEE BUTTON*/
+		.coffee-action-btn {
+		  background: linear-gradient(90deg, #ffe082 0%, #ffee58 50%, #8bc34a 100%);
+		  color: #444;
+		  font-weight: bold;
+		  border: none;
+		  outline: none;
+		  border-radius: 15px;
+		  box-shadow: 0 2px 8px #ccc2;
+		  padding: 7px 28px 7px 18px;
+		  margin: 8px 0 0 0;
+		  font-size: 16px;
+		  position: relative;
+		  cursor: pointer;
+		  transition: background .18s, box-shadow .18s, color .18s;
+		  display: inline-flex;
+		  align-items: center;
+		  gap: 6px;
+		}
+		.coffee-action-btn[disabled] {
+		  background: #eee;
+		  color: #888;
+		  box-shadow: none;
+		  cursor: not-allowed;
+		}
+				
+		/* FX TRADING SYSTEM */
         .fx-ticker {
             background: linear-gradient(135deg, #1e3a5f, #2c5282);
             color: white;
@@ -558,7 +654,7 @@
             background: var(--surface);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-light);
-            overflow: hidden;
+            overflow: visible !important;
             transition: all 0.3s ease;
         }
 
@@ -588,18 +684,20 @@
         }
 
         .department-description {
-            font-size: var(--text-sm);
+            
+			font-weight: 500;
             color: var(--text-muted);
-            line-height: 1.4;
+
         }
 
         .department-body {
-            padding: var(--space-4);
+            padding: var(--space-2);
+			overflow: visible !important;
         }
 
         .department-effects {
             background: rgba(33, 128, 141, 0.05);
-            padding: var(--space-3);
+            padding: var(--space-2);
             border-radius: var(--radius-md);
             margin-bottom: var(--space-4);
             border-left: 3px solid var(--primary);
@@ -607,11 +705,11 @@
 
         .effects-title {
             font-size: var(--text-sm);
-            font-weight: 600;
+            font-weight: 400;
             color: var(--primary);
             margin-bottom: var(--space-2);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0,5px;
         }
 
         .effect-item {
@@ -619,7 +717,6 @@
             display: flex;
             align-items: center;
             gap: var(--space-2);
-            margin-bottom: var(--space-1);
         }
 
         .effect-positive { color: var(--accent-success); }
@@ -628,8 +725,9 @@
         .department-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-3);
-            margin-bottom: var(--space-4);
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+			overflow: visible !important;
         }
 
         .department-button {
@@ -689,7 +787,6 @@
         .progress-fill.motivation {
             background: linear-gradient(90deg, #F44336, #FF9800, #4CAF50);
         }
-
         /* NOTIFICATIONS - Modern Toast System */
         .notification {
             position: fixed;
@@ -807,104 +904,97 @@
     </style>
 </head>
 <body>
-    <!-- STICKY RESOURCE BAR - Always Visible -->
-    <div class="resource-bar">
-        <div class="resource-grid">
-            <!-- Core Resources -->
-            <div class="resource-item">
-                <div class="resource-icon">💰</div>
-                <div class="resource-info">
-                    <div class="resource-label">Budżet</div>
-                    <div class="resource-value" id="budget">100</div>
-                </div>
-                <div class="resource-efficiency efficiency-optimal" id="budget-efficiency">100%</div>
+<!-- STICKY RESOURCE BAR - Always Visible -->
+<div class="resource-bar">
+    <div class="resource-grid resource-grid-main">
+        <!-- Core Resources (widoczne cały czas) -->
+        <div class="resource-item">
+            <div class="resource-icon">💰</div>
+            <div class="resource-info">
+                <div class="resource-label">Budżet</div>
+                <div class="resource-value" id="budget">100</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">📄</div>
-                <div class="resource-info">
-                    <div class="resource-label">Dokumenty</div>
-                    <div class="resource-value" id="documents">0</div>
-                </div>
-                <div class="resource-efficiency efficiency-optimal" id="documents-efficiency">100%</div>
+            <div class="resource-efficiency efficiency-optimal" id="budget-efficiency">100%</div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">📄</div>
+            <div class="resource-info">
+                <div class="resource-label">Dokumenty</div>
+                <div class="resource-value" id="documents">0</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">☕</div>
-                <div class="resource-info">
-                    <div class="resource-label">Kawa</div>
-                    <div class="resource-value" id="coffee">0</div>
-                </div>
-                <div class="resource-efficiency efficiency-optimal" id="coffee-efficiency">100%</div>
+            <div class="resource-efficiency efficiency-optimal" id="documents-efficiency">100%</div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">☕</div>
+            <div class="resource-info">
+                <div class="resource-label">Kawa</div>
+                <div class="resource-value" id="coffee">0</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">🎖️</div>
-                <div class="resource-info">
-                    <div class="resource-label">Prestiż</div>
-                    <div class="resource-value" id="prestige">0</div>
-                </div>
-                <div class="resource-efficiency efficiency-optimal" id="prestige-efficiency">100%</div>
+            <div class="resource-efficiency efficiency-optimal" id="coffee-efficiency">100%</div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">🎖️</div>
+            <div class="resource-info">
+                <div class="resource-label">Prestiż</div>
+                <div class="resource-value" id="prestige">0</div>
             </div>
-
-            <!-- International Currencies -->
-            <div class="resource-item">
-                <div class="resource-icon">💵</div>
-                <div class="resource-info">
-                    <div class="resource-label">USD</div>
-                    <div class="resource-value" id="usd">0</div>
-                </div>
+            <div class="resource-efficiency efficiency-optimal" id="prestige-efficiency">100%</div>
+        </div>
+    </div>
+    <!-- Przycisk rozwijania -->
+    <button class="resource-bar-more" onclick="toggleResourceBarExtra()">+</button>
+    <!-- Pozostałe zasoby -->
+    <div class="resource-grid resource-bar-extra" style="display: none;">
+        <div class="resource-item">
+            <div class="resource-icon">💵</div>
+            <div class="resource-info">
+                <div class="resource-label">USD</div>
+                <div class="resource-value" id="usd">0</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">💶</div>
-                <div class="resource-info">
-                    <div class="resource-label">EUR</div>
-                    <div class="resource-value" id="eur">0</div>
-                </div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">💶</div>
+            <div class="resource-info">
+                <div class="resource-label">EUR</div>
+                <div class="resource-value" id="eur">0</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">💴</div>
-                <div class="resource-info">
-                    <div class="resource-label">JPY</div>
-                    <div class="resource-value" id="jpy">0</div>
-                </div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">💴</div>
+            <div class="resource-info">
+                <div class="resource-label">JPY</div>
+                <div class="resource-value" id="jpy">0</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">💷</div>
-                <div class="resource-info">
-                    <div class="resource-label">CNY</div>
-                    <div class="resource-value" id="cny">0</div>
-                </div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">💷</div>
+            <div class="resource-info">
+                <div class="resource-label">CNY</div>
+                <div class="resource-value" id="cny">0</div>
             </div>
-
-            <div class="resource-item">
-                <div class="resource-icon">📦</div>
-                <div class="resource-info">
-                    <div class="resource-label">Freight</div>
-                    <div class="resource-value" id="freight">0</div>
-                </div>
+        </div>
+        <div class="resource-item">
+            <div class="resource-icon">📦</div>
+            <div class="resource-info">
+                <div class="resource-label">Freight</div>
+                <div class="resource-value" id="freight">0</div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- MAIN GAME CONTAINER -->
     <div class="game-container">
         <!-- GAME HEADER -->
         <div class="main-action">
             <h1 style="font-size: var(--text-3xl); font-weight: 800; margin-bottom: var(--space-2); background: linear-gradient(135deg, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                🏦 CorpoClicker Phase 4.3
+                Korposzczur v4.3 "Szczurku tylko bez paniki"
             </h1>
-            <div style="font-size: var(--text-base); color: var(--text-muted); margin-bottom: var(--space-4);">
-                Corporate Empire - Global Markets Edition
-            </div>
             
             <button class="main-click-button" id="main-click-button">
-                💼 Pracuj za Budżet
+                💼 Kliknij, aby zwiększyć budżet
                 <div class="click-info">
-                    +<span id="click-value">2</span> 💰 • <span id="click-efficiency">100%</span> efektywności
+                    +<span id="click-value">2</span> do💰 • Twoja praca ma aktualnie <span id="click-efficiency">100%</span> efektywności
                 </div>
             </button>
         </div>
@@ -1000,51 +1090,78 @@
         </div>
 
         <!-- HUMAN CAPITAL TAB -->
-        <div class="tab-content" id="human-capital-content">
-            <div class="grid">
-                <!-- Stress Management -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>😰</span>
-                            Poziom Stresu Korporacyjnego
-                        </h2>
-                        <div class="font-mono"><span id="stress">0</span> / 200</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="progress-container">
-                            <div class="progress-fill stress" id="stress-progress" style="width: 0%">
-                                <span id="stress-percentage">0%</span>
-                            </div>
-                        </div>
-                        <div style="margin-top: var(--space-3); padding: var(--space-3); background: rgba(244, 67, 54, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-error); color: #C62828; font-size: var(--text-sm);" id="stress-effects">
-                            Produkcja: 100% • Jakość: 100% • Ryzyko rezygnacji: 0%
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Motivation Management -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <span>💪</span>
-                            Motywacja Zespołu
-                        </h2>
-                        <div class="font-mono"><span id="motivation">50</span> / 100</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="progress-container">
-                            <div class="progress-fill motivation" id="motivation-progress" style="width: 67%">
-                                <span id="motivation-percentage">67%</span>
-                            </div>
-                        </div>
-                        <div style="margin-top: var(--space-3); padding: var(--space-3); background: rgba(76, 175, 80, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-success); color: #2E7D32; font-size: var(--text-sm);" id="motivation-effects">
-                            Bonus produkcji: 0% • Przyspieszenie: Normalne
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="tab-content" id="human-capital-content">
+			<div class="grid">
+				<!-- Stress Management -->
+				<div class="card">
+					<div class="card-header">
+						<h2 class="card-title">
+							<span>😰</span>
+							Poziom Stresu Korporacyjnego
+						</h2>
+						<div class="font-mono"><span id="stress">0</span> / 200</div>
+					</div>
+					<div class="card-content">
+						<div class="progress-container">
+							<div class="progress-fill stress" id="stress-progress" style="width: 0%">
+								<span id="stress-percentage">0%</span>
+							</div>
+						</div>
+						<div style="margin-top: var(--space-3); padding: var(--space-3); background: rgba(244, 67, 54, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-error); color: #C62828; font-size: var(--text-sm);" id="stress-effects">
+							Produkcja: 100% • Jakość: 100% • Ryzyko rezygnacji: 0%
+						</div>
+						<!-- Button for using coffee, placed under motivation bar -->
+						<div style="margin-top: var(--space-3); text-align: right;">
+							<button id="coffee-break-btn" class="coffee-action-btn">
+								☕ Wypij kawę
+								<span class="tooltip-icon" tabindex="0">?
+								  <span class="tooltip-text">
+									  Zamień 50 kawy na:<br>
+									  • -20 stresu<br>
+									  • +10 motywacji zespołu<br><br>
+									  (Dostępne tylko jeśli masz ≥50 kawy!)
+								  </span>
+								</span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<!-- Motivation Management -->
+				<div class="card">
+					<div class="card-header">
+						<h2 class="card-title">
+							<span>💪</span>
+							Motywacja Zespołu
+						</h2>
+						<div class="font-mono"><span id="motivation">50</span> / 100</div>
+					</div>
+					<div class="card-content">
+						<div class="progress-container">
+							<div class="progress-fill motivation" id="motivation-progress" style="width: 67%">
+								<span id="motivation-percentage">67%</span>
+							</div>
+						</div>
+						<div style="margin-top: var(--space-3); padding: var(--space-3); background: rgba(76, 175, 80, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-success); color: #2E7D32; font-size: var(--text-sm);" id="motivation-effects">
+							Bonus produkcji: 0% • Przyspieszenie: Normalne
+						</div>
+						<!-- Button for using coffee, placed under motivation bar -->
+						<div style="margin-top: var(--space-3); text-align: right;">
+							<button id="coffee-break-btn" class="coffee-action-btn">
+								☕ Wypij kawę
+								<span class="tooltip-icon" tabindex="0">?
+								  <span class="tooltip-text">
+									  Zamień 50 kawy na:<br>
+									  • -20 stresu<br>
+									  • +10 motywacji zespołu<br><br>
+									  (Dostępne tylko jeśli masz ≥50 kawy!)
+								  </span>
+								</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
         <!-- GLOBAL MARKETS TAB -->
         <div class="tab-content" id="global-markets-content">
@@ -1318,7 +1435,7 @@
             </div>
         </div>
     </div>
-
+	<div id="notification-container"></div>
     <script>
         /* =============================================
            CORPOCLICKER PHASE 4.3 - CORPORATE EMPIRE
@@ -1491,7 +1608,7 @@
                         sideEffects: {motivation: -0.05},
                         description: "Zapewnia kawę premium i wsparcie techniczne.",
                         unlockConditions: [
-                            {type: 'resource', resource: 'documents', amount: 5}
+                            {type: 'resource', resource: 'documents', amount: 100}
                         ]
                     },
                     marketing: { 
@@ -1501,7 +1618,7 @@
                         production: {budget: 1, prestige: 0.02},
                         description: "Generuje przychody i buduje prestiż marki.",
                         unlockConditions: [
-                            {type: 'resource', resource: 'documents', amount: 15}
+                            {type: 'resource', resource: 'documents', amount: 150}
                         ]
                     },
                     accounting: { 
@@ -1512,7 +1629,7 @@
                         sideEffects: {stress: 0.15},
                         description: "Optymalizuje finanse, ale zwiększa stres przez kontrole.",
                         unlockConditions: [
-                            {type: 'resource', resource: 'documents', amount: 35}
+                            {type: 'resource', resource: 'documents', amount: 350}
                         ]
                     },
                     management: { 
@@ -1522,7 +1639,7 @@
                         production: {motivation: 0.3},
                         description: "Motywuje pracowników i poprawia efektywność organizacyjną.",
                         unlockConditions: [
-                            {type: 'resource', resource: 'prestige', amount: 5}
+                            {type: 'resource', resource: 'prestige', amount: 50}
                         ]
                     },
                     rd: { 
@@ -1533,7 +1650,7 @@
                         sideEffects: {stress: 0.2},
                         description: "Innowacje zwiększają prestiż, ale wymagają intensywnej pracy.",
                         unlockConditions: [
-                            {type: 'resource', resource: 'prestige', amount: 15}
+                            {type: 'resource', resource: 'prestige', amount: 150}
                         ]
                     },
                     callcenter: { 
@@ -1544,7 +1661,7 @@
                         sideEffects: {motivation: -0.3, stress: 0.5},
                         description: "Wysokie przychody kosztem dobrostanu pracowników.",
                         unlockConditions: [
-                            {type: 'resource', resource: 'documents', amount: 100}
+                            {type: 'resource', resource: 'documents', amount: 10000}
                         ]
                     }
                 };
@@ -1706,7 +1823,7 @@
                 
                 return { productionBonus, speedBonus };
             }
-            
+          
             /* =============================================
                NEW: GLOBAL REGIONS SYSTEM
                ============================================= */
@@ -1733,19 +1850,33 @@
                     region.level = 1;
                     
                     this.showNotification(`🌍 Otwarto nowy region: ${region.name}!`, 'success');
-                    this.updateDisplay();
+                    this.updateResourceBar();
                     return true;
                 }
                 
                 this.showNotification(`💰 Niewystarczający budżet! Potrzebujesz ${region.unlockCost} 💰`, 'warning');
                 return false;
+				this.updateResourceBar();
             }
             
             /* =============================================
                NEW: FX TRADING SYSTEM
                ============================================= */
             
-            updateFXRates() {
+			updateFXBarDisplay() {
+			  Object.entries(this.fxRates).forEach(([pair, data]) => {
+				const rateElem = document.getElementById(`fx-rate-${pair}`);
+				if (rateElem) rateElem.textContent = data.rate.toFixed(3);
+
+				const trendElem = document.getElementById(`fx-trend-${pair}`);
+				if (trendElem) {
+				  trendElem.textContent = (data.trend === 'up') ? 'Ronie' : (data.trend === 'down') ? 'Spada' : 'Stabilny';
+				  trendElem.className = 'fx-trend trend-' + data.trend;
+				}
+			  });
+			}
+			
+			updateFXRates() {
                 const now = Date.now();
                 
                 Object.entries(this.fxRates).forEach(([pair, data]) => {
@@ -1769,7 +1900,7 @@
                     data.lastUpdate = now;
                 });
                 
-                this.updateFXDisplay();
+                this.updateFXBarDisplay();
             }
             
             executeTrade(fromCurrency, toCurrency, amount) {
@@ -1790,7 +1921,7 @@
                 this.resources.freight += Math.floor(amount / 100); // Freight tokens
                 
                 this.showNotification(`💱 Wymiana: -${amount} ${fromCurrency} → +${netReceived.toFixed(2)} ${toCurrency}`, 'success');
-                this.updateDisplay();
+                this.updateResourceBar();
                 
                 return true;
             }
@@ -1906,6 +2037,21 @@
                 
                 this.gameState.currentTab = tabName;
                 console.log(`Switched to tab: ${tabName}`);
+				
+				// Odśwież tylko potrzebny panel
+				if (tabName === 'overview') {
+					this.updateOverviewTab();
+				} else if (tabName === 'human-capital') {
+					this.updateHumanCapitalTab();
+				} else if (tabName === 'global-markets') {
+					this.updateGlobalMarketsTab();
+				} else if (tabName === 'trade') {
+					this.updateTradeTab();
+				} else if (tabName === 'automation') {
+					this.updateAutomationTab();
+				} else if (tabName === 'minigames') {
+					this.updateMinigamesTab();
+				}
             }
             
             /* =============================================
@@ -1931,7 +2077,7 @@
                     this.resources.influence += 0.1;
                 }
                 
-                this.updateDisplay();
+                this.updateResourceBar();
             }
             
             purchaseDepartment(deptId) {
@@ -1941,13 +2087,14 @@
                     this.resources.budget -= cost;
                     this.departments[deptId].owned++;
                     
-                    this.updateDisplay();
+                    this.updateResourceBar();
                     this.showNotification(`🏢 Zatrudniono ${this.departmentData[deptId].name}!`, 'success');
                     return true;
                 }
                 
                 this.showNotification(`💰 Niewystarczający budżet! Potrzebujesz ${cost} 💰`, 'warning');
                 return false;
+				this.updateResourceBar();
             }
             
             getDepartmentCost(deptId) {
@@ -2018,8 +2165,6 @@
                 this.checkDepartmentUnlocks();
                 this.checkRegionUnlocks();
                 
-                // Update display (throttled)
-                this.updateDisplayThrottled();
             }
             
             updateProduction(deltaSeconds) {
@@ -2039,9 +2184,20 @@
                         const production = rate * dept.owned * totalProductionMultiplier * softcapEfficiency * deltaSeconds;
                         
                         this.resources[resource] = (this.resources[resource] || 0) + production;
+						
                     });
                 });
-            }
+				    const unlockedBefore = Object.values(this.departments).filter(d => d.unlocked).length;
+					this.checkDepartmentUnlocks();
+					const unlockedAfter = Object.values(this.departments).filter(d => d.unlocked).length;
+					
+					// Odśwież panel tylko jeśli unlock rzeczywiście nastąpił
+					if (unlockedAfter > unlockedBefore) {
+						this.updateOverviewTab();
+					}
+					this.updateResourceBar();
+				}
+
             
             applySideEffects(deltaSeconds) {
                 // Department side effects
@@ -2069,31 +2225,13 @@
                 // Constrain values
                 this.resources.stress = Math.max(0, Math.min(200, this.resources.stress));
                 this.resources.motivation = Math.max(-50, Math.min(100, this.resources.motivation));
+				this.updateResourceBar();
             }
             
             /* =============================================
                DISPLAY UPDATES - Modern UI System
                ============================================= */
             
-            updateDisplayThrottled() {
-                // Always update resources (lightweight)
-                this.updateResourceBar();
-                
-                // Update content based on current tab
-                if (this.gameState.currentTab === 'overview') {
-                    this.updateOverviewTab();
-                } else if (this.gameState.currentTab === 'human-capital') {
-                    this.updateHumanCapitalTab();
-                } else if (this.gameState.currentTab === 'global-markets') {
-                    this.updateGlobalMarketsTab();
-                } else if (this.gameState.currentTab === 'trade') {
-                    this.updateTradeTab();
-                } else if (this.gameState.currentTab === 'automation') {
-                    this.updateAutomationTab();
-                } else if (this.gameState.currentTab === 'minigames') {
-                    this.updateMinigamesTab();
-                }
-            }
             
             updateDisplay() {
                 this.updateResourceBar();
@@ -2136,65 +2274,128 @@
                 });
             }
             
-            updateOverviewTab() {
-                // Update departments overview
-                const container = document.getElementById('departments-overview');
-                if (!container) return;
-                
-                container.innerHTML = '';
-                
-                Object.entries(this.departmentData).forEach(([deptId, deptData]) => {
-                    const dept = this.departments[deptId];
-                    
-                    const card = document.createElement('div');
-                    card.className = `department-card card ${dept.unlocked ? 'unlocked' : 'locked'}`;
-                    
-                    card.innerHTML = `
-                        <div class="department-header">
-                            <div class="department-title">
-                                <span>${deptData.icon}</span>
-                                ${deptData.name}
-                            </div>
+ updateOverviewTab() {
+    // Update departments overview
+    const container = document.getElementById('departments-overview');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    Object.entries(this.departmentData).forEach(([deptId, deptData]) => {
+        const dept = this.departments[deptId];
+
+        const card = document.createElement('div');
+        card.className = `department-card card ${dept.unlocked ? 'unlocked' : 'locked'}`;
+
+        card.innerHTML = `
+            <div class="department-header">
+                <div class="department-title">
+                    <span>${deptData.icon}</span>
+                    ${deptData.name}
+                </div>
+            </div>
+            <div class="department-body">
+                <div class="department-description">${deptData.description}</div>
+                <div class="department-effects"></div>
+                <div class="department-unlock-conditions"></div>
+                <div class="department-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">
+						  Zatrudnienie
+						  <span class="tooltip-icon" tabindex="0">?
+							<span class="tooltip-text">
+							  <b>Co oznacza 'Zatrudnienie'?</b><br>
+							  Liczba aktualnie zatrudnionych jednostek tego działu.<br>
+							  Każda zatrudniona jednostka zwiększa efekty działania.<br>
+							  Im więcej zatrudnionych, tym większy poziom oraz wzrost efektów, ale rośnie też koszt kolejnych zatrudnień!
+							</span>
+						  </span>
+						</div>
+                        <div class="stat-value">${dept.owned}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            Koszt (Budżet)
+                            <span class="tooltip-icon" tabindex="0">?
+                              <span class="tooltip-text">
+                                <b>Co oznacza Koszt?</b><br>
+                                Musisz posiadać wystarczający <b>Budżet</b>, aby zatrudnić kolejną jednostkę tego działu.<br>
+                                Koszt rośnie ze wzrostem liczby zatrudnionych!
+                              </span>
+                            </span>
                         </div>
-                        <div class="department-body">
-                            <div class="department-description">${deptData.description}</div>
-                            <div class="department-stats">
-                                <div class="stat-item">
-                                    <div class="stat-label">Posiadane</div>
-                                    <div class="stat-value">${dept.owned}</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-label">Koszt</div>
-                                    <div class="stat-value">${this.formatNumber(this.getDepartmentCost(deptId))}</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-label">Poziom</div>
-                                    <div class="stat-value">${dept.owned > 0 ? Math.floor(Math.log2(dept.owned + 1)) + 1 : 1}</div>
-                                </div>
-                            </div>
-                            <button class="department-button" ${dept.unlocked && this.resources.budget >= this.getDepartmentCost(deptId) ? '' : 'disabled'}>
-                                ${dept.unlocked ? 'Zatrudnij' : 'Zablokowane'}
-                            </button>
-                        </div>
-                    `;
-                    
-                    if (dept.unlocked) {
-                        const button = card.querySelector('button');
-                        button.addEventListener('click', () => this.purchaseDepartment(deptId));
-                    }
-                    
-                    container.appendChild(card);
-                });
-                
-                // Update global stats
-                const activeRegions = Object.values(this.regions).filter(r => r.unlocked).length;
-                const totalRevenue = this.resources.budget + this.resources.usd * 4 + this.resources.eur * 4.3;
-                const globalLevel = Math.floor(totalRevenue / 1000) + 1;
-                
-                document.getElementById('active-regions').textContent = activeRegions;
-                document.getElementById('total-revenue').textContent = this.formatNumber(totalRevenue);
-                document.getElementById('global-level').textContent = globalLevel;
-            }
+                        <div class="stat-value">${this.formatNumber(this.getDepartmentCost(deptId))}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">
+                            Poziom
+                            <span class="tooltip-icon" tabindex="0">?
+                              <span class="tooltip-text">
+                                <b>Jak liczony jest poziom?</b><br>
+                                Poziom danego działu zwiększa się coraz wolniej:<br>
+                                <code>poziom = 1 + ⌊log₂(liczba zatrudnionych + 1)⌋</code>.<br>
+                                Wyższy poziom umożliwia większą produkcję i dodatkowe efekty!
+                              </span>
+                            </span>
+                        </div>                        
+                        <div class="stat-value">${dept.owned > 0 ? Math.floor(Math.log2(dept.owned + 1)) + 1 : 1}</div>
+                    </div>
+                </div>
+                <button class="department-button" ${dept.unlocked && this.resources.budget >= this.getDepartmentCost(deptId) ? '' : 'disabled'}>
+                    ${dept.unlocked ? 'Zatrudnij' : 'Zablokowane'}
+                </button>
+            </div>
+        `;
+
+        // --- SEKRETNE EFEKTY DZIAŁU: PRODUKCJA I EFEKTY UBOCZNE ---
+        let effectHtml = '<div><span class="effects-title">Efekty zatrudniania:</span>';
+        if (deptData.production) {
+            Object.entries(deptData.production).forEach(([res, val]) => {
+                effectHtml += `<div class="effect-item effect-positive">+${val} ${this.formatResourceName(res)} / poziom</div>`;
+            });
+        }
+        if (deptData.sideEffects) {
+            Object.entries(deptData.sideEffects).forEach(([res, val]) => {
+                effectHtml += `<div class="effect-item effect-negative">${val > 0 ? '+' : ''}${val} ${this.formatResourceName(res)} / poziom</div>`;
+            });
+        }
+        effectHtml += '</div>';
+        card.querySelector('.department-effects').innerHTML = effectHtml;
+
+        // --- WARUNKI ODBLOKOWANIA DLA BLOKOWANEGO DZIAŁU ---
+        let unlockHtml = '';
+        if (!dept.unlocked && deptData.unlockConditions && deptData.unlockConditions.length) {
+            unlockHtml = '<div class="department-unlock"><span class="effects-title">Aby odblokować:</span><ul>';
+            deptData.unlockConditions.forEach(cond => {
+                if (cond.type === "resource") {
+                    unlockHtml += `<li>${cond.amount} ${this.formatResourceName(cond.resource)}</li>`;
+                }
+            });
+            unlockHtml += '</ul></div>';
+        }
+        if (!dept.unlocked && (!deptData.unlockConditions || !deptData.unlockConditions.length)) {
+            unlockHtml = '<div class="department-unlock">Dostępny od początku gry</div>';
+        }
+        card.querySelector('.department-unlock-conditions').innerHTML = unlockHtml;
+
+        if (dept.unlocked) {
+            const button = card.querySelector('button');
+            button.addEventListener('click', () => this.purchaseDepartment(deptId));
+        }
+
+        container.appendChild(card);
+    });
+
+    // Update global stats
+    const activeRegions = Object.values(this.regions).filter(r => r.unlocked).length;
+    const totalRevenue = this.resources.budget + this.resources.usd * 4 + this.resources.eur * 4.3;
+    const globalLevel = Math.floor(totalRevenue / 1000) + 1;
+
+    document.getElementById('active-regions').textContent = activeRegions;
+    document.getElementById('total-revenue').textContent = this.formatNumber(totalRevenue);
+    document.getElementById('global-level').textContent = globalLevel;
+}
+
             
             updateHumanCapitalTab() {
                 // Update stress progress
@@ -2248,6 +2449,27 @@
                         Przyspieszenie: ${speed === 1 ? 'Normalne' : `${speed.toFixed(1)}x`}
                     `;
                 }
+				const coffeeBtn = document.getElementById('coffee-break-btn');
+
+				// Funkcja obsługi picia kawy
+				coffeeBtn.addEventListener('click', () => {
+					if (this.resources.coffee >= 10) {
+						this.resources.coffee -= 10;
+						// Obniż stres i podnieś motywację
+						this.resources.stress = Math.max(0, this.resources.stress - 20);
+						this.resources.motivation = Math.min(100, this.resources.motivation + 10);
+
+						this.updateResourceBar();
+						this.updateStressMotivationBars(); // ← funkcja odświeżająca UI barów (patrz niżej)
+					} else {
+						alert("Nie masz wystarczająco kawy! (min. 50)");
+					}
+				});
+
+				// Opcjonalnie - dezaktywuj przycisk jeśli kawa < 10 (wywołuj to w updateResourceBar)
+				function updateCoffeeButton() {
+					coffeeBtn.disabled = (this.resources.coffee < 10);
+				}
             }
             
             updateGlobalMarketsTab() {
@@ -2309,42 +2531,55 @@
                 });
             }
             
-            updateAutomationTab() {
-                // Update AI agent statuses
-                const deptStatus = document.getElementById('dept-ai-status');
-                const tradeStatus = document.getElementById('trade-ai-status');
-                const expansionStatus = document.getElementById('expansion-ai-status');
-                
-                if (deptStatus) {
-                    deptStatus.className = `agent-status ${this.automation.departmentAI.active ? '' : 'inactive'}`;
-                }
-                if (tradeStatus) {
-                    tradeStatus.className = `agent-status ${this.automation.tradeBot.active ? '' : 'inactive'}`;
-                }
-                if (expansionStatus) {
-                    expansionStatus.className = `agent-status ${this.automation.expansionAI.active ? '' : 'inactive'}`;
-                }
-                
-                // Update threshold displays
-                const deptROIDisplay = document.getElementById('dept-roi-display');
-                const tradeArbitrageDisplay = document.getElementById('trade-arbitrage-display');
-                
-                if (deptROIDisplay) {
-                    const threshold = document.getElementById('dept-roi-threshold');
-                    if (threshold) {
-                        this.automation.departmentAI.roiThreshold = parseFloat(threshold.value) / 100;
-                        deptROIDisplay.textContent = `${threshold.value}%`;
-                    }
-                }
-                
-                if (tradeArbitrageDisplay) {
-                    const threshold = document.getElementById('trade-arbitrage-threshold');
-                    if (threshold) {
-                        this.automation.tradeBot.arbitrageThreshold = parseFloat(threshold.value) / 100;
-                        tradeArbitrageDisplay.textContent = `${threshold.value}%`;
-                    }
-                }
-            }
+updateAutomationTab() {
+    // BLOKADA: Sprawdź, czy przynajmniej 1 region poza Europą jest odblokowany
+    const otherRegions = Object.entries(this.regions).filter(([regionId, region]) =>
+        regionId !== "europe" && region.unlocked
+    );
+    const canShowAutomation = otherRegions.length > 0;
+    
+    const automationContent = document.getElementById('automation-content');
+    if (automationContent && !canShowAutomation) {
+        automationContent.innerHTML =
+            '<div class="automation-locked" style="padding: 2rem; color: #ff9800; font-weight: 600">Odblokuj przynajmniej jeden nowy rynek poza Europą, by uzyskać dostęp do automatyzacji AI.</div>';
+        return;
+    }
+
+    // Update AI agent statuses
+    const deptStatus = document.getElementById('dept-ai-status');
+    const tradeStatus = document.getElementById('trade-ai-status');
+    const expansionStatus = document.getElementById('expansion-ai-status');
+    
+    if (deptStatus) {
+        deptStatus.className = `agent-status ${this.automation.departmentAI.active ? '' : 'inactive'}`;
+    }
+    if (tradeStatus) {
+        tradeStatus.className = `agent-status ${this.automation.tradeBot.active ? '' : 'inactive'}`;
+    }
+    if (expansionStatus) {
+        expansionStatus.className = `agent-status ${this.automation.expansionAI.active ? '' : 'inactive'}`;
+    }
+    
+    // Update threshold displays
+    const deptROIDisplay = document.getElementById('dept-roi-display');
+    const tradeArbitrageDisplay = document.getElementById('trade-arbitrage-display');
+    
+    if (deptROIDisplay) {
+        const threshold = document.getElementById('dept-roi-threshold');
+        if (threshold) {
+            this.automation.departmentAI.roiThreshold = parseFloat(threshold.value) / 100;
+            deptROIDisplay.textContent = `${threshold.value}%`;
+        }
+    }
+    
+    if (tradeArbitrageDisplay) {
+        const threshold = document.getElementById('trade-arbitrage-threshold');
+        if (threshold) {
+            this.automation.tradeBot.arbitrageThreshold = parseFloat(threshold.value) / 100;
+            tradeArbitrageDisplay.textContent = `${threshold.value}%`;
+        }
+    }
+}
             
             updateMinigamesTab() {
                 const container = document.getElementById('minigames-grid');
@@ -2610,7 +2845,7 @@
                 // Set cooldown
                 this.gameState.minigameCooldowns[gameId] = Date.now();
                 
-                this.updateDisplay();
+                this.updateResourceBar();
             }
             
             applyMinigameReward(reward, value) {
@@ -2635,6 +2870,7 @@
                         });
                         break;
                 }
+				this.updateResourceBar();
             }
             
             applyMinigamePenalty(penalty, value) {
@@ -2652,6 +2888,7 @@
                         this.resources.prestige = Math.max(0, this.resources.prestige - value * 10);
                         break;
                 }
+				this.updateResourceBar();
             }
             
             /* =============================================
@@ -2827,7 +3064,7 @@
                 
                 // Welcome message
                 setTimeout(() => {
-                    this.showNotification('🌍 Phase 4.3 - Corporate Empire is live!', 'success');
+                    this.showNotification('🌍 Witaj w grze korposzczur!', 'success');
                 }, 1000);
             }
         }
@@ -2898,7 +3135,11 @@
                 window.game.exportData();
             }
         }
-        
+        function toggleResourceBarExtra() {
+			const extra = document.querySelector('.resource-bar-extra');
+			if (!extra) return;
+			extra.style.display = (extra.style.display === "none" || !extra.style.display) ? "grid" : "none";
+		}
         // Initialize game when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             console.log('📄 DOM loaded, starting Phase 4.3...');
