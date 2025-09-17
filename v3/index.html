@@ -1,1 +1,195 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpoClicker v4.3.1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <div class="flex justify-between items-center">
+                <h1>CorpoClicker <span class="version">v4.3.1</span></h1>
+                <div class="main-action">
+                    <button class="btn btn--primary btn--lg work-button" id="workButton">
+                        💼 Pracuj (+<span id="workIncome">1</span> Budżet)
+                    </button>
+                </div>
+            </div>
+        </header>
 
+        <!-- Currency Display -->
+        <div class="currency-panel">
+            <div class="currency-main" id="currencyMain">
+                <div class="currency-item main-currency">
+                    <span class="currency-icon">💰</span>
+                    <div class="currency-details">
+                        <span class="currency-label">Budżet</span>
+                        <span class="currency-value" id="budget">0</span>
+                    </div>
+                </div>
+                <div class="currency-item main-currency">
+                    <span class="currency-icon">📄</span>
+                    <div class="currency-details">
+                        <span class="currency-label">Dokumenty</span>
+                        <span class="currency-value" id="documents">0</span>
+                    </div>
+                </div>
+                <div class="currency-item main-currency">
+                    <span class="currency-icon">☕</span>
+                    <div class="currency-details">
+                        <span class="currency-label">Kawa</span>
+                        <span class="currency-value" id="coffee">0</span>
+                    </div>
+                </div>
+                <div class="currency-item main-currency">
+                    <span class="currency-icon">⭐</span>
+                    <div class="currency-details">
+                        <span class="currency-label">Prestiż</span>
+                        <span class="currency-value" id="prestige">0</span>
+                    </div>
+                </div>
+                <button class="currency-expand-btn" id="currencyExpandBtn">
+                    <span id="expandIcon">▼</span>
+                </button>
+            </div>
+            <div class="currency-secondary hidden" id="currencySecondary">
+                <div class="currency-item secondary-currency">
+                    <span class="currency-icon">🇺🇸</span>
+                    <div class="currency-details">
+                        <span class="currency-label">USD</span>
+                        <span class="currency-value" id="usd">0</span>
+                    </div>
+                </div>
+                <div class="currency-item secondary-currency">
+                    <span class="currency-icon">🇪🇺</span>
+                    <div class="currency-details">
+                        <span class="currency-label">EUR</span>
+                        <span class="currency-value" id="eur">0</span>
+                    </div>
+                </div>
+                <div class="currency-item secondary-currency">
+                    <span class="currency-icon">🇯🇵</span>
+                    <div class="currency-details">
+                        <span class="currency-label">JPY</span>
+                        <span class="currency-value" id="jpy">0</span>
+                    </div>
+                </div>
+                <div class="currency-item secondary-currency">
+                    <span class="currency-icon">🇨🇳</span>
+                    <div class="currency-details">
+                        <span class="currency-label">CNY</span>
+                        <span class="currency-value" id="cny">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-nav">
+            <button class="tab-button active" data-tab="overview">Przegląd</button>
+            <button class="tab-button" data-tab="departments">Kadry</button>
+            <button class="tab-button" data-tab="markets">Rynki Globalne</button>
+            <button class="tab-button" data-tab="trade">Handel</button>
+            <button class="tab-button" data-tab="automation">Automatyzacja</button>
+            <button class="tab-button" data-tab="entertainment">Rozrywka</button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="tab-content">
+            <!-- Overview Tab -->
+            <div class="tab-panel active" id="overview">
+                <div class="overview-grid">
+                    <div class="stats-card">
+                        <h3>Status Firmy</h3>
+                        <div class="stat-item">
+                            <span>Motywacja zespołu:</span>
+                            <span id="motivation" class="stat-value">100</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Poziom stresu:</span>
+                            <span id="stress" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Łączna produkcja/s:</span>
+                            <span id="totalProduction" class="stat-value">1</span>
+                        </div>
+                    </div>
+                    <div class="departments-overview">
+                        <h3>Imperium Korporacyjne</h3>
+                        <div id="departmentsOverview" class="departments-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Departments Tab -->
+            <div class="tab-panel" id="departments">
+                <div class="departments-section">
+                    <h2>Zarządzanie Działami</h2>
+                    <div id="departmentsList" class="departments-list"></div>
+                </div>
+            </div>
+
+            <!-- Global Markets Tab -->
+            <div class="tab-panel" id="markets">
+                <div class="markets-section">
+                    <h2>Ekspansja Globalna</h2>
+                    <div id="marketsList" class="markets-grid"></div>
+                </div>
+            </div>
+
+            <!-- Trade Tab -->
+            <div class="tab-panel" id="trade">
+                <div class="trade-section">
+                    <h2>Centrum Handlowe</h2>
+                    <p class="trade-description">Strategiczne zakupy dla rozwoju firmy</p>
+                    <div id="shoppingCenter" class="shopping-grid"></div>
+                </div>
+            </div>
+
+            <!-- Automation Tab -->
+            <div class="tab-panel" id="automation">
+                <div class="automation-section">
+                    <h2>Centrum Automatyzacji AI</h2>
+                    <div id="automationContent">
+                        <div class="locked-feature">
+                            <h3>🤖 System Automatyzacji AI</h3>
+                            <p>Odblokuj nowe rynki aby uzyskać dostęp do zaawansowanej automatyzacji!</p>
+                            <div class="unlock-requirement">
+                                <span>Wymaga: Odblokowanie rynku Ameryk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entertainment Tab -->
+            <div class="tab-panel" id="entertainment">
+                <div class="entertainment-section">
+                    <h2>Rozrywka Korporacyjna</h2>
+                    <div class="entertainment-options">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>🎯 Biurowa Liga Dart</h3>
+                                <p>Organizuj turnieje dart dla poprawy morale zespołu.</p>
+                                <button class="btn btn--secondary">Organizuj Turniej (50 Budżet)</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>🍕 Pizza Friday</h3>
+                                <p>Cotygodniowe spotkania przy pizzy budują więzi zespołowe.</p>
+                                <button class="btn btn--secondary">Zamów Pizzę (30 Budżet)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
