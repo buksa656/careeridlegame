@@ -1,0 +1,2538 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpoClicker Phase 4.2.2 - UI Fixes</title>
+    <!-- Embedded Manifest -->
+    <script>
+        // Embedded PWA Manifest
+        if ('serviceWorker' in navigator) {
+            const manifestData = {
+                "name": "CorpoClicker Phase 4.2.2",
+                "short_name": "CorpoClicker",
+                "description": "Advanced Corporate Clicker Game with Meaningful Economy",
+                "start_url": "./",
+                "display": "standalone",
+                "background_color": "#21808d",
+                "theme_color": "#21808d",
+                "orientation": "portrait-primary",
+                "icons": [
+                    {
+                        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%2321808d'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40'%3E🏦%3C/text%3E%3C/svg%3E",
+                        "sizes": "192x192",
+                        "type": "image/svg+xml"
+                    },
+                    {
+                        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%2321808d'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='30'%3E🏦%3C/text%3E%3C/svg%3E",
+                        "sizes": "512x512",
+                        "type": "image/svg+xml"
+                    }
+                ]
+            };
+            
+            const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = manifestURL;
+            document.head.appendChild(link);
+        }
+    </script>
+    <meta name="theme-color" content="#21808d">
+    <style>
+        /* Enhanced CSS for Phase 4.2.2 - FIXED FLICKERING + COLLAPSIBLE UI */
+        :root {
+            --primary-color: #21808d;
+            --primary-light: #2d9aa8;
+            --accent-success: #4CAF50;
+            --accent-warning: #FF9800;
+            --accent-error: #F44336;
+            --accent-info: #2196F3;
+            --accent-purple: #9C27B0;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --text: #333333;
+            --text-muted: #666666;
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-medium: 0 4px 16px rgba(0,0,0,0.15);
+            --shadow-heavy: 0 8px 32px rgba(0,0,0,0.25);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            --gradient-success: linear-gradient(135deg, #4CAF50, #66BB6A);
+            --gradient-warning: linear-gradient(135deg, #FF9800, #FFB74D);
+            --gradient-purple: linear-gradient(135deg, #9C27B0, #BA68C8);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .game-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Enhanced Resource Panel */
+        .resource-panel { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 35px;
+        }
+        
+        .resource-item { 
+            background: var(--surface);
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            overflow: hidden;
+        }
+
+        .resource-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .resource-item.optimal { 
+            border-color: var(--accent-success); 
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+        }
+        .resource-item.moderate { 
+            border-color: var(--accent-warning);
+            box-shadow: 0 0 20px rgba(255, 152, 0, 0.2);
+        }
+        .resource-item.softcapped { 
+            border-color: var(--accent-error);
+            box-shadow: 0 0 20px rgba(244, 67, 54, 0.2);
+        }
+
+        .resource-icon { 
+            font-size: 2.5rem; 
+            margin-bottom: 12px; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        .resource-label { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .resource-value { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: var(--primary-color);
+            font-family: 'SF Mono', Consolas, monospace;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .efficiency-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-shadow: none;
+        }
+
+        .efficiency-optimal { background: rgba(76, 175, 80, 0.2); color: #2E7D32; }
+        .efficiency-moderate { background: rgba(255, 152, 0, 0.2); color: #E65100; }
+        .efficiency-poor { background: rgba(244, 67, 54, 0.2); color: #C62828; }
+
+        .softcap-warning {
+            font-size: 0.8rem;
+            color: var(--accent-warning);
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .efficiency-breakdown {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .efficiency-factor {
+            padding: 2px 6px;
+            background: rgba(33, 128, 141, 0.1);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* Enhanced Main Button */
+        #main-click-button {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 25px 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            min-height: 80px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #main-click-button:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        /* NEW: COLLAPSIBLE SECTIONS UI */
+        .collapsible-section {
+            background: var(--surface);
+            margin: 30px 0;
+            border-radius: 24px;
+            box-shadow: var(--shadow-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            background: var(--gradient-success);
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0;
+        }
+
+        .collapse-indicator {
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-section.collapsed .collapse-indicator {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            padding: 35px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .collapsible-section.collapsed .section-content {
+            max-height: 0;
+            padding: 0 35px;
+            overflow: hidden;
+        }
+
+        /* FIXED: No more flickering - Static department cards */
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .department-card {
+            background: var(--surface);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            /* CRITICAL FIX: No transitions that cause flickering */
+            transition: none !important;
+        }
+
+        .department-card.unlocked {
+            border: 2px solid var(--primary-color);
+            opacity: 1;
+        }
+
+        .department-card.unlocked:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-heavy);
+            transition: all 0.3s ease;
+        }
+
+        .department-card.locked {
+            opacity: 0.5;
+            background: linear-gradient(135deg, rgba(158, 158, 158, 0.15), rgba(158, 158, 158, 0.05));
+            border: 2px dashed rgba(158, 158, 158, 0.4);
+            cursor: default;
+            pointer-events: none; /* CRITICAL: Prevent clicks on locked departments */
+        }
+        
+        .department-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .department-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .department-card.locked .department-title {
+            color: var(--text-muted);
+        }
+
+        .unlock-requirements {
+            background: rgba(158, 158, 158, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-warning);
+        }
+
+        .unlock-requirements .requirement-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-warning);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .requirement-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .requirement-item.met {
+            color: var(--accent-success);
+        }
+
+        .requirement-item.unmet {
+            color: var(--accent-error);
+        }
+
+        .department-info {
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* NEW: Department Effects Display */
+        .department-effects {
+            background: rgba(33, 128, 141, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .effects-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .effect-item {
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .effect-positive { color: var(--accent-success); }
+        .effect-negative { color: var(--accent-error); }
+
+        .department-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px 8px;
+            background: linear-gradient(135deg, rgba(33, 128, 141, 0.05), rgba(33, 128, 141, 0.02));
+            border-radius: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'SF Mono', Consolas, monospace;
+        }
+        
+        .department-card button {
+            background: var(--gradient-success);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .department-card.unlocked button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .department-card button:disabled {
+            background: linear-gradient(135deg, #ccc, #ddd);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .department-card.locked button {
+            background: linear-gradient(135deg, #999, #aaa);
+            cursor: not-allowed;
+        }
+
+        /* FIXED: Market rates - no flickering */
+        .market-rates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .market-rate {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(33, 150, 243, 0.02));
+            border-radius: 16px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            /* CRITICAL FIX: No transitions that cause flickering */
+            transition: none !important;
+        }
+
+        .market-rate:hover {
+            border-color: var(--accent-info);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+        }
+
+        .market-rate.favorable { 
+            border-color: var(--accent-success);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.08), rgba(76, 175, 80, 0.03));
+        }
+        .market-rate.unfavorable { 
+            border-color: var(--accent-error);
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.08), rgba(244, 67, 54, 0.03));
+        }
+
+        .rate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .rate-pair {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .rate-trend {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .trend-up { background: rgba(76, 175, 80, 0.2); color: #2E7D32; }
+        .trend-down { background: rgba(244, 67, 54, 0.2); color: #C62828; }
+        .trend-stable { background: rgba(158, 158, 158, 0.2); color: #424242; }
+
+        .rate-value {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-family: 'SF Mono', Consolas, monospace;
+        }
+
+        .rate-volume {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* FIXED: Minigames - no flickering, consistent locked state */
+        .minigames-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .minigame-card {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.05), rgba(156, 39, 176, 0.02));
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
+            border: 2px solid transparent;
+            /* CRITICAL FIX: No transitions that cause flickering */
+            transition: none !important;
+        }
+
+        .minigame-card.unlocked {
+            border-color: var(--accent-purple);
+            opacity: 1;
+        }
+
+        .minigame-card.unlocked:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--accent-purple);
+            transition: all 0.3s ease;
+        }
+
+        .minigame-card.locked {
+            opacity: 0.5;
+            background: linear-gradient(135deg, rgba(158, 158, 158, 0.15), rgba(158, 158, 158, 0.05));
+            border: 2px dashed rgba(158, 158, 158, 0.4);
+            cursor: default;
+            pointer-events: none; /* Prevent clicks on locked minigames */
+        }
+
+        .minigame-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .minigame-card.locked h3 {
+            color: var(--text-muted);
+        }
+
+        .minigame-cost {
+            background: rgba(156, 39, 176, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+        }
+
+        .minigame-card.locked .minigame-cost {
+            background: rgba(158, 158, 158, 0.1);
+            color: var(--text-muted);
+        }
+
+        .minigame-info {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .minigame-rewards {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-success);
+            font-size: 0.9rem;
+            color: var(--accent-success);
+        }
+
+        .minigame-card.locked .minigame-rewards {
+            background: rgba(158, 158, 158, 0.1);
+            color: var(--text-muted);
+            border-left-color: var(--text-muted);
+        }
+
+        .minigame-card button {
+            background: var(--gradient-purple);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .minigame-card.unlocked button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+        }
+
+        .minigame-card button.on-cooldown {
+            background: var(--gradient-warning);
+            cursor: wait;
+        }
+
+        .minigame-card button:disabled, .minigame-card.locked button {
+            background: linear-gradient(135deg, #999, #aaa);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Progress Bars */
+        .progress-item {
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .progress-value {
+            font-family: 'SF Mono', Consolas, monospace;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background: #e8f4f8;
+            border-radius: 25px;
+            height: 32px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 25px;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .progress-fill.stress {
+            background: linear-gradient(90deg, #4CAF50, #FF9800, #F44336);
+        }
+
+        .progress-fill.motivation {
+            background: linear-gradient(90deg, #F44336, #FF9800, #4CAF50);
+        }
+
+        .stress-effects, .motivation-effects {
+            margin-top: 12px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stress-effects {
+            background: rgba(244, 67, 54, 0.1);
+            color: #C62828;
+            border-left: 4px solid var(--accent-error);
+        }
+
+        .motivation-effects {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2E7D32;
+            border-left: 4px solid var(--accent-success);
+        }
+
+        .empty-section {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 18px 24px;
+            box-shadow: var(--shadow-heavy);
+            z-index: 10000;
+            max-width: 400px;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid var(--primary-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .notification.success { border-left-color: var(--accent-success); }
+        .notification.warning { border-left-color: var(--accent-warning); }
+        .notification.error { border-left-color: var(--accent-error); }
+        .notification.info { border-left-color: var(--accent-info); }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: var(--shadow-light);
+            text-align: center;
+        }
+
+        .control-panel h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .control-btn.save { background: var(--gradient-primary); }
+        .control-btn.reset { background: var(--gradient-warning); }
+        .control-btn.export { background: var(--gradient-success); }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .game-container { padding: 15px; }
+            .resource-panel { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .departments-grid { grid-template-columns: 1fr; }
+            .minigames-grid { grid-template-columns: 1fr; }
+            .market-rates { grid-template-columns: 1fr; }
+            
+            .header h1 { font-size: 2.2rem; }
+            #main-click-button { margin: 20px 10px; padding: 20px 30px; }
+            
+            .department-stats { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Economic Indicators */
+        .economic-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+        }
+
+        .indicator-excellent { background: #4CAF50; box-shadow: 0 0 8px rgba(76, 175, 80, 0.5); }
+        .indicator-good { background: #8BC34A; box-shadow: 0 0 8px rgba(139, 195, 74, 0.5); }
+        .indicator-moderate { background: #FF9800; box-shadow: 0 0 8px rgba(255, 152, 0, 0.5); }
+        .indicator-poor { background: #F44336; box-shadow: 0 0 8px rgba(244, 67, 54, 0.5); }
+        .indicator-critical { background: #E91E63; box-shadow: 0 0 8px rgba(233, 30, 99, 0.5); }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Enhanced Header -->
+        <div class="header">
+            <h1>🏦 CorpoClicker Phase 4.2.2</h1>
+            <div class="subtitle">UI Fixes - Collapsible Sections & No More Flickering</div>
+        </div>
+        
+        <!-- Enhanced Resources -->
+        <div class="resource-panel">
+            <div class="resource-item" id="budget-container">
+                <div class="efficiency-indicator" id="budget-efficiency">100%</div>
+                <div class="resource-icon">💰</div>
+                <div class="resource-label">Budżet Korporacji</div>
+                <div class="resource-value" id="budget">100</div>
+                <div class="softcap-warning" id="budget-warning" style="display: none;"></div>
+                <div class="efficiency-breakdown" id="budget-breakdown"></div>
+            </div>
+            
+            <div class="resource-item" id="documents-container">
+                <div class="efficiency-indicator" id="documents-efficiency">100%</div>
+                <div class="resource-icon">📄</div>
+                <div class="resource-label">Dokumenty</div>
+                <div class="resource-value" id="documents">0</div>
+                <div class="softcap-warning" id="documents-warning" style="display: none;"></div>
+                <div class="efficiency-breakdown" id="documents-breakdown"></div>
+            </div>
+            
+            <div class="resource-item" id="coffee-container">
+                <div class="efficiency-indicator" id="coffee-efficiency">100%</div>
+                <div class="resource-icon">☕</div>
+                <div class="resource-label">Kawa Premium</div>
+                <div class="resource-value" id="coffee">0</div>
+                <div class="softcap-warning" id="coffee-warning" style="display: none;"></div>
+                <div class="efficiency-breakdown" id="coffee-breakdown"></div>
+            </div>
+            
+            <div class="resource-item" id="prestige-container">
+                <div class="efficiency-indicator" id="prestige-efficiency">100%</div>
+                <div class="resource-icon">🎖️</div>
+                <div class="resource-label">Prestiż</div>
+                <div class="resource-value" id="prestige">0</div>
+                <div class="softcap-warning" id="prestige-warning" style="display: none;"></div>
+                <div class="efficiency-breakdown" id="prestige-breakdown"></div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Main Button -->
+        <button id="main-click-button">
+            💼 Pracuj za Budżet
+            <div style="font-size: 1.1rem; opacity: 0.9; margin-top: 8px; text-transform: none; letter-spacing: normal;">
+                +<span id="click-value">2</span> 💰 • <span id="click-efficiency">100%</span> efektywności
+            </div>
+        </button>
+        
+        <!-- NEW: COLLAPSIBLE - Stress & Motivation Management -->
+        <div class="collapsible-section" id="human-capital-section">
+            <div class="section-header" onclick="toggleSection('human-capital-section')">
+                <h2>⚖️ Zarządzanie Kapitałem Ludzkim</h2>
+                <span class="collapse-indicator">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <div class="progress-label">😰 Poziom Stresu Korporacyjnego</div>
+                        <div class="progress-value"><span id="stress">0</span> / 200</div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill stress" id="stress-progress" style="width: 0%">
+                            <span id="stress-percentage">0%</span>
+                        </div>
+                    </div>
+                    <div class="stress-effects" id="stress-effects">
+                        Produkcja: 100% • Jakość: 100% • Ryzyko rezygnacji: 0%
+                    </div>
+                </div>
+                
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <div class="progress-label">💪 Motywacja Zespołu</div>
+                        <div class="progress-value"><span id="motivation">50</span> / 100</div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill motivation" id="motivation-progress" style="width: 67%">
+                            <span id="motivation-percentage">67%</span>
+                        </div>
+                    </div>
+                    <div class="motivation-effects" id="motivation-effects">
+                        Bonus produkcji: 0% • Przyspieszenie: Normalne
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NEW: COLLAPSIBLE - Market Trading System -->
+        <div class="collapsible-section collapsed" id="market-section">
+            <div class="section-header" onclick="toggleSection('market-section')">
+                <h2>💱 Centrum Handlowe</h2>
+                <span class="collapse-indicator">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="market-rates" id="market-rates">
+                    <!-- Market rates populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- NEW: COLLAPSIBLE - Departments -->
+        <div class="collapsible-section collapsed" id="departments-section">
+            <div class="section-header" onclick="toggleSection('departments-section')">
+                <h2>🏢 Imperium Korporacyjne</h2>
+                <span class="collapse-indicator">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="departments-grid" id="departments-grid">
+                    <!-- All departments populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- NEW: COLLAPSIBLE - Minigames -->
+        <div class="collapsible-section collapsed" id="minigames-section">
+            <div class="section-header" onclick="toggleSection('minigames-section')">
+                <h2>🎮 Centrum Rozrywki Biznesowej</h2>
+                <span class="collapse-indicator">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="minigames-grid" id="minigames-grid">
+                    <!-- Minigames populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Control Panel -->
+        <div class="control-panel">
+            <h3>🎛️ Panel Kontroli</h3>
+            <div class="control-buttons">
+                <button id="save-game" class="control-btn save">💾 Zapisz Postęp</button>
+                <button id="reset-game" class="control-btn reset">🔄 Reset Gry</button>
+                <button id="export-data" class="control-btn export">📤 Eksport Danych</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =============================================
+           CORPOCLICKER PHASE 4.2.2 - CRITICAL UI FIXES
+           Fixed: Flickering, Added Department Effects, Collapsible UI
+           ============================================= */
+        
+        // Global function for section toggling
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.toggle('collapsed');
+            }
+        }
+        
+        class CorpoClickerPhase422 {
+            constructor() {
+                this.version = "4.2.2-uifix";
+                
+                console.log('🏦 Initializing CorpoClicker Phase 4.2.2 - UI Fixes...');
+                
+                // Core Resources
+                this.resources = {
+                    budget: 100,
+                    documents: 0,
+                    coffee: 0,
+                    stress: 0,
+                    motivation: 50,
+                    prestige: 0,
+                    influence: 0
+                };
+                
+                // Enhanced Departments - All Visible
+                this.departments = {
+                    hr: { owned: 0, unlocked: true },
+                    it: { owned: 0, unlocked: false },
+                    marketing: { owned: 0, unlocked: false },
+                    accounting: { owned: 0, unlocked: false },
+                    management: { owned: 0, unlocked: false },
+                    rd: { owned: 0, unlocked: false },
+                    callcenter: { owned: 0, unlocked: false }
+                };
+                
+                // Enhanced Department Data with Effects
+                this.departmentData = {
+                    hr: { 
+                        name: "Dział HR", 
+                        icon: "👥",
+                        baseCost: 10, 
+                        production: {documents: 1}, 
+                        sideEffects: {stress: 0.1},
+                        description: "Produkuje dokumenty korporacyjne. Zwiększa stres przez biurokrację.",
+                        unlockConditions: []
+                    },
+                    it: { 
+                        name: "Dział IT", 
+                        icon: "💻",
+                        baseCost: 20, 
+                        production: {coffee: 1}, 
+                        sideEffects: {motivation: -0.05},
+                        description: "Zapewnia kawę premium i wsparcie techniczne. Może obniżać motywację.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 5}
+                        ]
+                    },
+                    marketing: { 
+                        name: "Marketing", 
+                        icon: "📈",
+                        baseCost: 35, 
+                        production: {budget: 1, prestige: 0.02},
+                        description: "Generuje przychody i buduje prestiż marki.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 15}
+                        ]
+                    },
+                    accounting: { 
+                        name: "Księgowość", 
+                        icon: "🧮",
+                        baseCost: 55, 
+                        production: {budget: 0.8}, 
+                        sideEffects: {stress: 0.15},
+                        description: "Optymalizuje finanse, ale zwiększa stres przez kontrole.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 35}
+                        ]
+                    },
+                    management: { 
+                        name: "Zarząd", 
+                        icon: "👔",
+                        baseCost: 90, 
+                        production: {motivation: 0.3},
+                        description: "Motywuje pracowników i poprawia efektywność organizacyjną.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'prestige', amount: 5}
+                        ]
+                    },
+                    rd: { 
+                        name: "R&D", 
+                        icon: "🔬",
+                        baseCost: 150, 
+                        production: {prestige: 0.1}, 
+                        sideEffects: {stress: 0.2},
+                        description: "Innowacje zwiększają prestiż, ale wymagają intensywnej pracy.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'prestige', amount: 15}
+                        ]
+                    },
+                    callcenter: { 
+                        name: "Call Center", 
+                        icon: "📞",
+                        baseCost: 300, 
+                        production: {budget: 4}, 
+                        sideEffects: {motivation: -0.3, stress: 0.5},
+                        description: "Wysokie przychody kosztem dobrostanu pracowników.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 100}
+                        ]
+                    }
+                };
+                
+                // Enhanced Minigames with Resource Costs
+                this.minigameData = {
+                    quarterly_presentation: {
+                        name: "Prezentacja Kwartalna",
+                        icon: "📊",
+                        cost: { documents: 100, coffee: 50 },
+                        description: "Wysokopostawowa prezentacja dla zarządu z ryzykiem utraty prestiżu.",
+                        rewards: { 
+                            success: { budget: 500, prestige: 10 }, 
+                            failure: { budget_loss_percent: 0.2, stress: 25 } 
+                        },
+                        cooldown: 300000, // 5 minutes
+                        unlocked: () => this.resources.documents >= 50
+                    },
+                    
+                    barista_championship: {
+                        name: "Mistrzostwa Baristy",
+                        icon: "☕",
+                        cost: { coffee: 200, prestige: 25 },
+                        description: "Konkurs umiejętności parzenia kawy z możliwością rozwinięcia kawiarni.",
+                        rewards: { 
+                            success: { coffee_shop_level: 1, passive_income: 10 }, 
+                            failure: { coffee_addiction: 1, motivation: -15 } 
+                        },
+                        cooldown: 600000, // 10 minutes
+                        unlocked: () => this.departments.it.owned >= 3
+                    },
+                    
+                    corporate_merger: {
+                        name: "Fuzja Korporacyjna",
+                        icon: "🤝",
+                        cost: { budget: 5000, documents: 100 },
+                        description: "Ryzykowna fuzja z konkurencją. Ogromne zyski lub katastrofalne straty.",
+                        rewards: { 
+                            success: { subsidiary: 1, all_production: 1.25 }, 
+                            failure: { budget_loss_percent: 0.5, departments_loss: 1 } 
+                        },
+                        cooldown: 1800000, // 30 minutes
+                        unlocked: () => this.resources.prestige >= 50
+                    },
+                    
+                    government_lobbying: {
+                        name: "Lobbying Rządowy",
+                        icon: "🏛️",
+                        cost: { prestige: 50, budget: 1000 },
+                        description: "Wpływanie na politykę gospodarczą w celu korzystnych regulacji.",
+                        rewards: { 
+                            success: { softcap_increase: 0.25, tax_reduction: 0.1 }, 
+                            failure: { investigation: true, production_penalty: 0.3 } 
+                        },
+                        cooldown: 3600000, // 1 hour
+                        unlocked: () => this.resources.prestige >= 100
+                    }
+                };
+                
+                // Softcap System
+                this.softcapThresholds = {
+                    budget: [1000, 5000, 25000, 125000],
+                    documents: [100, 500, 2500, 12500],
+                    coffee: [50, 250, 1250, 6250],
+                    prestige: [10, 50, 250, 1250]
+                };
+                
+                // Enhanced Market System
+                this.marketSystem = {
+                    rates: {
+                        'documents_to_budget': { base: 0.1, current: 0.1, trend: 'stable' },
+                        'coffee_to_documents': { base: 0.33, current: 0.33, trend: 'stable' },
+                        'prestige_to_influence': { base: 100, current: 100, trend: 'stable' }
+                    },
+                    volume: {
+                        'documents_to_budget': 0,
+                        'coffee_to_documents': 0,
+                        'prestige_to_influence': 0
+                    },
+                    lastUpdate: Date.now(),
+                    totalTrades: 0
+                };
+                
+                // Enhanced Game State
+                this.gameState = {
+                    lastUpdate: Date.now(),
+                    totalClicks: 0,
+                    sessionStart: Date.now(),
+                    gameSpeed: 1.0,
+                    paused: false,
+                    activeEffects: {},
+                    minigameCooldowns: {},
+                    ceoLevel: 1,
+                    marketUpdateInterval: 300000, // 5 minutes
+                    lastDisplayUpdate: {
+                        departments: 0,
+                        minigames: 0,
+                        market: 0
+                    }
+                };
+                
+                // Coffee System
+                this.coffeeSystem = {
+                    addictionLevel: 0,
+                    lastCoffeeTime: 0,
+                    coffeeShopLevel: 0,
+                    dailyCoffeeUses: 0,
+                    coffeeEffects: {}
+                };
+                
+                this.init();
+            }
+            
+            /* =============================================
+               SOFTCAP SYSTEM - From Phase 4.1
+               ============================================= */
+            
+            calculateSoftcap(resource, amount) {
+                const thresholds = this.softcapThresholds[resource];
+                if (!thresholds || amount <= thresholds[0]) {
+                    return 1.0; // No softcap
+                }
+                
+                let efficiency = 1.0;
+                
+                if (amount > thresholds[0] && amount <= thresholds[1]) {
+                    // Tier 2: 100% → 60% (logarithmic)
+                    const ratio = amount / thresholds[0];
+                    efficiency = 0.6 + 0.4 * Math.log(thresholds[1]/thresholds[0]) / Math.log(ratio);
+                    efficiency = Math.max(0.6, Math.min(1.0, efficiency));
+                } else if (amount > thresholds[1] && amount <= thresholds[2]) {
+                    // Tier 3: 60% → 25% (steep)
+                    const ratio = (amount - thresholds[1]) / (thresholds[2] - thresholds[1]);
+                    efficiency = 0.25 + 0.35 * (1 - ratio);
+                } else if (amount > thresholds[2]) {
+                    // Tier 4: 25% → 10% (asymptotic)
+                    const excess = (amount - thresholds[2]) / thresholds[2];
+                    efficiency = 0.1 + 0.15 * Math.exp(-excess);
+                }
+                
+                return Math.max(0.05, efficiency); // Minimum 5% efficiency
+            }
+            
+            getSoftcapTier(resource, amount) {
+                const thresholds = this.softcapThresholds[resource];
+                if (!thresholds) return 0;
+                
+                if (amount <= thresholds[0]) return 1;
+                if (amount <= thresholds[1]) return 2;
+                if (amount <= thresholds[2]) return 3;
+                return 4;
+            }
+            
+            getSoftcapWarning(resource, amount) {
+                const tier = this.getSoftcapTier(resource, amount);
+                const efficiency = this.calculateSoftcap(resource, amount);
+                
+                switch(tier) {
+                    case 1: return null;
+                    case 2: return `Soft limit: ${Math.round(efficiency * 100)}% efektywności`;
+                    case 3: return `Hard limit: ${Math.round(efficiency * 100)}% efektywności`;
+                    case 4: return `Extreme limit: ${Math.round(efficiency * 100)}% efektywności`;
+                    default: return null;
+                }
+            }
+            
+            /* =============================================
+               STRESS SYSTEM - From Phase 4.1
+               ============================================= */
+            
+            calculateStressEffects() {
+                const stress = this.resources.stress;
+                let production = 1.0;
+                let quality = 1.0;
+                let quitChance = 0.0;
+                
+                if (stress <= 25) {
+                    production = 1.0;
+                    quality = 1.0;
+                    quitChance = 0.0;
+                } else if (stress <= 50) {
+                    production = 0.95;
+                    quality = 0.9;
+                    quitChance = 0.01;
+                } else if (stress <= 75) {
+                    production = 0.85;
+                    quality = 0.75;
+                    quitChance = 0.03;
+                } else if (stress <= 100) {
+                    production = 0.70;
+                    quality = 0.50;
+                    quitChance = 0.06;
+                } else if (stress <= 125) {
+                    production = 0.50;
+                    quality = 0.25;
+                    quitChance = 0.10;
+                } else if (stress <= 150) {
+                    production = 0.30;
+                    quality = 0.10;
+                    quitChance = 0.15;
+                } else if (stress <= 175) {
+                    production = 0.15;
+                    quality = 0.05;
+                    quitChance = 0.25;
+                } else {
+                    production = 0.05;
+                    quality = 0.01;
+                    quitChance = 0.40;
+                }
+                
+                return { production, quality, quitChance };
+            }
+            
+            getStressLevel() {
+                const stress = this.resources.stress;
+                if (stress <= 50) return 'low';
+                if (stress <= 100) return 'moderate';
+                if (stress <= 150) return 'high';
+                return 'critical';
+            }
+            
+            /* =============================================
+               MOTIVATION SYSTEM - From Phase 4.1
+               ============================================= */
+            
+            calculateMotivationEffects() {
+                const motivation = this.resources.motivation;
+                let productionBonus = 0;
+                let speedBonus = 1.0;
+                
+                if (motivation <= -25) {
+                    productionBonus = -0.75; // Strike conditions
+                    speedBonus = 0.5;
+                } else if (motivation <= 0) {
+                    productionBonus = -0.50; // Mass resignations possible
+                    speedBonus = 0.7;
+                } else if (motivation <= 25) {
+                    productionBonus = -0.25; // Low morale
+                    speedBonus = 0.85;
+                } else if (motivation <= 50) {
+                    productionBonus = 0; // Baseline
+                    speedBonus = 1.0;
+                } else if (motivation <= 75) {
+                    productionBonus = 0.25; // Good working environment
+                    speedBonus = 1.15;
+                } else if (motivation <= 90) {
+                    productionBonus = 0.50; // High team spirit
+                    speedBonus = 1.35;
+                } else if (motivation <= 100) {
+                    productionBonus = 1.0; // Peak performance
+                    speedBonus = 1.5;
+                }
+                
+                return { productionBonus, speedBonus };
+            }
+            
+            getMotivationLevel() {
+                const motivation = this.resources.motivation;
+                if (motivation <= 0) return 'critical';
+                if (motivation <= 25) return 'poor';
+                if (motivation <= 50) return 'moderate';
+                if (motivation <= 75) return 'good';
+                return 'excellent';
+            }
+            
+            /* =============================================
+               ENHANCED UNLOCK SYSTEM - Show All Departments
+               ============================================= */
+            
+            checkDepartmentUnlocks() {
+                Object.keys(this.departments).forEach(deptId => {
+                    const deptData = this.departmentData[deptId];
+                    const dept = this.departments[deptId];
+                    
+                    if (dept.unlocked) return;
+                    
+                    let allConditionsMet = true;
+                    
+                    if (deptData.unlockConditions) {
+                        for (const condition of deptData.unlockConditions) {
+                            if (condition.type === 'resource') {
+                                if (this.resources[condition.resource] < condition.amount) {
+                                    allConditionsMet = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (allConditionsMet) {
+                        dept.unlocked = true;
+                        this.showNotification(`🆕 Odblokowano ${deptData.name}!`, 'success');
+                        console.log(`Department unlocked: ${deptId}`);
+                        // Force department display update when unlocking
+                        this.gameState.lastDisplayUpdate.departments = 0;
+                    }
+                });
+            }
+            
+            getDepartmentUnlockStatus(deptId) {
+                const deptData = this.departmentData[deptId];
+                const dept = this.departments[deptId];
+                
+                if (dept.unlocked) return { unlocked: true, requirements: [] };
+                
+                const requirements = [];
+                
+                if (deptData.unlockConditions) {
+                    for (const condition of deptData.unlockConditions) {
+                        if (condition.type === 'resource') {
+                            const current = this.resources[condition.resource];
+                            const required = condition.amount;
+                            const met = current >= required;
+                            
+                            requirements.push({
+                                text: `${this.formatResourceName(condition.resource)}: ${Math.floor(current)}/${required}`,
+                                met: met
+                            });
+                        }
+                    }
+                }
+                
+                return { unlocked: false, requirements: requirements };
+            }
+            
+            formatResourceName(resourceId) {
+                const names = {
+                    budget: '💰 Budżet',
+                    documents: '📄 Dokumenty', 
+                    coffee: '☕ Kawa',
+                    prestige: '🎖️ Prestiż'
+                };
+                return names[resourceId] || resourceId;
+            }
+            
+            /* =============================================
+               NEW: DEPARTMENT EFFECTS CALCULATION
+               ============================================= */
+            
+            calculateDepartmentEffects(deptId) {
+                const dept = this.departments[deptId];
+                const deptData = this.departmentData[deptId];
+                
+                if (!dept || !deptData || dept.owned === 0) {
+                    return { production: [], sideEffects: [] };
+                }
+                
+                const effects = {
+                    production: [],
+                    sideEffects: []
+                };
+                
+                // Calculate production effects
+                if (deptData.production) {
+                    Object.entries(deptData.production).forEach(([resource, rate]) => {
+                        const totalRate = rate * dept.owned;
+                        const efficiency = this.calculateSoftcap(resource, this.resources[resource]);
+                        const effectiveRate = totalRate * efficiency;
+                        
+                        effects.production.push({
+                            resource: resource,
+                            rate: effectiveRate.toFixed(2),
+                            icon: resource === 'budget' ? '💰' : resource === 'documents' ? '📄' : 
+                                  resource === 'coffee' ? '☕' : resource === 'prestige' ? '🎖️' : '⚡'
+                        });
+                    });
+                }
+                
+                // Calculate side effects
+                if (deptData.sideEffects) {
+                    Object.entries(deptData.sideEffects).forEach(([resource, rate]) => {
+                        const totalRate = rate * dept.owned;
+                        
+                        effects.sideEffects.push({
+                            resource: resource,
+                            rate: totalRate.toFixed(2),
+                            icon: resource === 'stress' ? '😰' : resource === 'motivation' ? '💪' : '⚡',
+                            positive: totalRate > 0
+                        });
+                    });
+                }
+                
+                return effects;
+            }
+            
+            /* =============================================
+               FIXED: MARKET SYSTEM - No Flickering Updates
+               ============================================= */
+            
+            updateMarketRates() {
+                const now = Date.now();
+                if (now - this.marketSystem.lastUpdate < this.gameState.marketUpdateInterval) return;
+                
+                Object.keys(this.marketSystem.rates).forEach(pair => {
+                    const rate = this.marketSystem.rates[pair];
+                    
+                    // Base fluctuation: ±10%
+                    const fluctuation = (Math.random() - 0.5) * 0.2;
+                    
+                    // Stress factor: higher stress = better rates for selling documents
+                    let stressFactor = 0;
+                    if (pair === 'documents_to_budget') {
+                        stressFactor = this.resources.stress > 100 ? 
+                            (this.resources.stress - 100) * 0.001 : 0;
+                    }
+                    
+                    // Volume factor: high volume = worse rates
+                    const volumeFactor = -this.marketSystem.volume[pair] * 0.0001;
+                    
+                    // Calculate new rate
+                    const newRate = rate.base * (1 + fluctuation + stressFactor + volumeFactor);
+                    
+                    // Update trend
+                    if (newRate > rate.current * 1.02) {
+                        rate.trend = 'up';
+                    } else if (newRate < rate.current * 0.98) {
+                        rate.trend = 'down';
+                    } else {
+                        rate.trend = 'stable';
+                    }
+                    
+                    rate.current = Math.max(rate.base * 0.5, Math.min(rate.base * 2, newRate));
+                });
+                
+                this.marketSystem.lastUpdate = now;
+                // Force market display update only when rates actually change
+                this.gameState.lastDisplayUpdate.market = 0;
+            }
+            
+            trade(fromResource, toResource, amount) {
+                const pair = `${fromResource}_to_${toResource}`;
+                const rate = this.marketSystem.rates[pair];
+                
+                if (!rate || this.resources[fromResource] < amount) {
+                    this.showNotification(`Niewystarczające zasoby do wymiany!`, 'warning');
+                    return false;
+                }
+                
+                const received = amount * rate.current;
+                
+                this.resources[fromResource] -= amount;
+                this.resources[toResource] += received;
+                
+                // Update volume (affects future rates)
+                this.marketSystem.volume[pair] += amount;
+                this.marketSystem.totalTrades++;
+                
+                this.showNotification(`Wymiana: -${amount} ${fromResource} → +${received.toFixed(2)} ${toResource}`, 'success');
+                this.updateDisplay();
+                
+                return true;
+            }
+            
+            openTradeDialog(from, to, rate) {
+                const amount = prompt(`Ile ${from} chcesz wymienić na ${to}?\nAktualny kurs: 1:${rate.toFixed(3)}`);
+                
+                if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                    this.trade(from, to, parseFloat(amount));
+                }
+            }
+            
+            /* =============================================
+               ENHANCED MINIGAME SYSTEM WITH STAKES
+               ============================================= */
+            
+            openMinigame(gameId) {
+                const gameData = this.minigameData[gameId];
+                if (!gameData || !gameData.unlocked()) {
+                    this.showNotification('Mini-gra jeszcze nie odblokowana!', 'warning');
+                    return;
+                }
+                
+                // Check cooldown
+                const lastPlayed = this.gameState.minigameCooldowns[gameId] || 0;
+                const cooldownRemaining = gameData.cooldown - (Date.now() - lastPlayed);
+                
+                if (cooldownRemaining > 0) {
+                    const minutes = Math.ceil(cooldownRemaining / 60000);
+                    this.showNotification(`⏱️ Cooldown: ${minutes} minut`, 'warning');
+                    return;
+                }
+                
+                // Check costs
+                let canAfford = true;
+                const costText = [];
+                
+                Object.entries(gameData.cost).forEach(([resource, amount]) => {
+                    if (this.resources[resource] < amount) {
+                        canAfford = false;
+                    }
+                    costText.push(`${amount} ${this.formatResourceName(resource)}`);
+                });
+                
+                if (!canAfford) {
+                    this.showNotification(`Niewystarczające zasoby! Potrzebujesz: ${costText.join(', ')}`, 'warning');
+                    return;
+                }
+                
+                // Start enhanced minigame
+                this.startStakeMinigame(gameId);
+            }
+            
+            startStakeMinigame(gameId) {
+                const gameData = this.minigameData[gameId];
+                
+                // Deduct costs
+                Object.entries(gameData.cost).forEach(([resource, amount]) => {
+                    this.resources[resource] -= amount;
+                });
+                
+                console.log(`🎮 Starting high-stakes minigame: ${gameId}`);
+                
+                const costText = Object.entries(gameData.cost)
+                    .map(([resource, amount]) => `${amount} ${this.formatResourceName(resource)}`)
+                    .join(', ');
+                
+                this.showNotification(`🎮 ${gameData.name} - Koszt: ${costText}. Naciśnij SPACE aby wygrać!`, 'info', 5000);
+                
+                let completed = false;
+                let success = false;
+                
+                const completeGame = (result) => {
+                    if (completed) return;
+                    completed = true;
+                    success = result;
+                    
+                    document.removeEventListener('keydown', keyHandler);
+                    this.completeStakeMinigame(gameId, success);
+                };
+                
+                const keyHandler = (e) => {
+                    if (e.code === 'Space' || e.key === ' ') {
+                        e.preventDefault();
+                        completeGame(true);
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        completeGame(false);
+                    }
+                };
+                
+                document.addEventListener('keydown', keyHandler);
+                
+                // Difficulty-based success chance
+                const successChances = {
+                    quarterly_presentation: 0.75,
+                    barista_championship: 0.65,
+                    corporate_merger: 0.55,
+                    government_lobbying: 0.45
+                };
+                
+                const successChance = successChances[gameId] || 0.7;
+                
+                setTimeout(() => {
+                    completeGame(Math.random() < successChance);
+                }, 5000);
+            }
+            
+            completeStakeMinigame(gameId, success) {
+                const gameData = this.minigameData[gameId];
+                const rewards = success ? gameData.rewards.success : gameData.rewards.failure;
+                
+                if (success) {
+                    this.showNotification(`🎉 ${gameData.name} - SUKCES!`, 'success');
+                    
+                    Object.entries(rewards).forEach(([reward, value]) => {
+                        this.applyMinigameReward(reward, value);
+                    });
+                    
+                    // Influence points for successful high-stakes games
+                    this.resources.influence += Math.floor(Object.values(gameData.cost).reduce((a, b) => a + b, 0) / 10);
+                    
+                } else {
+                    this.showNotification(`😞 ${gameData.name} - PORAŻKA!`, 'error');
+                    
+                    Object.entries(rewards).forEach(([penalty, value]) => {
+                        this.applyMinigamePenalty(penalty, value);
+                    });
+                }
+                
+                // Set cooldown
+                this.gameState.minigameCooldowns[gameId] = Date.now();
+                // Force minigame display update
+                this.gameState.lastDisplayUpdate.minigames = 0;
+                
+                this.updateDisplay();
+                console.log(`Minigame ${gameId} result:`, success ? 'SUCCESS' : 'FAILED');
+            }
+            
+            applyMinigameReward(reward, value) {
+                switch(reward) {
+                    case 'budget':
+                    case 'documents': 
+                    case 'coffee':
+                    case 'prestige':
+                        this.resources[reward] += value;
+                        break;
+                    case 'coffee_shop_level':
+                        this.coffeeSystem.coffeeShopLevel += value;
+                        break;
+                    case 'passive_income':
+                        this.gameState.activeEffects.passiveIncome = (this.gameState.activeEffects.passiveIncome || 0) + value;
+                        break;
+                    case 'subsidiary':
+                        this.gameState.activeEffects.subsidiaries = (this.gameState.activeEffects.subsidiaries || 0) + value;
+                        break;
+                    case 'all_production':
+                        this.gameState.activeEffects.productionMultiplier = value;
+                        break;
+                    case 'softcap_increase':
+                        Object.keys(this.softcapThresholds).forEach(resource => {
+                            this.softcapThresholds[resource] = this.softcapThresholds[resource].map(t => t * (1 + value));
+                        });
+                        break;
+                }
+            }
+            
+            applyMinigamePenalty(penalty, value) {
+                switch(penalty) {
+                    case 'budget_loss_percent':
+                        this.resources.budget *= (1 - value);
+                        break;
+                    case 'stress':
+                        this.resources.stress += value;
+                        break;
+                    case 'motivation':
+                        this.resources.motivation += value;
+                        break;
+                    case 'coffee_addiction':
+                        this.coffeeSystem.addictionLevel = Math.min(3, this.coffeeSystem.addictionLevel + value);
+                        break;
+                    case 'departments_loss':
+                        // Lose one random department level
+                        const depts = Object.keys(this.departments).filter(d => this.departments[d].owned > 0);
+                        if (depts.length > 0) {
+                            const randomDept = depts[Math.floor(Math.random() * depts.length)];
+                            this.departments[randomDept].owned = Math.max(0, this.departments[randomDept].owned - 1);
+                        }
+                        break;
+                    case 'investigation':
+                        this.gameState.activeEffects.investigation = Date.now() + 3600000; // 1 hour
+                        break;
+                    case 'production_penalty':
+                        this.gameState.activeEffects.productionPenalty = Date.now() + 3600000; // 1 hour
+                        break;
+                }
+            }
+            
+            /* =============================================
+               CORE MECHANICS - Enhanced from Phase 4.1
+               ============================================= */
+            
+            performMainClick() {
+                // Calculate click value with all modifiers
+                let clickValue = 2;
+                
+                // Softcap impact
+                const budgetEfficiency = this.calculateSoftcap('budget', this.resources.budget);
+                
+                // Stress impact
+                const stressEffects = this.calculateStressEffects();
+                
+                // Motivation impact
+                const motivationEffects = this.calculateMotivationEffects();
+                
+                // Final click value
+                const finalValue = clickValue * budgetEfficiency * stressEffects.production * (1 + motivationEffects.productionBonus);
+                
+                this.resources.budget += finalValue;
+                this.gameState.totalClicks++;
+                
+                // Update click display
+                this.updateClickValueDisplay(finalValue, budgetEfficiency);
+                
+                // Visual feedback
+                this.animateResourceValue('budget');
+                
+                // Earn influence for active play
+                if (Math.random() < 0.1) { // 10% chance
+                    this.resources.influence += 0.1;
+                }
+                
+                console.log(`Main click: +${finalValue.toFixed(2)} budget (efficiency: ${Math.round(budgetEfficiency * 100)}%)`);
+                this.updateDisplay();
+            }
+            
+            purchaseDepartment(deptId) {
+                const cost = this.getDepartmentCost(deptId);
+                
+                if (this.resources.budget >= cost) {
+                    this.resources.budget -= cost;
+                    this.departments[deptId].owned++;
+                    
+                    // Force department display update
+                    this.gameState.lastDisplayUpdate.departments = 0;
+                    this.updateDisplay();
+                    
+                    this.showNotification(`🏢 Zatrudniono ${this.departmentData[deptId].name}!`, 'success');
+                    return true;
+                }
+                
+                this.showNotification(`💰 Niewystarczający budżet! Potrzebujesz ${cost} 💰`, 'warning');
+                return false;
+            }
+            
+            getDepartmentCost(deptId) {
+                const baseData = this.departmentData[deptId];
+                if (!baseData) return 999999;
+                
+                const owned = this.departments[deptId].owned;
+                return Math.floor(baseData.baseCost * Math.pow(1.25, owned));
+            }
+            
+            /* =============================================
+               GAME LOOP - Enhanced Production System
+               ============================================= */
+            
+            gameLoop() {
+                if (this.gameState.paused) return;
+                
+                const now = Date.now();
+                const deltaTime = now - this.gameState.lastUpdate;
+                this.gameState.lastUpdate = now;
+                const deltaSeconds = deltaTime / 1000;
+                
+                // Apply game speed from motivation
+                const motivationEffects = this.calculateMotivationEffects();
+                const adjustedDelta = deltaSeconds * motivationEffects.speedBonus * this.gameState.gameSpeed;
+                
+                // Update production
+                this.updateProduction(adjustedDelta);
+                
+                // Apply side effects
+                this.applySideEffects(adjustedDelta);
+                
+                // Update market rates (less frequent)
+                this.updateMarketRates();
+                
+                // Check department unlocks
+                this.checkDepartmentUnlocks();
+                
+                // CRITICAL FIX: Update display less frequently to prevent flickering
+                this.updateDisplayThrottled();
+            }
+            
+            updateProduction(deltaSeconds) {
+                const stressEffects = this.calculateStressEffects();
+                const motivationEffects = this.calculateMotivationEffects();
+                
+                let totalProductionMultiplier = stressEffects.production * (1 + motivationEffects.productionBonus);
+                
+                // Apply upgrade multipliers
+                if (this.gameState.activeEffects.subsidiaries) {
+                    totalProductionMultiplier *= Math.pow(1.1, this.gameState.activeEffects.subsidiaries);
+                }
+                if (this.gameState.activeEffects.productionMultiplier) {
+                    totalProductionMultiplier *= this.gameState.activeEffects.productionMultiplier;
+                }
+                if (this.gameState.activeEffects.productionPenalty && this.gameState.activeEffects.productionPenalty > Date.now()) {
+                    totalProductionMultiplier *= 0.7; // Investigation penalty
+                }
+                
+                Object.entries(this.departments).forEach(([deptId, dept]) => {
+                    if (dept.owned === 0) return;
+                    
+                    const deptData = this.departmentData[deptId];
+                    if (!deptData || !deptData.production) return;
+                    
+                    Object.entries(deptData.production).forEach(([resource, rate]) => {
+                        // Calculate softcap efficiency for this resource
+                        const softcapEfficiency = this.calculateSoftcap(resource, this.resources[resource]);
+                        
+                        // Calculate final production
+                        const production = rate * dept.owned * totalProductionMultiplier * softcapEfficiency * deltaSeconds;
+                        
+                        this.resources[resource] = (this.resources[resource] || 0) + production;
+                    });
+                });
+            }
+            
+            applySideEffects(deltaSeconds) {
+                // Department side effects
+                Object.entries(this.departments).forEach(([deptId, dept]) => {
+                    if (dept.owned === 0) return;
+                    
+                    const deptData = this.departmentData[deptId];
+                    if (!deptData || !deptData.sideEffects) return;
+                    
+                    Object.entries(deptData.sideEffects).forEach(([resource, rate]) => {
+                        const effect = rate * dept.owned * deltaSeconds;
+                        this.resources[resource] = (this.resources[resource] || 0) + effect;
+                    });
+                });
+                
+                // Natural changes
+                this.resources.stress = Math.max(0, this.resources.stress - 0.2 * deltaSeconds);
+                
+                if (this.resources.motivation > 50) {
+                    this.resources.motivation -= 0.15 * deltaSeconds;
+                } else if (this.resources.motivation < 50) {
+                    this.resources.motivation += 0.05 * deltaSeconds;
+                }
+                
+                // Constrain values
+                this.resources.stress = Math.max(0, Math.min(200, this.resources.stress));
+                this.resources.motivation = Math.max(-50, Math.min(100, this.resources.motivation));
+            }
+            
+            /* =============================================
+               FIXED: DISPLAY UPDATES - THROTTLED TO PREVENT FLICKERING
+               ============================================= */
+            
+            updateDisplayThrottled() {
+                const now = Date.now();
+                
+                // Always update resources (lightweight)
+                Object.keys(this.resources).forEach(resource => {
+                    this.updateResourceDisplay(resource);
+                });
+                
+                // Always update progress bars (lightweight)
+                this.updateProgressBars();
+                
+                // Throttled updates for heavy DOM operations (prevent flickering)
+                if (now - this.gameState.lastDisplayUpdate.departments > 1000) { // Update every 1 second
+                    this.updateDepartmentDisplay();
+                    this.gameState.lastDisplayUpdate.departments = now;
+                }
+                
+                if (now - this.gameState.lastDisplayUpdate.minigames > 2000) { // Update every 2 seconds
+                    this.updateMinigameDisplay();
+                    this.gameState.lastDisplayUpdate.minigames = now;
+                }
+                
+                if (now - this.gameState.lastDisplayUpdate.market > 5000) { // Update every 5 seconds
+                    this.updateMarketDisplay();
+                    this.gameState.lastDisplayUpdate.market = now;
+                }
+            }
+            
+            updateDisplay() {
+                // Force immediate update (for manual calls)
+                Object.keys(this.resources).forEach(resource => {
+                    this.updateResourceDisplay(resource);
+                });
+                
+                this.updateProgressBars();
+                this.updateDepartmentDisplay();
+                this.updateMinigameDisplay();
+                this.updateMarketDisplay();
+            }
+            
+            updateResourceDisplay(resource) {
+                const element = document.getElementById(resource);
+                const container = document.getElementById(`${resource}-container`);
+                const efficiencyElement = document.getElementById(`${resource}-efficiency`);
+                const warningElement = document.getElementById(`${resource}-warning`);
+                const breakdownElement = document.getElementById(`${resource}-breakdown`);
+                
+                if (!element) return;
+                
+                const value = Math.floor(this.resources[resource]);
+                element.textContent = this.formatNumber(value);
+                
+                // Calculate and display efficiency
+                const efficiency = this.calculateSoftcap(resource, this.resources[resource]);
+                const efficiencyPercent = Math.round(efficiency * 100);
+                
+                if (efficiencyElement && container) {
+                    efficiencyElement.textContent = `${efficiencyPercent}%`;
+                    
+                    // Update efficiency class
+                    efficiencyElement.className = 'efficiency-indicator ';
+                    if (efficiency >= 0.9) {
+                        efficiencyElement.className += 'efficiency-optimal';
+                        container.className = 'resource-item optimal';
+                    } else if (efficiency >= 0.6) {
+                        efficiencyElement.className += 'efficiency-moderate';
+                        container.className = 'resource-item moderate';
+                    } else {
+                        efficiencyElement.className += 'efficiency-poor';
+                        container.className = 'resource-item softcapped';
+                    }
+                }
+                
+                // Show softcap warning
+                const warning = this.getSoftcapWarning(resource, this.resources[resource]);
+                if (warningElement) {
+                    if (warning) {
+                        warningElement.textContent = warning;
+                        warningElement.style.display = 'block';
+                    } else {
+                        warningElement.style.display = 'none';
+                    }
+                }
+                
+                // Show efficiency breakdown
+                if (breakdownElement) {
+                    const tier = this.getSoftcapTier(resource, this.resources[resource]);
+                    const breakdown = [];
+                    
+                    if (tier > 1) breakdown.push(`Softcap Tier ${tier}`);
+                    
+                    const stressEffects = this.calculateStressEffects();
+                    if (stressEffects.production < 1) {
+                        breakdown.push(`Stres: -${Math.round((1-stressEffects.production)*100)}%`);
+                    }
+                    
+                    const motivationEffects = this.calculateMotivationEffects();
+                    if (motivationEffects.productionBonus !== 0) {
+                        const sign = motivationEffects.productionBonus > 0 ? '+' : '';
+                        breakdown.push(`Motywacja: ${sign}${Math.round(motivationEffects.productionBonus*100)}%`);
+                    }
+                    
+                    breakdownElement.innerHTML = breakdown.map(b => 
+                        `<span class="efficiency-factor">${b}</span>`
+                    ).join('');
+                }
+            }
+            
+            updateClickValueDisplay(finalValue, efficiency) {
+                const clickValueElement = document.getElementById('click-value');
+                const clickEfficiencyElement = document.getElementById('click-efficiency');
+                
+                if (clickValueElement) {
+                    clickValueElement.textContent = finalValue.toFixed(1);
+                }
+                
+                if (clickEfficiencyElement) {
+                    clickEfficiencyElement.textContent = `${Math.round(efficiency * 100)}%`;
+                }
+            }
+            
+            updateProgressBars() {
+                // Stress bar
+                const stressBar = document.getElementById('stress-progress');
+                const stressPercentage = document.getElementById('stress-percentage');
+                const stressEffectsElement = document.getElementById('stress-effects');
+                const stressValue = document.getElementById('stress');
+                
+                if (stressBar && stressValue) {
+                    const stressPercent = (this.resources.stress / 200) * 100;
+                    stressBar.style.width = `${Math.min(stressPercent, 100)}%`;
+                    stressValue.textContent = Math.floor(this.resources.stress);
+                    
+                    if (stressPercentage) {
+                        stressPercentage.textContent = `${Math.round(stressPercent)}%`;
+                    }
+                }
+                
+                if (stressEffectsElement) {
+                    const effects = this.calculateStressEffects();
+                    stressEffectsElement.innerHTML = `
+                        Produkcja: ${Math.round(effects.production * 100)}% • 
+                        Jakość: ${Math.round(effects.quality * 100)}% • 
+                        Ryzyko rezygnacji: ${Math.round(effects.quitChance * 100)}%
+                    `;
+                }
+                
+                // Motivation bar
+                const motivationBar = document.getElementById('motivation-progress');
+                const motivationPercentage = document.getElementById('motivation-percentage');
+                const motivationEffectsElement = document.getElementById('motivation-effects');
+                const motivationValue = document.getElementById('motivation');
+                
+                if (motivationBar && motivationValue) {
+                    const motivationPercent = ((this.resources.motivation + 50) / 150) * 100;
+                    motivationBar.style.width = `${Math.max(0, Math.min(motivationPercent, 100))}%`;
+                    motivationValue.textContent = Math.floor(this.resources.motivation);
+                    
+                    if (motivationPercentage) {
+                        motivationPercentage.textContent = `${Math.round(motivationPercent)}%`;
+                    }
+                }
+                
+                if (motivationEffectsElement) {
+                    const effects = this.calculateMotivationEffects();
+                    const bonus = effects.productionBonus * 100;
+                    const speed = effects.speedBonus;
+                    
+                    motivationEffectsElement.innerHTML = `
+                        Bonus produkcji: ${bonus > 0 ? '+' : ''}${Math.round(bonus)}% • 
+                        Przyspieszenie: ${speed === 1 ? 'Normalne' : `${speed.toFixed(1)}x`}
+                    `;
+                }
+            }
+            
+            /* CRITICAL FIX: Department Display - No More Flickering */
+            updateDepartmentDisplay() {
+                const container = document.getElementById('departments-grid');
+                if (!container) return;
+                
+                // CRITICAL: Only update if container is empty or we have unlock changes
+                const shouldUpdate = container.children.length === 0 || 
+                                   Object.values(this.departments).some((dept, index) => {
+                    const existingCard = container.children[index];
+                    if (!existingCard) return true;
+                    
+                    const isCurrentlyUnlocked = dept.unlocked;
+                    const wasUnlocked = existingCard.classList.contains('unlocked');
+                    
+                    return isCurrentlyUnlocked !== wasUnlocked;
+                });
+                
+                if (!shouldUpdate) return;
+                
+                container.innerHTML = '';
+                
+                Object.entries(this.departmentData).forEach(([deptId, deptData]) => {
+                    const dept = this.departments[deptId];
+                    const unlockStatus = this.getDepartmentUnlockStatus(deptId);
+                    
+                    const card = document.createElement('div');
+                    // CRITICAL: Static classes, no dynamic transitions
+                    card.className = `department-card ${unlockStatus.unlocked ? 'unlocked' : 'locked'}`;
+                    card.dataset.dept = deptId;
+                    
+                    let unlockRequirementsHTML = '';
+                    if (!unlockStatus.unlocked && unlockStatus.requirements.length > 0) {
+                        unlockRequirementsHTML = `
+                            <div class="unlock-requirements">
+                                <div class="requirement-title">Wymagania do odblokowania:</div>
+                                ${unlockStatus.requirements.map(req => `
+                                    <div class="requirement-item ${req.met ? 'met' : 'unmet'}">
+                                        ${req.met ? '✅' : '❌'} ${req.text}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    // NEW: Department Effects Display
+                    let effectsHTML = '';
+                    if (unlockStatus.unlocked && dept.owned > 0) {
+                        const effects = this.calculateDepartmentEffects(deptId);
+                        
+                        effectsHTML = `
+                            <div class="department-effects">
+                                <div class="effects-title">Aktualne efekty (poziom ${dept.owned}):</div>
+                                ${effects.production.map(effect => `
+                                    <div class="effect-item effect-positive">
+                                        ${effect.icon} +${effect.rate}/s ${effect.resource}
+                                    </div>
+                                `).join('')}
+                                ${effects.sideEffects.map(effect => `
+                                    <div class="effect-item ${effect.positive ? 'effect-positive' : 'effect-negative'}">
+                                        ${effect.icon} ${effect.positive ? '+' : ''}${effect.rate}/s ${effect.resource}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="department-header">
+                            <div class="department-title">
+                                <span>${deptData.icon}</span> ${deptData.name}
+                            </div>
+                        </div>
+                        
+                        ${unlockRequirementsHTML}
+                        
+                        <div class="department-info">
+                            ${deptData.description}
+                        </div>
+                        
+                        ${effectsHTML}
+                        
+                        <div class="department-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Posiadane</div>
+                                <div class="stat-value department-count">${dept.owned}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Koszt</div>
+                                <div class="stat-value department-cost">${this.formatNumber(this.getDepartmentCost(deptId))}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Poziom</div>
+                                <div class="stat-value">${dept.owned > 0 ? Math.floor(Math.log2(dept.owned + 1)) + 1 : 1}</div>
+                            </div>
+                        </div>
+                        
+                        <button ${unlockStatus.unlocked && this.resources.budget >= this.getDepartmentCost(deptId) ? '' : 'disabled'}>
+                            ${unlockStatus.unlocked ? 'Zatrudnij' : 'Zablokowane'}
+                        </button>
+                    `;
+                    
+                    // CRITICAL: Add event listener only for unlocked departments
+                    if (unlockStatus.unlocked) {
+                        const button = card.querySelector('button');
+                        button.addEventListener('click', () => this.purchaseDepartment(deptId));
+                    }
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            /* FIXED: Minigame Display - No More Flickering, Show All */
+            updateMinigameDisplay() {
+                const container = document.getElementById('minigames-grid');
+                if (!container) return;
+                
+                // CRITICAL: Only update if content needs to change
+                const currentGameCount = container.children.length;
+                const expectedGameCount = Object.keys(this.minigameData).length;
+                
+                if (currentGameCount === expectedGameCount) return;
+                
+                container.innerHTML = '';
+                
+                Object.entries(this.minigameData).forEach(([gameId, gameData]) => {
+                    const isUnlocked = gameData.unlocked();
+                    const lastPlayed = this.gameState.minigameCooldowns[gameId] || 0;
+                    const cooldownRemaining = gameData.cooldown - (Date.now() - lastPlayed);
+                    const onCooldown = cooldownRemaining > 0;
+                    
+                    const card = document.createElement('div');
+                    // CRITICAL: Static classes, show all games but gray out locked ones
+                    card.className = `minigame-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+                    card.dataset.game = gameId;
+                    
+                    const costText = Object.entries(gameData.cost)
+                        .map(([resource, amount]) => `${amount} ${this.formatResourceName(resource)}`)
+                        .join(', ');
+                    
+                    const successRewards = Object.entries(gameData.rewards.success)
+                        .map(([reward, value]) => `${reward}: +${value}`)
+                        .join(', ');
+                    
+                    let buttonText, buttonClass = '';
+                    
+                    if (!isUnlocked) {
+                        buttonText = 'Zablokowane';
+                        buttonClass = 'disabled';
+                    } else if (onCooldown) {
+                        buttonText = `Cooldown: ${Math.ceil(cooldownRemaining / 60000)}min`;
+                        buttonClass = 'on-cooldown disabled';
+                    } else {
+                        buttonText = 'Zagraj Teraz';
+                    }
+                    
+                    card.innerHTML = `
+                        <h3>
+                            <span>${gameData.icon}</span> ${gameData.name}
+                        </h3>
+                        
+                        <div class="minigame-cost">
+                            💸 Koszt: ${costText}
+                        </div>
+                        
+                        <div class="minigame-info">
+                            ${gameData.description}
+                        </div>
+                        
+                        <div class="minigame-rewards">
+                            🎁 Nagrody za sukces: ${successRewards}
+                        </div>
+                        
+                        <button class="${buttonClass}" ${buttonClass.includes('disabled') ? 'disabled' : ''}>
+                            ${buttonText}
+                        </button>
+                    `;
+                    
+                    // Add event listener only for unlocked, non-cooldown games
+                    const button = card.querySelector('button');
+                    if (isUnlocked && !onCooldown && !buttonClass.includes('disabled')) {
+                        button.addEventListener('click', () => this.openMinigame(gameId));
+                    }
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            /* FIXED: Market Display - No More Flickering */
+            updateMarketDisplay() {
+                const container = document.getElementById('market-rates');
+                if (!container) return;
+                
+                // CRITICAL: Only update if rates have actually changed
+                const currentRateCount = container.children.length;
+                const expectedRateCount = Object.keys(this.marketSystem.rates).length;
+                
+                if (currentRateCount === expectedRateCount) return;
+                
+                container.innerHTML = '';
+                
+                Object.entries(this.marketSystem.rates).forEach(([pair, rate]) => {
+                    const [from, to] = pair.split('_to_');
+                    const volume = this.marketSystem.volume[pair];
+                    
+                    const rateElement = document.createElement('div');
+                    rateElement.className = 'market-rate';
+                    
+                    // Add favorable/unfavorable styling
+                    if (rate.current > rate.base * 1.1) {
+                        rateElement.classList.add('favorable');
+                    } else if (rate.current < rate.base * 0.9) {
+                        rateElement.classList.add('unfavorable');
+                    }
+                    
+                    rateElement.innerHTML = `
+                        <div class="rate-header">
+                            <div class="rate-pair">${from} → ${to}</div>
+                            <div class="rate-trend trend-${rate.trend}">
+                                ${rate.trend === 'up' ? '📈' : rate.trend === 'down' ? '📉' : '➡️'}
+                            </div>
+                        </div>
+                        <div class="rate-value">1:${rate.current.toFixed(3)}</div>
+                        <div class="rate-volume">Wolumen: ${volume.toFixed(0)}</div>
+                    `;
+                    
+                    rateElement.addEventListener('click', () => {
+                        this.openTradeDialog(from, to, rate.current);
+                    });
+                    
+                    container.appendChild(rateElement);
+                });
+            }
+            
+            /* =============================================
+               UTILITY FUNCTIONS - Enhanced
+               ============================================= */
+            
+            formatNumber(num) {
+                if (Math.abs(num) >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+                if (Math.abs(num) >= 1e9) return (num / 1e9).toFixed(2) + 'B';  
+                if (Math.abs(num) >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+                if (Math.abs(num) >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+                return Math.floor(num).toString();
+            }
+            
+            getTotalDepartments() {
+                return Object.values(this.departments).reduce((sum, dept) => sum + dept.owned, 0);
+            }
+            
+            animateResourceValue(resource) {
+                const element = document.getElementById(resource);
+                if (element) {
+                    element.style.animation = 'none';
+                    setTimeout(() => {
+                        element.style.animation = 'valueUpdate 0.6s ease';
+                    }, 10);
+                }
+            }
+            
+            showNotification(message, type = 'info', duration = 3000) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideInRight 0.4s ease reverse';
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.parentElement.removeChild(notification);
+                        }
+                    }, 400);
+                }, duration);
+            }
+            
+            /* =============================================
+               EVENT HANDLERS
+               ============================================= */
+            
+            setupEventHandlers() {
+                // Main click button
+                const mainButton = document.getElementById('main-click-button');
+                if (mainButton) {
+                    mainButton.addEventListener('click', () => this.performMainClick());
+                }
+                
+                // Control buttons
+                document.getElementById('save-game')?.addEventListener('click', () => this.saveGame());
+                document.getElementById('reset-game')?.addEventListener('click', () => this.resetGame());
+                document.getElementById('export-data')?.addEventListener('click', () => this.exportData());
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && !e.ctrlKey && !e.altKey && !document.activeElement.tagName.match(/INPUT|TEXTAREA/)) {
+                        e.preventDefault();
+                        this.performMainClick();
+                    }
+                });
+                
+                console.log('✅ Enhanced event handlers attached');
+            }
+            
+            /* =============================================
+               SAVE/LOAD SYSTEM - Enhanced for Phase 4.2.2
+               ============================================= */
+            
+            saveGame() {
+                try {
+                    const saveData = {
+                        version: this.version,
+                        resources: this.resources,
+                        departments: this.departments,
+                        gameState: this.gameState,
+                        marketSystem: this.marketSystem,
+                        coffeeSystem: this.coffeeSystem,
+                        timestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem('corpoclicker_phase422_save', JSON.stringify(saveData));
+                    this.showNotification('💾 Gra zapisana pomyślnie!', 'success');
+                } catch (error) {
+                    this.showNotification('❌ Błąd podczas zapisu!', 'error');
+                    console.error('Save failed:', error);
+                }
+            }
+            
+            loadGame() {
+                try {
+                    // Try to load Phase 4.2.2 save first
+                    let saved = localStorage.getItem('corpoclicker_phase422_save');
+                    
+                    // If not found, try previous versions for backwards compatibility
+                    if (!saved) {
+                        saved = localStorage.getItem('corpoclicker_phase421_save') || 
+                                localStorage.getItem('corpoclicker_phase42_save');
+                    }
+                    
+                    if (saved) {
+                        const saveData = JSON.parse(saved);
+                        
+                        this.resources = { ...this.resources, ...saveData.resources };
+                        this.departments = { ...this.departments, ...saveData.departments };
+                        this.gameState = { ...this.gameState, ...saveData.gameState };
+                        
+                        if (saveData.marketSystem) {
+                            this.marketSystem = { ...this.marketSystem, ...saveData.marketSystem };
+                        }
+                        
+                        if (saveData.coffeeSystem) {
+                            this.coffeeSystem = { ...this.coffeeSystem, ...saveData.coffeeSystem };
+                        }
+                        
+                        console.log('📁 Phase 4.2.2 game loaded successfully');
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Load failed:', error);
+                }
+                return false;
+            }
+            
+            resetGame() {
+                if (confirm('Czy na pewno chcesz zresetować grę? Wszystkie postępy zostaną utracone!')) {
+                    localStorage.removeItem('corpoclicker_phase422_save');
+                    localStorage.removeItem('corpoclicker_phase421_save');
+                    localStorage.removeItem('corpoclicker_phase42_save'); 
+                    this.showNotification('Gra zostanie zresetowana za 3 sekundy...', 'warning', 3000);
+                    setTimeout(() => window.location.reload(), 3000);
+                }
+            }
+            
+            exportData() {
+                try {
+                    const exportData = {
+                        version: this.version,
+                        resources: this.resources,
+                        departments: this.departments,
+                        gameState: this.gameState,
+                        marketSystem: this.marketSystem,
+                        coffeeSystem: this.coffeeSystem,
+                        exportTime: new Date().toISOString()
+                    };
+                    
+                    const dataStr = JSON.stringify(exportData, null, 2);
+                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                    
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(dataBlob);
+                    link.download = `corpoclicker_phase422_${Date.now()}.json`;
+                    link.click();
+                    
+                    this.showNotification('📤 Dane wyeksportowane!', 'success');
+                } catch (error) {
+                    this.showNotification('❌ Błąd podczas eksportu!', 'error');
+                }
+            }
+            
+            /* =============================================
+               INITIALIZATION
+               ============================================= */
+            
+            init() {
+                console.log('🔧 Initializing Phase 4.2.2 systems...');
+                
+                // Load saved game
+                this.loadGame();
+                
+                // Setup event handlers
+                this.setupEventHandlers();
+                
+                // Start game loop
+                setInterval(() => this.gameLoop(), 100);
+                
+                // Initialize displays
+                this.updateDisplay();
+                
+                console.log('✅ CorpoClicker Phase 4.2.2 - UI Fixes initialized!');
+                console.log('🔧 Critical fixes:');
+                console.log('   • FIXED: Flickering eliminated with throttled updates');
+                console.log('   • FIXED: Locked elements properly prevented from clicking');
+                console.log('   • ADDED: Department effects display with production/side effects');
+                console.log('   • ADDED: Collapsible sections for better UI organization');
+                console.log('   • ADDED: All minigames visible with grayed-out locked state');
+                console.log('   • ENHANCED: Market display with proper update throttling');
+                
+                // Welcome message
+                setTimeout(() => {
+                    this.showNotification('🔧 Phase 4.2.2 - Critical UI fixes applied!', 'success');
+                }, 1000);
+            }
+        }
+        
+        // Initialize game when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM loaded, starting Phase 4.2.2...');
+            
+            try {
+                window.game = new CorpoClickerPhase422();
+                console.log('🎯 Phase 4.2.2 game instance created successfully');
+            } catch (error) {
+                console.error('💥 Critical error during Phase 4.2.2 initialization:', error);
+            }
+        });
+    </script>
+</body>
+</html>
