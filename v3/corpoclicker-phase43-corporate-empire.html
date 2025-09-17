@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpoClicker Phase 4.3 - Corporate Empire</title>
+    <!-- Embedded Manifest -->
+    <script>
+        // Embedded PWA Manifest
+        if ('serviceWorker' in navigator) {
+            const manifestData = {
+                "name": "CorpoClicker Phase 4.3",
+                "short_name": "CorpoClicker",
+                "description": "Advanced Corporate Clicker Game - Global Empire Edition",
+                "start_url": "./",
+                "display": "standalone",
+                "background_color": "#21808d",
+                "theme_color": "#21808d",
+                "orientation": "portrait-primary",
+                "icons": [
+                    {
+                        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%2321808d'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40'%3E🏦%3C/text%3E%3C/svg%3E",
+                        "sizes": "192x192",
+                        "type": "image/svg+xml"
+                    }
+                ]
+            };
+            
+            const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = manifestURL;
+            document.head.appendChild(link);
+        }
+    </script>
+    <meta name="theme-color" content="#21808d">
+    <style>
+        /* PHASE 4.3 - MODERN UI SYSTEM WITH GLOBAL MARKETS */
+        :root {
+            /* Theme Colors */
+            --primary: #21808d;
+            --primary-light: #2d9aa8;
+            --primary-dark: #1a6b75;
+            
+            /* Accent Colors */
+            --accent-success: #4CAF50;
+            --accent-warning: #FF9800;
+            --accent-error: #F44336;
+            --accent-info: #2196F3;
+            --accent-purple: #9C27B0;
+            
+            /* Regional Colors */
+            --region-europe: #3F51B5;
+            --region-americas: #8BC34A;
+            --region-asia: #FF5722;
+            --region-africa: #795548;
+            --region-middle-east: #607D8B;
+            
+            /* Currency Colors */
+            --currency-usd: #4CAF50;
+            --currency-eur: #2196F3;
+            --currency-jpy: #FF5722;
+            --currency-cny: #F44336;
+            --currency-freight: #9C27B0;
+            
+            /* UI Colors */
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --surface-alt: #f5f5f5;
+            --text: #212121;
+            --text-muted: #616161;
+            --text-light: #9E9E9E;
+            
+            /* Shadows & Effects */
+            --shadow-light: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
+            --shadow-heavy: 0 8px 16px rgba(0,0,0,0.2);
+            --blur-backdrop: blur(8px);
+            
+            /* Typography Scale (Reduced from 4.2.2) */
+            --text-xs: 0.75rem;    /* 12px */
+            --text-sm: 0.875rem;   /* 14px - new base */
+            --text-base: 1rem;     /* 16px */
+            --text-lg: 1.125rem;   /* 18px */
+            --text-xl: 1.25rem;    /* 20px */
+            --text-2xl: 1.5rem;    /* 24px */
+            --text-3xl: 1.875rem;  /* 30px */
+            
+            /* Spacing Scale */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-12: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-size: var(--text-sm);
+            line-height: 1.5;
+            background: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* STICKY RESOURCE BAR - Always visible */
+        .resource-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--surface);
+            backdrop-filter: var(--blur-backdrop);
+            border-bottom: 1px solid #e0e0e0;
+            padding: var(--space-3) var(--space-4);
+            box-shadow: var(--shadow-light);
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-3);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background: var(--surface-alt);
+            border-radius: var(--radius-md);
+            min-width: 0; /* Prevent flex overflow */
+        }
+
+        .resource-icon {
+            font-size: var(--text-lg);
+            flex-shrink: 0;
+        }
+
+        .resource-info {
+            min-width: 0; /* Prevent flex overflow */
+        }
+
+        .resource-label {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .resource-value {
+            font-size: var(--text-base);
+            font-weight: 700;
+            font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+            color: var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .resource-efficiency {
+            font-size: var(--text-xs);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            margin-left: var(--space-2);
+        }
+
+        .efficiency-optimal { background: rgba(76, 175, 80, 0.2); color: #2E7D32; }
+        .efficiency-moderate { background: rgba(255, 152, 0, 0.2); color: #E65100; }
+        .efficiency-poor { background: rgba(244, 67, 54, 0.2); color: #C62828; }
+
+        /* TAB SYSTEM - Modern Navigation */
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .tab-navigation {
+            background: var(--surface);
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 var(--space-4);
+            overflow-x: auto;
+        }
+
+        .tab-list {
+            display: flex;
+            gap: 0;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            min-width: max-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: var(--space-4) var(--space-6);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: var(--text);
+            background: var(--surface-alt);
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-button .tab-icon {
+            margin-right: var(--space-2);
+        }
+
+        /* TAB CONTENT PANELS */
+        .tab-content {
+            display: none;
+            padding: var(--space-6);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* MAIN CLICK BUTTON - Prominent but compact */
+        .main-action {
+            text-align: center;
+            padding: var(--space-6);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .main-click-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: var(--space-4) var(--space-8);
+            font-size: var(--text-lg);
+            font-weight: 700;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-click-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .click-info {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+            margin-top: var(--space-1);
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        /* MODERN CARD SYSTEM */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: var(--space-4) var(--space-5);
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .card-content {
+            padding: var(--space-5);
+        }
+
+        /* GRID LAYOUTS - Responsive */
+        .grid {
+            display: grid;
+            gap: var(--space-4);
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-auto { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+        /* GLOBAL REGIONS SYSTEM */
+        .region-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .region-header {
+            background: linear-gradient(135deg, var(--region-europe), transparent);
+            padding: var(--space-4);
+            color: white;
+            position: relative;
+        }
+
+        .region-card[data-region="americas"] .region-header {
+            background: linear-gradient(135deg, var(--region-americas), transparent);
+        }
+
+        .region-card[data-region="asia"] .region-header {
+            background: linear-gradient(135deg, var(--region-asia), transparent);
+        }
+
+        .region-card[data-region="africa"] .region-header {
+            background: linear-gradient(135deg, var(--region-africa), transparent);
+        }
+
+        .region-card[data-region="middle-east"] .region-header {
+            background: linear-gradient(135deg, var(--region-middle-east), transparent);
+        }
+
+        .region-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .region-status {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+            margin-top: var(--space-1);
+        }
+
+        .region-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-3);
+            background: var(--surface-alt);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-label {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: var(--text-base);
+            font-weight: 700;
+            color: var(--primary);
+            font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+            margin-top: var(--space-1);
+        }
+
+        /* FX TRADING SYSTEM */
+        .fx-ticker {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            color: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-4);
+        }
+
+        .fx-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+            text-align: center;
+        }
+
+        .fx-pairs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-3);
+        }
+
+        .fx-pair {
+            text-align: center;
+            padding: var(--space-3);
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fx-pair:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .fx-pair-name {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+
+        .fx-rate {
+            font-size: var(--text-base);
+            font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+            font-weight: 700;
+        }
+
+        .fx-trend {
+            font-size: var(--text-xs);
+            margin-top: var(--space-1);
+        }
+
+        .trend-up { color: #4CAF50; }
+        .trend-down { color: #F44336; }
+        .trend-stable { color: #FFC107; }
+
+        /* AI AUTOMATION PANEL */
+        .automation-panel {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+        }
+
+        .automation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+
+        .automation-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .automation-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .automation-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .automation-toggle.active {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        .ai-agents {
+            display: grid;
+            gap: var(--space-3);
+        }
+
+        .ai-agent {
+            background: rgba(255,255,255,0.1);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .agent-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        .agent-status.inactive {
+            background: #757575;
+            box-shadow: none;
+        }
+
+        /* DEPARTMENT SYSTEM - Enhanced for Global Operations */
+        .department-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .department-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .department-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .department-card.locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .department-header {
+            padding: var(--space-4);
+            background: linear-gradient(135deg, rgba(33, 128, 141, 0.1), transparent);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .department-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .department-description {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .department-body {
+            padding: var(--space-4);
+        }
+
+        .department-effects {
+            background: rgba(33, 128, 141, 0.05);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-4);
+            border-left: 3px solid var(--primary);
+        }
+
+        .effects-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .effect-item {
+            font-size: var(--text-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-1);
+        }
+
+        .effect-positive { color: var(--accent-success); }
+        .effect-negative { color: var(--accent-error); }
+
+        .department-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .department-button {
+            background: linear-gradient(135deg, var(--accent-success), #66BB6A);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .department-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .department-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* PROGRESS BARS - Compact Design */
+        .progress-container {
+            background: #e8f4f8;
+            border-radius: 12px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
+        }
+
+        .progress-fill.stress {
+            background: linear-gradient(90deg, #4CAF50, #FF9800, #F44336);
+        }
+
+        .progress-fill.motivation {
+            background: linear-gradient(90deg, #F44336, #FF9800, #4CAF50);
+        }
+
+        /* NOTIFICATIONS - Modern Toast System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4) var(--space-5);
+            box-shadow: var(--shadow-heavy);
+            z-index: 10000;
+            max-width: 400px;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid var(--primary);
+            backdrop-filter: var(--blur-backdrop);
+        }
+
+        .notification.success { border-left-color: var(--accent-success); }
+        .notification.warning { border-left-color: var(--accent-warning); }
+        .notification.error { border-left-color: var(--accent-error); }
+        .notification.info { border-left-color: var(--accent-info); }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .resource-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tab-button {
+                padding: var(--space-3) var(--space-4);
+                font-size: var(--text-xs);
+            }
+            
+            .tab-content {
+                padding: var(--space-4);
+            }
+            
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .department-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .fx-pairs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --text-xs: 0.7rem;
+                --text-sm: 0.8rem;
+                --text-base: 0.9rem;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-navigation {
+                padding: 0 var(--space-2);
+            }
+            
+            .tab-button {
+                padding: var(--space-2) var(--space-3);
+            }
+        }
+
+        /* UTILITY CLASSES */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+
+        .font-mono { font-family: ui-monospace, 'SF Mono', Consolas, monospace; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 600; }
+
+        .text-success { color: var(--accent-success); }
+        .text-warning { color: var(--accent-warning); }
+        .text-error { color: var(--accent-error); }
+        .text-muted { color: var(--text-muted); }
+
+        .mb-2 { margin-bottom: var(--space-2); }
+        .mb-3 { margin-bottom: var(--space-3); }
+        .mb-4 { margin-bottom: var(--space-4); }
+        .mb-6 { margin-bottom: var(--space-6); }
+
+        .hidden { display: none; }
+        .invisible { visibility: hidden; }
+
+        /* LOADING STATES */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <!-- STICKY RESOURCE BAR - Always Visible -->
+    <div class="resource-bar">
+        <div class="resource-grid">
+            <!-- Core Resources -->
+            <div class="resource-item">
+                <div class="resource-icon">💰</div>
+                <div class="resource-info">
+                    <div class="resource-label">Budżet</div>
+                    <div class="resource-value" id="budget">100</div>
+                </div>
+                <div class="resource-efficiency efficiency-optimal" id="budget-efficiency">100%</div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">📄</div>
+                <div class="resource-info">
+                    <div class="resource-label">Dokumenty</div>
+                    <div class="resource-value" id="documents">0</div>
+                </div>
+                <div class="resource-efficiency efficiency-optimal" id="documents-efficiency">100%</div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">☕</div>
+                <div class="resource-info">
+                    <div class="resource-label">Kawa</div>
+                    <div class="resource-value" id="coffee">0</div>
+                </div>
+                <div class="resource-efficiency efficiency-optimal" id="coffee-efficiency">100%</div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">🎖️</div>
+                <div class="resource-info">
+                    <div class="resource-label">Prestiż</div>
+                    <div class="resource-value" id="prestige">0</div>
+                </div>
+                <div class="resource-efficiency efficiency-optimal" id="prestige-efficiency">100%</div>
+            </div>
+
+            <!-- International Currencies -->
+            <div class="resource-item">
+                <div class="resource-icon">💵</div>
+                <div class="resource-info">
+                    <div class="resource-label">USD</div>
+                    <div class="resource-value" id="usd">0</div>
+                </div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">💶</div>
+                <div class="resource-info">
+                    <div class="resource-label">EUR</div>
+                    <div class="resource-value" id="eur">0</div>
+                </div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">💴</div>
+                <div class="resource-info">
+                    <div class="resource-label">JPY</div>
+                    <div class="resource-value" id="jpy">0</div>
+                </div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">💷</div>
+                <div class="resource-info">
+                    <div class="resource-label">CNY</div>
+                    <div class="resource-value" id="cny">0</div>
+                </div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-icon">📦</div>
+                <div class="resource-info">
+                    <div class="resource-label">Freight</div>
+                    <div class="resource-value" id="freight">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN GAME CONTAINER -->
+    <div class="game-container">
+        <!-- GAME HEADER -->
+        <div class="main-action">
+            <h1 style="font-size: var(--text-3xl); font-weight: 800; margin-bottom: var(--space-2); background: linear-gradient(135deg, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                🏦 CorpoClicker Phase 4.3
+            </h1>
+            <div style="font-size: var(--text-base); color: var(--text-muted); margin-bottom: var(--space-4);">
+                Corporate Empire - Global Markets Edition
+            </div>
+            
+            <button class="main-click-button" id="main-click-button">
+                💼 Pracuj za Budżet
+                <div class="click-info">
+                    +<span id="click-value">2</span> 💰 • <span id="click-efficiency">100%</span> efektywności
+                </div>
+            </button>
+        </div>
+
+        <!-- TAB NAVIGATION -->
+        <nav class="tab-navigation">
+            <ul class="tab-list" role="tablist">
+                <li role="presentation">
+                    <button class="tab-button active" id="tab-overview" onclick="switchTab('overview')" role="tab">
+                        <span class="tab-icon">📊</span>
+                        Przegląd
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-button" id="tab-human-capital" onclick="switchTab('human-capital')" role="tab">
+                        <span class="tab-icon">⚖️</span>
+                        Kapitał Ludzki
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-button" id="tab-global-markets" onclick="switchTab('global-markets')" role="tab">
+                        <span class="tab-icon">🌍</span>
+                        Rynki Globalne
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-button" id="tab-trade" onclick="switchTab('trade')" role="tab">
+                        <span class="tab-icon">💱</span>
+                        Handel
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-button" id="tab-automation" onclick="switchTab('automation')" role="tab">
+                        <span class="tab-icon">🤖</span>
+                        Automatyzacja
+                    </button>
+                </li>
+                <li role="presentation">
+                    <button class="tab-button" id="tab-minigames" onclick="switchTab('minigames')" role="tab">
+                        <span class="tab-icon">🎮</span>
+                        Rozrywka
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- TAB CONTENT PANELS -->
+
+        <!-- OVERVIEW TAB -->
+        <div class="tab-content active" id="overview-content">
+            <div class="grid grid-auto">
+                <!-- Company Overview Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🏢</span>
+                            Imperium Korporacyjne
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="department-grid" id="departments-overview">
+                            <!-- Departments will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Presence Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🌍</span>
+                            Obecność Globalna
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="region-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Aktywne Regiony</div>
+                                <div class="stat-value" id="active-regions">1</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Całkowite Przychody</div>
+                                <div class="stat-value" id="total-revenue">100</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Globalny Poziom</div>
+                                <div class="stat-value" id="global-level">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HUMAN CAPITAL TAB -->
+        <div class="tab-content" id="human-capital-content">
+            <div class="grid">
+                <!-- Stress Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>😰</span>
+                            Poziom Stresu Korporacyjnego
+                        </h2>
+                        <div class="font-mono"><span id="stress">0</span> / 200</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="progress-container">
+                            <div class="progress-fill stress" id="stress-progress" style="width: 0%">
+                                <span id="stress-percentage">0%</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: var(--space-3); padding: var(--space-3); background: rgba(244, 67, 54, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-error); color: #C62828; font-size: var(--text-sm);" id="stress-effects">
+                            Produkcja: 100% • Jakość: 100% • Ryzyko rezygnacji: 0%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motivation Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>💪</span>
+                            Motywacja Zespołu
+                        </h2>
+                        <div class="font-mono"><span id="motivation">50</span> / 100</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="progress-container">
+                            <div class="progress-fill motivation" id="motivation-progress" style="width: 67%">
+                                <span id="motivation-percentage">67%</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: var(--space-3); padding: var(--space-3); background: rgba(76, 175, 80, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-success); color: #2E7D32; font-size: var(--text-sm);" id="motivation-effects">
+                            Bonus produkcji: 0% • Przyspieszenie: Normalne
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLOBAL MARKETS TAB -->
+        <div class="tab-content" id="global-markets-content">
+            <div class="grid grid-auto">
+                <!-- Region Cards -->
+                <div class="region-card card" data-region="europe">
+                    <div class="region-header">
+                        <h3 class="region-title">🇪🇺 Europa</h3>
+                        <div class="region-status">Odblokowane</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="region-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Przychody</div>
+                                <div class="stat-value">€0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pracownicy</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Poziom</div>
+                                <div class="stat-value">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card card locked" data-region="americas">
+                    <div class="region-header">
+                        <h3 class="region-title">🌎 Ameryki</h3>
+                        <div class="region-status">Wymaga: 1000 💰</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="region-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Przychody</div>
+                                <div class="stat-value">$0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pracownicy</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Poziom</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card card locked" data-region="asia">
+                    <div class="region-header">
+                        <h3 class="region-title">🌏 Azja-Pacyfik</h3>
+                        <div class="region-status">Wymaga: 5000 💰</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="region-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Przychody</div>
+                                <div class="stat-value">¥0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pracownicy</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Poziom</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card card locked" data-region="africa">
+                    <div class="region-header">
+                        <h3 class="region-title">🌍 Afryka</h3>
+                        <div class="region-status">Wymaga: 10000 💰</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="region-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Przychody</div>
+                                <div class="stat-value">R0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pracownicy</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Poziom</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card card locked" data-region="middle-east">
+                    <div class="region-header">
+                        <h3 class="region-title">🕌 Bliski Wschód</h3>
+                        <div class="region-status">Wymaga: 25000 💰</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="region-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Przychody</div>
+                                <div class="stat-value">د0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pracownicy</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Poziom</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRADE TAB -->
+        <div class="tab-content" id="trade-content">
+            <!-- FX Ticker -->
+            <div class="fx-ticker">
+                <div class="fx-title">💱 Kursy Walut - Czas Rzeczywisty</div>
+                <div class="fx-pairs" id="fx-rates">
+                    <div class="fx-pair" onclick="openTradeDialog('budget', 'usd')">
+                        <div class="fx-pair-name">PLN/USD</div>
+                        <div class="fx-rate">0.25</div>
+                        <div class="fx-trend trend-stable">⟷ Stabilny</div>
+                    </div>
+                    <div class="fx-pair" onclick="openTradeDialog('budget', 'eur')">
+                        <div class="fx-pair-name">PLN/EUR</div>
+                        <div class="fx-rate">0.23</div>
+                        <div class="fx-trend trend-up">↗ Rośnie</div>
+                    </div>
+                    <div class="fx-pair" onclick="openTradeDialog('budget', 'jpy')">
+                        <div class="fx-pair-name">PLN/JPY</div>
+                        <div class="fx-rate">36.5</div>
+                        <div class="fx-trend trend-down">↘ Spada</div>
+                    </div>
+                    <div class="fx-pair" onclick="openTradeDialog('budget', 'cny')">
+                        <div class="fx-pair-name">PLN/CNY</div>
+                        <div class="fx-rate">1.78</div>
+                        <div class="fx-trend trend-stable">⟷ Stabilny</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Trade Contracts -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>📋</span>
+                        Aktywne Kontrakty
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <div class="text-center text-muted" id="no-trades">
+                        Brak aktywnych kontraktów handlowych
+                    </div>
+                    <div class="grid" id="active-trades" style="display: none;">
+                        <!-- Active trades will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTOMATION TAB -->
+        <div class="tab-content" id="automation-content">
+            <div class="automation-panel">
+                <div class="automation-header">
+                    <h2 class="automation-title">
+                        <span>🤖</span>
+                        Centrum Automatyzacji AI
+                    </h2>
+                    <button class="automation-toggle" id="master-automation" onclick="toggleMasterAutomation()">
+                        Włącz Automatyzację
+                    </button>
+                </div>
+
+                <div class="ai-agents" id="ai-agents">
+                    <div class="ai-agent">
+                        <div class="agent-info">
+                            <div class="agent-status inactive" id="dept-ai-status"></div>
+                            <div>
+                                <div style="font-weight: 600;">Menedżer Działów AI</div>
+                                <div style="font-size: var(--text-sm); opacity: 0.8;">Automatyczne zatrudnianie działów na podstawie ROI</div>
+                            </div>
+                        </div>
+                        <button class="automation-toggle" onclick="toggleDepartmentAI()">Nieaktywny</button>
+                    </div>
+
+                    <div class="ai-agent">
+                        <div class="agent-info">
+                            <div class="agent-status inactive" id="trade-ai-status"></div>
+                            <div>
+                                <div style="font-weight: 600;">Bot Handlowy</div>
+                                <div style="font-size: var(--text-sm); opacity: 0.8;">Automatyczny arbitraż walutowy</div>
+                            </div>
+                        </div>
+                        <button class="automation-toggle" onclick="toggleTradeBot()">Nieaktywny</button>
+                    </div>
+
+                    <div class="ai-agent">
+                        <div class="agent-info">
+                            <div class="agent-status inactive" id="expansion-ai-status"></div>
+                            <div>
+                                <div style="font-weight: 600;">Strategia Ekspansji</div>
+                                <div style="font-size: var(--text-sm); opacity: 0.8;">Automatyczne odblokowanie regionów</div>
+                            </div>
+                        </div>
+                        <button class="automation-toggle" onclick="toggleExpansionAI()">Nieaktywny</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Settings -->
+            <div class="card" style="margin-top: var(--space-6);">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>⚙️</span>
+                        Ustawienia AI
+                    </h2>
+                </div>
+                <div class="card-content">
+                    <div class="grid">
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Próg ROI dla Działów (%)</label>
+                            <input type="range" min="10" max="500" value="150" id="dept-roi-threshold" style="width: 100%;">
+                            <div class="text-muted font-mono" id="dept-roi-display">150%</div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: var(--space-2);">Min. Arbitraż Walutowy (%)</label>
+                            <input type="range" min="1" max="20" value="5" id="trade-arbitrage-threshold" style="width: 100%;">
+                            <div class="text-muted font-mono" id="trade-arbitrage-display">5%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MINIGAMES TAB -->
+        <div class="tab-content" id="minigames-content">
+            <div class="grid grid-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🎮</span>
+                            Centrum Rozrywki Biznesowej
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-auto" id="minigames-grid">
+                            <!-- Minigames will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL PANEL -->
+        <div style="text-align: center; padding: var(--space-6); border-top: 1px solid #e0e0e0; margin-top: var(--space-8);">
+            <h3 style="color: var(--primary); margin-bottom: var(--space-4); font-size: var(--text-lg); font-weight: 700;">🎛️ Panel Kontroli</h3>
+            <div style="display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap;">
+                <button id="save-game" onclick="saveGame()" style="padding: var(--space-3) var(--space-5); border: none; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 600; cursor: pointer; color: white; background: linear-gradient(135deg, var(--primary), var(--primary-light));">💾 Zapisz</button>
+                <button id="reset-game" onclick="resetGame()" style="padding: var(--space-3) var(--space-5); border: none; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 600; cursor: pointer; color: white; background: linear-gradient(135deg, var(--accent-warning), #FFB74D);">🔄 Reset</button>
+                <button id="export-data" onclick="exportData()" style="padding: var(--space-3) var(--space-5); border: none; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 600; cursor: pointer; color: white; background: linear-gradient(135deg, var(--accent-success), #66BB6A);">📤 Eksport</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =============================================
+           CORPOCLICKER PHASE 4.3 - CORPORATE EMPIRE
+           Global Markets • AI Automation • Modern UI
+           ============================================= */
+        
+        class CorpoClickerPhase43 {
+            constructor() {
+                this.version = "4.3.0-dev";
+                
+                console.log('🏦 Initializing CorpoClicker Phase 4.3 - Corporate Empire...');
+                
+                // Core Resources (from 4.2.2)
+                this.resources = {
+                    budget: 100,
+                    documents: 0,
+                    coffee: 0,
+                    stress: 0,
+                    motivation: 50,
+                    prestige: 0,
+                    influence: 0,
+                    
+                    // NEW: International Currencies
+                    usd: 0,
+                    eur: 0,
+                    jpy: 0,
+                    cny: 0,
+                    freight: 0
+                };
+                
+                // Enhanced Departments (from 4.2.2)
+                this.departments = {
+                    hr: { owned: 0, unlocked: true },
+                    it: { owned: 0, unlocked: false },
+                    marketing: { owned: 0, unlocked: false },
+                    accounting: { owned: 0, unlocked: false },
+                    management: { owned: 0, unlocked: false },
+                    rd: { owned: 0, unlocked: false },
+                    callcenter: { owned: 0, unlocked: false }
+                };
+                
+                // NEW: Global Regions System
+                this.regions = {
+                    europe: {
+                        name: "Europa",
+                        flag: "🇪🇺",
+                        currency: "eur",
+                        unlocked: true,
+                        unlockCost: 0,
+                        level: 1,
+                        departments: { ...this.departments },
+                        resources: { eur: 0, documents: 0, coffee: 0 },
+                        marketModifier: 1.0,
+                        culturalCost: 0
+                    },
+                    americas: {
+                        name: "Ameryki",
+                        flag: "🌎",
+                        currency: "usd",
+                        unlocked: false,
+                        unlockCost: 1000,
+                        level: 0,
+                        departments: { ...this.departments },
+                        resources: { usd: 0, documents: 0, coffee: 0 },
+                        marketModifier: 1.2,
+                        culturalCost: 100
+                    },
+                    asia: {
+                        name: "Azja-Pacyfik",
+                        flag: "🌏",
+                        currency: "jpy",
+                        unlocked: false,
+                        unlockCost: 5000,
+                        level: 0,
+                        departments: { ...this.departments },
+                        resources: { jpy: 0, documents: 0, coffee: 0 },
+                        marketModifier: 1.5,
+                        culturalCost: 500
+                    },
+                    africa: {
+                        name: "Afryka",
+                        flag: "🌍",
+                        currency: "cny",
+                        unlocked: false,
+                        unlockCost: 10000,
+                        level: 0,
+                        departments: { ...this.departments },
+                        resources: { cny: 0, documents: 0, coffee: 0 },
+                        marketModifier: 0.8,
+                        culturalCost: 200
+                    },
+                    middleeast: {
+                        name: "Bliski Wschód",
+                        flag: "🕌",
+                        currency: "cny", // Simplified - in reality would be different currencies
+                        unlocked: false,
+                        unlockCost: 25000,
+                        level: 0,
+                        departments: { ...this.departments },
+                        resources: { cny: 0, documents: 0, coffee: 0 },
+                        marketModifier: 1.8,
+                        culturalCost: 1000
+                    }
+                };
+                
+                // NEW: FX Exchange Rates
+                this.fxRates = {
+                    'budget_to_usd': { rate: 0.25, trend: 'stable', lastUpdate: Date.now() },
+                    'budget_to_eur': { rate: 0.23, trend: 'up', lastUpdate: Date.now() },
+                    'budget_to_jpy': { rate: 36.5, trend: 'down', lastUpdate: Date.now() },
+                    'budget_to_cny': { rate: 1.78, trend: 'stable', lastUpdate: Date.now() },
+                    'usd_to_eur': { rate: 0.92, trend: 'stable', lastUpdate: Date.now() },
+                    'eur_to_jpy': { rate: 158.7, trend: 'up', lastUpdate: Date.now() }
+                };
+                
+                // NEW: AI Automation System
+                this.automation = {
+                    enabled: false,
+                    departmentAI: {
+                        active: false,
+                        roiThreshold: 1.5, // 150% ROI required
+                        lastAction: 0
+                    },
+                    tradeBot: {
+                        active: false,
+                        arbitrageThreshold: 0.05, // 5% minimum arbitrage
+                        lastAction: 0
+                    },
+                    expansionAI: {
+                        active: false,
+                        aggressiveness: 0.5,
+                        lastAction: 0
+                    }
+                };
+                
+                // Enhanced Game State
+                this.gameState = {
+                    lastUpdate: Date.now(),
+                    totalClicks: 0,
+                    sessionStart: Date.now(),
+                    gameSpeed: 1.0,
+                    paused: false,
+                    activeEffects: {},
+                    minigameCooldowns: {},
+                    currentTab: 'overview',
+                    lastDisplayUpdate: {
+                        departments: 0,
+                        minigames: 0,
+                        regions: 0,
+                        fx: 0
+                    }
+                };
+                
+                // Department Data (from 4.2.2)
+                this.departmentData = {
+                    hr: { 
+                        name: "Dział HR", 
+                        icon: "👥",
+                        baseCost: 10, 
+                        production: {documents: 1}, 
+                        sideEffects: {stress: 0.1},
+                        description: "Produkuje dokumenty korporacyjne. Zwiększa stres przez biurokrację.",
+                        unlockConditions: []
+                    },
+                    it: { 
+                        name: "Dział IT", 
+                        icon: "💻",
+                        baseCost: 20, 
+                        production: {coffee: 1}, 
+                        sideEffects: {motivation: -0.05},
+                        description: "Zapewnia kawę premium i wsparcie techniczne.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 5}
+                        ]
+                    },
+                    marketing: { 
+                        name: "Marketing", 
+                        icon: "📈",
+                        baseCost: 35, 
+                        production: {budget: 1, prestige: 0.02},
+                        description: "Generuje przychody i buduje prestiż marki.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 15}
+                        ]
+                    },
+                    accounting: { 
+                        name: "Księgowość", 
+                        icon: "🧮",
+                        baseCost: 55, 
+                        production: {budget: 0.8}, 
+                        sideEffects: {stress: 0.15},
+                        description: "Optymalizuje finanse, ale zwiększa stres przez kontrole.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 35}
+                        ]
+                    },
+                    management: { 
+                        name: "Zarząd", 
+                        icon: "👔",
+                        baseCost: 90, 
+                        production: {motivation: 0.3},
+                        description: "Motywuje pracowników i poprawia efektywność organizacyjną.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'prestige', amount: 5}
+                        ]
+                    },
+                    rd: { 
+                        name: "R&D", 
+                        icon: "🔬",
+                        baseCost: 150, 
+                        production: {prestige: 0.1}, 
+                        sideEffects: {stress: 0.2},
+                        description: "Innowacje zwiększają prestiż, ale wymagają intensywnej pracy.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'prestige', amount: 15}
+                        ]
+                    },
+                    callcenter: { 
+                        name: "Call Center", 
+                        icon: "📞",
+                        baseCost: 300, 
+                        production: {budget: 4}, 
+                        sideEffects: {motivation: -0.3, stress: 0.5},
+                        description: "Wysokie przychody kosztem dobrostanu pracowników.",
+                        unlockConditions: [
+                            {type: 'resource', resource: 'documents', amount: 100}
+                        ]
+                    }
+                };
+                
+                // Minigame Data (from 4.2.2)
+                this.minigameData = {
+                    quarterly_presentation: {
+                        name: "Prezentacja Kwartalna",
+                        icon: "📊",
+                        cost: { documents: 100, coffee: 50 },
+                        description: "Wysokopostawowa prezentacja dla zarządu z ryzykiem utraty prestiżu.",
+                        rewards: { 
+                            success: { budget: 500, prestige: 10 }, 
+                            failure: { budget_loss_percent: 0.2, stress: 25 } 
+                        },
+                        cooldown: 300000, // 5 minutes
+                        unlocked: () => this.resources.documents >= 50
+                    },
+                    
+                    barista_championship: {
+                        name: "Mistrzostwa Baristy",
+                        icon: "☕",
+                        cost: { coffee: 200, prestige: 25 },
+                        description: "Konkurs umiejętności parzenia kawy z możliwością rozwinięcia kawiarni.",
+                        rewards: { 
+                            success: { coffee_shop_level: 1, passive_income: 10 }, 
+                            failure: { coffee_addiction: 1, motivation: -15 } 
+                        },
+                        cooldown: 600000, // 10 minutes
+                        unlocked: () => this.departments.it.owned >= 3
+                    },
+                    
+                    corporate_merger: {
+                        name: "Fuzja Korporacyjna",
+                        icon: "🤝",
+                        cost: { budget: 5000, documents: 100 },
+                        description: "Ryzykowna fuzja z konkurencją. Ogromne zyski lub katastrofalne straty.",
+                        rewards: { 
+                            success: { subsidiary: 1, all_production: 1.25 }, 
+                            failure: { budget_loss_percent: 0.5, departments_loss: 1 } 
+                        },
+                        cooldown: 1800000, // 30 minutes
+                        unlocked: () => this.resources.prestige >= 50
+                    },
+                    
+                    government_lobbying: {
+                        name: "Lobbying Rządowy",
+                        icon: "🏛️",
+                        cost: { prestige: 50, budget: 1000 },
+                        description: "Wpływanie na politykę gospodarczą w celu korzystnych regulacji.",
+                        rewards: { 
+                            success: { softcap_increase: 0.25, tax_reduction: 0.1 }, 
+                            failure: { investigation: true, production_penalty: 0.3 } 
+                        },
+                        cooldown: 3600000, // 1 hour
+                        unlocked: () => this.resources.prestige >= 100
+                    },
+                    
+                    // NEW: Global expansion minigame
+                    global_summit: {
+                        name: "Szczyt Globalny",
+                        icon: "🌍",
+                        cost: { prestige: 100, usd: 1000, eur: 800 },
+                        description: "Międzynarodowa konferencja biznesowa. Możliwość ekspansji lub skandalu.",
+                        rewards: { 
+                            success: { global_expansion_bonus: 0.5, freight: 50 }, 
+                            failure: { reputation_loss: 1, region_lock: 30 } 
+                        },
+                        cooldown: 7200000, // 2 hours
+                        unlocked: () => Object.values(this.regions).filter(r => r.unlocked).length >= 3
+                    }
+                };
+                
+                // Softcap System (from 4.2.2)
+                this.softcapThresholds = {
+                    budget: [1000, 5000, 25000, 125000],
+                    documents: [100, 500, 2500, 12500],
+                    coffee: [50, 250, 1250, 6250],
+                    prestige: [10, 50, 250, 1250],
+                    usd: [100, 500, 2500, 12500],
+                    eur: [100, 500, 2500, 12500],
+                    jpy: [10000, 50000, 250000, 1250000],
+                    cny: [500, 2500, 12500, 62500]
+                };
+                
+                this.init();
+            }
+            
+            /* =============================================
+               CORE SYSTEMS FROM 4.2.2
+               ============================================= */
+            
+            calculateSoftcap(resource, amount) {
+                const thresholds = this.softcapThresholds[resource];
+                if (!thresholds || amount <= thresholds[0]) {
+                    return 1.0;
+                }
+                
+                let efficiency = 1.0;
+                
+                if (amount > thresholds[0] && amount <= thresholds[1]) {
+                    const ratio = amount / thresholds[0];
+                    efficiency = 0.6 + 0.4 * Math.log(thresholds[1]/thresholds[0]) / Math.log(ratio);
+                    efficiency = Math.max(0.6, Math.min(1.0, efficiency));
+                } else if (amount > thresholds[1] && amount <= thresholds[2]) {
+                    const ratio = (amount - thresholds[1]) / (thresholds[2] - thresholds[1]);
+                    efficiency = 0.25 + 0.35 * (1 - ratio);
+                } else if (amount > thresholds[2]) {
+                    const excess = (amount - thresholds[2]) / thresholds[2];
+                    efficiency = 0.1 + 0.15 * Math.exp(-excess);
+                }
+                
+                return Math.max(0.05, efficiency);
+            }
+            
+            calculateStressEffects() {
+                const stress = this.resources.stress;
+                let production = 1.0;
+                let quality = 1.0;
+                let quitChance = 0.0;
+                
+                if (stress <= 25) {
+                    production = 1.0; quality = 1.0; quitChance = 0.0;
+                } else if (stress <= 50) {
+                    production = 0.95; quality = 0.9; quitChance = 0.01;
+                } else if (stress <= 75) {
+                    production = 0.85; quality = 0.75; quitChance = 0.03;
+                } else if (stress <= 100) {
+                    production = 0.70; quality = 0.50; quitChance = 0.06;
+                } else {
+                    production = Math.max(0.05, 1.0 - (stress - 100) * 0.01);
+                    quality = Math.max(0.01, 1.0 - (stress - 100) * 0.015);
+                    quitChance = Math.min(0.40, (stress - 100) * 0.005);
+                }
+                
+                return { production, quality, quitChance };
+            }
+            
+            calculateMotivationEffects() {
+                const motivation = this.resources.motivation;
+                let productionBonus = 0;
+                let speedBonus = 1.0;
+                
+                if (motivation <= -25) {
+                    productionBonus = -0.75; speedBonus = 0.5;
+                } else if (motivation <= 0) {
+                    productionBonus = -0.50; speedBonus = 0.7;
+                } else if (motivation <= 25) {
+                    productionBonus = -0.25; speedBonus = 0.85;
+                } else if (motivation <= 50) {
+                    productionBonus = 0; speedBonus = 1.0;
+                } else if (motivation <= 75) {
+                    productionBonus = 0.25; speedBonus = 1.15;
+                } else if (motivation <= 90) {
+                    productionBonus = 0.50; speedBonus = 1.35;
+                } else {
+                    productionBonus = 1.0; speedBonus = 1.5;
+                }
+                
+                return { productionBonus, speedBonus };
+            }
+            
+            /* =============================================
+               NEW: GLOBAL REGIONS SYSTEM
+               ============================================= */
+            
+            checkRegionUnlocks() {
+                Object.entries(this.regions).forEach(([regionId, region]) => {
+                    if (region.unlocked) return;
+                    
+                    if (this.resources.budget >= region.unlockCost) {
+                        // Could unlock, but don't auto-unlock (player choice)
+                        this.updateRegionDisplay();
+                    }
+                });
+            }
+            
+            unlockRegion(regionId) {
+                const region = this.regions[regionId];
+                
+                if (!region || region.unlocked) return false;
+                
+                if (this.resources.budget >= region.unlockCost) {
+                    this.resources.budget -= region.unlockCost;
+                    region.unlocked = true;
+                    region.level = 1;
+                    
+                    this.showNotification(`🌍 Otwarto nowy region: ${region.name}!`, 'success');
+                    this.updateDisplay();
+                    return true;
+                }
+                
+                this.showNotification(`💰 Niewystarczający budżet! Potrzebujesz ${region.unlockCost} 💰`, 'warning');
+                return false;
+            }
+            
+            /* =============================================
+               NEW: FX TRADING SYSTEM
+               ============================================= */
+            
+            updateFXRates() {
+                const now = Date.now();
+                
+                Object.entries(this.fxRates).forEach(([pair, data]) => {
+                    if (now - data.lastUpdate < 30000) return; // Update every 30s
+                    
+                    // Simulate market volatility
+                    const volatility = 0.02; // 2% max change
+                    const change = (Math.random() - 0.5) * volatility;
+                    const newRate = data.rate * (1 + change);
+                    
+                    // Update trend
+                    if (newRate > data.rate * 1.005) {
+                        data.trend = 'up';
+                    } else if (newRate < data.rate * 0.995) {
+                        data.trend = 'down';
+                    } else {
+                        data.trend = 'stable';
+                    }
+                    
+                    data.rate = Math.max(newRate, data.rate * 0.5); // Prevent extreme drops
+                    data.lastUpdate = now;
+                });
+                
+                this.updateFXDisplay();
+            }
+            
+            executeTrade(fromCurrency, toCurrency, amount) {
+                const pair = `${fromCurrency}_to_${toCurrency}`;
+                const fxData = this.fxRates[pair];
+                
+                if (!fxData || this.resources[fromCurrency] < amount) {
+                    this.showNotification('Niewystarczające środki do wymiany!', 'warning');
+                    return false;
+                }
+                
+                const received = amount * fxData.rate;
+                const fee = received * 0.01; // 1% transaction fee
+                const netReceived = received - fee;
+                
+                this.resources[fromCurrency] -= amount;
+                this.resources[toCurrency] += netReceived;
+                this.resources.freight += Math.floor(amount / 100); // Freight tokens
+                
+                this.showNotification(`💱 Wymiana: -${amount} ${fromCurrency} → +${netReceived.toFixed(2)} ${toCurrency}`, 'success');
+                this.updateDisplay();
+                
+                return true;
+            }
+            
+            /* =============================================
+               NEW: AI AUTOMATION SYSTEM
+               ============================================= */
+            
+            toggleMasterAutomation() {
+                this.automation.enabled = !this.automation.enabled;
+                
+                const button = document.getElementById('master-automation');
+                if (this.automation.enabled) {
+                    button.textContent = 'Wyłącz Automatyzację';
+                    button.classList.add('active');
+                    this.showNotification('🤖 Automatyzacja włączona!', 'success');
+                } else {
+                    button.textContent = 'Włącz Automatyzację';
+                    button.classList.remove('active');
+                    this.showNotification('⏸️ Automatyzacja wyłączona!', 'info');
+                }
+                
+                this.updateAutomationDisplay();
+            }
+            
+            runDepartmentAI() {
+                if (!this.automation.enabled || !this.automation.departmentAI.active) return;
+                
+                const now = Date.now();
+                if (now - this.automation.departmentAI.lastAction < 10000) return; // 10s cooldown
+                
+                // Find best ROI department
+                let bestROI = 0;
+                let bestDept = null;
+                
+                Object.entries(this.departmentData).forEach(([deptId, deptData]) => {
+                    const dept = this.departments[deptId];
+                    if (!dept.unlocked) return;
+                    
+                    const cost = this.getDepartmentCost(deptId);
+                    if (this.resources.budget < cost) return;
+                    
+                    // Calculate ROI based on production
+                    let production = 0;
+                    if (deptData.production) {
+                        Object.entries(deptData.production).forEach(([resource, rate]) => {
+                            const efficiency = this.calculateSoftcap(resource, this.resources[resource]);
+                            production += rate * efficiency * 3600; // Hourly production
+                        });
+                    }
+                    
+                    const roi = production / cost;
+                    if (roi > bestROI) {
+                        bestROI = roi;
+                        bestDept = deptId;
+                    }
+                });
+                
+                if (bestDept && bestROI >= this.automation.departmentAI.roiThreshold) {
+                    this.purchaseDepartment(bestDept);
+                    this.automation.departmentAI.lastAction = now;
+                    this.showNotification(`🤖 AI zatrudniło: ${this.departmentData[bestDept].name} (ROI: ${(bestROI * 100).toFixed(1)}%)`, 'info');
+                }
+            }
+            
+            runTradeBot() {
+                if (!this.automation.enabled || !this.automation.tradeBot.active) return;
+                
+                const now = Date.now();
+                if (now - this.automation.tradeBot.lastAction < 30000) return; // 30s cooldown
+                
+                // Look for arbitrage opportunities
+                Object.entries(this.fxRates).forEach(([pair, data]) => {
+                    const [from, to] = pair.split('_to_');
+                    
+                    // Simple arbitrage check (real implementation would be more complex)
+                    if (data.trend === 'up' && this.resources[from] > 100) {
+                        const amount = Math.min(this.resources[from] * 0.1, 1000); // Trade 10% or max 1000
+                        if (this.executeTrade(from, to, amount)) {
+                            this.automation.tradeBot.lastAction = now;
+                            this.showNotification(`🤖 Bot wykonał arbitraż: ${from} → ${to}`, 'info');
+                        }
+                    }
+                });
+            }
+            
+            /* =============================================
+               TAB SYSTEM
+               ============================================= */
+            
+            switchTab(tabName) {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Remove active class from all tab buttons
+                document.querySelectorAll('.tab-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+                
+                // Show selected tab content
+                const tabContent = document.getElementById(`${tabName}-content`);
+                if (tabContent) {
+                    tabContent.classList.add('active');
+                }
+                
+                // Activate selected tab button
+                const tabButton = document.getElementById(`tab-${tabName}`);
+                if (tabButton) {
+                    tabButton.classList.add('active');
+                }
+                
+                this.gameState.currentTab = tabName;
+                console.log(`Switched to tab: ${tabName}`);
+            }
+            
+            /* =============================================
+               CORE MECHANICS (from 4.2.2)
+               ============================================= */
+            
+            performMainClick() {
+                let clickValue = 2;
+                
+                const budgetEfficiency = this.calculateSoftcap('budget', this.resources.budget);
+                const stressEffects = this.calculateStressEffects();
+                const motivationEffects = this.calculateMotivationEffects();
+                
+                const finalValue = clickValue * budgetEfficiency * stressEffects.production * (1 + motivationEffects.productionBonus);
+                
+                this.resources.budget += finalValue;
+                this.gameState.totalClicks++;
+                
+                this.updateClickValueDisplay(finalValue, budgetEfficiency);
+                this.animateResourceValue('budget');
+                
+                if (Math.random() < 0.1) {
+                    this.resources.influence += 0.1;
+                }
+                
+                this.updateDisplay();
+            }
+            
+            purchaseDepartment(deptId) {
+                const cost = this.getDepartmentCost(deptId);
+                
+                if (this.resources.budget >= cost) {
+                    this.resources.budget -= cost;
+                    this.departments[deptId].owned++;
+                    
+                    this.updateDisplay();
+                    this.showNotification(`🏢 Zatrudniono ${this.departmentData[deptId].name}!`, 'success');
+                    return true;
+                }
+                
+                this.showNotification(`💰 Niewystarczający budżet! Potrzebujesz ${cost} 💰`, 'warning');
+                return false;
+            }
+            
+            getDepartmentCost(deptId) {
+                const baseData = this.departmentData[deptId];
+                if (!baseData) return 999999;
+                
+                const owned = this.departments[deptId].owned;
+                return Math.floor(baseData.baseCost * Math.pow(1.25, owned));
+            }
+            
+            checkDepartmentUnlocks() {
+                Object.keys(this.departments).forEach(deptId => {
+                    const deptData = this.departmentData[deptId];
+                    const dept = this.departments[deptId];
+                    
+                    if (dept.unlocked) return;
+                    
+                    let allConditionsMet = true;
+                    
+                    if (deptData.unlockConditions) {
+                        for (const condition of deptData.unlockConditions) {
+                            if (condition.type === 'resource') {
+                                if (this.resources[condition.resource] < condition.amount) {
+                                    allConditionsMet = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (allConditionsMet) {
+                        dept.unlocked = true;
+                        this.showNotification(`🆕 Odblokowano ${deptData.name}!`, 'success');
+                    }
+                });
+            }
+            
+            /* =============================================
+               GAME LOOP - Enhanced for Global Operations
+               ============================================= */
+            
+            gameLoop() {
+                if (this.gameState.paused) return;
+                
+                const now = Date.now();
+                const deltaTime = now - this.gameState.lastUpdate;
+                this.gameState.lastUpdate = now;
+                const deltaSeconds = deltaTime / 1000;
+                
+                // Apply game speed
+                const motivationEffects = this.calculateMotivationEffects();
+                const adjustedDelta = deltaSeconds * motivationEffects.speedBonus * this.gameState.gameSpeed;
+                
+                // Update production
+                this.updateProduction(adjustedDelta);
+                
+                // Apply side effects
+                this.applySideEffects(adjustedDelta);
+                
+                // NEW: Update FX rates
+                this.updateFXRates();
+                
+                // NEW: Run AI automation
+                this.runDepartmentAI();
+                this.runTradeBot();
+                
+                // Check unlocks
+                this.checkDepartmentUnlocks();
+                this.checkRegionUnlocks();
+                
+                // Update display (throttled)
+                this.updateDisplayThrottled();
+            }
+            
+            updateProduction(deltaSeconds) {
+                const stressEffects = this.calculateStressEffects();
+                const motivationEffects = this.calculateMotivationEffects();
+                
+                let totalProductionMultiplier = stressEffects.production * (1 + motivationEffects.productionBonus);
+                
+                Object.entries(this.departments).forEach(([deptId, dept]) => {
+                    if (dept.owned === 0) return;
+                    
+                    const deptData = this.departmentData[deptId];
+                    if (!deptData || !deptData.production) return;
+                    
+                    Object.entries(deptData.production).forEach(([resource, rate]) => {
+                        const softcapEfficiency = this.calculateSoftcap(resource, this.resources[resource]);
+                        const production = rate * dept.owned * totalProductionMultiplier * softcapEfficiency * deltaSeconds;
+                        
+                        this.resources[resource] = (this.resources[resource] || 0) + production;
+                    });
+                });
+            }
+            
+            applySideEffects(deltaSeconds) {
+                // Department side effects
+                Object.entries(this.departments).forEach(([deptId, dept]) => {
+                    if (dept.owned === 0) return;
+                    
+                    const deptData = this.departmentData[deptId];
+                    if (!deptData || !deptData.sideEffects) return;
+                    
+                    Object.entries(deptData.sideEffects).forEach(([resource, rate]) => {
+                        const effect = rate * dept.owned * deltaSeconds;
+                        this.resources[resource] = (this.resources[resource] || 0) + effect;
+                    });
+                });
+                
+                // Natural stress/motivation changes
+                this.resources.stress = Math.max(0, this.resources.stress - 0.2 * deltaSeconds);
+                
+                if (this.resources.motivation > 50) {
+                    this.resources.motivation -= 0.15 * deltaSeconds;
+                } else if (this.resources.motivation < 50) {
+                    this.resources.motivation += 0.05 * deltaSeconds;
+                }
+                
+                // Constrain values
+                this.resources.stress = Math.max(0, Math.min(200, this.resources.stress));
+                this.resources.motivation = Math.max(-50, Math.min(100, this.resources.motivation));
+            }
+            
+            /* =============================================
+               DISPLAY UPDATES - Modern UI System
+               ============================================= */
+            
+            updateDisplayThrottled() {
+                // Always update resources (lightweight)
+                this.updateResourceBar();
+                
+                // Update content based on current tab
+                if (this.gameState.currentTab === 'overview') {
+                    this.updateOverviewTab();
+                } else if (this.gameState.currentTab === 'human-capital') {
+                    this.updateHumanCapitalTab();
+                } else if (this.gameState.currentTab === 'global-markets') {
+                    this.updateGlobalMarketsTab();
+                } else if (this.gameState.currentTab === 'trade') {
+                    this.updateTradeTab();
+                } else if (this.gameState.currentTab === 'automation') {
+                    this.updateAutomationTab();
+                } else if (this.gameState.currentTab === 'minigames') {
+                    this.updateMinigamesTab();
+                }
+            }
+            
+            updateDisplay() {
+                this.updateResourceBar();
+                this.updateOverviewTab();
+                this.updateHumanCapitalTab();
+                this.updateGlobalMarketsTab();
+                this.updateTradeTab();
+                this.updateAutomationTab();
+                this.updateMinigamesTab();
+            }
+            
+            updateResourceBar() {
+                const resources = ['budget', 'documents', 'coffee', 'prestige', 'usd', 'eur', 'jpy', 'cny', 'freight'];
+                
+                resources.forEach(resource => {
+                    const element = document.getElementById(resource);
+                    if (element) {
+                        const value = Math.floor(this.resources[resource] || 0);
+                        element.textContent = this.formatNumber(value);
+                    }
+                    
+                    // Update efficiency indicators
+                    const efficiencyElement = document.getElementById(`${resource}-efficiency`);
+                    if (efficiencyElement && this.softcapThresholds[resource]) {
+                        const efficiency = this.calculateSoftcap(resource, this.resources[resource]);
+                        const efficiencyPercent = Math.round(efficiency * 100);
+                        
+                        efficiencyElement.textContent = `${efficiencyPercent}%`;
+                        
+                        // Update efficiency class
+                        efficiencyElement.className = 'resource-efficiency ';
+                        if (efficiency >= 0.9) {
+                            efficiencyElement.className += 'efficiency-optimal';
+                        } else if (efficiency >= 0.6) {
+                            efficiencyElement.className += 'efficiency-moderate';
+                        } else {
+                            efficiencyElement.className += 'efficiency-poor';
+                        }
+                    }
+                });
+            }
+            
+            updateOverviewTab() {
+                // Update departments overview
+                const container = document.getElementById('departments-overview');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                Object.entries(this.departmentData).forEach(([deptId, deptData]) => {
+                    const dept = this.departments[deptId];
+                    
+                    const card = document.createElement('div');
+                    card.className = `department-card card ${dept.unlocked ? 'unlocked' : 'locked'}`;
+                    
+                    card.innerHTML = `
+                        <div class="department-header">
+                            <div class="department-title">
+                                <span>${deptData.icon}</span>
+                                ${deptData.name}
+                            </div>
+                        </div>
+                        <div class="department-body">
+                            <div class="department-description">${deptData.description}</div>
+                            <div class="department-stats">
+                                <div class="stat-item">
+                                    <div class="stat-label">Posiadane</div>
+                                    <div class="stat-value">${dept.owned}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Koszt</div>
+                                    <div class="stat-value">${this.formatNumber(this.getDepartmentCost(deptId))}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Poziom</div>
+                                    <div class="stat-value">${dept.owned > 0 ? Math.floor(Math.log2(dept.owned + 1)) + 1 : 1}</div>
+                                </div>
+                            </div>
+                            <button class="department-button" ${dept.unlocked && this.resources.budget >= this.getDepartmentCost(deptId) ? '' : 'disabled'}>
+                                ${dept.unlocked ? 'Zatrudnij' : 'Zablokowane'}
+                            </button>
+                        </div>
+                    `;
+                    
+                    if (dept.unlocked) {
+                        const button = card.querySelector('button');
+                        button.addEventListener('click', () => this.purchaseDepartment(deptId));
+                    }
+                    
+                    container.appendChild(card);
+                });
+                
+                // Update global stats
+                const activeRegions = Object.values(this.regions).filter(r => r.unlocked).length;
+                const totalRevenue = this.resources.budget + this.resources.usd * 4 + this.resources.eur * 4.3;
+                const globalLevel = Math.floor(totalRevenue / 1000) + 1;
+                
+                document.getElementById('active-regions').textContent = activeRegions;
+                document.getElementById('total-revenue').textContent = this.formatNumber(totalRevenue);
+                document.getElementById('global-level').textContent = globalLevel;
+            }
+            
+            updateHumanCapitalTab() {
+                // Update stress progress
+                const stressBar = document.getElementById('stress-progress');
+                const stressPercentage = document.getElementById('stress-percentage');
+                const stressEffectsElement = document.getElementById('stress-effects');
+                const stressValue = document.getElementById('stress');
+                
+                if (stressBar && stressValue) {
+                    const stressPercent = (this.resources.stress / 200) * 100;
+                    stressBar.style.width = `${Math.min(stressPercent, 100)}%`;
+                    stressValue.textContent = Math.floor(this.resources.stress);
+                    
+                    if (stressPercentage) {
+                        stressPercentage.textContent = `${Math.round(stressPercent)}%`;
+                    }
+                }
+                
+                if (stressEffectsElement) {
+                    const effects = this.calculateStressEffects();
+                    stressEffectsElement.innerHTML = `
+                        Produkcja: ${Math.round(effects.production * 100)}% • 
+                        Jakość: ${Math.round(effects.quality * 100)}% • 
+                        Ryzyko rezygnacji: ${Math.round(effects.quitChance * 100)}%
+                    `;
+                }
+                
+                // Update motivation progress
+                const motivationBar = document.getElementById('motivation-progress');
+                const motivationPercentage = document.getElementById('motivation-percentage');
+                const motivationEffectsElement = document.getElementById('motivation-effects');
+                const motivationValue = document.getElementById('motivation');
+                
+                if (motivationBar && motivationValue) {
+                    const motivationPercent = ((this.resources.motivation + 50) / 150) * 100;
+                    motivationBar.style.width = `${Math.max(0, Math.min(motivationPercent, 100))}%`;
+                    motivationValue.textContent = Math.floor(this.resources.motivation);
+                    
+                    if (motivationPercentage) {
+                        motivationPercentage.textContent = `${Math.round(motivationPercent)}%`;
+                    }
+                }
+                
+                if (motivationEffectsElement) {
+                    const effects = this.calculateMotivationEffects();
+                    const bonus = effects.productionBonus * 100;
+                    const speed = effects.speedBonus;
+                    
+                    motivationEffectsElement.innerHTML = `
+                        Bonus produkcji: ${bonus > 0 ? '+' : ''}${Math.round(bonus)}% • 
+                        Przyspieszenie: ${speed === 1 ? 'Normalne' : `${speed.toFixed(1)}x`}
+                    `;
+                }
+            }
+            
+            updateGlobalMarketsTab() {
+                // Update region cards based on unlock status
+                Object.entries(this.regions).forEach(([regionId, region]) => {
+                    const card = document.querySelector(`[data-region="${regionId}"]`);
+                    if (!card) return;
+                    
+                    if (region.unlocked) {
+                        card.classList.remove('locked');
+                        const status = card.querySelector('.region-status');
+                        if (status) {
+                            status.textContent = 'Aktywne';
+                        }
+                    } else {
+                        card.classList.add('locked');
+                        const status = card.querySelector('.region-status');
+                        if (status) {
+                            status.textContent = `Wymaga: ${region.unlockCost} 💰`;
+                        }
+                        
+                        // Add click handler for unlocking
+                        card.style.cursor = 'pointer';
+                        card.onclick = () => {
+                            if (this.resources.budget >= region.unlockCost) {
+                                this.unlockRegion(regionId);
+                            } else {
+                                this.showNotification(`Potrzebujesz ${region.unlockCost} 💰 aby odblokować ${region.name}`, 'warning');
+                            }
+                        };
+                    }
+                });
+            }
+            
+            updateTradeTab() {
+                // Update FX rates display
+                const fxContainer = document.getElementById('fx-rates');
+                if (!fxContainer) return;
+                
+                fxContainer.innerHTML = '';
+                
+                Object.entries(this.fxRates).forEach(([pair, data]) => {
+                    const [from, to] = pair.split('_to_');
+                    
+                    const pairElement = document.createElement('div');
+                    pairElement.className = 'fx-pair';
+                    pairElement.onclick = () => this.openTradeDialog(from, to);
+                    
+                    const trendIcon = data.trend === 'up' ? '↗' : data.trend === 'down' ? '↘' : '⟷';
+                    const trendText = data.trend === 'up' ? 'Rośnie' : data.trend === 'down' ? 'Spada' : 'Stabilny';
+                    
+                    pairElement.innerHTML = `
+                        <div class="fx-pair-name">${from.toUpperCase()}/${to.toUpperCase()}</div>
+                        <div class="fx-rate">${data.rate.toFixed(3)}</div>
+                        <div class="fx-trend trend-${data.trend}">${trendIcon} ${trendText}</div>
+                    `;
+                    
+                    fxContainer.appendChild(pairElement);
+                });
+            }
+            
+            updateAutomationTab() {
+                // Update AI agent statuses
+                const deptStatus = document.getElementById('dept-ai-status');
+                const tradeStatus = document.getElementById('trade-ai-status');
+                const expansionStatus = document.getElementById('expansion-ai-status');
+                
+                if (deptStatus) {
+                    deptStatus.className = `agent-status ${this.automation.departmentAI.active ? '' : 'inactive'}`;
+                }
+                if (tradeStatus) {
+                    tradeStatus.className = `agent-status ${this.automation.tradeBot.active ? '' : 'inactive'}`;
+                }
+                if (expansionStatus) {
+                    expansionStatus.className = `agent-status ${this.automation.expansionAI.active ? '' : 'inactive'}`;
+                }
+                
+                // Update threshold displays
+                const deptROIDisplay = document.getElementById('dept-roi-display');
+                const tradeArbitrageDisplay = document.getElementById('trade-arbitrage-display');
+                
+                if (deptROIDisplay) {
+                    const threshold = document.getElementById('dept-roi-threshold');
+                    if (threshold) {
+                        this.automation.departmentAI.roiThreshold = parseFloat(threshold.value) / 100;
+                        deptROIDisplay.textContent = `${threshold.value}%`;
+                    }
+                }
+                
+                if (tradeArbitrageDisplay) {
+                    const threshold = document.getElementById('trade-arbitrage-threshold');
+                    if (threshold) {
+                        this.automation.tradeBot.arbitrageThreshold = parseFloat(threshold.value) / 100;
+                        tradeArbitrageDisplay.textContent = `${threshold.value}%`;
+                    }
+                }
+            }
+            
+            updateMinigamesTab() {
+                const container = document.getElementById('minigames-grid');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                Object.entries(this.minigameData).forEach(([gameId, gameData]) => {
+                    const isUnlocked = gameData.unlocked();
+                    const lastPlayed = this.gameState.minigameCooldowns[gameId] || 0;
+                    const cooldownRemaining = gameData.cooldown - (Date.now() - lastPlayed);
+                    const onCooldown = cooldownRemaining > 0;
+                    
+                    const card = document.createElement('div');
+                    card.className = `card ${isUnlocked ? 'unlocked' : 'locked'}`;
+                    
+                    const costText = Object.entries(gameData.cost)
+                        .map(([resource, amount]) => `${amount} ${this.formatResourceName(resource)}`)
+                        .join(', ');
+                    
+                    const successRewards = Object.entries(gameData.rewards.success)
+                        .map(([reward, value]) => `${reward}: +${value}`)
+                        .join(', ');
+                    
+                    let buttonText, buttonClass = '';
+                    
+                    if (!isUnlocked) {
+                        buttonText = 'Zablokowane';
+                        buttonClass = 'disabled';
+                    } else if (onCooldown) {
+                        buttonText = `Cooldown: ${Math.ceil(cooldownRemaining / 60000)}min`;
+                        buttonClass = 'disabled';
+                    } else {
+                        buttonText = 'Zagraj Teraz';
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span>${gameData.icon}</span>
+                                ${gameData.name}
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div style="background: rgba(156, 39, 176, 0.1); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-3); font-size: var(--text-sm); font-weight: 600; color: var(--accent-purple);">
+                                💸 Koszt: ${costText}
+                            </div>
+                            
+                            <div style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-4); line-height: 1.5;">
+                                ${gameData.description}
+                            </div>
+                            
+                            <div style="background: rgba(76, 175, 80, 0.1); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-4); border-left: 3px solid var(--accent-success); font-size: var(--text-sm); color: var(--accent-success);">
+                                🎁 Nagrody za sukces: ${successRewards}
+                            </div>
+                            
+                            <button class="department-button ${buttonClass}" ${buttonClass.includes('disabled') ? 'disabled' : ''}>
+                                ${buttonText}
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add event listener
+                    if (isUnlocked && !onCooldown && !buttonClass.includes('disabled')) {
+                        const button = card.querySelector('button');
+                        button.addEventListener('click', () => this.openMinigame(gameId));
+                    }
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            /* =============================================
+               UTILITY FUNCTIONS
+               ============================================= */
+            
+            formatNumber(num) {
+                if (Math.abs(num) >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+                if (Math.abs(num) >= 1e9) return (num / 1e9).toFixed(2) + 'B';  
+                if (Math.abs(num) >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+                if (Math.abs(num) >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+                return Math.floor(num).toString();
+            }
+            
+            formatResourceName(resourceId) {
+                const names = {
+                    budget: '💰 Budżet',
+                    documents: '📄 Dokumenty', 
+                    coffee: '☕ Kawa',
+                    prestige: '🎖️ Prestiż',
+                    usd: '💵 USD',
+                    eur: '💶 EUR',
+                    jpy: '💴 JPY',
+                    cny: '💷 CNY',
+                    freight: '📦 Freight'
+                };
+                return names[resourceId] || resourceId;
+            }
+            
+            animateResourceValue(resource) {
+                const element = document.getElementById(resource);
+                if (element) {
+                    element.style.animation = 'none';
+                    setTimeout(() => {
+                        element.style.animation = 'pulse 0.6s ease';
+                    }, 10);
+                }
+            }
+            
+            showNotification(message, type = 'info', duration = 3000) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideInRight 0.4s ease reverse';
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.parentElement.removeChild(notification);
+                        }
+                    }, 400);
+                }, duration);
+            }
+            
+            updateClickValueDisplay(finalValue, efficiency) {
+                const clickValueElement = document.getElementById('click-value');
+                const clickEfficiencyElement = document.getElementById('click-efficiency');
+                
+                if (clickValueElement) {
+                    clickValueElement.textContent = finalValue.toFixed(1);
+                }
+                
+                if (clickEfficiencyElement) {
+                    clickEfficiencyElement.textContent = `${Math.round(efficiency * 100)}%`;
+                }
+            }
+            
+            /* =============================================
+               DIALOG SYSTEMS
+               ============================================= */
+            
+            openTradeDialog(from, to) {
+                const rate = this.fxRates[`${from}_to_${to}`]?.rate || 0.1;
+                const amount = prompt(`Ile ${from} chcesz wymienić na ${to}?\nAktualny kurs: 1:${rate.toFixed(3)}\nOpłata transakcyjna: 1%`);
+                
+                if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                    this.executeTrade(from, to, parseFloat(amount));
+                }
+            }
+            
+            openMinigame(gameId) {
+                const gameData = this.minigameData[gameId];
+                if (!gameData || !gameData.unlocked()) {
+                    this.showNotification('Mini-gra jeszcze nie odblokowana!', 'warning');
+                    return;
+                }
+                
+                // Check cooldown
+                const lastPlayed = this.gameState.minigameCooldowns[gameId] || 0;
+                const cooldownRemaining = gameData.cooldown - (Date.now() - lastPlayed);
+                
+                if (cooldownRemaining > 0) {
+                    const minutes = Math.ceil(cooldownRemaining / 60000);
+                    this.showNotification(`⏱️ Cooldown: ${minutes} minut`, 'warning');
+                    return;
+                }
+                
+                // Check costs
+                let canAfford = true;
+                const costText = [];
+                
+                Object.entries(gameData.cost).forEach(([resource, amount]) => {
+                    if (this.resources[resource] < amount) {
+                        canAfford = false;
+                    }
+                    costText.push(`${amount} ${this.formatResourceName(resource)}`);
+                });
+                
+                if (!canAfford) {
+                    this.showNotification(`Niewystarczające zasoby! Potrzebujesz: ${costText.join(', ')}`, 'warning');
+                    return;
+                }
+                
+                // Start minigame
+                this.startMinigame(gameId);
+            }
+            
+            startMinigame(gameId) {
+                const gameData = this.minigameData[gameId];
+                
+                // Deduct costs
+                Object.entries(gameData.cost).forEach(([resource, amount]) => {
+                    this.resources[resource] -= amount;
+                });
+                
+                console.log(`🎮 Starting minigame: ${gameId}`);
+                
+                const costText = Object.entries(gameData.cost)
+                    .map(([resource, amount]) => `${amount} ${this.formatResourceName(resource)}`)
+                    .join(', ');
+                
+                this.showNotification(`🎮 ${gameData.name} - Koszt: ${costText}. Naciśnij SPACE aby wygrać!`, 'info', 5000);
+                
+                let completed = false;
+                
+                const completeGame = (result) => {
+                    if (completed) return;
+                    completed = true;
+                    
+                    document.removeEventListener('keydown', keyHandler);
+                    this.completeMinigame(gameId, result);
+                };
+                
+                const keyHandler = (e) => {
+                    if (e.code === 'Space' || e.key === ' ') {
+                        e.preventDefault();
+                        completeGame(true);
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        completeGame(false);
+                    }
+                };
+                
+                document.addEventListener('keydown', keyHandler);
+                
+                // Success chances
+                const successChances = {
+                    quarterly_presentation: 0.75,
+                    barista_championship: 0.65,
+                    corporate_merger: 0.55,
+                    government_lobbying: 0.45,
+                    global_summit: 0.60
+                };
+                
+                const successChance = successChances[gameId] || 0.7;
+                
+                setTimeout(() => {
+                    completeGame(Math.random() < successChance);
+                }, 5000);
+            }
+            
+            completeMinigame(gameId, success) {
+                const gameData = this.minigameData[gameId];
+                const rewards = success ? gameData.rewards.success : gameData.rewards.failure;
+                
+                if (success) {
+                    this.showNotification(`🎉 ${gameData.name} - SUKCES!`, 'success');
+                    
+                    Object.entries(rewards).forEach(([reward, value]) => {
+                        this.applyMinigameReward(reward, value);
+                    });
+                    
+                } else {
+                    this.showNotification(`😞 ${gameData.name} - PORAŻKA!`, 'error');
+                    
+                    Object.entries(rewards).forEach(([penalty, value]) => {
+                        this.applyMinigamePenalty(penalty, value);
+                    });
+                }
+                
+                // Set cooldown
+                this.gameState.minigameCooldowns[gameId] = Date.now();
+                
+                this.updateDisplay();
+            }
+            
+            applyMinigameReward(reward, value) {
+                switch(reward) {
+                    case 'budget':
+                    case 'documents': 
+                    case 'coffee':
+                    case 'prestige':
+                    case 'usd':
+                    case 'eur':
+                    case 'jpy':
+                    case 'cny':
+                    case 'freight':
+                        this.resources[reward] += value;
+                        break;
+                    case 'global_expansion_bonus':
+                        this.gameState.activeEffects.globalExpansionBonus = value;
+                        break;
+                    case 'softcap_increase':
+                        Object.keys(this.softcapThresholds).forEach(resource => {
+                            this.softcapThresholds[resource] = this.softcapThresholds[resource].map(t => t * (1 + value));
+                        });
+                        break;
+                }
+            }
+            
+            applyMinigamePenalty(penalty, value) {
+                switch(penalty) {
+                    case 'budget_loss_percent':
+                        this.resources.budget *= (1 - value);
+                        break;
+                    case 'stress':
+                        this.resources.stress += value;
+                        break;
+                    case 'motivation':
+                        this.resources.motivation += value;
+                        break;
+                    case 'reputation_loss':
+                        this.resources.prestige = Math.max(0, this.resources.prestige - value * 10);
+                        break;
+                }
+            }
+            
+            /* =============================================
+               EVENT HANDLERS
+               ============================================= */
+            
+            setupEventHandlers() {
+                // Main click button
+                const mainButton = document.getElementById('main-click-button');
+                if (mainButton) {
+                    mainButton.addEventListener('click', () => this.performMainClick());
+                }
+                
+                // Control buttons
+                const saveButton = document.getElementById('save-game');
+                const resetButton = document.getElementById('reset-game');
+                const exportButton = document.getElementById('export-data');
+                
+                if (saveButton) saveButton.addEventListener('click', () => this.saveGame());
+                if (resetButton) resetButton.addEventListener('click', () => this.resetGame());
+                if (exportButton) exportButton.addEventListener('click', () => this.exportData());
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && !e.ctrlKey && !e.altKey && !document.activeElement.tagName.match(/INPUT|TEXTAREA/)) {
+                        e.preventDefault();
+                        this.performMainClick();
+                    }
+                    
+                    // Tab navigation
+                    if (e.key >= '1' && e.key <= '6' && e.ctrlKey) {
+                        e.preventDefault();
+                        const tabs = ['overview', 'human-capital', 'global-markets', 'trade', 'automation', 'minigames'];
+                        const tabIndex = parseInt(e.key) - 1;
+                        if (tabs[tabIndex]) {
+                            switchTab(tabs[tabIndex]);
+                        }
+                    }
+                });
+                
+                console.log('✅ Event handlers attached for Phase 4.3');
+            }
+            
+            /* =============================================
+               SAVE/LOAD SYSTEM - Enhanced for Global Data
+               ============================================= */
+            
+            saveGame() {
+                try {
+                    const saveData = {
+                        version: this.version,
+                        resources: this.resources,
+                        departments: this.departments,
+                        regions: this.regions,
+                        fxRates: this.fxRates,
+                        automation: this.automation,
+                        gameState: this.gameState,
+                        timestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem('corpoclicker_phase43_save', JSON.stringify(saveData));
+                    this.showNotification('💾 Gra zapisana pomyślnie!', 'success');
+                } catch (error) {
+                    this.showNotification('❌ Błąd podczas zapisu!', 'error');
+                    console.error('Save failed:', error);
+                }
+            }
+            
+            loadGame() {
+                try {
+                    let saved = localStorage.getItem('corpoclicker_phase43_save');
+                    
+                    // Backwards compatibility
+                    if (!saved) {
+                        saved = localStorage.getItem('corpoclicker_phase422_save') || 
+                                localStorage.getItem('corpoclicker_phase421_save') ||
+                                localStorage.getItem('corpoclicker_phase42_save');
+                    }
+                    
+                    if (saved) {
+                        const saveData = JSON.parse(saved);
+                        
+                        // Migrate resources
+                        this.resources = { ...this.resources, ...saveData.resources };
+                        this.departments = { ...this.departments, ...saveData.departments };
+                        
+                        // New data (might not exist in older saves)
+                        if (saveData.regions) {
+                            this.regions = { ...this.regions, ...saveData.regions };
+                        }
+                        if (saveData.fxRates) {
+                            this.fxRates = { ...this.fxRates, ...saveData.fxRates };
+                        }
+                        if (saveData.automation) {
+                            this.automation = { ...this.automation, ...saveData.automation };
+                        }
+                        if (saveData.gameState) {
+                            this.gameState = { ...this.gameState, ...saveData.gameState };
+                        }
+                        
+                        console.log('📁 Phase 4.3 game loaded successfully');
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Load failed:', error);
+                }
+                return false;
+            }
+            
+            resetGame() {
+                if (confirm('Czy na pewno chcesz zresetować grę? Wszystkie postępy zostaną utracone!')) {
+                    ['corpoclicker_phase43_save', 'corpoclicker_phase422_save', 'corpoclicker_phase421_save', 'corpoclicker_phase42_save'].forEach(key => {
+                        localStorage.removeItem(key);
+                    });
+                    this.showNotification('Gra zostanie zresetowana za 3 sekundy...', 'warning', 3000);
+                    setTimeout(() => window.location.reload(), 3000);
+                }
+            }
+            
+            exportData() {
+                try {
+                    const exportData = {
+                        version: this.version,
+                        resources: this.resources,
+                        departments: this.departments,
+                        regions: this.regions,
+                        fxRates: this.fxRates,
+                        automation: this.automation,
+                        gameState: this.gameState,
+                        exportTime: new Date().toISOString()
+                    };
+                    
+                    const dataStr = JSON.stringify(exportData, null, 2);
+                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                    
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(dataBlob);
+                    link.download = `corpoclicker_phase43_${Date.now()}.json`;
+                    link.click();
+                    
+                    this.showNotification('📤 Dane wyeksportowane!', 'success');
+                } catch (error) {
+                    this.showNotification('❌ Błąd podczas eksportu!', 'error');
+                }
+            }
+            
+            /* =============================================
+               INITIALIZATION
+               ============================================= */
+            
+            init() {
+                console.log('🔧 Initializing Phase 4.3 systems...');
+                
+                // Load saved game
+                this.loadGame();
+                
+                // Setup event handlers
+                this.setupEventHandlers();
+                
+                // Start game loop
+                setInterval(() => this.gameLoop(), 100);
+                
+                // Initialize displays
+                this.updateDisplay();
+                
+                console.log('✅ CorpoClicker Phase 4.3 - Corporate Empire initialized!');
+                console.log('🌟 New features:');
+                console.log('   • 🌍 Global Markets: 5 regions with unique economics');
+                console.log('   • 💱 FX Trading: Real-time currency exchange');
+                console.log('   • 🤖 AI Automation: Smart department and trade management'); 
+                console.log('   • 🎨 Modern UI: Tab system with sticky resource bar');
+                console.log('   • 📦 New Resources: USD, EUR, JPY, CNY, Freight tokens');
+                
+                // Welcome message
+                setTimeout(() => {
+                    this.showNotification('🌍 Phase 4.3 - Corporate Empire is live!', 'success');
+                }, 1000);
+            }
+        }
+        
+        // Global functions for UI interactions
+        function switchTab(tabName) {
+            if (window.game) {
+                window.game.switchTab(tabName);
+            }
+        }
+        
+        function toggleMasterAutomation() {
+            if (window.game) {
+                window.game.toggleMasterAutomation();
+            }
+        }
+        
+        function toggleDepartmentAI() {
+            if (window.game) {
+                window.game.automation.departmentAI.active = !window.game.automation.departmentAI.active;
+                window.game.updateAutomationTab();
+                const button = event.target;
+                button.textContent = window.game.automation.departmentAI.active ? 'Aktywny' : 'Nieaktywny';
+                button.classList.toggle('active', window.game.automation.departmentAI.active);
+            }
+        }
+        
+        function toggleTradeBot() {
+            if (window.game) {
+                window.game.automation.tradeBot.active = !window.game.automation.tradeBot.active;
+                window.game.updateAutomationTab();
+                const button = event.target;
+                button.textContent = window.game.automation.tradeBot.active ? 'Aktywny' : 'Nieaktywny';
+                button.classList.toggle('active', window.game.automation.tradeBot.active);
+            }
+        }
+        
+        function toggleExpansionAI() {
+            if (window.game) {
+                window.game.automation.expansionAI.active = !window.game.automation.expansionAI.active;
+                window.game.updateAutomationTab();
+                const button = event.target;
+                button.textContent = window.game.automation.expansionAI.active ? 'Aktywny' : 'Nieaktywny';
+                button.classList.toggle('active', window.game.automation.expansionAI.active);
+            }
+        }
+        
+        function openTradeDialog(from, to) {
+            if (window.game) {
+                window.game.openTradeDialog(from, to);
+            }
+        }
+        
+        function saveGame() {
+            if (window.game) {
+                window.game.saveGame();
+            }
+        }
+        
+        function resetGame() {
+            if (window.game) {
+                window.game.resetGame();
+            }
+        }
+        
+        function exportData() {
+            if (window.game) {
+                window.game.exportData();
+            }
+        }
+        
+        // Initialize game when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM loaded, starting Phase 4.3...');
+            
+            try {
+                window.game = new CorpoClickerPhase43();
+                console.log('🎯 Phase 4.3 game instance created successfully');
+            } catch (error) {
+                console.error('💥 Critical error during Phase 4.3 initialization:', error);
+            }
+        });
+    </script>
+</body>
+</html>
