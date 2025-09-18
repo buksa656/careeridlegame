@@ -901,6 +901,390 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+		/* ========== ACHIEVEMENT SYSTEM STYLES ========== */
+.achievement-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-heavy);
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    backdrop-filter: var(--blur-backdrop);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.achievement-panel.show {
+    display: flex;
+    animation: achievement-panel-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes achievement-panel-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.achievement-header {
+    padding: var(--space-6);
+    border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.achievement-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.achievement-progress-summary {
+    font-size: var(--text-sm);
+    opacity: 0.9;
+}
+
+.achievement-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--text-lg);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.achievement-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.achievement-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-6);
+}
+
+.achievement-filters {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: var(--space-2) var(--space-4);
+    border: 2px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-4);
+}
+
+.achievement-item {
+    background: var(--surface-alt);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.achievement-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.achievement-item.unlocked {
+    border-color: var(--accent-success);
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.achievement-item.locked {
+    opacity: 0.7;
+}
+
+.achievement-item-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.achievement-icon {
+    font-size: var(--text-3xl);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.8);
+    flex-shrink: 0;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-name {
+    font-weight: 700;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-1);
+    color: var(--text);
+}
+
+.achievement-tier {
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tier-bronze {
+    background: rgba(205, 127, 50, 0.2);
+    color: #8B4513;
+}
+
+.tier-silver {
+    background: rgba(192, 192, 192, 0.3);
+    color: #696969;
+}
+
+.tier-gold {
+    background: rgba(255, 215, 0, 0.3);
+    color: #B8860B;
+}
+
+.tier-platinum {
+    background: rgba(229, 228, 226, 0.4);
+    color: #4A4A4A;
+}
+
+.achievement-description {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-3);
+    line-height: 1.4;
+}
+
+.achievement-reward {
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--accent-success);
+    font-weight: 600;
+    border-left: 3px solid var(--accent-success);
+}
+
+.achievement-no-reward {
+    font-size: var(--text-xs);
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.achievement-unlock-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.achievement-item.unlocked .achievement-unlock-indicator {
+    background: var(--accent-success);
+    color: white;
+}
+
+.achievement-item.locked .achievement-unlock-indicator {
+    background: var(--text-light);
+    color: white;
+}
+
+.achievement-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(224, 224, 224, 0.5);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: var(--space-2);
+}
+
+.achievement-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.achievement-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--accent-success), #66BB6A);
+    color: white;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-heavy);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 300px;
+    animation: achievement-notification-in 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes achievement-notification-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.achievement-notification-icon {
+    font-size: var(--text-2xl);
+    background: rgba(255, 255, 255, 0.2);
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.achievement-notification-content {
+    flex: 1;
+}
+
+.achievement-notification-title {
+    font-weight: 700;
+    font-size: var(--text-base);
+    margin-bottom: var(--space-1);
+}
+
+.achievement-notification-desc {
+    font-size: var(--text-sm);
+    opacity: 0.9;
+}
+
+.achievement-progress-indicator {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-light);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--primary);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: var(--blur-backdrop);
+}
+
+.achievement-progress-indicator:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: var(--shadow-medium);
+}
+
+.achievement-progress-icon {
+    font-size: var(--text-base);
+}
+
+@media (max-width: 768px) {
+    .achievement-panel {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .achievement-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .achievement-filters {
+        justify-content: center;
+    }
+    
+    .achievement-notification {
+        right: 10px;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievement-header {
+        padding: var(--space-4);
+    }
+    
+    .achievement-content {
+        padding: var(--space-4);
+    }
+    
+    .achievement-title {
+        font-size: var(--text-xl);
+    }
+    
+    .achievement-notification {
+        right: 5px;
+        min-width: 260px;
+    }
+}
     </style>
 </head>
 <body>
@@ -1038,6 +1422,12 @@
                         Rozrywka
                     </button>
                 </li>
+				<li role="presentation">
+				  <button class="tab-button" id="tab-achievements" onclick="openAchievementPanel()" role="tab">
+					<span class="tab-icon">🏆</span> 
+					<span id="achievement-progress-text">0/30 (0%)</span>
+				  </button>
+				</li>
             </ul>
         </nav>
 
@@ -1436,12 +1826,382 @@
         </div>
     </div>
 	<div id="notification-container"></div>
+	<!-- ========== ACHIEVEMENT SYSTEM HTML ========== -->
+
+	<!-- Achievement Panel (modal) -->
+	<div class="achievement-panel" id="achievement-panel">
+		<div class="achievement-header">
+			<div>
+				<h2 class="achievement-title">
+					<span>🏆</span>
+					<span>Osiągnięcia</span>
+				</h2>
+				<div class="achievement-progress-summary" id="achievement-summary">
+					Postęp: 0 z 30 osiągnięć (0%)
+				</div>
+			</div>
+			<button class="achievement-close" onclick="closeAchievementPanel()">&times;</button>
+		</div>
+		
+		<div class="achievement-content">
+			<div class="achievement-filters">
+				<button class="filter-btn active" data-filter="all">Wszystkie</button>
+				<button class="filter-btn" data-filter="bronze">🥉 Podstawowe</button>
+				<button class="filter-btn" data-filter="silver">🥈 Zaawansowane</button>
+				<button class="filter-btn" data-filter="gold">🥇 Profesjonalne</button>
+				<button class="filter-btn" data-filter="platinum">💎 Mistrzowskie</button>
+				<button class="filter-btn" data-filter="unlocked">Odblokowane</button>
+			</div>
+			
+			<div class="achievement-grid" id="achievement-grid">
+				<!-- Achievements will be populated here by JavaScript -->
+			</div>
+		</div>
+	</div>
+
+	<!-- Achievement notification container -->
+	<div id="achievement-notification-container"></div>
     <script>
         /* =============================================
            CORPOCLICKER PHASE 4.3 - CORPORATE EMPIRE
            Global Markets • AI Automation • Modern UI
            ============================================= */
-        
+        // ========== ACHIEVEMENT SYSTEM JAVASCRIPT ==========
+const ACHIEVEMENTS = {
+    first_steps: {
+        id: "first_steps",
+        name: "Pierwsze kroki",
+        description: "Wykonaj 10 kliknięć w główny przycisk",
+        icon: "👶",
+        tier: "bronze",
+        requirement: {type: "click_count", value: 10},
+        reward: null,
+        unlocked: false,
+        progress: 0
+    },
+    budget_builder: {
+        id: "budget_builder", 
+        name: "Budowniczy budżetu",
+        description: "Osiągnij 1000 budżetu",
+        icon: "💰",
+        tier: "bronze",
+        requirement: {type: "resource_max", resource: "budget", value: 1000},
+        reward: {type: "production_bonus", resource: "budget", multiplier: 1.05},
+        unlocked: false,
+        progress: 0
+    },
+    documentation_demon: {
+        id: "documentation_demon",
+        name: "Demon dokumentacji", 
+        description: "Wyprodukuj 500 dokumentów łącznie",
+        icon: "📋",
+        tier: "bronze", 
+        requirement: {type: "resource_total", resource: "documents", value: 500},
+        reward: {type: "production_bonus", resource: "documents", multiplier: 1.1},
+        unlocked: false,
+        progress: 0
+    },
+    coffee_addict: {
+        id: "coffee_addict",
+        name: "Kofeinowy uzależniony",
+        description: "Użyj funkcji kawy 25 razy",
+        icon: "☕",
+        tier: "bronze",
+        requirement: {type: "coffee_breaks", value: 25},
+        reward: {type: "coffee_efficiency", multiplier: 1.2},
+        unlocked: false,
+        progress: 0
+    },
+    hr_pioneer: {
+        id: "hr_pioneer",
+        name: "Pionier HR",
+        description: "Zatrudnij pierwszy dział HR",
+        icon: "👥",
+        tier: "bronze",
+        requirement: {type: "department_hired", department: "hr", value: 1},
+        reward: null,
+        unlocked: false,
+        progress: 0
+    },
+    tech_savvy: {
+        id: "tech_savvy",
+        name: "Techniczny mistrz",
+        description: "Odblokuj dział IT",
+        icon: "💻",
+        tier: "bronze", 
+        requirement: {type: "department_unlocked", department: "it"},
+        reward: {type: "production_bonus", resource: "coffee", multiplier: 1.05},
+        unlocked: false,
+        progress: 0
+    },
+    marketing_guru: {
+        id: "marketing_guru",
+        name: "Guru marketingu",
+        description: "Zatrudnij 5 osób w marketingu",
+        icon: "📊",
+        tier: "silver",
+        requirement: {type: "department_hired", department: "marketing", value: 5},
+        reward: {type: "production_bonus", resource: "prestige", multiplier: 1.15},
+        unlocked: false,
+        progress: 0
+    },
+    numbers_game: {
+        id: "numbers_game",
+        name: "Gra liczbami",
+        description: "Odblokuj księgowość",
+        icon: "🧮",
+        tier: "silver",
+        requirement: {type: "department_unlocked", department: "accounting"},
+        reward: {type: "cost_reduction", department: "all", multiplier: 0.95},
+        unlocked: false,
+        progress: 0
+    },
+    stress_survivor: {
+        id: "stress_survivor",
+        name: "Przetrwaniec stresu",
+        description: "Osiągnij 150 punktów stresu",
+        icon: "😰",
+        tier: "silver",
+        requirement: {type: "stress_peak", value: 150},
+        reward: {type: "stress_resistance", multiplier: 0.9},
+        unlocked: false,
+        progress: 0
+    },
+    motivation_master: {
+        id: "motivation_master",
+        name: "Mistrz motywacji",
+        description: "Osiągnij 90 punktów motywacji",
+        icon: "🔥",
+        tier: "silver",
+        requirement: {type: "motivation_peak", value: 90},
+        reward: {type: "motivation_bonus", multiplier: 1.1},
+        unlocked: false,
+        progress: 0
+    },
+    prestige_player: {
+        id: "prestige_player",
+        name: "Gracz prestiżu",
+        description: "Osiągnij 100 punktów prestiżu",
+        icon: "🎖️",
+        tier: "silver",
+        requirement: {type: "resource_max", resource: "prestige", value: 100},
+        reward: {type: "production_bonus", resource: "budget", multiplier: 1.1},
+        unlocked: false,
+        progress: 0
+    },
+    globalist: {
+        id: "globalist",
+        name: "Globalista",
+        description: "Odblokuj drugi region (Ameryki)",
+        icon: "🌎",
+        tier: "silver",
+        requirement: {type: "region_unlocked", region: "americas"},
+        reward: {type: "global_expansion_bonus", multiplier: 1.05},
+        unlocked: false,
+        progress: 0
+    },
+    forex_trader: {
+        id: "forex_trader",
+        name: "Trader forex",
+        description: "Wykonaj pierwszą wymianę walut",
+        icon: "💱",
+        tier: "bronze",
+        requirement: {type: "currency_trade", value: 1},
+        reward: {type: "fx_fee_reduction", multiplier: 0.95},
+        unlocked: false,
+        progress: 0
+    },
+    call_center_king: {
+        id: "call_center_king",
+        name: "Król call center",
+        description: "Odblokuj call center",
+        icon: "📞",
+        tier: "gold",
+        requirement: {type: "department_unlocked", department: "callcenter"},
+        reward: {type: "production_bonus", resource: "budget", multiplier: 1.2},
+        unlocked: false,
+        progress: 0
+    },
+    asian_expansion: {
+        id: "asian_expansion",
+        name: "Ekspansja azjatycka",
+        description: "Odblokuj region Azja-Pacyfik",
+        icon: "🌏",
+        tier: "gold",
+        requirement: {type: "region_unlocked", region: "asia"},
+        reward: {type: "global_market_bonus", multiplier: 1.15},
+        unlocked: false,
+        progress: 0
+    },
+    rd_innovator: {
+        id: "rd_innovator",
+        name: "Innowator R&D",
+        description: "Zatrudnij 3 osoby w R&D",
+        icon: "🔬",
+        tier: "gold",
+        requirement: {type: "department_hired", department: "rd", value: 3},
+        reward: {type: "innovation_bonus", multiplier: 1.25},
+        unlocked: false,
+        progress: 0
+    },
+    budget_millionaire: {
+        id: "budget_millionaire",
+        name: "Milioner budżetowy",
+        description: "Osiągnij 1,000,000 budżetu",
+        icon: "💎",
+        tier: "gold",
+        requirement: {type: "resource_max", resource: "budget", value: 1000000},
+        reward: {type: "production_bonus", resource: "budget", multiplier: 1.3},
+        unlocked: false,
+        progress: 0
+    },
+    automation_pioneer: {
+        id: "automation_pioneer",
+        name: "Pionier automatyzacji",
+        description: "Włącz system automatyzacji AI",
+        icon: "🤖",
+        tier: "gold",
+        requirement: {type: "automation_enabled"},
+        reward: {type: "automation_efficiency", multiplier: 1.1},
+        unlocked: false,
+        progress: 0
+    },
+    stress_zen: {
+        id: "stress_zen",
+        name: "Zen stresu",
+        description: "Utrzymaj stres poniżej 20 przez 2 minuty",
+        icon: "🧘",
+        tier: "silver",
+        requirement: {type: "stress_low", value: 20, duration: 120000},
+        reward: {type: "stress_generation", multiplier: 0.8},
+        unlocked: false,
+        progress: 0
+    },
+    multicurrency_master: {
+        id: "multicurrency_master",
+        name: "Mistrz wielu walut",
+        description: "Posiadaj wszystkie 4 waluty obce jednocześnie",
+        icon: "🏦",
+        tier: "gold",
+        requirement: {type: "all_currencies", currencies: ["usd", "eur", "jpy", "cny"]},
+        reward: {type: "currency_bonus", multiplier: 1.1},
+        unlocked: false,
+        progress: 0
+    },
+    clicker_veteran: {
+        id: "clicker_veteran",
+        name: "Weteran klikanek",
+        description: "Wykonaj 1,000 kliknięć łącznie",
+        icon: "👆",
+        tier: "gold",
+        requirement: {type: "click_count", value: 1000},
+        reward: {type: "click_power", multiplier: 1.05},
+        unlocked: false,
+        progress: 0
+    },
+    department_emperor: {
+        id: "department_emperor",
+        name: "Cesarz działów",
+        description: "Odblokuj wszystkie działy",
+        icon: "👑",
+        tier: "platinum",
+        requirement: {type: "all_departments_unlocked"},
+        reward: {type: "department_synergy", multiplier: 1.2},
+        unlocked: false,
+        progress: 0
+    },
+    global_tycoon: {
+        id: "global_tycoon",
+        name: "Globalny potentat",
+        description: "Odblokuj wszystkie regiony",
+        icon: "🌍",
+        tier: "platinum",
+        requirement: {type: "all_regions_unlocked"},
+        reward: {type: "global_dominance", multiplier: 1.5},
+        unlocked: false,
+        progress: 0
+    },
+    coffee_connoisseur: {
+        id: "coffee_connoisseur",
+        name: "Koneser kawy",
+        description: "Użyj funkcji kawy 100 razy",
+        icon: "☕",
+        tier: "gold",
+        requirement: {type: "coffee_breaks", value: 100},
+        reward: {type: "coffee_power", multiplier: 1.3},
+        unlocked: false,
+        progress: 0
+    },
+    efficiency_expert: {
+        id: "efficiency_expert",
+        name: "Ekspert efektywności",
+        description: "Osiągnij 100% efektywność we wszystkich podstawowych zasobach",
+        icon: "⚡",
+        tier: "gold",
+        requirement: {type: "full_efficiency"},
+        reward: {type: "efficiency_master", multiplier: 1.1},
+        unlocked: false,
+        progress: 0
+    },
+    minigame_master: {
+        id: "minigame_master",
+        name: "Mistrz minigier",
+        description: "Wygraj prezentację kwartalną 3 razy",
+        icon: "🎯",
+        tier: "gold",
+        requirement: {type: "minigame_wins", game: "quarterlypresentation", value: 3},
+        reward: {type: "minigame_bonus", multiplier: 1.25},
+        unlocked: false,
+        progress: 0
+    },
+    african_explorer: {
+        id: "african_explorer",
+        name: "Odkrywca Afryki",
+        description: "Odblokuj region Afryka",
+        icon: "🌍",
+        tier: "platinum",
+        requirement: {type: "region_unlocked", region: "africa"},
+        reward: {type: "exploration_bonus", multiplier: 1.2},
+        unlocked: false,
+        progress: 0
+    },
+    middle_east_mogul: {
+        id: "middle_east_mogul",
+        name: "Potentat Bliskiego Wschodu",
+        description: "Odblokuj region Bliskiego Wschodu",
+        icon: "🕌",
+        tier: "platinum",
+        requirement: {type: "region_unlocked", region: "middleeast"},
+        reward: {type: "premium_markets", multiplier: 1.4},
+        unlocked: false,
+        progress: 0
+    },
+    ultimate_corporate: {
+        id: "ultimate_corporate",
+        name: "Ostateczny korporacyjny",
+        description: "Osiągnij 500 prestiżu i odblokuj wszystkie regiony",
+        icon: "🏆",
+        tier: "platinum",
+        requirement: {type: "combined", requirements: [
+            {type: "resource_max", resource: "prestige", value: 500},
+            {type: "all_regions_unlocked"}
+        ]},
+        reward: {type: "ultimate_bonus", multiplier: 2.0},
+        unlocked: false,
+        progress: 0
+    },
+    speed_demon: {
+        id: "speed_demon",
+        name: "Demon prędkości",
+        description: "Wykonaj 50 kliknięć w ciągu 10 sekund",
+        icon: "💨",
+        tier: "silver",
+        requirement: {type: "click_speed", clicks: 50, time: 10000},
+        reward: {type: "click_speed_bonus", multiplier: 1.05},
+        unlocked: false,
+        progress: 0
+    }
+};
         class CorpoClickerPhase43 {
             constructor() {
                 this.version = "4.3.0-dev";
@@ -1746,10 +2506,189 @@
                     jpy: [10000, 50000, 250000, 1250000],
                     cny: [500, 2500, 12500, 62500]
                 };
-                
+                this.achievements = {};
+				this.achievementBonuses = {};
+				this.gameState.coffeeBreaks = 0;
+				this.gameState.maxStress = 0;
+				this.gameState.maxMotivation = this.resources.motivation;
+				this.gameState.currencyTrades = 0;
+				this.gameState.minigameWins = {};
+				this.gameState.totalProduced = {
+					budget: 0,
+					documents: 0,
+					coffee: 0,
+					prestige: 0
+				};
+				this.initializeAchievements();
                 this.init();
             }
             
+			initializeAchievements() {
+    // Initialize all achievements from the ACHIEVEMENTS constant
+    Object.keys(ACHIEVEMENTS).forEach(id => {
+        this.achievements[id] = {
+            ...ACHIEVEMENTS[id],
+            unlocked: false,
+            progress: 0
+        };
+    });
+    
+    // Update progress indicator
+    this.updateAchievementProgress();
+}
+
+checkAchievements() {
+    let newUnlocks = [];
+    
+    Object.keys(this.achievements).forEach(id => {
+        const achievement = this.achievements[id];
+        if (achievement.unlocked) return;
+        
+        if (this.checkAchievementRequirement(achievement)) {
+            this.unlockAchievement(id);
+            newUnlocks.push(achievement);
+        }
+    });
+    
+    // Show notifications for new unlocks
+    newUnlocks.forEach(achievement => {
+        setTimeout(() => showAchievementNotification(achievement), 500);
+    });
+    
+    if (newUnlocks.length > 0) {
+        this.updateAchievementProgress();
+    }
+}
+
+checkAchievementRequirement(achievement) {
+    const req = achievement.requirement;
+    
+    switch (req.type) {
+        case 'click_count':
+            return this.gameState.totalClicks >= req.value;
+            
+        case 'resource_max':
+            return this.resources[req.resource] >= req.value;
+            
+        case 'resource_total':
+            return (this.gameState.totalProduced[req.resource] || 0) >= req.value;
+            
+        case 'department_hired':
+            return this.departments[req.department]?.owned >= req.value;
+            
+        case 'department_unlocked':
+            return this.departments[req.department]?.unlocked === true;
+            
+        case 'region_unlocked':
+            return this.regions[req.region]?.unlocked === true;
+            
+        case 'coffee_breaks':
+            return this.gameState.coffeeBreaks >= req.value;
+            
+        case 'stress_peak':
+            return this.gameState.maxStress >= req.value;
+            
+        case 'motivation_peak':
+            return this.gameState.maxMotivation >= req.value;
+            
+        case 'currency_trade':
+            return this.gameState.currencyTrades >= req.value;
+            
+        case 'automation_enabled':
+            return this.automation.enabled === true;
+            
+        case 'all_currencies':
+            return req.currencies.every(currency => this.resources[currency] > 0);
+            
+        case 'all_departments_unlocked':
+            return Object.values(this.departments).every(dept => dept.unlocked);
+            
+        case 'all_regions_unlocked':
+            return Object.values(this.regions).every(region => region.unlocked);
+            
+        case 'full_efficiency':
+            const basicResources = ['budget', 'documents', 'coffee', 'prestige'];
+            return basicResources.every(resource => 
+                this.calculateSoftcap(resource, this.resources[resource]) >= 0.99
+            );
+            
+        case 'minigame_wins':
+            return (this.gameState.minigameWins[req.game] || 0) >= req.value;
+            
+        case 'combined':
+            return req.requirements.every(subReq => 
+                this.checkAchievementRequirement({requirement: subReq})
+            );
+            
+        default:
+            return false;
+    }
+}
+
+unlockAchievement(id) {
+    const achievement = this.achievements[id];
+    if (!achievement || achievement.unlocked) return;
+    
+    achievement.unlocked = true;
+    
+    // Apply reward if exists
+    if (achievement.reward) {
+        this.applyAchievementReward(achievement.reward);
+    }
+    
+    console.log(`Achievement unlocked: ${achievement.name}`);
+}
+
+applyAchievementReward(reward) {
+    switch (reward.type) {
+        case 'production_bonus':
+            // Store bonus for use in production calculations
+            if (!this.achievementBonuses[reward.resource]) {
+                this.achievementBonuses[reward.resource] = 1;
+            }
+            this.achievementBonuses[reward.resource] *= reward.multiplier;
+            break;
+            
+        case 'cost_reduction':
+            this.achievementBonuses.costReduction = (this.achievementBonuses.costReduction || 1) * reward.multiplier;
+            break;
+            
+        case 'click_power':
+            this.achievementBonuses.clickPower = (this.achievementBonuses.clickPower || 1) * reward.multiplier;
+            break;
+            
+        case 'coffee_efficiency':
+            this.achievementBonuses.coffeeEfficiency = (this.achievementBonuses.coffeeEfficiency || 1) * reward.multiplier;
+            break;
+            
+        default:
+            // Store other bonuses generically
+            this.achievementBonuses[reward.type] = (this.achievementBonuses[reward.type] || 1) * reward.multiplier;
+    }
+}
+
+updateAchievementProgress() {
+    const indicator = document.getElementById('achievement-progress-indicator');
+    const progressText = document.getElementById('achievement-progress-text');
+    
+    if (!indicator || !progressText) return;
+    
+    const unlockedCount = Object.values(this.achievements).filter(a => a.unlocked).length;
+    const totalCount = Object.keys(this.achievements).length;
+    const percentage = Math.round((unlockedCount / totalCount) * 100);
+    
+    progressText.textContent = `Osiągnięcia: ${unlockedCount}/${totalCount} (${percentage}%)`;
+    
+    // Update indicator color based on progress
+    if (percentage >= 100) {
+        indicator.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
+    } else if (percentage >= 75) {
+        indicator.style.background = 'linear-gradient(135deg, #4CAF50, #66BB6A)';
+    } else if (percentage >= 50) {
+        indicator.style.background = 'linear-gradient(135deg, #2196F3, #42A5F5)';
+    }
+}
+			
             /* =============================================
                CORE SYSTEMS FROM 4.2.2
                ============================================= */
@@ -1919,7 +2858,7 @@
                 this.resources[fromCurrency] -= amount;
                 this.resources[toCurrency] += netReceived;
                 this.resources.freight += Math.floor(amount / 100); // Freight tokens
-                
+                this.gameState.currencyTrades = (this.gameState.currencyTrades || 0) + 1;
                 this.showNotification(`💱 Wymiana: -${amount} ${fromCurrency} → +${netReceived.toFixed(2)} ${toCurrency}`, 'success');
                 this.updateResourceBar();
                 
@@ -2065,7 +3004,7 @@
                 const stressEffects = this.calculateStressEffects();
                 const motivationEffects = this.calculateMotivationEffects();
                 
-                const finalValue = clickValue * budgetEfficiency * stressEffects.production * (1 + motivationEffects.productionBonus);
+                const finalValue = clickValue * budgetEfficiency * stressEffects.production * (1 + motivationEffects.productionBonus) * (this.achievementBonuses?.clickPower || 1);
                 
                 this.resources.budget += finalValue;
                 this.gameState.totalClicks++;
@@ -2078,6 +3017,7 @@
                 }
                 
                 this.updateResourceBar();
+				this.checkAchievements();
             }
             
             purchaseDepartment(deptId) {
@@ -2103,6 +3043,10 @@
                 
                 const owned = this.departments[deptId].owned;
                 return Math.floor(baseData.baseCost * Math.pow(1.25, owned));
+				// Apply cost reduction from achievements
+				if (this.achievementBonuses && this.achievementBonuses.costReduction) {
+					cost *= this.achievementBonuses.costReduction;
+				}
             }
             
             checkDepartmentUnlocks() {
@@ -2272,8 +3216,19 @@
                         }
                     }
                 });
-            }
-            
+				const productionGains = {
+				  budget: 0,
+				  documents: 0,
+				  coffee: 0,
+				  prestige: 0,
+				};
+				this.gameState.maxStress = Math.max(this.gameState.maxStress || 0, this.resources.stress);
+				this.gameState.maxMotivation = Math.max(this.gameState.maxMotivation || 0, this.resources.motivation);
+			Object.keys(productionGains).forEach(resource => {
+				this.gameState.totalProduced[resource] = (this.gameState.totalProduced[resource] || 0) + productionGains[resource];
+			});
+			}
+
  updateOverviewTab() {
     // Update departments overview
     const container = document.getElementById('departments-overview');
@@ -2458,7 +3413,7 @@
 						// Obniż stres i podnieś motywację
 						this.resources.stress = Math.max(0, this.resources.stress - 20);
 						this.resources.motivation = Math.min(100, this.resources.motivation + 10);
-
+						this.gameState.coffeeBreaks = (this.gameState.coffeeBreaks || 0) + 1;
 						this.updateResourceBar();
 						this.updateStressMotivationBars(); // ← funkcja odświeżająca UI barów (patrz niżej)
 					} else {
@@ -2946,7 +3901,10 @@ updateAutomationTab() {
                         fxRates: this.fxRates,
                         automation: this.automation,
                         gameState: this.gameState,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+						achievements: this.achievements,
+						achievementBonuses: this.achievementBonuses,
+						gameState: this.gameState  // Make sure this includes all new properties
                     };
                     
                     localStorage.setItem('corpoclicker_phase43_save', JSON.stringify(saveData));
@@ -2960,7 +3918,7 @@ updateAutomationTab() {
             loadGame() {
                 try {
                     let saved = localStorage.getItem('corpoclicker_phase43_save');
-                    
+
                     // Backwards compatibility
                     if (!saved) {
                         saved = localStorage.getItem('corpoclicker_phase422_save') || 
@@ -2992,10 +3950,13 @@ updateAutomationTab() {
                         console.log('📁 Phase 4.3 game loaded successfully');
                         return true;
                     }
+
                 } catch (error) {
                     console.error('Load failed:', error);
                 }
                 return false;
+				                    if (saveData.achievements) this.achievements = saveData.achievements;
+					if (saveData.achievementBonuses) this.achievementBonuses = saveData.achievementBonuses;
             }
             
             resetGame() {
@@ -3140,6 +4101,199 @@ updateAutomationTab() {
 			if (!extra) return;
 			extra.style.display = (extra.style.display === "none" || !extra.style.display) ? "grid" : "none";
 		}
+		// UI Functions for Achievement System
+function openAchievementPanel() {
+    const panel = document.getElementById('achievement-panel');
+    if (panel) {
+        panel.classList.add('show');
+        updateAchievementDisplay();
+    }
+}
+
+function closeAchievementPanel() {
+    const panel = document.getElementById('achievement-panel');
+    if (panel) {
+        panel.classList.remove('show');
+    }
+}
+
+function updateAchievementDisplay() {
+    const grid = document.getElementById('achievement-grid');
+    const summary = document.getElementById('achievement-summary');
+    const progressText = document.getElementById('achievement-progress-text');
+    
+    if (!grid || !window.game) return;
+    
+    const unlockedCount = Object.values(window.game.achievements || {}).filter(a => a.unlocked).length;
+    const totalCount = Object.keys(ACHIEVEMENTS).length;
+    const percentage = Math.round((unlockedCount / totalCount) * 100);
+    
+    // Update summary text
+    if (summary) {
+        summary.textContent = `Postęp: ${unlockedCount} z ${totalCount} osiągnięć (${percentage}%)`;
+    }
+    
+    if (progressText) {
+        progressText.textContent = `Osiągnięcia: ${unlockedCount}/${totalCount} (${percentage}%)`;
+    }
+    
+    // Clear and rebuild grid
+    grid.innerHTML = '';
+    
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    
+    Object.values(ACHIEVEMENTS).forEach(achievement => {
+        const gameAchievement = window.game.achievements?.[achievement.id] || achievement;
+        
+        // Apply filter
+        if (activeFilter !== 'all') {
+            if (activeFilter === 'unlocked' && !gameAchievement.unlocked) return;
+            if (activeFilter !== 'unlocked' && achievement.tier !== activeFilter) return;
+        }
+        
+        const item = createAchievementItem(achievement, gameAchievement);
+        grid.appendChild(item);
+    });
+    
+    // Setup filter buttons
+    setupFilterButtons();
+}
+
+function createAchievementItem(achievement, gameAchievement) {
+    const item = document.createElement('div');
+    item.className = `achievement-item ${gameAchievement.unlocked ? 'unlocked' : 'locked'}`;
+    
+    const rewardText = achievement.reward 
+        ? `<div class="achievement-reward">Nagroda: ${getRewardDescription(achievement.reward)}</div>`
+        : `<div class="achievement-no-reward">Brak nagrody</div>`;
+    
+    const progressBar = getProgressBar(achievement, gameAchievement);
+    
+    item.innerHTML = `
+        <div class="achievement-unlock-indicator">
+            ${gameAchievement.unlocked ? '✓' : '✗'}
+        </div>
+        <div class="achievement-item-header">
+            <div class="achievement-icon">${achievement.icon}</div>
+            <div class="achievement-info">
+                <div class="achievement-name">${achievement.name}</div>
+                <span class="achievement-tier tier-${achievement.tier}">${achievement.tier}</span>
+            </div>
+        </div>
+        <div class="achievement-description">${achievement.description}</div>
+        ${rewardText}
+        ${progressBar}
+    `;
+    
+    return item;
+}
+
+function getRewardDescription(reward) {
+    switch (reward.type) {
+        case 'production_bonus':
+            return `+${Math.round((reward.multiplier - 1) * 100)}% produkcji ${reward.resource}`;
+        case 'cost_reduction':
+            return `${Math.round((1 - reward.multiplier) * 100)}% taniej działy`;
+        case 'click_power':
+            return `+${Math.round((reward.multiplier - 1) * 100)}% siła kliknięć`;
+        case 'coffee_efficiency':
+            return `+${Math.round((reward.multiplier - 1) * 100)}% efektywność kawy`;
+        case 'global_expansion_bonus':
+            return `+${Math.round((reward.multiplier - 1) * 100)}% bonus ekspansji`;
+        default:
+            return 'Specjalny bonus';
+    }
+}
+
+function getProgressBar(achievement, gameAchievement) {
+    if (gameAchievement.unlocked) return '';
+    
+    const progress = calculateAchievementProgress(achievement);
+    if (progress === null) return '';
+    
+    const percentage = Math.min(100, Math.round(progress * 100));
+    
+    return `
+        <div class="achievement-progress-bar">
+            <div class="achievement-progress-fill" style="width: ${percentage}%"></div>
+        </div>
+    `;
+}
+
+function calculateAchievementProgress(achievement) {
+    if (!window.game) return null;
+    
+    const req = achievement.requirement;
+    const game = window.game;
+    
+    switch (req.type) {
+        case 'click_count':
+            return Math.min(1, (game.gameState?.totalClicks || 0) / req.value);
+        case 'resource_max':
+            return Math.min(1, (game.resources?.[req.resource] || 0) / req.value);
+        case 'department_hired':
+            return Math.min(1, (game.departments?.[req.department]?.owned || 0) / req.value);
+        case 'coffee_breaks':
+            return Math.min(1, (game.gameState?.coffeeBreaks || 0) / req.value);
+        case 'stress_peak':
+            return Math.min(1, (game.gameState?.maxStress || 0) / req.value);
+        case 'motivation_peak':
+            return Math.min(1, (game.gameState?.maxMotivation || 0) / req.value);
+        default:
+            return null;
+    }
+}
+
+function setupFilterButtons() {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            updateAchievementDisplay();
+        });
+    });
+}
+
+function showAchievementNotification(achievement) {
+    const container = document.getElementById('achievement-notification-container');
+    if (!container) return;
+    
+    const notification = document.createElement('div');
+    notification.className = 'achievement-notification';
+    
+    notification.innerHTML = `
+        <div class="achievement-notification-icon">${achievement.icon}</div>
+        <div class="achievement-notification-content">
+            <div class="achievement-notification-title">Osiągnięcie odblokowane!</div>
+            <div class="achievement-notification-desc">${achievement.name}</div>
+        </div>
+    `;
+    
+    container.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'achievement-notification-in 0.3s ease reverse';
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.parentElement.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 5000);
+}
+document.addEventListener('click', (e) => {
+    const panel = document.getElementById('achievement-panel');
+    const indicator = document.getElementById('achievement-progress-indicator');
+    
+    if (panel && panel.classList.contains('show') && 
+        !panel.contains(e.target) && 
+        !indicator.contains(e.target)) {
+        closeAchievementPanel();
+    }
+});
         // Initialize game when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             console.log('📄 DOM loaded, starting Phase 4.3...');
