@@ -1,340 +1,16 @@
 
         // ========== ACHIEVEMENT SYSTEM JAVASCRIPT ==========
-const ACHIEVEMENTS = {
-    first_steps: {
-        id: "first_steps",
-        name: "Pierwsze kroki",
-        description: "Wykonaj 10 kliknięć w główny przycisk",
-        icon: "👶",
-        tier: "bronze",
-        requirement: {type: "click_count", value: 10},
-        reward: null,
-        unlocked: false,
-        progress: 0
-    },
-    budget_builder: {
-        id: "budget_builder",
-        name: "Budowniczy budżetu",
-        description: "Osiągnij 1000 punktów",
-        icon: "💰",
-        tier: "bronze",
-        requirement: {type: "resource_max", resource: "budget", value: 1000},
-        reward: {type: "production_bonus", resource: "budget", multiplier: 1.05},
-        unlocked: false,
-        progress: 0
-    },
-    documentation_demon: {
-        id: "documentation_demon",
-        name: "Demon dokumentacji",
-        description: "Wyprodukuj 500 dokumentów łącznie",
-        icon: "📋",
-        tier: "bronze",
-        requirement: {type: "resourcemax", resource: "documents", value: 500},
-        reward: {type: "production_bonus", resource: "documents", multiplier: 1.1},
-        unlocked: false,
-        progress: 0
-    },
-    coffee_addict: {
-        id: "coffee_addict",
-        name: "Kofeinowy uzależniony",
-        description: "Użyj funkcji kawy 25 razy",
-        icon: "☕",
-        tier: "bronze",
-        requirement: {type: "coffee_breaks", value: 25},
-        reward: {type: "coffee_efficiency", multiplier: 1.2},
-        unlocked: false,
-        progress: 0
-    },
-    hr_pioneer: {
-        id: "hr_pioneer",
-        name: "Pionier HR",
-        description: "Zatrudnij pierwszy dział HR",
-        icon: "👥",
-        tier: "bronze",
-        requirement: {type: "department_hired", department: "hr", value: 1},
-        reward: null,
-        unlocked: false,
-        progress: 0
-    },
-    tech_savvy: {
-        id: "tech_savvy",
-        name: "Techniczny mistrz",
-        description: "Odblokuj dział IT",
-        icon: "💻",
-        tier: "bronze",
-        requirement: {type: "department_unlocked", department: "it"},
-        reward: {type: "production_bonus", resource: "coffee", multiplier: 1.05},
-        unlocked: false,
-        progress: 0
-    },
-    marketing_guru: {
-        id: "marketing_guru",
-        name: "Guru marketingu",
-        description: "Zatrudnij 5 osób w marketingu",
-        icon: "📊",
-        tier: "silver",
-        requirement: {type: "department_hired", department: "marketing", value: 5},
-        reward: {type: "production_bonus", resource: "prestige", multiplier: 1.15},
-        unlocked: false,
-        progress: 0
-    },
-    numbers_game: {
-        id: "numbers_game",
-        name: "Gra liczbami",
-        description: "Odblokuj księgowość",
-        icon: "🧮",
-        tier: "silver",
-        requirement: {type: "department_unlocked", department: "accounting"},
-        reward: {type: "cost_reduction", department: "all", multiplier: 0.95},
-        unlocked: false,
-        progress: 0
-    },
-    stress_survivor: {
-        id: "stress_survivor",
-        name: "Przetrwaniec stresu",
-        description: "Osiągnij 150 punktów stresu",
-        icon: "😰",
-        tier: "silver",
-        requirement: {type: "stress_peak", value: 150},
-        reward: {type: "stress_resistance", multiplier: 0.9},
-        unlocked: false,
-        progress: 0
-    },
-    motivation_master: {
-        id: "motivation_master",
-        name: "Mistrz motywacji",
-        description: "Osiągnij 90 punktów motywacji",
-        icon: "🔥",
-        tier: "silver",
-        requirement: {type: "motivation_peak", value: 90},
-        reward: {type: "motivation_bonus", multiplier: 1.1},
-        unlocked: false,
-        progress: 0
-    },
-    prestige_player: {
-        id: "prestige_player",
-        name: "Gracz prestiżu",
-        description: "Osiągnij 100 punktów prestiżu",
-        icon: "🎖️",
-        tier: "silver",
-        requirement: {type: "resource_max", resource: "prestige", value: 100},
-        reward: {type: "production_bonus", resource: "budget", multiplier: 1.1},
-        unlocked: false,
-        progress: 0
-    },
-    globalist: {
-        id: "globalist",
-        name: "Globalista",
-        description: "Odblokuj drugi region (Ameryki)",
-        icon: "🌎",
-        tier: "silver",
-        requirement: {type: "region_unlocked", region: "americas"},
-        reward: {type: "global_expansion_bonus", multiplier: 1.05},
-        unlocked: false,
-        progress: 0
-    },
-    forex_trader: {
-        id: "forex_trader",
-        name: "Trader forex",
-        description: "Wykonaj pierwszą wymianę walut",
-        icon: "💱",
-        tier: "bronze",
-        requirement: {type: "currency_trade", value: 1},
-        reward: {type: "fx_fee_reduction", multiplier: 0.95},
-        unlocked: false,
-        progress: 0
-    },
-    call_center_king: {
-        id: "call_center_king",
-        name: "Król call center",
-        description: "Odblokuj call center",
-        icon: "📞",
-        tier: "gold",
-        requirement: {type: "department_unlocked", department: "callcenter"},
-        reward: {type: "production_bonus", resource: "budget", multiplier: 1.2},
-        unlocked: false,
-        progress: 0
-    },
-    asian_expansion: {
-        id: "asian_expansion",
-        name: "Ekspansja azjatycka",
-        description: "Odblokuj region Azja-Pacyfik",
-        icon: "🌏",
-        tier: "gold",
-        requirement: {type: "region_unlocked", region: "asia"},
-        reward: {type: "global_market_bonus", multiplier: 1.15},
-        unlocked: false,
-        progress: 0
-    },
-    rd_innovator: {
-        id: "rd_innovator",
-        name: "Innowator R&D",
-        description: "Zatrudnij 3 osoby w R&D",
-        icon: "🔬",
-        tier: "gold",
-        requirement: {type: "department_hired", department: "rd", value: 3},
-        reward: {type: "innovation_bonus", multiplier: 1.25},
-        unlocked: false,
-        progress: 0
-    },
-    budget_millionaire: {
-        id: "budget_millionaire",
-        name: "Milioner budżetowy",
-        description: "Osiągnij 1,000,000 punktów",
-        icon: "💎",
-        tier: "gold",
-        requirement: {type: "resource_max", resource: "budget", value: 1000000},
-        reward: {type: "production_bonus", resource: "budget", multiplier: 1.3},
-        unlocked: false,
-        progress: 0
-    },
-    automation_pioneer: {
-        id: "automation_pioneer",
-        name: "Pionier automatyzacji",
-        description: "Włącz system automatyzacji AI",
-        icon: "🤖",
-        tier: "gold",
-        requirement: {type: "automation_enabled"},
-        reward: {type: "automation_efficiency", multiplier: 1.1},
-        unlocked: false,
-        progress: 0
-    },
-    stress_zen: {
-        id: "stress_zen",
-        name: "Zen stresu",
-        description: "Utrzymaj stres poniżej 20 przez 2 minuty",
-        icon: "🧘",
-        tier: "silver",
-        requirement: {type: "stress_low", value: 20, duration: 120000},
-        reward: {type: "stress_generation", multiplier: 0.8},
-        unlocked: false,
-        progress: 0
-    },
-    multicurrency_master: {
-        id: "multicurrency_master",
-        name: "Mistrz wielu walut",
-        description: "Posiadaj wszystkie 4 waluty obce jednocześnie",
-        icon: "🏦",
-        tier: "gold",
-        requirement: {type: "all_currencies", currencies: ["usd", "eur", "jpy", "cny"]},
-        reward: {type: "currency_bonus", multiplier: 1.1},
-        unlocked: false,
-        progress: 0
-    },
-    clicker_veteran: {
-        id: "clicker_veteran",
-        name: "Weteran klikanek",
-        description: "Wykonaj 1,000 kliknięć łącznie",
-        icon: "👆",
-        tier: "gold",
-        requirement: {type: "click_count", value: 1000},
-        reward: {type: "click_power", multiplier: 1.05},
-        unlocked: false,
-        progress: 0
-    },
-    department_emperor: {
-        id: "department_emperor",
-        name: "Cesarz działów",
-        description: "Odblokuj wszystkie działy",
-        icon: "👑",
-        tier: "platinum",
-        requirement: {type: "all_departments_unlocked"},
-        reward: {type: "department_synergy", multiplier: 1.2},
-        unlocked: false,
-        progress: 0
-    },
-    global_tycoon: {
-        id: "global_tycoon",
-        name: "Globalny potentat",
-        description: "Odblokuj wszystkie regiony",
-        icon: "🌍",
-        tier: "platinum",
-        requirement: {type: "all_regions_unlocked"},
-        reward: {type: "global_dominance", multiplier: 1.5},
-        unlocked: false,
-        progress: 0
-    },
-    coffee_connoisseur: {
-        id: "coffee_connoisseur",
-        name: "Koneser kawy",
-        description: "Użyj funkcji kawy 100 razy",
-        icon: "☕",
-        tier: "gold",
-        requirement: {type: "coffee_breaks", value: 100},
-        reward: {type: "coffee_power", multiplier: 1.3},
-        unlocked: false,
-        progress: 0
-    },
-    efficiency_expert: {
-        id: "efficiency_expert",
-        name: "Ekspert efektywności",
-        description: "Osiągnij 100% efektywność we wszystkich podstawowych zasobach",
-        icon: "⚡",
-        tier: "gold",
-        requirement: {type: "full_efficiency"},
-        reward: {type: "efficiency_master", multiplier: 1.1},
-        unlocked: false,
-        progress: 0
-    },
-    minigame_master: {
-        id: "minigame_master",
-        name: "Mistrz minigier",
-        description: "Wygraj prezentację kwartalną 3 razy",
-        icon: "🎯",
-        tier: "gold",
-        requirement: {type: "minigame_wins", game: "quarterlypresentation", value: 3},
-        reward: {type: "minigame_bonus", multiplier: 1.25},
-        unlocked: false,
-        progress: 0
-    },
-    african_explorer: {
-        id: "african_explorer",
-        name: "Odkrywca Afryki",
-        description: "Odblokuj region Afryka",
-        icon: "🌍",
-        tier: "platinum",
-        requirement: {type: "region_unlocked", region: "africa"},
-        reward: {type: "exploration_bonus", multiplier: 1.2},
-        unlocked: false,
-        progress: 0
-    },
-    middle_east_mogul: {
-        id: "middle_east_mogul",
-        name: "Potentat Bliskiego Wschodu",
-        description: "Odblokuj region Bliskiego Wschodu",
-        icon: "🕌",
-        tier: "platinum",
-        requirement: {type: "region_unlocked", region: "middleeast"},
-        reward: {type: "premium_markets", multiplier: 1.4},
-        unlocked: false,
-        progress: 0
-    },
-    ultimate_corporate: {
-        id: "ultimate_corporate",
-        name: "Ostateczny korporacyjny",
-        description: "Osiągnij 500 prestiżu i odblokuj wszystkie regiony",
-        icon: "🏆",
-        tier: "platinum",
-        requirement: {type: "combined", requirements: [
-            {type: "resource_max", resource: "prestige", value: 500},
-            {type: "all_regions_unlocked"}
-        ]},
-        reward: {type: "ultimate_bonus", multiplier: 2.0},
-        unlocked: false,
-        progress: 0
-    },
-    speed_demon: {
-        id: "speed_demon",
-        name: "Demon prędkości",
-        description: "Wykonaj 50 kliknięć w ciągu 10 sekund",
-        icon: "💨",
-        tier: "silver",
-        requirement: {type: "click_speed", clicks: 50, time: 10000},
-        reward: {type: "click_speed_bonus", multiplier: 1.05},
-        unlocked: false,
-        progress: 0
-    }
-};
+		
+		const ACHIEVEMENT_TIERS = {
+		  bronze: "🥉 Podstawowe",
+		  silver: "🥈 Zaawansowane",
+		  gold: "🥇 Profesjonalne",
+		  platinum: "💎 Mistrzowskie"
+		};
+
+		function getTierLabel(tier) {
+		  return ACHIEVEMENT_TIERS[tier] || tier;
+		}
         class CorpoClickerPhase43 {
             constructor() {
                 this.version = "v.0.4.5";
@@ -343,13 +19,14 @@ const ACHIEVEMENTS = {
 
                 // Core Resources 
                 this.resources = {
-                    budget: 100,
+                    budget: 50,
                     documents: 0,
                     coffee: 0,
                     stress: 0,
                     motivation: 100,
                     prestige: 0,
                     influence: 0,
+					synergy: 10, 
 
                     // International Currencies
                     usd: 0,
@@ -821,7 +498,6 @@ unlockAchievement(id) {
 applyAchievementReward(reward) {
     switch (reward.type) {
         case 'production_bonus':
-            // Store bonus for use in production calculations
             if (!this.achievementBonuses[reward.resource]) {
                 this.achievementBonuses[reward.resource] = 1;
             }
@@ -840,9 +516,15 @@ applyAchievementReward(reward) {
             this.achievementBonuses.coffeeEfficiency = (this.achievementBonuses.coffeeEfficiency || 1) * reward.multiplier;
             break;
 
+        case 'synergy_coin':
+            // Dodaj monety synergii do zasobów gracza
+            if (!this.resources.synergy) this.resources.synergy = 0;
+            this.resources.synergy += reward.amount || 1;
+            this.updateResourceBar?.();
+            break;
+
         default:
-            // Store other bonuses generically
-            this.achievementBonuses[reward.type] = (this.achievementBonuses[reward.type] || 1) * reward.multiplier;
+            this.achievementBonuses[reward.type] = (this.achievementBonuses[reward.type] || 1) * (reward.multiplier || 1);
     }
 }
 
@@ -1619,7 +1301,7 @@ updateGlobalPresenceCard() {
             }
 
             updateResourceBar() {
-                const resources = ['budget', 'documents', 'coffee', 'prestige', 'usd', 'eur', 'jpy', 'cny', 'freight'];
+                const resources = ['budget', 'documents', 'coffee', 'prestige', 'usd', 'eur', 'jpy', 'cny', 'freight', 'synergy'];
 
                 resources.forEach(resource => {
                     const element = document.getElementById(resource);
@@ -3081,7 +2763,8 @@ startGlobalSummit(gameId) {
             }
 
             loadGame() {
-                try {
+                
+				try {
                     let saved = localStorage.getItem('corpoclicker_phase43_save');
 
                     // Backwards compatibility
@@ -3111,7 +2794,11 @@ startGlobalSummit(gameId) {
                         if (saveData.gameState) {
                             this.gameState = { ...this.gameState, ...saveData.gameState };
                         }
-
+						Object.keys(ACHIEVEMENTS).forEach(id => {
+							if (!this.achievements[id]) {
+								this.achievements[id] = { unlocked: false, progress: 0 };
+							}
+						});
                         console.log('📁 Phase 4.4 game loaded successfully');
                         return true;
                     }
@@ -3184,7 +2871,7 @@ startGlobalSummit(gameId) {
 
                 // Welcome message
         
-                    showCustomModal('🌍 Witaj w grze korposzczur!', 'Zacznijmy grę!');
+                    showCustomModal('🌍 Witaj w grze korposzczur!', 'OK');
                 
             }
         }
@@ -3361,70 +3048,137 @@ function updateAchievementDisplay() {
     // Clear and rebuild grid
     grid.innerHTML = '';
 
-    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
-
-    Object.values(ACHIEVEMENTS).forEach(achievement => {
-        const gameAchievement = window.game.achievements?.[achievement.id] || achievement;
-
-        // Apply filter
-        if (activeFilter !== 'all') {
-            if (activeFilter === 'unlocked' && !gameAchievement.unlocked) return;
-            if (activeFilter !== 'unlocked' && achievement.tier !== activeFilter) return;
+		const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || "all";
+Object.values(window.ACHIEVEMENTS).forEach(achievement => {
+    const gameAchievement = window.game.achievements?.[achievement.id];
+    if (activeFilter !== "all") {
+        if (activeFilter === "unlocked") {
+            if (!(gameAchievement && gameAchievement.unlocked)) return;
+        } else if (achievement.tier !== activeFilter) {
+            return;
         }
+    }
 
         const item = createAchievementItem(achievement, gameAchievement);
         grid.appendChild(item);
     });
-
+	
     // Setup filter buttons
     setupFilterButtons();
 }
 
 function createAchievementItem(achievement, gameAchievement) {
+    // zapobiega błędom przy nowych achievementach lub czystym save
+    gameAchievement = gameAchievement || { unlocked: false, progress: 0 };
+
     const item = document.createElement('div');
-    item.className = `achievement-item ${gameAchievement.unlocked ? 'unlocked' : 'locked'}`;
+    item.className = 'achievement-item ' + (gameAchievement.unlocked ? 'unlocked' : 'locked');
 
     const rewardText = achievement.reward
-        ? `<div class="achievement-reward">Nagroda: ${getRewardDescription(achievement.reward)}</div>`
-        : `<div class="achievement-no-reward">Brak nagrody</div>`;
+      ? `<div class="achievement-reward">Nagroda: ${getRewardDescription(achievement.reward)}</div>`
+      : `<div class="achievement-no-reward">Brak nagrody</div>`;
 
     const progressBar = getProgressBar(achievement, gameAchievement);
 
     item.innerHTML = `
-        <div class="achievement-unlock-indicator">
-            ${gameAchievement.unlocked ? '✓' : '✗'}
+      <div class="achievement-unlock-indicator">
+        ${gameAchievement.unlocked ? '✓' : '✗'}
+      </div>
+      <div class="achievement-item-header">
+        <div class="achievement-icon">${achievement.icon}</div>
+        <div class="achievement-info">
+          <div class="achievement-name">${achievement.name}</div>
+          <span class="achievement-tier tier-${achievement.tier}">${getTierLabel(achievement.tier)}</span>
         </div>
-        <div class="achievement-item-header">
-            <div class="achievement-icon">${achievement.icon}</div>
-            <div class="achievement-info">
-                <div class="achievement-name">${achievement.name}</div>
-                <span class="achievement-tier tier-${achievement.tier}">${achievement.tier}</span>
-            </div>
-        </div>
-        <div class="achievement-description">${achievement.description}</div>
-        ${rewardText}
-        ${progressBar}
+      </div>
+      <div class="achievement-description">${achievement.description}</div>
+      ${rewardText}
+      ${progressBar}
     `;
-
     return item;
 }
 
+function formatResourceName(resourceId) {
+				const names = {
+					budget: '💰 Punkty',
+					documents: '📄 Dokumenty',
+					coffee: '☕ Kofeina',
+					prestige: '🎖️ Reputacja',
+					usd: '💵 USD',
+					eur: '💶 EUR',
+					jpy: '💴 JPY',
+					cny: '💷 CNY',
+					freight: '📦 Freight',
+					subsidiaries: '🏢 Spółka zależna',
+					subsidiary: '🏢 Spółka zależna',
+					coffee_shop_level: '🏪 Poziom kawiarni',
+					passive_income: '💵 Pasywny przychód',
+					all_production: '⚙️ Produkcja (wszystko)',
+					softcap_increase: '⬆️ Softcap',
+					reputation_loss: '🎖️ Utrata reputacji',
+					departments_loss: '🧑‍💼 Strata działu',
+					region_lock: '🚫 Blokada regionu'
+				};
+				return names[resourceId] || resourceId;
+			}
 function getRewardDescription(reward) {
+    if (!reward) return '';
     switch (reward.type) {
         case 'production_bonus':
-            return `+${Math.round((reward.multiplier - 1) * 100)}% produkcji ${reward.resource}`;
+            return `🛠️ +${Math.round((reward.multiplier-1)*100)}% produkcji ${formatResourceName(reward.resource)}`;
         case 'cost_reduction':
-            return `${Math.round((1 - reward.multiplier) * 100)}% taniej działy`;
+            return `📉 ${Math.round((1-reward.multiplier)*100)}% taniej działy`;
+        case 'main_click_bonus':
         case 'click_power':
-            return `+${Math.round((reward.multiplier - 1) * 100)}% siła kliknięć`;
+            return `👆 +${Math.round((reward.multiplier-1)*100)}% siła kliknięć`;
+        case 'motivation_bonus':
+            return `💪 +${Math.round((reward.multiplier-1)*100)}% do motywacji`;
         case 'coffee_efficiency':
-            return `+${Math.round((reward.multiplier - 1) * 100)}% efektywność kawy`;
+            return `☕ +${Math.round((reward.multiplier-1)*100)}% efektywność kawy`;
+        case 'department_efficiency':
+            return `🏢 +${Math.round((reward.multiplier-1)*100)}% wydajności działu ${formatResourceName(reward.department)}`;
+        case 'softcap_up':
+            return `⬆️ Softcap dla ${formatResourceName(reward.resource)} zwiększony o ${Math.round(reward.value*100)}%`;
+        case 'currency_premium':
+        case 'synergy_coin':
+            return `🪙 +${reward.amount||reward.synergy_coin} Monet synergii`;
+        case 'automation_efficiency':
+            return `🤖 +${Math.round((reward.multiplier-1)*100)}% wydajności automatyzacji`;
+        case 'stress_resistance':
+        case 'stress_generation':
+            return `🧘 -${Math.round((1-reward.multiplier)*100)}% powstawania stresu`;
         case 'global_expansion_bonus':
-            return `+${Math.round((reward.multiplier - 1) * 100)}% bonus ekspansji`;
+        case 'global_market_bonus':
+            return `🌍 +${Math.round((reward.multiplier-1)*100)}% premii globalnej`;
+        case 'fx_fee_reduction':
+            return `💱 -${Math.round((1-reward.multiplier)*100)}% opłat FX`;
+        case 'department_synergy':
+            return `🔗 +${Math.round((reward.multiplier-1)*100)}% synergia między działami`;
+        case 'currency_bonus':
+            return `🏦 +${Math.round((reward.multiplier-1)*100)}% zysków z walut`;
+        case 'efficiency_master':
+            return `⚡ +${Math.round((reward.multiplier-1)*100)}% ogólnej efektywności`;
+        case 'minigame_bonus':
+            return `🎯 +${Math.round((reward.multiplier-1)*100)}% zysków z minigier`;
+        case 'innovation_bonus':
+            return `💡 +${Math.round((reward.multiplier-1)*100)}% do innowacji/R&D`;
+        case 'ultimate_bonus':
+            return `🏆 Całkowity bonus globalny: +${Math.round((reward.multiplier-1)*100)}%`;
+        case 'exploration_bonus':
+            return `🌍 +${Math.round((reward.multiplier-1)*100)}% premii za ekspansję`;
+        case 'premium_markets':
+            return `🕌 +${Math.round((reward.multiplier-1)*100)}% z rynków premium`;
+        case 'click_speed_bonus':
+            return `💨 +${Math.round((reward.multiplier-1)*100)}% do wartości klików za tempo`;
+        case 'full_efficiency':
+            return `⚡ Osiągnięto pełną efektywność`;
         default:
-            return 'Specjalny bonus';
+            if (reward.synergy_coin)
+                return `🪙 +${reward.synergy_coin} Monet synergii`;
+            return '🎁 Specjalny bonus';
     }
 }
+
 
 function calculateHumanCapitalEffects(stress, motivation) {
   let production = 1.0;
@@ -3461,16 +3215,17 @@ function calculateHumanCapitalEffects(stress, motivation) {
 
 
 function getProgressBar(achievement, gameAchievement) {
-    if (gameAchievement.unlocked) return '';
+    if (!gameAchievement || typeof gameAchievement.unlocked === 'undefined' || gameAchievement.unlocked) return '';
 
+    // Prawidłowe liczenie progresu:
     const progress = calculateAchievementProgress(achievement);
-    if (progress === null) return '';
 
-    const percentage = Math.min(100, Math.round(progress * 100));
+    // Render HTML na podstawie realnej wartości:
+    const percentage = Math.max(0, Math.min(100, Math.round(progress * 100)));
 
     return `
         <div class="achievement-progress-bar">
-            <div class="achievement-progress-fill" style="width: ${percentage}%"></div>
+            <div class="achievement-progress-fill" style="width: ${percentage}%;"></div>
         </div>
     `;
 }
@@ -3651,12 +3406,15 @@ document.addEventListener('click', (e) => {
     const panel = document.getElementById('achievement-panel');
     const indicator = document.getElementById('achievement-progress-indicator');
 
-    if (panel && panel.classList.contains('show') &&
+    if (
+        panel && panel.classList.contains('show') &&
         !panel.contains(e.target) &&
-        !indicator.contains(e.target)) {
-        closeAchievementPanel();
+        indicator && !indicator.contains(e.target)
+    ) {
+        closeAchievementsPanel();
     }
 });
+
         // Initialize game when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             console.log('📄 DOM loaded, starting Phase 4.3...');

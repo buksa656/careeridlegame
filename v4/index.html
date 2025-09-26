@@ -70,6 +70,18 @@
             </div>
             <div class="resource-efficiency efficiency-optimal" id="prestige-efficiency">100%</div>
         </div>
+		<div class="resource-item">
+		  <div class="resource-icon">🪙</div>
+		  <div class="resource-info">
+			<div class="resource-label">Monety synergii</div>
+			<div class="resource-value" id="synergy">0</div>
+		  </div>
+		  <span class="tooltip-icon" tabindex="0">?
+			  <span class="tooltip-text">
+				<b>Monety synergii:</b> to twoje saldo waluty premium.<br>
+			  </span>
+			</span>
+		</div>
 		    <!-- Przycisk rozwijania -->
     <button class="resource-bar-more" onclick="toggleResourceBarExtra()">+</button>
     </div>
@@ -132,7 +144,7 @@
     </button>
   <button id="achievement-progress-btn" class="achievement-progress-btn" onclick="openAchievementPanel()">
     <span class="achievement-progress-icon">🏆</span>
-    <span id="achievement-progress-text">Osiągnięcia: 0/30 (0%)</span>
+    <span id="achievement-progress-text">Osiągnięcia: 0/45 (0%)</span>
 
   </button>
 </div>
@@ -601,6 +613,7 @@
 		<button onclick="closeCoffeePopup()" class="coffee-action-btn" style="margin-top:16px;">OK</button>
 	  </div>
 	</div>
+	<script src="achievements.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

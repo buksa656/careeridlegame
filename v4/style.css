@@ -142,7 +142,10 @@
             border-radius: var(--radius-md);
             min-width: 0; /* Prevent flex overflow */
         }
-
+.resource-item .resource-value#synergy {
+  color: #00bea2;
+  font-weight: bold;
+}
         .resource-icon {
             font-size: var(--text-lg);
             flex-shrink: 0;
